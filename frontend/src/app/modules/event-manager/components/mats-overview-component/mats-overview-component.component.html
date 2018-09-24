@@ -1,0 +1,12 @@
+<div class="ui three stackable cards">
+  <div class="ui card" *ngFor="let mat of mats">
+    <div class="content">
+      <app-mat-display (competitorClicked)="openCompetitorPage($event)"
+                       [mat]="mat"
+                       [title]="matName(mat?.matId)"
+                       (scoreboardSelected)="scoreboardClicked.next($event?.matId)"
+                       (detailsViewSelected)="matDetailsClicked.next($event?.matId)">
+      </app-mat-display>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="ui relaxed divided list">
+  <div *ngFor="let event of events" class="item">
+    <div class="right floated content">
+      <div class="ui floating dropdown" suiDropdown autoClose="outsideClick">
+        <div class="text">Actions</div>
+        <i class="dropdown icon"></i>
+        <div class="menu" suiDropdownMenu>
+          <div class="item" (click)="editCategories(event.competitionId)">Category Editor</div>
+          <div class="item" (click)="editEvent(event.competitionId)">Properties Editor</div>
+          <a class="item" routerLink="{{event.competitionId}}/fighters">Fighters Editor</a>
+          <div class="item" *ngIf="event.status !== 'PUBLISHED'" (click)="publishEvent(event)">Publish</div>
+          <div class="item" *ngIf="event.status === 'PUBLISHED'" (click)="unpublishEvent(event)">Unpublish</div>
+          <div class="item" (click)="deleteEvent(event)">Delete</div>
+        </div>
+      </div>
+    </div>
+    <i class="large github middle aligned icon"></i>
+    <div class="content">
+      <a class="header" (click)="editEvent(event.competitionId)">{{event.competitionName}}</a>
+      <div class="description">STATUS: {{event.status}}</div>
+      <div class="description" *ngIf="event.registrationOpen">Registration Open!</div>
+    </div>
+  </div>
+</div>

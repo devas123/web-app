@@ -1,0 +1,18 @@
+<div class="ui container">
+  <h2 class="ui header">Fighter Profile</h2>
+  <div class="ui divider"></div>
+  <button class="ui basic button" (click)="navigateBack()">
+    Return
+  </button>
+  <!--<div class="ui submit button" *ngIf="!editing" (click)="editing = true">Edit</div>-->
+  <!--<div class="ui positive submit button" *ngIf="editing" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">-->
+  <!--Save-->
+  <!--</div>-->
+  <p></p>
+  <ng-container *ngIf="(category$ | async)">
+    <app-fighter-profile [type]="'category'" [fighter]="categoryFighter$ | async" (categoryChanged)="sendChangeCategoryCommand($event)" (competitorChanged)="sendChangeCompetitorCommand($event)" [categories]="categories$ | async"></app-fighter-profile>
+  </ng-container>
+  <ng-container *ngIf="!(category$ | async)">
+    <app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async" (categoryChanged)="sendChangeCategoryCommand($event)" (competitorChanged)="sendChangeCompetitorCommand($event)" [categories]="categories$ | async"></app-fighter-profile>
+  </ng-container>
+</div>

@@ -1,0 +1,25 @@
+<div class="ui massive menu">
+  <div class="right menu">
+    <a class="violet item" (click)="eventsNav()">Events</a>
+
+    <a *ngIf="!user" class="item" (click)="loginNav()" >
+        <i class="user circle icon "></i>
+      Sign Up
+      </a>
+
+    <div *ngIf="user" class="ui dropdown link  item" suiDropdown>
+      <div class="ui avatar image"> <ngx-avatar  size="100%" [src]="sanitizer.bypassSecurityTrustResourceUrl(user.avatar)" [round]="true"></ngx-avatar></div> <span>&nbsp;&nbsp;</span>
+      {{user.firstName}}
+      <i class="dropdown icon"></i>
+      <div class="menu" suiDropdownMenu>
+        <div class="item">Settings</div>
+        <div class="item " (click)="accountPage()">Account</div>
+        <div class="item " (click)="eventManagerPage()">Event manager</div>
+        <div class="ui divider"></div>
+        <div class="item" (click)="logout()">Logout</div>
+      </div>
+    </div>
+
+
+  </div>
+</div>

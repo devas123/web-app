@@ -1,0 +1,4 @@
+<div class="wrapper">
+  <app-sign-in (notify)="signIn=$event;" *ngIf="signIn" ></app-sign-in>
+  <app-sign-up (notify)="signIn=$event" *ngIf="!signIn" ></app-sign-up>
+</div>

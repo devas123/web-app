@@ -1,0 +1,90 @@
+<ng-template let-context let-modal="modal" #modalTemplate>
+  <div class="header">Select categories to add...</div>
+  <div class="content">
+    <sui-multi-select
+      (selectedOptionsChange)="setCategoriesToAdd($event)"
+      [options]="defaultCategories"
+      [isSearchable]="true"
+      [isDisabled]="false"
+      [optionsFilter]="optionsFilter"
+      [optionFormatter]="formatter"
+      [maxSelected]="10"
+      placeholder="Select categories to add"
+      icon="list"
+      #select>
+      <div class="ui icon search input">
+        <i class="search icon"></i>
+        <input suiSelectSearch type="text" placeholder="Search options...">
+      </div>
+      <div class="divider"></div>
+      <div class="header">
+        <i class="list icon"></i>
+        Options
+      </div>
+      <div class="scrolling menu">
+        <sui-select-option *ngFor="let o of select.filteredOptions" [value]="o"></sui-select-option>
+      </div>
+    </sui-multi-select>
+  </div>
+  <div class="actions">
+    <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
+    <button class="ui green button" [disabled]="!(categoriesToAdd && categoriesToAdd != null && competition && competition != null)" (click)="modal.approve('approved')" autofocus>Add selected
+    </button>
+  </div>
+</ng-template>
+<div class="ui container">
+  <h2 class="ui header">{{competition?.competitionName}}</h2>
+  <div class="ui description">Categories</div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui basic button" routerLink="..">Return</div>
+    <div class="ui basic button"
+         *ngIf="competition && competition != null"
+         (click)="openModal('Select categories')">Select categories
+    </div>
+    <div class="ui basic button" *ngIf="competition && competition != null"
+         (click)="addCategory(competition?.competitionId)">Create manually
+    </div>
+    <div class="ui icon search input">
+      <i class="search icon"></i>
+      <input type="text" placeholder="Search categories..." (change)="searchStringChanged($event)">
+    </div>
+  </div>
+  <div class="ui horizontal divider">
+    Categories list
+  </div>
+  <ng-container *ngIf="competition && competition != null">
+    <div class="ui relaxed divided list">
+      <div *ngFor="let category of filteredCategories" class="item">
+        <!--<div class="right floated content">-->
+        <!--<div class="ui button" (click)="editCategories(event.competitionId)">Category Editor</div>-->
+        <!--<div class="ui button" (click)="publishEvent(event)">Publish</div>-->
+        <!--<div class="ui button" (click)="deleteEvent(event)">Delete</div>-->
+        <!--</div>-->
+        <div class="right floated content">
+          <div class="ui basic button" (click)="deleteCategory(category)">Delete</div>
+          <div class="ui basic button" (click)="generateRandomFighters(category)">Generate Fighters</div>
+        </div>
+        <i class="large github middle aligned icon"></i>
+        <div class="content">
+          <a class="header" routerLink="{{getCategoryId(category)}}">{{category?.gender}}/{{category?.ageDivision?.name}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
+          <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
+          <div class="description">Number of competitors: {{category?.competitorsQuantity || 0}}</div>
+          <div class="description">Number of fights: {{category?.fightsNumber || 0}}</div>
+          <div class="description">Minimal age: {{category?.ageDivision?.minimalAge > 0 ?
+            category?.ageDivision?.minimalAge : 0}}
+          </div>
+          <div class="description">Maximal age: {{category?.ageDivision?.maximalAge < 100 ?
+            category?.ageDivision?.maximalAge : 100}}
+          </div>
+          <div class="description">Minimal weight (kg): {{category?.weight?.minvalue > 0 ?
+            category?.weight?.minvalue : 0}}
+          </div>
+          <div class="description">Maximal weight: {{category?.weight?.maxvalue < 100 ?
+            category?.weight?.maxvalue : 999}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

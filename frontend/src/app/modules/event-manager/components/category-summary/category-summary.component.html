@@ -1,0 +1,69 @@
+<div class="ui container">
+  <h2 class="ui header">Category:
+    {{category?.gender}}/{{category?.ageDivision?.name}}/{{category?.beltType}}/{{category?.weight?.id}}</h2>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui basic button" (click)="goback()">Return</div>
+  </div>
+  <p></p>
+  <div class="ui three stackable cards">
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <div class="value">
+              {{competitors?.length}}
+            </div>
+            <div class="label">
+              Competitors
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" routerLink="fighters">Competitors editor</div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <ng-container *ngIf="fights && fights?.length > 0">
+              <div class="value">
+                {{getFightsCount()}}
+              </div>
+              <div class="label">
+                Fights
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!fights || fights?.length <= 0">
+              <div class="text value">
+                Brackets not generated
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" routerLink="brackets">Brackets editor</div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <ng-container *ngIf="categoryStartTime">
+              <div class="label">
+                Starts at
+              </div>
+              <div class="value">
+                {{categoryStartTime | date:'dd.MM.yyyy HH:mm'}}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!categoryStartTime">
+              <div class="text value">
+                Schedule is not generated
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

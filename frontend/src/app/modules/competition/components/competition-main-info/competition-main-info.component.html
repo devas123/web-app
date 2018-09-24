@@ -1,0 +1,61 @@
+
+  <div class="ui  grid">
+    <div class="two column row">
+      <div class="left floated six wide   column">
+        <p></p>
+        <p></p>
+        <div class="ui  container">
+          <div class="ui segment">
+            <div class="ui two column divided   grid">
+              <div class="stretched row relat">
+                <div class="column">
+                  <div class="ui  container">
+                    <a class="ui green big left ribbon label" (click)="startEvent()"> Event starts at </a>
+                    <p></p>
+                    <div class="ui container">
+                      <div class="ui huge centered  header">{{properties?.startDate}}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="ui vertical divider"></div>
+                <div class="column ">
+                  <div class="ui container">
+                    <a class="ui blue right large ribbon label">Normal registration </a>
+                    01.05.2017
+                  </div>
+                  <div class="ui divider"></div>
+                  <div class="ui container">
+                    <a class="ui red right large ribbon  label">Late registration</a>
+                    01.05.2017
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ui hidden divider"></div>
+          <div class="ui hidden divider"></div>
+          <div class="ui hidden divider"></div>
+          <div class="ui secondary center  menu">
+            <a class="item" *ngFor="let menuItem of menu" [ngClass]="{active: menuItem.active}"
+               (click)="changeActiveMenuItem(menuItem)">{{menuItem.name}}</a>
+          </div>
+        </div>
+      </div>
+      <div class="right floated ten wide column">
+        <div class="ui fluid  container">
+          <img class="ui  fluid   bordered  image " src="/assets/images/doc.jpg">
+        </div>
+      </div>
+    </div>
+    <div class="ui clearing divider"></div>
+    <div *ngIf="menu[0].active" class="two column row" competition-description [properties]="properties">
+    </div>
+    <div *ngIf="menu[1].active" class="row" competition-divisions [categories]="categories">
+    </div>
+
+  </div>
+
+
+
+
+

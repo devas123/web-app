@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css?family=Oswald:400,500,600,700&subset=cyrillic");
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body,
+.wrapper {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  font-family: 'Oswald', sans-serif;
+}
+
+.participant {
+  background-color: #000;
+  height: 32%;
+  overflow: hidden;
+}
+
+.participant_blue {
+  background: -webkit-linear-gradient(45deg, #000000 0%, #000 100%);
+  background: linear-gradient(45deg, #000000 0%, #000 100%);
+}
+
+.participant_red {
+  background: -webkit-linear-gradient(45deg, #1a8629 0%, #000 100%);
+  background: linear-gradient(45deg, #1a8629 0%, #000 100%);
+}
+
+.winner_border {
+  border: 7px solid #f70018;
+}
+
+.start_time_border{
+  background-color: #f79b98;
+}
+
+.time_red {
+  color: #f70018;
+}
+
+.participant__data {
+  float: left;
+  padding: 40px;
+  height: 100%;
+}
+
+.participant__data-box {
+  height: 100%;
+}
+
+.participant__right {
+  float: right;
+}
+
+.participant__name {
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 7vh;
+  font-weight: 500;
+  font-family: 'Oswald', sans-serif;
+  padding-bottom: 10px;
+}
+
+@media screen and (max-width: 1024px) {
+  .participant__name {
+    font-size: 8vh;
+  }
+}
+
+.participant__team {
+  text-transform: uppercase;
+  font-size: 5vh;
+  line-height: 1;
+  color: #99b5ec;
+  font-family: 'Oswald', sans-serif;
+  padding-top: 10px;
+}
+
+.participant__extra-points {
+  color: #fff;
+  font-size: 9vh;
+  line-height: 1;
+  text-align: center;
+  float: right;
+  height: 100%;
+  font-family: 'Oswald', sans-serif;
+}
+
+.participant__extra-points-item {
+  height: 50%;
+  padding: 20px 30px;
+  position: relative;
+  color: black;
+  background-color: #f7f100;
+  font-family: 'Oswald', sans-serif;
+}
+
+.participant__extra-points-item:after {
+  content: '';
+  display: block;
+  width: 50%;
+  height: 5px;
+  background-color: #f7f100;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -25%;
+}
+
+.participant__extra-points-penalties-item {
+  height: 50%;
+  padding: 20px 30px;
+  position: relative;
+  background-color: #f7222c;
+  font-family: 'Oswald', sans-serif;
+}
+
+.participant__extra-points-penalties-item:after {
+  content: '';
+  display: block;
+  width: 50%;
+  height: 5px;
+  background-color: #f7222c;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -25%;
+}
+
+.participant__point {
+  color: #fff;
+  float: right;
+  font-size: 24vh;
+  line-height: 1;
+  padding: 20px 30px;
+  height: 100%;
+  font-family: 'Oswald', sans-serif;
+}
+
+.participant__point_red {
+  background-color: #1a8629;
+  width: 30vh;
+  text-align: center;
+}
+
+.participant__point_blue {
+  background-color: #000000;
+  width: 30vh;
+  text-align: center;
+}
+
+.info {
+  align-items: center;
+  height: 100%;
+  background: -webkit-linear-gradient(45deg, #182d67 0%, #000 100%);
+  background: linear-gradient(45deg, #182d67 0%, #000 100%);
+  padding: 40px;
+  font-family: 'Oswald', sans-serif;
+}
+
+@media screen and (max-width: 1024px) {
+  .info {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 100px) {
+  .info__time {
+    height: 10px;
+    font-size: 11vh;
+    line-height: 1;
+  }
+}
+
+.info__time {
+  float: right;
+  color: #99b5ec;
+  height: 100%;
+  font-size: 100%;
+  line-height: 1;
+  margin-right: 30px;
+  font-family: 'Oswald', sans-serif;
+  align-self: center;
+}
+
+.info__round {
+  overflow: hidden;
+  text-transform: uppercase;
+  height: 100%;
+  vertical-align: middle;
+  font-family: 'Oswald', sans-serif;
+}
+
+.info__round:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.info__round-box {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.info__round-name {
+  color: #f7f100;
+  font-size: 6vh;
+  line-height: 1;
+  margin-bottom: 5px;
+  font-family: 'Oswald', sans-serif;
+}
+
+.info__category {
+  line-height: 1;
+  font-size: 6vh;
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+}
+
+pre code {
+  color: #268bd2;
+}
+
+.fullscreen {
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+
