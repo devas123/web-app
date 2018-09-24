@@ -1,0 +1,50 @@
+import {Action} from '@ngrx/store';
+import {CompetitionProperties} from '../reducers';
+
+//Commands
+export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';
+export const CREATE_COMPETITION_COMMAND = 'CREATE_COMPETITION_COMMAND';
+export const START_COMPETITION_COMMAND = 'START_COMPETITION_COMMAND';
+export const PUBLISH_COMPETITION_COMMAND = 'PUBLISH_COMPETITION_COMMAND';
+export const UNPUBLISH_COMPETITION_COMMAND = 'UNPUBLISH_COMPETITION_COMMAND';
+export const DELETE_COMPETITION_COMMAND = 'DELETE_COMPETITION_COMMAND';
+export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
+
+
+//Events
+export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
+export const COMPETITION_LIST_LOADED = 'COMPETITION_LIST_LOADED';
+export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
+export const COMPETITION_DELETED = 'COMPETITION_DELETED';
+export const COMPETITION_PUBLISHED = 'COMPETITION_PUBLISHED';
+export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
+
+export const CLEAR_COMPETITION_SELECTION = 'CLEAR_COMPETITION_SELECTION';
+export const ERROR_OCCURRED = 'ERROR_EVENT';
+
+export const errorEvent = (text: string) => { return {type: ERROR_OCCURRED, payload: text} as Action };
+export const competitionsLoaded = (payload: CompetitionProperties[]) => { return {type: COMPETITION_LIST_LOADED, payload} };
+export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
+export const clearCompetitionSelection = {type: CLEAR_COMPETITION_SELECTION};
+export const competitionSelected = (competitionId: string) => ({type: COMPETITION_SELECTED, payload: competitionId});
+export const publishCompetition = (competitionId: string) => ({
+  type: PUBLISH_COMPETITION_COMMAND,
+  competitionId: competitionId
+});
+export const unpublishCompetition = (competitionId: string) => ({
+  type: UNPUBLISH_COMPETITION_COMMAND,
+  competitionId: competitionId
+});
+export const deleteCompetition = (competitionProperties: CompetitionProperties) => ({
+  type: DELETE_COMPETITION_COMMAND,
+  competitionId: competitionProperties.competitionId,
+  payload: competitionProperties
+});
+export const createCompetition = (competitionInfo: CompetitionProperties) => ({
+  type: CREATE_COMPETITION_COMMAND,
+  competitionId: competitionInfo.competitionId,
+  payload: competitionInfo
+});
+
+
+

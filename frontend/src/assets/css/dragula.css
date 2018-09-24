@@ -1,0 +1,32 @@
+/* Draggable*/
+
+.drag-border {
+  border: #efffee dot-dash 1px;
+}
+
+.drag-handle {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+/* Droppable */
+
+.drag-hint-border {
+  border: #9da5ae dot-dash 1px;
+}
+
+.drag-over-border {
+  border: #f7edfb dashed 2px;
+}
+
+.drag-transit {
+  border: #9da5ae dashed 2px;
+}

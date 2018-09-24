@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration status="WARN" name="XMLConfigTest" packages="frontend.logging">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%-4r %-5p [%t] %c{1.} - %m%n%throwable" />
+        </Console>
+    </appenders>
+    <loggers>
+        <logger name="org.springframework.web" level="INFO" />
+        <root level="INFO">
+            <appender-ref ref="Console" />
+        </root>
+    </loggers>
+</configuration>

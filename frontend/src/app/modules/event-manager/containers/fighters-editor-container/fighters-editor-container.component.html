@@ -1,0 +1,22 @@
+<div class="ui container" *ngIf="competitionName$ | async">
+  <h2 class="ui header">{{competitionName$ | async}}</h2>
+  <h4 class="ui description">Fighters</h4>
+  <h4 class="ui description">Total: {{totalCompetitors$ | async}}</h4>
+  <div class="ui divider"></div>
+  <button class="ui basic button" (click)="navigateBack()">Return</button>
+  <button class="ui basic button" (click)="addFighterOpen = !addFighterOpen">{{addFighterOpen ? 'Close editor' : 'Add fighter'}}
+  </button>
+  <p></p>
+  <app-add-fighter [collapsed]="!addFighterOpen"
+                   [categories]="categories$ | async" [header]="false"
+                   (fighterAdded)="dispatchAddFighterAction($event)"></app-add-fighter>
+  <app-fighters-editor
+    [pageNumber]="pageNumber$ | async"
+    [pageSize]="pageSize$ | async"
+    [collectionSize]="totalCompetitors$ | async"
+    [fighters]="competitors$ | async"
+    [competitionId]="competitionId$ | async"
+    (fighterDeleted)="deleteFighter($event)"
+    (pageChanged)="changePage($event)"
+    (fighterClicked)="navigateToFighterProfilePage($event)"></app-fighters-editor>
+</div>

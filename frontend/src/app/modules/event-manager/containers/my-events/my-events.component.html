@@ -1,0 +1,14 @@
+<div class="ui container">
+  <h2 class="ui header">Event manager</h2>
+  <div class="ui divider"></div>
+  <button class="ui basic button" (click)="navigateCreateCompetition()">New event</button>
+  <div class="ui horizontal divider">
+    Created events
+  </div>
+  <app-my-events-list (eventPublished)="sendPublishCommand($event)"
+                      (eventDeleted)="sendDeleteCommand($event)"
+                      (editEventPressed)="navigateToEventPropsEditor($event)"
+                      (editCategoriesPressed)="navigateToCategoriesEditor($event)"
+                      (eventUnpublished)="sendUnpublishCommand($event)"
+                      [events]="events$ | async"></app-my-events-list>
+</div>

@@ -1,0 +1,25 @@
+<div class="ui container">
+  <h2 class="ui header">{{(competition$ | async)?.competitionName}}</h2>
+  <div class="ui description">{{getName(category$ | async)}}</div>
+  <div class="ui description">Brackets</div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui basic button" routerLink="..">Return</div>
+    <button class="ui basic button" *ngIf="!(fights$ | async) || (fights$ | async).length === 0"
+            (click)="generateBrackets()">Generate
+    </button>
+    <button class="ui basic button"
+            *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && !(competition$ | async).bracketsPublished"
+            (click)="dropSelectedBrackets()">Drop
+    </button>
+  </div>
+  <div class="ui clearing divider"></div>
+  <ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0">
+    <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"
+                         (competitorMoved)="sendCompetitorMovedAction($event)"></app-brackets-editor>
+  </ng-container>
+  <ng-container *ngIf="!(fights$ | async) || (fights$ | async).length === 0">
+    <div class="ui header">No brackets for this category.</div>
+  </ng-container>
+</div>
+
