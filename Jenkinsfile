@@ -15,7 +15,7 @@ node {
     }
     stage("push_docker") {
         if (env.BRANCH_NAME == 'master' && (currentBuild.result == null || currentBuild.result == 'SUCCESS')) {
-            docker.withRegistry('http://95.169.186.20:8081/repository/compmanager-registry/', 'Nexus') {
+            docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
                 env.BUILD_ID = "test"
                 env.IMAGE_NAME = "frontend"
                 def customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
