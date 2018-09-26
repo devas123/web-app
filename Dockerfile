@@ -34,7 +34,7 @@ RUN npm run build-prod
 ## CMD ["serve", "-s", "dist", "-p", "8080"]
 #CMD ["node", "server.js"]
 
-FROM nginx AS release
+FROM nginx
 
 WORKDIR /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
