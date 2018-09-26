@@ -1,24 +1,24 @@
 node {
     /* Requires the Docker Pipeline plugin to be installed */
-    checkout scm
-    stage('build') {
-        docker.image('maven:3-alpine').inside('-v /root/.m2:/root/.m2') {
-            sh 'mvn -s /root/.m2/settings.xml clean package'
-        }
+    currentBuild.result = 'SUCCESS'
+    stage("checkout") {
+        checkout scm
     }
-    stage('push_artifactory') {
-        if (env.BRANCH_NAME == 'master' && (currentBuild.result == null || currentBuild.result == 'SUCCESS')) {
-            docker.image('maven:3-alpine').inside('-v /root/.m2:/root/.m2') {
-                sh 'mvn -s /root/.m2/settings.xml deploy'
+    docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
+        env.BUILD_ID = "test"
+        env.IMAGE_NAME = "frontend"
+        def customImage = null
+        stage("build_docker") {
+            try {
+                customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
+            } catch (err) {
+                currentBuild.result = 'FAILURE'
+                print "Failed: ${err}"
+                throw err
             }
         }
-    }
-    stage("push_docker") {
         if (env.BRANCH_NAME == 'master' && (currentBuild.result == null || currentBuild.result == 'SUCCESS')) {
-            docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
-                env.BUILD_ID = "test"
-                env.IMAGE_NAME = "frontend"
-                def customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
+            stage("push_image") {
                 customImage.push()
             }
         }
