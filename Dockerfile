@@ -14,8 +14,12 @@ RUN npm install
 FROM dependencies AS build
 WORKDIR /app
 COPY frontend/src /app
+COPY frontend/e2e /app
+COPY frontend/angular.json /app
+COPY frontend/tsconfig.json /app
+COPY frontend/tslint.json /app
 # Собрать статические файлы react/vue/angular
-RUN npm run build --prod
+RUN npm run build-prod
 
 ## --- Выпуск, используя Alpine ----
 #FROM node:8.9-alpine AS release
