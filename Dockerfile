@@ -1,6 +1,37 @@
-FROM nginx
+# ---- Базовый Node ----
+FROM node:carbon AS base
+# Создать директорию app
+WORKDIR /app
 
-COPY nginx.conf /etc/nginx/nginx.conf
+# ---- Зависимости ----
+FROM base AS dependencies
+# Используется символ подстановки для копирования как package.json, так и package-lock.json
+COPY frontend/package*.json ./
+# Установить зависимости приложения, включая предназначенные для разработки ('devDependencies')
+RUN npm install
+
+# ---- Скопировать файлы/билд ----
+FROM dependencies AS build
+WORKDIR /app
+COPY frontend/src /app
+# Собрать статические файлы react/vue/angular
+RUN npm run build --prod
+
+## --- Выпуск, используя Alpine ----
+#FROM node:8.9-alpine AS release
+## Создать директорию app
+#WORKDIR /app
+## Необязательно
+## RUN npm -g install serve
+#COPY --from=dependencies /app/package.json ./
+## Установить зависимости приложения
+#RUN npm install --only=production
+#COPY --from=build /app ./
+## CMD ["serve", "-s", "dist", "-p", "8080"]
+#CMD ["node", "server.js"]
+
+FROM nginx AS release
 
 WORKDIR /usr/share/nginx/html
-COPY frontend/dist .
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=dependencies /app/dist ./
