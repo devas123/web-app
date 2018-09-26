@@ -13,7 +13,7 @@ RUN npm install
 # ---- Скопировать файлы/билд ----
 FROM dependencies AS build
 WORKDIR /app
-COPY frontend/src /app
+COPY frontend/src /app/src
 COPY frontend/e2e /app
 COPY frontend/angular.json /app
 COPY frontend/tsconfig.json /app
