@@ -1,9 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "backend.url",
-      "type": "java.lang.String",
-      "description": "Url for connecting to backend service"
-    }
-  ]
-}
