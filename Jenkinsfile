@@ -14,9 +14,11 @@ node {
         }
     }
     stage("push_docker") {
-        env.BUILD_ID = "test"
-        env.IMAGE_NAME = "frontend"
-        def customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
-        customImage.push()
+        if (env.BRANCH_NAME == 'master' && (currentBuild.result == null || currentBuild.result == 'SUCCESS')) {
+            env.BUILD_ID = "test"
+            env.IMAGE_NAME = "frontend"
+            def customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
+            customImage.push()
+        }
     }
 }

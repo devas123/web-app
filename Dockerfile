@@ -14,7 +14,7 @@ RUN npm install
 FROM dependencies AS build
 WORKDIR /app
 COPY frontend/src /app/src
-COPY frontend/e2e /app
+COPY frontend/e2e /app/e2e
 COPY frontend/angular.json /app
 COPY frontend/tsconfig.json /app
 COPY frontend/tslint.json /app
@@ -38,4 +38,4 @@ FROM nginx AS release
 
 WORKDIR /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=dependencies /app/dist ./
+COPY --from=build /app/dist ./
