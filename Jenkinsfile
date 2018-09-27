@@ -5,7 +5,7 @@ node {
         checkout scm
     }
     stage("test") {
-        docker.build("web-app:test", "-f Dockerfile.test").inside {
+        docker.build("web-app:test", "-f Dockerfile.test .").inside {
             sh 'npm --prefix frontend prune'
             sh 'npm --prefix frontend install'
             sh 'npm --prefix frontend test-headless'
