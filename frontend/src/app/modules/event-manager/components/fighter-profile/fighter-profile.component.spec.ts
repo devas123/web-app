@@ -1,6 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FighterProfileComponent} from './fighter-profile.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {SuiDatepickerModule, SuiSelectModule} from 'ng2-semantic-ui'
 
 describe('FighterProfileComponent', () => {
   let component: FighterProfileComponent;
@@ -8,7 +10,8 @@ describe('FighterProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FighterProfileComponent]
+      declarations: [FighterProfileComponent],
+      imports: [ReactiveFormsModule, SuiDatepickerModule, SuiSelectModule]
     })
       .compileComponents();
   }));

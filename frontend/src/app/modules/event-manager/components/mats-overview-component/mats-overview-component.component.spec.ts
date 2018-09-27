@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MatsOverviewComponentComponent } from './mats-overview-component.component';
+import {MatDisplayComponent} from './mat-display.component';
+import {FightDisplayComponent} from './fight-display.component';
 
 describe('MatsOverviewComponentComponent', () => {
   let component: MatsOverviewComponentComponent;
@@ -8,7 +10,7 @@ describe('MatsOverviewComponentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatsOverviewComponentComponent ]
+      declarations: [ MatsOverviewComponentComponent, MatDisplayComponent, FightDisplayComponent ]
     })
     .compileComponents();
   }));

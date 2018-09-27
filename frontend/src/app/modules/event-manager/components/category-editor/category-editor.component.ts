@@ -6,7 +6,6 @@ import {SuiMultiSelect} from 'ng2-semantic-ui/dist/modules/select/components/mul
 import {IContext} from '../schedule-editor/schedule-editor.component';
 import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
-import {obsoleteFight} from '../../redux/reducers';
 
 
 @Component({
