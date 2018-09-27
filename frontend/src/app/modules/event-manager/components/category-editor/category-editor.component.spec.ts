@@ -1,6 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CategoryEditorComponent} from './category-editor.component';
+import {SuiModule} from 'ng2-semantic-ui'
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('CategoryEditorComponent', () => {
   let component: CategoryEditorComponent;
@@ -8,7 +10,8 @@ describe('CategoryEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CategoryEditorComponent]
+      declarations: [CategoryEditorComponent],
+      imports: [SuiModule, RouterTestingModule]
     })
       .compileComponents();
   }));

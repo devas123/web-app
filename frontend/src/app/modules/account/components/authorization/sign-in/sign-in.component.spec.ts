@@ -1,6 +1,15 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SignInComponent} from './sign-in.component';
+import {SuiTransitionModule} from 'ng2-semantic-ui';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpAuthService} from '../../../service/AuthService';
+import {combineReducers, StoreModule} from '@ngrx/store';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../../reducers';
+import {eventManagerReducers} from '../../../../event-manager/redux/event-manager-reducers';
+import {initialAccountState} from '../../../flux/account.state';
+import {periodsInitialState} from '../../../../event-manager/redux/dashboard-reducers';
+
 
 describe('SignInComponent', () => {
   let component: SignInComponent;
@@ -8,7 +17,25 @@ describe('SignInComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignInComponent ]
+      declarations: [ SignInComponent ],
+      imports: [SuiTransitionModule, ReactiveFormsModule, StoreModule.forRoot({
+        ...reducers,
+        'eventManagerState': combineReducers(eventManagerReducers())
+      }, {
+        initialState: {
+          events: competitionPropertiesEntitiesInitialState,
+          accountState: initialAccountState,
+          eventManagerState: {
+            myEvents: competitionPropertiesEntitiesInitialState,
+            socketConnected: false,
+            dashboardState: {
+              dashboardSocketConnected: false,
+              eventPeriods: periodsInitialState
+            }
+          }
+        }
+      })],
+      providers: [HttpAuthService]
     })
     .compileComponents();
   }));

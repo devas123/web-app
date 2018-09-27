@@ -40,7 +40,7 @@ export class FighterProfileContainerComponent implements OnInit, OnDestroy {
 // .map(params => atob(params['fighterId']))
   constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
     const a$ = combineLatest(
-      route.params.pipe(map(params => atob(params['fighterId']))),
+      route.params.pipe(map(params => params['fighterId'] && atob(params['fighterId']))),
       this.store.pipe(select(eventManagerGetSelectedEventId)),
       this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)));
     this.subs.add(a$.pipe(

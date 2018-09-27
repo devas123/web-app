@@ -20,6 +20,8 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
+import {EntitySelectors} from '@ngrx/entity/src/models';
+import {dashboardGetPeriodsCollection, periodEntityAdapter} from '../modules/event-manager/redux/dashboard-reducers';
 
 export interface AppState {
   events: EventPropsEntities;
@@ -164,26 +166,15 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
 
-export const selectCompetitionListState = state => state.events;
-export const getSelectedEventId = createSelector(selectCompetitionListState, state => state.selectedEventId);
-const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state.selectedEventCategories);
-export const selectAccountState = state => state.accountState;
+export const selectCompetitionListState = state => (state && state.events) || competitionPropertiesEntitiesInitialState;
+export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);
+const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state && state.selectedEventCategories);
+export const selectAccountState = state => state && state.accountState;
 
-export const selectUser = createSelector(selectAccountState, state => state.user);
-
+export const selectUser = createSelector(selectAccountState, state => state && state.user);
 
 export const {
-  // select the array of user ids
-  selectIds: getCompetitionIds,
-
-  // select the dictionary of user entities
-  selectEntities: getCompetitions,
-
-  // select the array of users
   selectAll: getAllCompetitions,
-
-  // select the total user count
-  selectTotal: getCompetitionsTotal,
 } = competitionPropertiesEntitiesAdapter.getSelectors(selectCompetitionListState);
 
 export const selectAllCompetitions = getAllCompetitions;
@@ -197,17 +188,8 @@ export const getSelectedEventProperties = createSelector(
 );
 
 export const {
-  // select the array of user ids
-  selectIds: getCategoryIds,
-
-  // select the dictionary of user entities
-  selectEntities: getCategories,
-
   // select the array of users
   selectAll: getAllCategories,
-
-  // select the total user count
-  selectTotal: getTotalCategories,
 } = categoryEntityAdapter.getSelectors(selectCategoriesEntities);
 
 export const getSelectedCompetitionCategories = getAllCategories;

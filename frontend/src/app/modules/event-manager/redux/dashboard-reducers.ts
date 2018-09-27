@@ -1,11 +1,12 @@
-import {ActionReducerMap, combineReducers, createSelector} from '@ngrx/store';
+import {combineReducers, createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers';
 import {fightEntityAdapter, FightsCollection, fightsInitialState} from '../../competition/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Fight} from '../../../commons/model/competition.model';
 import {
   DASHBOARD_FIGHT_SELECTED,
-  DASHBOARD_FIGHT_UNSELECTED, DASHBOARD_MAT_FIGHTS_LOADED,
+  DASHBOARD_FIGHT_UNSELECTED,
+  DASHBOARD_MAT_FIGHTS_LOADED,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MAT_UNSELECTED,
   DASHBOARD_MATS_LOADED,
@@ -16,11 +17,9 @@ import {
   DASHBOARD_STATE_LOADED,
   DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND
 } from './dashboard-actions';
-import {
-  EVENT_MANAGER_COMPETITION_SELECTED,
-  EVENT_MANAGER_COMPETITION_UNSELECTED,
-} from './event-manager-actions';
+import {EVENT_MANAGER_COMPETITION_SELECTED, EVENT_MANAGER_COMPETITION_UNSELECTED,} from './event-manager-actions';
 import {getEventManagerState} from './reducers';
+import {EntitySelectors} from '@ngrx/entity/src/models';
 
 
 export interface DashboardState {
@@ -81,10 +80,10 @@ export const periodsInitialState = periodEntityAdapter.getInitialState({
 });
 
 
-export const getDashboardState = createSelector(getEventManagerState, state => state.dashboardState);
-export const dashboardGetPeriodsCollection = createSelector(getDashboardState, state => state.eventPeriods);
-export const dashboardGetSelectedPeriodId = createSelector(dashboardGetPeriodsCollection, state => state.selectedPeriodId);
-export const dashboardGetSelectedPeriodMatsCollection = createSelector(dashboardGetPeriodsCollection, state => state.selectedPeriodMats);
+export const getDashboardState = createSelector(getEventManagerState, state => state && state.dashboardState);
+export const dashboardGetPeriodsCollection = createSelector(getDashboardState, state => state && state.eventPeriods);
+export const dashboardGetSelectedPeriodId = createSelector(dashboardGetPeriodsCollection, state => state && state.selectedPeriodId);
+export const dashboardGetSelectedPeriodMatsCollection = createSelector(dashboardGetPeriodsCollection, state => state && state.selectedPeriodMats);
 
 export const {
   selectEntities: dasboardGetSelectedPeriodMatsDictionary,
@@ -97,11 +96,11 @@ export const extractMatNumberFromId = (matId: string) => {
 };
 
 export const dashboardGetSelectedPeriodMats = dashboardGetSelectedPeriodAllMats;
-export const dashboardGetSelectedPeriodSelectedMatId = createSelector(dashboardGetSelectedPeriodMatsCollection, state => state.selectedMatId);
+export const dashboardGetSelectedPeriodSelectedMatId = createSelector(dashboardGetSelectedPeriodMatsCollection, state => state && state.selectedMatId);
 export const dashboardGetSelectedPeriodSelectedMat = createSelector(dashboardGetSelectedPeriodSelectedMatId, dasboardGetSelectedPeriodMatsDictionary, (id, entities) => id && entities[id]);
 
 export const dashboardGetSelectedPeriodSelectedMatFightsCollection = createSelector(dashboardGetSelectedPeriodMatsCollection, state => state && state.selectedMatFights);
-export const dashboardGetSelectedPeriodSelectedMatSelectedFightId = createSelector(dashboardGetSelectedPeriodSelectedMatFightsCollection, state => state.selectedFightId);
+export const dashboardGetSelectedPeriodSelectedMatSelectedFightId = createSelector(dashboardGetSelectedPeriodSelectedMatFightsCollection, state => state && state.selectedFightId);
 export const dashboardGetSelectedPeriodSelectedMatScoreboardState = createSelector(dashboardGetSelectedPeriodSelectedMat, state => state && state.matScoreboardState);
 export const dashboardGetSelectedPeriodSelectedMatScoreboardStateFight = createSelector(dashboardGetSelectedPeriodSelectedMatScoreboardState, state => state && state.fight);
 
@@ -123,7 +122,7 @@ export const {
   selectAll: dashboardGetAllPeriods
 } = periodEntityAdapter.getSelectors(dashboardGetPeriodsCollection);
 export const dashboardGetSelectedPeriod = createSelector(dashboardGetSelectedPeriodId, dashboardGetPeriodsEntities, (periodId, entities) => periodId && entities[periodId]);
-export const dashboardGetSocketConnected = createSelector(getDashboardState, state => state.dashboardSocketConnected);
+export const dashboardGetSocketConnected = createSelector(getDashboardState, state => state && state.dashboardSocketConnected);
 export const dashboardGetPeriods = dashboardGetAllPeriods;
 
 export function socketStateReducer(state: boolean = false, action): boolean {

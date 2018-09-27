@@ -1,6 +1,28 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BracketsEditorContainerComponent} from './brackets-editor-container.component';
+import {
+  SuiCollapseModule,
+  SuiDatepickerModule,
+  SuiDimmerModule,
+  SuiDropdownModule,
+  SuiMessageModule,
+  SuiModalModule,
+  SuiPaginationModule,
+  SuiPopupModule,
+  SuiSelectModule,
+  SuiSidebarModule,
+  SuiTabsModule
+} from 'ng2-semantic-ui';
+import {BracketsEditorComponent} from '../../components/brackets-editor/brackets-editor.component';
+import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
+import {BracketMatchComponent} from '../../components/brackets-editor/bracket-match/bracket-match.component';
+import {GetNamePipe} from '../../../../pipes/get-name.pipe';
+import {combineReducers, StoreModule} from '@ngrx/store';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {initialAccountState} from '../../../account/flux/account.state';
+import {periodsInitialState} from '../../redux/dashboard-reducers';
 
 describe('BracketsEditorContainerComponent', () => {
   let component: BracketsEditorContainerComponent;
@@ -8,7 +30,24 @@ describe('BracketsEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BracketsEditorContainerComponent]
+      declarations: [BracketsEditorContainerComponent, BracketsEditorComponent, BracketMatchComponent, GetNamePipe],
+      imports: [SuiSelectModule, NgDragDropModule.forRoot(), StoreModule.forRoot({
+        ...reducers,
+        'eventManagerState': combineReducers(eventManagerReducers())
+      }, {
+        initialState: {
+          events: competitionPropertiesEntitiesInitialState,
+          accountState: initialAccountState,
+          eventManagerState: {
+            myEvents: competitionPropertiesEntitiesInitialState,
+            socketConnected: false,
+            dashboardState: {
+              dashboardSocketConnected: false,
+              eventPeriods: periodsInitialState
+            }
+          }
+        }
+      })]
     })
       .compileComponents();
   }));
