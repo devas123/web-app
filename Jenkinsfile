@@ -6,6 +6,7 @@ node {
     }
     stage("test") {
         docker.image('node:carbon').inside {
+            sh 'cd frontend'
             sh 'npm prune'
             sh 'npm install'
             sh 'npm test'
