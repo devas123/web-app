@@ -4,6 +4,13 @@ node {
     stage("checkout") {
         checkout scm
     }
+    stage("test") {
+        docker.image('node:carbon').inside {
+            sh 'npm prune'
+            sh 'npm install'
+            sh 'npm test'
+        }
+    }
     docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
         env.BUILD_ID = "test"
         env.IMAGE_NAME = "frontend"
@@ -17,7 +24,7 @@ node {
                 throw err
             }
         }
-        if (env.BRANCH_NAME == 'master' && (currentBuild.result == null || currentBuild.result == 'SUCCESS')) {
+        if (env.BRANCH_NAME == 'master' && currentBuild.result == 'SUCCESS') {
             stage("push_image") {
                 customImage.push()
             }

@@ -1,6 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ScoreboardComponentComponent } from './scoreboard-component.component';
+import {ScoreboardComponentComponent} from './scoreboard-component.component';
+import {GetNamePipe} from '../../../../pipes/get-name.pipe';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
+import {HotkeyModule} from 'angular2-hotkeys';
 
 describe('ScoreboardComponentComponent', () => {
   let component: ScoreboardComponentComponent;
@@ -8,9 +11,10 @@ describe('ScoreboardComponentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScoreboardComponentComponent ]
+      declarations: [ScoreboardComponentComponent, GetNamePipe, TruncatePipe],
+      imports: [HotkeyModule.forRoot()]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

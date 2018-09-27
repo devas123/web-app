@@ -1,6 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventCardComponent} from './event-card.component';
+import {SuiTransitionModule} from 'ng2-semantic-ui'
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('EventCardComponent', () => {
   let component: EventCardComponent;
@@ -8,7 +10,8 @@ describe('EventCardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EventCardComponent ]
+      declarations: [ EventCardComponent ],
+      imports: [SuiTransitionModule, RouterTestingModule]
     })
     .compileComponents();
   }));

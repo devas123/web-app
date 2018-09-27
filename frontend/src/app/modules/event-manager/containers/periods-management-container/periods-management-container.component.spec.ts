@@ -1,6 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PeriodsManagementContainerComponent } from './periods-management-container.component';
+import {PeriodsManagementContainerComponent} from './periods-management-container.component';
+
+import {SuiModule} from 'ng2-semantic-ui'
+import {ScheduleDisplayComponent} from '../../components/schedule-editor/schedule-display.component';
+import {combineReducers, StoreModule} from '@ngrx/store';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {RouterTestingModule} from '@angular/router/testing';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {initialAccountState} from '../../../account/flux/account.state';
+import {periodsInitialState} from '../../redux/dashboard-reducers';
 
 describe('PeriodsManagementContainerComponent', () => {
   let component: PeriodsManagementContainerComponent;
@@ -8,9 +17,26 @@ describe('PeriodsManagementContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PeriodsManagementContainerComponent ]
+      declarations: [PeriodsManagementContainerComponent, ScheduleDisplayComponent],
+      imports: [SuiModule, StoreModule.forRoot({
+        ...reducers,
+        'eventManagerState': combineReducers(eventManagerReducers())
+      }, {
+        initialState: {
+          events: competitionPropertiesEntitiesInitialState,
+          accountState: initialAccountState,
+          eventManagerState: {
+            myEvents: competitionPropertiesEntitiesInitialState,
+            socketConnected: false,
+            dashboardState: {
+              dashboardSocketConnected: false,
+              eventPeriods: periodsInitialState
+            }
+          }
+        }
+      }), RouterTestingModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

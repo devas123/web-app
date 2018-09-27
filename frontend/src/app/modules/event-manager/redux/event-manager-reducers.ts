@@ -12,8 +12,10 @@ import {
   CATEGORY_DELETED,
   CATEGORY_STATE_DELETED,
   COMPETITION_CREATED,
-  COMPETITION_PROPERTIES_UPDATED, EVENT_MANAGER_ALL_BRACKETS_DROPPED,
-  EVENT_MANAGER_CATEGORIES_LOADED, EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
+  COMPETITION_PROPERTIES_UPDATED,
+  EVENT_MANAGER_ALL_BRACKETS_DROPPED,
+  EVENT_MANAGER_CATEGORIES_LOADED,
+  EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORY_MOVED,
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
@@ -22,8 +24,10 @@ import {
   EVENT_MANAGER_COMPETITION_UNSELECTED,
   EVENT_MANAGER_COMPETITIONS_LOADED,
   EVENT_MANAGER_COMPETITOR_ADDED,
-  EVENT_MANAGER_COMPETITOR_REMOVED, EVENT_MANAGER_COMPETITOR_UPDATED,
-  EVENT_MANAGER_COMPETITORS_MOVED, EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED,
+  EVENT_MANAGER_COMPETITOR_REMOVED,
+  EVENT_MANAGER_COMPETITOR_UPDATED,
+  EVENT_MANAGER_COMPETITORS_MOVED,
+  EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
   EVENT_MANAGER_FIGHTER_UNSELECTED,
@@ -31,14 +35,15 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED, EVENT_MANAGER_SCHEDULE_DROPPED,
+  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED,
   FIGHTS_START_TIME_UPDATED,
   SCHEDULE_GENERATED
 } from './event-manager-actions';
-import {ActionReducerMap, combineReducers, createSelector} from '@ngrx/store';
+import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
 import {
   categoriesInitialState,
@@ -49,9 +54,15 @@ import {
   fightsInitialState
 } from '../../competition/reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
-import {dashboardReducers, DashboardState} from './dashboard-reducers';
+import {
+  dashboardGetPeriodsCollection,
+  dashboardReducers,
+  DashboardState,
+  periodEntityAdapter
+} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
+import {EntitySelectors} from '@ngrx/entity/src/models';
 
 
 export interface EventManagerState {
@@ -74,21 +85,13 @@ export interface ScheduleProperties {
   periodPropertiesList: Array<PeriodProperties>;
 }
 
-export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state.myEvents);
+export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
 
 export const {
-  // select the array of user ids
-  selectIds: selectMyCompetitionIds,
-
-  // select the dictionary of user entities
   selectEntities: selectMyCompetitions,
 
-  // select the array of users
   selectAll: getAllMyCompetitions,
-
-  // select the total user count
-  selectTotal: selectMyCompetitionsTotal,
 } = competitionPropertiesEntitiesAdapter.getSelectors(eventManagerGetMyEventsCollection);
 
 export function socketStateReducer(state: boolean = false, action): boolean {
@@ -722,8 +725,7 @@ export interface State extends AppState {
 }
 
 
-
-export function reducers(): ActionReducerMap<EventManagerState> {
+export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
   return {
     myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
@@ -733,8 +735,8 @@ export function reducers(): ActionReducerMap<EventManagerState> {
 
 export const EVENT_MANAGER_REDUCERS: InjectionToken<ActionReducerMap<EventManagerState>> =
   new InjectionToken<ActionReducerMap<EventManagerState>>('EVENT_MANAGER_REDUCERS', {
-  factory: reducers
-});
+    factory: eventManagerReducers
+  });
 
 export const eventManagerGetSelectedEventId = createSelector(eventManagerGetMyEventsCollection, state => state && state.selectedEventId);
 export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
@@ -769,25 +771,13 @@ export const {
 } = categoryEntityAdapter.getSelectors(eventManagerGetSelectedEventsCategoriesCollection);
 
 export const {
-  // select the array of user ids
-
-  // select the dictionary of user entities
-
-  // select the array of users
   selectAll: eventManagerGetSelectedEventSelectedCategoryAllFights,
-
-  // select the total user count
 } = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsCollection);
 
 export const {
-  // select the array of user ids
 
-  // select the dictionary of user entities
   selectEntities: eventManagerGetSelectedEventSelectedCategoryCompetitorsDictionary,
-  // select the array of users
   selectAll: eventManagerGetSelectedEventSelectedCategoryAllCompetitors,
-
-  // select the total user count
 } = competitorEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryCompetitorsCollection);
 
 export const eventManagerGetSelectedEventSelectedCategory = createSelector(
@@ -836,14 +826,8 @@ export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(
 });
 
 export const {
-  // select the array of user ids
   selectEntities: eventManagerGetSelectedEventCompetitorsDictionary,
-  // select the dictionary of user entities
-
-  // select the array of users
   selectAll: eventManagerGetSelectedEventAllCompetitors,
-
-  // select the total user count
 } = competitorEntityAdapter.getSelectors(eventManagerGetSelectedEventCompetitorsCollection);
 
 export const eventManagerGetSelectedEventCompetitors = eventManagerGetSelectedEventAllCompetitors;
