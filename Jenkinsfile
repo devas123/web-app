@@ -8,7 +8,7 @@ node {
         docker.build("web-app:test", "-f Dockerfile.test .").inside {
             sh 'npm --prefix frontend prune'
             sh 'npm --prefix frontend install'
-            sh 'npm --prefix frontend test-headless'
+            sh 'npm --prefix frontend run test-headless'
         }
     }
     docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
