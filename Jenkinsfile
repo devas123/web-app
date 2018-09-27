@@ -15,18 +15,20 @@ node {
         env.BUILD_ID = "test"
         env.IMAGE_NAME = "frontend"
         def customImage = null
-        stage("build_docker") {
-            try {
-                customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
-            } catch (err) {
-                currentBuild.result = 'FAILURE'
-                print "Failed: ${err}"
-                throw err
-            }
-        }
         if (env.BRANCH_NAME == 'master' && currentBuild.result == 'SUCCESS') {
+            stage("build_docker") {
+                try {
+                    customImage = docker.build("${env.IMAGE_NAME}:${env.BUILD_ID}")
+                } catch (err) {
+                    currentBuild.result = 'FAILURE'
+                    print "Failed: ${err}"
+                    throw err
+                }
+            }
             stage("push_image") {
-                customImage.push()
+                if (customImage != null && currentBuild.result != 'FAILURE') {
+                    customImage.push()
+                }
             }
         }
     }
