@@ -6,9 +6,14 @@ node {
     }
     stage("test") {
         docker.image('node:carbon').inside {
-            sh 'npm --prefix=frontend prune'
-            sh 'npm --prefix=frontend install'
-            sh 'npm --prefix=frontend test'
+            sh 'wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \\' +
+                    '  echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \\' +
+                    '  apt-get update && \\' +
+                    '  apt-get install -y google-chrome-stable xvfb \\' +
+                    '  apt-get install -y procps'
+            sh 'npm --prefix frontend prune'
+            sh 'npm --prefix frontend install'
+            sh 'npm --prefix frontend test-headless'
         }
     }
     docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
