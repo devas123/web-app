@@ -1,5 +1,5 @@
 # ---- Базовый Node ----
-FROM node:carbon AS base
+FROM node:latest AS base
 # Создать директорию app
 WORKDIR /app
 
