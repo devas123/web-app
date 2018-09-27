@@ -6,10 +6,9 @@ node {
     }
     stage("test") {
         docker.image('node:carbon').inside {
-            sh 'cd frontend'
-            sh 'npm prune'
-            sh 'npm install'
-            sh 'npm test'
+            sh 'npm --prefix=frontend prune'
+            sh 'npm --prefix=frontend install'
+            sh 'npm --prefix=frontend test'
         }
     }
     docker.withRegistry('http://95.169.186.20:8082/repository/compmanager-registry/', 'Nexus') {
