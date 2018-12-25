@@ -68,7 +68,7 @@ export interface Fight {
   fightResult: FightResult;
   timeToStart: boolean;
   numberInRound: number;
-  mat: number;
+  matId: string;
   numberOnMat: number;
   priority: number;
   period: string;

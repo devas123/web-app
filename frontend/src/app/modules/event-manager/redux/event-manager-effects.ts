@@ -50,7 +50,13 @@ export class EventManagerEffects {
     mergeMap((action: CommonAction) => {
       return this.infoService.getCompetitions(action.payload.creatorId, action.payload.status).pipe(catchError(error => observableOf(errorEvent(error))));
     }),
-    map(payload => myCompetitionsLoaded((payload || []) as CompetitionProperties[])));
+    map((payload: any) => {
+      if (Array.isArray(payload)) {
+        return myCompetitionsLoaded(payload as CompetitionProperties[])
+      } else {
+        return errorEvent(payload)
+      }
+    }));
 
   @Effect()
   loadFighter$: Observable<Action> = this.actions$.pipe(
@@ -195,7 +201,7 @@ export class EventManagerEffects {
   @Effect({dispatch: false})
   disConnectSocket$ = this.actions$.pipe(
     ofType(EVENT_MANAGER_DISCONNECT_SOCKET),
-    tap(() => this.eventManagerService.disconnect()));
+    tap(() => this.eventManagerService.dropConnection()));
 
   constructor(private actions$: Actions,
               private infoService: InfoService,

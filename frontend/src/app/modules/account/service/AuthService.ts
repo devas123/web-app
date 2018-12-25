@@ -71,7 +71,7 @@ export class HttpAuthService {
       if (err.error.message) {
         throw err.error.message;
       }
-      throw new Error('Internal error occured');
+      throw new Error('Error when getting current user.');
     }));
   }
 

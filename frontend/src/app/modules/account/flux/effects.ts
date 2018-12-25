@@ -2,7 +2,7 @@
 import {mergeMap, map, catchError, tap, switchMap} from 'rxjs/operators';
 import {Injectable} from "@angular/core";
 import {HttpAuthService} from "../service/AuthService";
-import {Actions, Effect} from "@ngrx/effects";
+import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Observable, of} from "rxjs";
 import {Action} from "@ngrx/store";
 import {accountError, AUTHORIZE_TOKEN, AUTHORIZE_USER, CHANGE_AVATAR, USER_AUTHORIZED, userAuthorized} from "./actions";
@@ -22,7 +22,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class AccountEffects {
 
   @Effect({dispatch: false})
-  userAuthorized = this.actions$.ofType(USER_AUTHORIZED).pipe(tap((action: CommonAction) => {
+  userAuthorized = this.actions$.pipe(ofType(USER_AUTHORIZED), tap((action: CommonAction) => {
     this.route.queryParams.subscribe(params => {
       if (params['returnUrl']) {
         this.router.navigateByUrl(params['returnUrl'])
@@ -33,7 +33,7 @@ export class AccountEffects {
   }));
 
   @Effect()
-  authorizeUser: Observable<Action> = this.actions$.ofType(AUTHORIZE_USER).pipe(mergeMap((action: CommonAction) => {
+  authorizeUser: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_USER), mergeMap((action: CommonAction) => {
     return this.authService.requestToken(action.payload.email, action.payload.password).pipe(tap(token => {
       HttpAuthService.setToken(token.access_token);
     }),switchMap(token => {
@@ -42,7 +42,7 @@ export class AccountEffects {
   }));
 
   @Effect()
-  authorizeToken: Observable<Action> = this.actions$.ofType(AUTHORIZE_TOKEN).pipe(mergeMap((action: CommonAction) => {
+  authorizeToken: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_TOKEN), mergeMap((action: CommonAction) => {
     return this.authService.getCurrentUser(action.payload).pipe(map(user => userAuthorized(user)));
   }));
 
@@ -52,7 +52,7 @@ export class AccountEffects {
 
 
   @Effect({dispatch: false})
-  changeAvatar = this.actions$.ofType(CHANGE_AVATAR).pipe(tap((action: CommonAction) => {
+  changeAvatar = this.actions$.pipe(ofType(CHANGE_AVATAR), tap((action: CommonAction) => {
     this.accountService.changeAvatar(action.payload.blobBase64).subscribe(data => data, error2 => {
       console.error(error2);
     });
