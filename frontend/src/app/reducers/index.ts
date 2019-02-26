@@ -11,17 +11,18 @@ import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {
-  AcademiesCollection, academiesInitialState,
+  AcademiesCollection,
+  academiesInitialState,
   CategoriesCollection,
   categoriesInitialState,
   categoryEntityAdapter,
-  competitorEntityAdapter, CompetitorsCollection, competitorsInitialState
+  competitorEntityAdapter,
+  CompetitorsCollection,
+  competitorsInitialState
 } from '../modules/competition/reducers';
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
-import {EntitySelectors} from '@ngrx/entity/src/models';
-import {dashboardGetPeriodsCollection, periodEntityAdapter} from '../modules/event-manager/redux/dashboard-reducers';
 
 export interface AppState {
   events: EventPropsEntities;
@@ -35,7 +36,7 @@ export interface CommonAction extends Action {
 }
 
 export const competitionPropertiesEntitiesAdapter: EntityAdapter<CompetitionProperties> = createEntityAdapter<CompetitionProperties>({
-  selectId: (competitionProperties: CompetitionProperties) => competitionProperties.competitionId,
+  selectId: (competitionProperties: CompetitionProperties) => competitionProperties.id,
   sortComparer: false
 });
 
@@ -72,18 +73,36 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
   selectedEventDefaultCategories: []
 });
 
+export interface RegistrationGroup {
+  id: string
+  displayName: string,
+  registrationFee: number
+}
+
+export interface RegistrationPeriod {
+  id: string,
+  start: string,
+  end: string,
+  registrationGroups: RegistrationGroup[]
+}
+
+export interface RegistrationInfo {
+  registrationPeriods: RegistrationPeriod[]
+}
+
 export interface CompetitionProperties {
   infoTemplate: string;
   creatorId: any;
-  competitionId: string;
+  id: string;
   competitionName: string;
-  registrationFee: string;
-  startDate: number;
+  registrationInfo: RegistrationInfo;
+  startDate: string;
   schedulePublished: boolean;
   bracketsPublished: boolean;
   status: string;
-  endDate: number;
+  endDate: string;
   registrationOpen: boolean;
+  timeZone: string
 }
 
 export interface Error {
@@ -172,6 +191,7 @@ const selectCategoriesEntities = createSelector(selectCompetitionListState, stat
 export const selectAccountState = state => state && state.accountState;
 
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
+export const selectUserId = createSelector(selectUser, state => state && state.userId);
 
 export const {
   selectAll: getAllCompetitions,

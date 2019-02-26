@@ -10,7 +10,7 @@ import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';
 import {TemplateEffects} from './effects/template';
-import {MarkdownModule} from 'ngx-md';
+import {NgxMdModule} from 'ngx-md';
 import {MiscEffects} from './effects/misc';
 import {CompetitionInfoComponent} from './containers/competition-info/competition-info.component';
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
@@ -24,7 +24,7 @@ import {CompetitionDivisionsComponent} from './components/competition-main-info/
     RouterModule.forChild(compRoutes),
     SuiSidebarModule,
     ReactiveFormsModule,
-    MarkdownModule
+    NgxMdModule
   ],
   declarations: [CompetitionInfoComponent, CompetitionMainInfoComponent, CompetitionDescriptionComponent, CompetitionDivisionsComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]

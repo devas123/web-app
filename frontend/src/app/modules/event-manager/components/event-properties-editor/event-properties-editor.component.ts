@@ -3,6 +3,7 @@ import {CompetitionProperties} from '../../../../reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
+import {InfoService} from '../../../../service/info.service';
 
 @Component({
   selector: 'app-event-properties-editor',
@@ -32,10 +33,6 @@ export class EventPropertiesEditorComponent implements OnChanges {
     return this.form.get('competitionName');
   }
 
-  get registrationFee() {
-    return this.form.get('registrationFee');
-  }
-
   get startDate() {
     return this.form.get('startDate');
   }
@@ -60,33 +57,46 @@ export class EventPropertiesEditorComponent implements OnChanges {
     return this.form.get('registrationOpen');
   }
 
-
   createForm() {
     this.form = this.fb.group({
       competitionId: ['', [Validators.required]],
       competitionName: ['', [Validators.required]],
-      registrationFee: ['', [Validators.required]],
+      registrationPeriods: this.fb.array([
+          this.fb.group({
+            start: [''],
+            end: [''],
+            registrationGroups: this.fb.array([
+              this.fb.group({
+                displayName: [''],
+                registrationFee: ['']
+              })
+            ])
+          })
+        ]
+      ),
       startDate: [''],
+      endDate: [''],
+      timeZone: [''],
       schedulePublished: [false, [Validators.required]],
       bracketsPublished: [false, [Validators.required]],
       status: ['', [Validators.required]],
-      endDate: [''],
       registrationOpen: [false, [Validators.required]]
     });
   }
 
   updateForm() {
     if (this.properties) {
-      this.form.setValue({
-        competitionId: this.properties.competitionId,
+      this.form.patchValue({
+        competitionId: this.properties.id,
         competitionName: this.properties.competitionName,
-        registrationFee: this.properties.registrationFee,
-        startDate: new Date(this.properties.startDate),
-        schedulePublished: this.properties.schedulePublished,
-        bracketsPublished: this.properties.bracketsPublished,
-        status: this.properties.status,
-        endDate: new Date(this.properties.endDate),
-        registrationOpen: this.properties.registrationOpen,
+        // registrationFee: this.properties.registrationFee,
+        startDate: InfoService.parseZonedDateTime(this.properties.startDate),
+        timeZone: this.properties.timeZone || 'UNKNOWN',
+        schedulePublished: this.properties.schedulePublished || false,
+        bracketsPublished: this.properties.bracketsPublished || false,
+        status: this.properties.status || 'UNKNOWN',
+        endDate: InfoService.parseZonedDateTime(this.properties.endDate),
+        registrationOpen: this.properties.registrationOpen || false,
       });
     }
   }
@@ -110,12 +120,10 @@ export class EventPropertiesEditorComponent implements OnChanges {
     const properties = {
       ...this.properties,
       competitionName: this.competitionName.value,
-      registrationFee: this.registrationFee.value,
-      startDate: +sd,
-      endDate: +ed,
+      startDate: sd.toISOString(),
+      endDate: ed.toISOString(),
       registrationOpen: this.registrationOpen.value,
-
-    };
+    } as CompetitionProperties;
     this.propertiesUpdated.next(properties);
   }
 }

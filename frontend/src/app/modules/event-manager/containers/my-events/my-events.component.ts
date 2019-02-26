@@ -35,11 +35,11 @@ export class MyEventsComponent implements OnInit, OnDestroy {
   }
 
   sendPublishCommand(props: CompetitionProperties) {
-    this.store.dispatch(publishCompetition(props.competitionId));
+    this.store.dispatch(publishCompetition(props.id));
   }
 
   sendUnpublishCommand(props: CompetitionProperties) {
-    this.store.dispatch(unpublishCompetition(props.competitionId));
+    this.store.dispatch(unpublishCompetition(props.id));
   }
 
 

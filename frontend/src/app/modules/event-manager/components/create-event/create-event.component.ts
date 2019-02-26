@@ -30,9 +30,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     return this.form.get('competitionName');
   }
 
-  get registrationFee() {
-    return this.form.get('registrationFee');
-  }
+  // get registrationFee() {
+  //   return this.form.get('registrationFee');
+  // }
 
   get registrationOpen() {
     return this.form.get('registrationOpen');
@@ -41,7 +41,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   createForm() {
     this.form = this.fb.group({
       competitionName: ['', [Validators.required]],
-      registrationFee: ['1500'],
+      // registrationFee: ['1500'],
       registrationOpen: [false]
     });
   }
@@ -67,9 +67,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       const props = {} as CompetitionProperties;
       props.creatorId = user.userId;
       props.competitionName = this.competitionName.value;
-      props.registrationFee = this.registrationFee.value || '1500';
+      // props.registrationFee = this.registrationFee.value || '1500';
       props.registrationOpen = this.registrationOpen.value || false;
-      props.competitionId = btoa(this.competitionName.value).replace(/=/gi, '_');
+      props.id = btoa(this.competitionName.value).replace(/=/gi, '_');
       props.schedulePublished = false;
       props.bracketsPublished = false;
       return createCompetition(props);

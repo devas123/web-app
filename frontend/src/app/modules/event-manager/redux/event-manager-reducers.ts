@@ -288,7 +288,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_COMPETITION_SELECTED: {
       const newState = {
         ...state,
-        selectedEventId: action.payload.competitionId,
+        selectedEventId: action.payload.id,
         selectedEventCategories: categoriesInitialState
       };
       return competitionPropertiesEntitiesAdapter.updateOne({

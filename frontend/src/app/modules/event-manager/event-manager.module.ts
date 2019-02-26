@@ -48,7 +48,6 @@ import {NgDragDropModule} from '../dragdrop/ng-drag-drop.module';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
 import {FighterProfileComponent} from './components/fighter-profile/fighter-profile.component';
 import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
-import {DashboardService} from './dashboard.service';
 import {DashboardContainerComponent} from './containers/dashboard-container/dashboard-container.component';
 import {MatsOverviewContainerComponent} from './containers/mats-overview-container/mats-overview-container.component';
 import {MatsOverviewComponentComponent} from './components/mats-overview-component/mats-overview-component.component';
@@ -133,7 +132,7 @@ import {MatDetailsContainerComponent} from './containers/mat-details-container/m
     FighterProfileContainerComponent,
     FighterProfileComponent,
     FightersContainerComponent],
-  providers: [EventManagerService, DashboardService]
+  providers: [EventManagerService]
 })
 export class EventManagerModule {
 }

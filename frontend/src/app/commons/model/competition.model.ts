@@ -62,7 +62,7 @@ export interface Fight {
   competitionId: string;
   internalId: string;
   duration: number;
-  competitors: [{ competitor: Competitor, score: Score }];
+  competitors: { competitor: Competitor, score: Score }[];
   round: number;
   stage: string;
   fightResult: FightResult;

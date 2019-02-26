@@ -23,8 +23,13 @@
     "target": "http://localhost:8080",
     "secure": false
   },
-  "/sockjs": {
+  "/query/api": {
     "target": "http://localhost:9000/",
     "secure": false
+  },
+  "/query/sockjs": {
+    "target": "http://localhost:9000/",
+    "secure": false,
+    "ws": true
   }
 }

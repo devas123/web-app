@@ -53,7 +53,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
 
   removePeriod(period: DashboardPeriod) {
     if (this.competitionProperties) {
-      this.store.dispatch(dashboardRemovePeriod(this.competitionProperties.competitionId, period.id));
+      this.store.dispatch(dashboardRemovePeriod(this.competitionProperties.id, period.id));
     }
   }
 
@@ -66,15 +66,15 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
   }
 
   sendUseScheduleCommand() {
-    if (this.competitionProperties && this.competitionProperties.competitionId) {
-      this.store.dispatch(dashboardInitState(this.competitionProperties.competitionId));
+    if (this.competitionProperties && this.competitionProperties.id) {
+      this.store.dispatch(dashboardInitState(this.competitionProperties.id));
       this.showSchedule = false;
     }
   }
 
   sendDeleteDashboardStateCommand() {
-    if (this.competitionProperties && this.competitionProperties.competitionId) {
-      this.store.dispatch(dashboardDeleteState(this.competitionProperties.competitionId));
+    if (this.competitionProperties && this.competitionProperties.id) {
+      this.store.dispatch(dashboardDeleteState(this.competitionProperties.id));
       this.showSchedule = true;
     }
   }

@@ -43,7 +43,7 @@
          (click)="openModal('Select categories')">Select categories
     </div>
     <div class="ui basic button" *ngIf="competition && competition != null"
-         (click)="addCategory(competition?.competitionId)">Create manually
+         (click)="addCategory(competition?.id)">Create manually
     </div>
     <div class="ui icon search input">
       <i class="search icon"></i>

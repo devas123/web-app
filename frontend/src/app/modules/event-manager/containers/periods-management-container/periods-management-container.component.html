@@ -18,7 +18,7 @@
   <div class="ui basic segment" [suiCollapse]="!showSchedule">
     <app-schedule-display [categories]="selectedCompetitionCategories$ | async"
                           [schedule]="selectedCompetitionSchedule$ | async"
-                          [competitionId]="(selectedCompetitionProperties$ | async)?.competitionId"
+                          [competitionId]="(selectedCompetitionProperties$ | async)?.id"
                           (categoryClicked)="navigateToCategory($event)"></app-schedule-display>
   </div>
   <div class="ui three stackable cards">
@@ -29,7 +29,7 @@
         </div>
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
-        <div class="meta">Begins {{period?.startTime | date:'dd.MM.yyyy HH:mm'}}</div>
+        <div class="meta">Begins {{period?.startTime | zdate:true}}</div>
         <div class="meta">{{period?.matIds?.length + ' mats'}}</div>
       </div>
     </div>

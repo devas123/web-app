@@ -6,13 +6,48 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CompetitionProperties} from '../reducers';
 import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
+import {DateTime} from 'luxon'
+
+const format = "yyyy-MM-dd'T'HH:mm:ss.SZZ[z]";
+
 
 @Injectable()
 export class InfoService {
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
   private commandsEndpoint = '/competitions/api/v1/command';
+  private competitionQueryEndpoint = '/query/api/v1/competition';
+  private competitorQueryEndpoint = '/query/api/v1/competitor';
+
+  static parseZonedDateTime(zonedDateTimeStr: string): Date {
+    if (!zonedDateTimeStr) {
+      return null
+    }
+    const keepZone = DateTime.fromFormat(zonedDateTimeStr, format, {
+      setZone: true
+    });
+    return new Date(keepZone.toString())
+  }
+
+
+  static toZonedDateTimeString(date: Date, timeZone: string): string {
+    return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format)
+  }
 
   constructor(private http: HttpClient) {
+  }
+
+  subscribeToCompetition(userId: string, competitionId: string) {
+    const params = {
+      userId,
+      competitionId
+    };
+    return this.http.get(this.competitionQueryEndpoint + '/select', {
+      params: params,
+    }).pipe(map(value => value || {}),
+      catchError(error => {
+        console.log(error);
+        return observableOf(error);
+      }));
   }
 
   getCompetitions(creatorId?, status?) {
@@ -23,9 +58,8 @@ export class InfoService {
     if (creatorId) {
       params = {...params, creatorId};
     }
-    return this.http.get('/competitions/api/v1/store/competition', {
+    return this.http.get(this.competitionQueryEndpoint, {
       params: params,
-      headers: this.headers
     }).pipe(map(value => value || {}));
   }
 
@@ -33,7 +67,6 @@ export class InfoService {
     const params = {competitionId, categoryId, fighterId: btoa(fighterId)};
     return this.http.get('/competitions/api/v1/store/competitor', {
       params: params,
-      headers: this.headers
     }).pipe(map(value => value || {}));
   }
 
@@ -57,7 +90,6 @@ export class InfoService {
     const params = {competitionId, pageNumber, pageSize, searchString};
     return this.http.get('/competitions/api/v1/store/competitors', {
       params: params,
-      headers: this.headers
     }).pipe(map(value => (value || {}) as CompetitionProperties), catchError(error => observableOf(error)));
   }
 
@@ -65,7 +97,6 @@ export class InfoService {
     const params = {competitionId, includeKids: 'false'};
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + HttpAuthService.getToken(),
-      'Content-Type': 'application/json'
     });
     return this.http.get('/accounts/category/get/default', {
       params: params,
@@ -107,6 +138,7 @@ export class InfoService {
       })
     });
   }
+
   sendGlobalDashboardCommand(command: any): Observable<any> {
     return this.sendCommand(command);
   }

@@ -40,6 +40,6 @@ export const competitionPropertiesLoaded = (props: CompetitionProperties) => (
   {
     type: COMPETITION_PROPERTIES_LOADED,
     payload: props,
-    competitionId: props.competitionId
+    competitionId: props.id
   }
 );

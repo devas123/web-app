@@ -19,13 +19,11 @@ export const COMPETITION_DELETED = 'COMPETITION_DELETED';
 export const COMPETITION_PUBLISHED = 'COMPETITION_PUBLISHED';
 export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
 
-export const CLEAR_COMPETITION_SELECTION = 'CLEAR_COMPETITION_SELECTION';
 export const ERROR_OCCURRED = 'ERROR_EVENT';
 
 export const errorEvent = (text: string) => { return {type: ERROR_OCCURRED, payload: text} as Action };
 export const competitionsLoaded = (payload: CompetitionProperties[]) => { return {type: COMPETITION_LIST_LOADED, payload} };
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
-export const clearCompetitionSelection = {type: CLEAR_COMPETITION_SELECTION};
 export const competitionSelected = (competitionId: string) => ({type: COMPETITION_SELECTED, payload: competitionId});
 export const publishCompetition = (competitionId: string) => ({
   type: PUBLISH_COMPETITION_COMMAND,
@@ -37,13 +35,13 @@ export const unpublishCompetition = (competitionId: string) => ({
 });
 export const deleteCompetition = (competitionProperties: CompetitionProperties) => ({
   type: DELETE_COMPETITION_COMMAND,
-  competitionId: competitionProperties.competitionId,
+  competitionId: competitionProperties.id,
   payload: competitionProperties
 });
 export const createCompetition = (competitionInfo: CompetitionProperties) => ({
   type: CREATE_COMPETITION_COMMAND,
-  competitionId: competitionInfo.competitionId,
-  payload: competitionInfo
+  competitionId: competitionInfo.id,
+  payload: {properties: competitionInfo}
 });
 
 

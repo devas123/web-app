@@ -30,7 +30,7 @@ export class EventCardComponent implements OnInit {
   }
 
   navigateToEvent() {
-    this.router.navigate(['/events', this.eventInfo.competitionId]);
+    this.router.navigate(['/events', this.eventInfo.id]);
   }
 
 }
