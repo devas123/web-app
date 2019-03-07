@@ -23,6 +23,8 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
+import {EntitySelectors} from '@ngrx/entity/src/models';
+import {dashboardGetPeriodsCollection, periodEntityAdapter} from '../modules/event-manager/redux/dashboard-reducers';
 
 export interface AppState {
   events: EventPropsEntities;
