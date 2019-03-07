@@ -5,5 +5,5 @@ export const environment = {
   dashboardEventQueue: `/state/dashboard/events`,
   eventQueue: `/state/events`,
   errorQueue: `/state/errors`,
-  webSocketUrl: `/compman-ws`
+  webSocketUrl: `/query/api/v1/sockjs/competition`
 };

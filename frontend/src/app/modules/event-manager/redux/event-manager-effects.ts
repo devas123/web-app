@@ -1,6 +1,6 @@
 import {Observable, of as observableOf} from 'rxjs';
 
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mapTo, mergeMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -50,7 +50,13 @@ export class EventManagerEffects {
     mergeMap((action: CommonAction) => {
       return this.infoService.getCompetitions(action.payload.creatorId, action.payload.status).pipe(catchError(error => observableOf(errorEvent(error))));
     }),
-    map(payload => myCompetitionsLoaded((payload || []) as CompetitionProperties[])));
+    map((payload: any) => {
+      if (Array.isArray(payload)) {
+        return myCompetitionsLoaded(payload as CompetitionProperties[])
+      } else {
+        return errorEvent(payload)
+      }
+    }));
 
   @Effect()
   loadFighter$: Observable<Action> = this.actions$.pipe(
@@ -69,21 +75,27 @@ export class EventManagerEffects {
   @Effect()
   myCompetitionSelected$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_COMPETITION_SELECTED),
-    map((action: CommonAction) => eventManagerLoadCategories(action.payload.competitionId)));
+    map((action: CommonAction) => eventManagerLoadCategories(action.payload.id)));
 
   @Effect()
   selectMyCompetition$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_SELECT_COMPETITION_COMMAND),
-    mergeMap((action: CommonAction) => this.infoService.getCompetitionProperties(action.payload).pipe(catchError(error => {
+    mergeMap((action: CommonAction) => this.infoService.getCompetitionProperties(action.payload)
+      .pipe(catchError(error => {
+        console.log(error);
+        return observableOf(error);
+      }))),
+    mergeMap(props => {
+      if (props.id) {
+        return this.eventManagerService.selectCompetition(props.id)
+          .pipe(mapTo(eventManagerCompetitionSelected(props)))
+      } else {
+        return observableOf(errorEvent('Error occured while loading competition properties: ' + JSON.stringify(props)));
+      }
+    }),
+    catchError(error => {
       console.log(error);
       return observableOf(error);
-    }))),
-    map(props => {
-      if (props.competitionId) {
-        return eventManagerCompetitionSelected(props);
-      } else {
-        return errorEvent('Error occured while loading competition properties: ' + JSON.stringify(props));
-      }
     }));
 
   @Effect()
@@ -130,8 +142,8 @@ export class EventManagerEffects {
       return this.infoService.getCompetitorsForCompetition(action.competitionId, pageNumber, pageSize, searchString);
     }),
     map(response => {
-      if (response.total != null && response.page != null && response.competitionId) {
-        return eventManagerFightersForCompetitionLoaded(response.competitionId, response);
+      if (response.total != null && response.page != null && response.id) {
+        return eventManagerFightersForCompetitionLoaded(response.id, response);
       } else {
         return errorEvent('Error occured while loading: ' + JSON.stringify(response));
       }
@@ -142,21 +154,21 @@ export class EventManagerEffects {
   loadMyCategories$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_CATEGORIES_COMMAND),
     mergeMap((action: CommonAction) => {
-    return this.infoService.getCategories(action.payload).pipe(map(payload => {
-      const categories = (payload || []) as Category[];
-      return eventManagerCategoriesLoaded(action.payload, categories);
-    }), catchError(error => observableOf(errorEvent(error))));
-  }));
+      return this.infoService.getCategories(action.payload).pipe(map(payload => {
+        const categories = (payload || []) as Category[];
+        return eventManagerCategoriesLoaded(action.payload, categories);
+      }), catchError(error => observableOf(errorEvent(error))));
+    }));
 
   @Effect()
   loadSelectedEventSchedule$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_COMPETITION_SELECTED),
     mergeMap((action: CommonAction) => {
-    return this.infoService.getSchedule(action.competitionId).pipe(map(payload => {
-      const schedule = (payload || {}) as Schedule;
-      return eventManagerScheduleLoaded(action.competitionId, schedule);
-    }), catchError(error => observableOf(errorEvent(error))));
-  }));
+      return this.infoService.getSchedule(action.competitionId).pipe(map(payload => {
+        const schedule = (payload || {}) as Schedule;
+        return eventManagerScheduleLoaded(action.competitionId, schedule);
+      }), catchError(error => observableOf(errorEvent(error))));
+    }));
 
   @Effect()
   disconnectEventManagerSocket$ = this.actions$.pipe(
@@ -178,11 +190,11 @@ export class EventManagerEffects {
   @Effect({dispatch: false})
   eventManagerForwardCommands$: Observable<Action> = this.actions$.pipe(
     ofType(
-    EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
-    EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-    EVENT_MANAGER_MOVE_COMPETITOR,
-    EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
-    EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
+      EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
+      EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
+      EVENT_MANAGER_MOVE_COMPETITOR,
+      EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
+      EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     tap(command => {
       return this.infoService.sendCommand(command).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
     }));
@@ -195,7 +207,7 @@ export class EventManagerEffects {
   @Effect({dispatch: false})
   disConnectSocket$ = this.actions$.pipe(
     ofType(EVENT_MANAGER_DISCONNECT_SOCKET),
-    tap(() => this.eventManagerService.disconnect()));
+    tap(() => this.eventManagerService.dropConnection()));
 
   constructor(private actions$: Actions,
               private infoService: InfoService,

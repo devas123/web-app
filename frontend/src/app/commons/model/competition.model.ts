@@ -62,13 +62,13 @@ export interface Fight {
   competitionId: string;
   internalId: string;
   duration: number;
-  competitors: [{ competitor: Competitor, score: Score }];
+  competitors: { competitor: Competitor, score: Score }[];
   round: number;
   stage: string;
   fightResult: FightResult;
   timeToStart: boolean;
   numberInRound: number;
-  mat: number;
+  matId: string;
   numberOnMat: number;
   priority: number;
   period: string;

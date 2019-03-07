@@ -1,83 +1,93 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Store} from '@ngrx/store';
+import {HttpClient} from '@angular/common/http';
+import {select, Store} from '@ngrx/store';
 import 'sockjs-client';
 import * as SockJS from 'sockjs-client';
 import {environment} from '../../../environments/environment';
-import {AppState} from '../../reducers';
+import {AppState, selectUserId} from '../../reducers';
 import {socketConnected, socketDisconnected} from './redux/event-manager-actions';
-
-const Stomp = require('stompjs/lib/stomp').Stomp;
-
+import {HttpAuthService} from '../account/service/AuthService';
+import {InfoService} from '../../service/info.service';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class EventManagerService {
-  headers = new HttpHeaders({'Content-Type': 'application/json'}); // TODO: add authorization
-  public stompClient: any;
   private connected = false;
+  private _disconnect = false;
 
-  private _dropConnection = false;
+  socket: SockJS;
 
-  constructor(public http: HttpClient, public store: Store<AppState>) {
-  }
+  constructor(public http: HttpClient, public store: Store<AppState>, private infoService: InfoService) {
 
-  dropConnection() {
-    this._dropConnection = true;
-  }
-
-  disconnect() {
-    const that = this;
-    if (this.stompClient) {
-      try {
-        if (that.connected) {
-          this.stompClient.disconnect();
-        }
-      } catch (e) {
-        console.error('Error while disconnecting.');
-        console.error(e);
-      } finally {
-        this._dropConnection = false;
-        that.connected = false;
-        that.store.dispatch(socketDisconnected);
-      }
-    } else {
-      this._dropConnection = false;
-      this.store.dispatch(socketDisconnected);
-    }
   }
 
   connect() {
-    if (!this.connected) {
-      const that = this;
-      const socket = new SockJS(environment.webSocketUrl);
-      this.stompClient = Stomp.over(socket);
-      this.stompClient.connect({}, () => {
-        if (!that._dropConnection) {
-          that.connected = true;
-          that.store.dispatch(socketConnected);
-          that.stompClient.subscribe(environment.eventQueue, function (data) {
-            console.log(data);
-            if (data && data.body) {
-              that.store.dispatch(JSON.parse(data.body));
-            }
-          });
+    this._disconnect = false;
+    this.createSocket();
+  }
 
-          that.stompClient.subscribe(environment.errorQueue, function (data) {
-            console.error(data);
-          });
-        } else {
-          that.disconnect();
+  selectCompetition(competitionId: string) {
+    return this.store
+      .pipe(
+        select(selectUserId),
+        map(userId => this.infoService.subscribeToCompetition(userId, competitionId)))
+  }
+
+  private createSocket() {
+    try {
+      console.log('Connecting to SockJS.');
+      const that = this;
+      const token = HttpAuthService.getToken();
+      this.socket = new SockJS(`${environment.webSocketUrl}?token=${token}`, null, {
+        transports: []
+      });
+      this.socket.onopen = function () {
+        console.log('SockJS connection open');
+        that.connected = true;
+        that.store.dispatch(socketConnected);
+      };
+
+      this.socket.onmessage = function (e) {
+        if (e && e.data) {
+          const d = JSON.parse(e.data);
+
+          if (d.error) {
+            console.log('Error: ', d.error);
+            try {
+              that.socket.close();
+            } catch (e) {
+              console.error(`Error: ${e}`)
+            }
+          } else {
+            console.log('SockJS message', e.data);
+            that.store.dispatch(d);
+          }
         }
-      }, (err) => {
-        console.log('Connection error:', err);
+      };
+
+      this.socket.onclose = function () {
+        console.log('SockJS connection close');
         that.connected = false;
         that.store.dispatch(socketDisconnected);
-        if (!that._dropConnection) {
-          that.connect();
+        if (!that._disconnect) {
+          that.createSocket();
         }
-      });
-    } else {
-      this.store.dispatch(socketConnected);
+      };
+    } catch (e) {
+      console.error("Error while creating socket: " + e)
+    }
+  }
+
+  // sendMessage(message: any) {
+  //   if (this.connected) {
+  //     this.socket.send(JSON.stringify({ text: message }));
+  //   }
+  // }
+
+  dropConnection() {
+    this._disconnect = true;
+    if (this.socket) {
+      this.socket.close();
     }
   }
 }

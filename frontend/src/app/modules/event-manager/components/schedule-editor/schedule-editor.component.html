@@ -86,7 +86,7 @@
                 <i class="close link icon" (click)="removePeriod(period)"></i>
               </div>
               <div class="header">Period {{period?.id}}</div>
-              <div class="meta">Begins {{period?.startTime | date:'dd.MM.yyyy HH:mm'}}</div>
+              <div class="meta">Begins {{period?.startTime | zdate:true}}</div>
               <div class="ui middle aligned divided list" droppable [dropScope]="categoriesGroup"
                    (onDrop)="onItemDrop($event, period.id)" dragHintClass="drag-hint-border">
                 <a class="item" *ngFor="let cat of period?.categories" draggable [dragScope]="categoriesGroup"

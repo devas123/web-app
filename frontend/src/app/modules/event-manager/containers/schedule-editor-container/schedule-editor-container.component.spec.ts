@@ -11,6 +11,7 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../r
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 
 describe('ScheduleEditorContainerComponent', () => {
   let component: ScheduleEditorContainerComponent;
@@ -18,7 +19,7 @@ describe('ScheduleEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScheduleEditorContainerComponent, ScheduleEditorComponent, ScheduleDisplayComponent],
+      declarations: [ScheduleEditorContainerComponent, ScheduleEditorComponent, ScheduleDisplayComponent, ZonedDatePipe],
       imports: [ReactiveFormsModule, SuiModule, NgDragDropModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())

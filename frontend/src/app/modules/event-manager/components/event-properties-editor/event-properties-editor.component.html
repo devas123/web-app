@@ -49,35 +49,23 @@
       </div>
       <!---------->
     </div>
-
-    <div class="item" itemInput (contentEdited)="submitForm()">
-
-      <!--input  hidden field-->
-      <div class="input-content">
-        <div class="left floated content  ">
-          <div class="ui transparent inverted right floated input">
-            <div class="description">Registration Fee:<span>&nbsp;&nbsp;</span></div>
-            <input type="text" formControlName="registrationFee">
+    <div class="item">        <!--input  hidden field-->
+      <ng-container *ngIf="properties?.registrationInfo?.registrationPeriods">
+        <div class="left floated content" *ngFor="let period of properties?.registrationInfo?.registrationPeriods">
+          <div class="description">{{period?.start}} - {{period?.end}}</div>
+          <div class="header" *ngFor="let group of period?.registrationGroups; let i=index">
+            {{group.displayName}}: {{group.registrationFee}}
           </div>
         </div>
-        <div class="right floated content ">
-          <i class="check link green icon hide-input-btn "></i>
-        </div>
-      </div>
-      <!---------->
-
-      <!--visible content-->
-      <div class="row-content">
+      </ng-container>
+      <ng-container *ngIf="!properties?.registrationInfo?.registrationPeriods">
         <div class="left floated content ">
-          <div class="description">Registration Fee</div>
-          <div class="header">{{properties?.registrationFee}}</div>
+          <div class="description">No registration info</div>
         </div>
-        <div class="right floated content">
-          <i class="edit link teal tiny  icon  show-input-btn"></i>
-        </div>
-      </div>
+      </ng-container>
       <!---------->
     </div>
+
 
     <div class="item" itemInput (contentEdited)="submitForm()">
 
@@ -103,7 +91,7 @@
       <div class="row-content">
         <div class="left floated content ">
           <div class="description">Start Date</div>
-          <div class="header">{{(properties?.startDate | date:'dd.MM.yyyy') || 'Not set'}}</div>
+          <div class="header">{{(properties?.startDate | zdate:true) || 'Not set'}}</div>
         </div>
         <div class="right floated content">
           <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -136,7 +124,7 @@
       <div class="row-content">
         <div class="left floated content ">
           <div class="description">End Date</div>
-          <div class="header">{{(properties?.endDate | date:'dd.MM.yyyy') || 'Not set'}}</div>
+          <div class="header">{{(properties?.endDate | zdate:true) || 'Not set'}}</div>
         </div>
         <div class="right floated content">
           <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -185,7 +173,7 @@
       <div class="left floated content">
         <div class="description">Competition ID</div>
         <div class="header">
-          {{properties?.competitionId}}
+          {{properties?.id}}
         </div>
       </div>
     </div>

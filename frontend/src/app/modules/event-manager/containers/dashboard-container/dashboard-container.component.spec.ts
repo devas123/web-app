@@ -1,10 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DashboardContainerComponent } from './dashboard-container.component';
+import {DashboardContainerComponent} from './dashboard-container.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {DashboardService} from '../../dashboard.service';
 import {HttpClientModule} from '@angular/common/http';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
@@ -16,7 +15,7 @@ describe('DashboardContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardContainerComponent],
+      declarations: [DashboardContainerComponent],
       imports: [RouterTestingModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
@@ -33,10 +32,9 @@ describe('DashboardContainerComponent', () => {
             }
           }
         }
-      }), HttpClientModule],
-      providers: [DashboardService]
+      }), HttpClientModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

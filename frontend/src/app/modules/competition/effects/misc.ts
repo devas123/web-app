@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {of, from} from 'rxjs';
 import {CompetitionStateService} from '../service/competition.state.service';
 import {HttpAuthService} from '../../account/service/AuthService';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import * as miscActions from '../actions/misc';
 import * as fightsActions from '../actions/fights';
 
@@ -16,8 +16,7 @@ import {CompetitionProperties} from '../../../reducers';
 @Injectable()
 export class MiscEffects {
   @Effect()
-  loadCompetitionState$ = this.actions$
-    .ofType(miscActions.LOAD_COMPETITION_PROPERTIES).pipe(
+  loadCompetitionState$ = this.actions$.pipe(ofType(miscActions.LOAD_COMPETITION_PROPERTIES),
     switchMap((action: any) => {
       const competitionId = action.competitionId;
       return this.competitionStateService.getCompetitionProps(competitionId).pipe(
@@ -27,11 +26,11 @@ export class MiscEffects {
     }));
 
   @Effect({dispatch: false})
-  startCompetition$ = this.actions$.ofType(miscActions.START_COMPETITION).pipe(switchMap((action: any) =>
+  startCompetition$ = this.actions$.pipe(ofType(miscActions.START_COMPETITION), switchMap((action: any) =>
     this.competitionStateService.startCompetition(action.competitionId)));
 
   @Effect()
-  loadEvents$ = this.actions$.ofType(miscActions.LOAD_EVENTS_SINCE).pipe(switchMap((action: any) => {
+  loadEvents$ = this.actions$.pipe(ofType(miscActions.LOAD_EVENTS_SINCE), switchMap((action: any) => {
     const competitionId = action.competitionId;
     const {eventNumber, categoryId} = action.payload;
     return this.competitionStateService
@@ -41,7 +40,7 @@ export class MiscEffects {
   }));
 
   @Effect()
-  refreshMenu$ = this.actions$.ofType(fightsActions.BRACKETS_SAVED, fightsActions.BRACKETS_DROPPED).pipe(
+  refreshMenu$ = this.actions$.pipe(ofType(fightsActions.BRACKETS_SAVED, fightsActions.BRACKETS_DROPPED),
     switchMap((action: any) => of(miscActions.configureMenu(action.competitionId, this.authService.getUserRole(action.competitionId)))));
 
   constructor(private actions$: Actions,

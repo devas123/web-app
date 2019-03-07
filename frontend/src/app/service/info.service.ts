@@ -1,19 +1,53 @@
+import {Observable, of as observableOf} from 'rxjs';
 
-import {of as observableOf, Observable, of} from 'rxjs';
-
-import {map, catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CompetitionProperties} from '../reducers';
-import {Action} from '@ngrx/store';
 import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
+import {DateTime} from 'luxon'
+
+const format = "yyyy-MM-dd'T'HH:mm:ss.SZZ[z]";
+
 
 @Injectable()
 export class InfoService {
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  private commandsEndpoint = '/competitions/api/v1/command';
+  private competitionQueryEndpoint = '/query/api/v1/competition';
+  private competitorQueryEndpoint = '/query/api/v1/competitor';
+
+  static parseZonedDateTime(zonedDateTimeStr: string): Date {
+    if (!zonedDateTimeStr) {
+      return null
+    }
+    const keepZone = DateTime.fromFormat(zonedDateTimeStr, format, {
+      setZone: true
+    });
+    return new Date(keepZone.toString())
+  }
+
+
+  static toZonedDateTimeString(date: Date, timeZone: string): string {
+    return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format)
+  }
 
   constructor(private http: HttpClient) {
+  }
+
+  subscribeToCompetition(userId: string, competitionId: string) {
+    const params = {
+      userId,
+      competitionId
+    };
+    return this.http.get(this.competitionQueryEndpoint + '/select', {
+      params: params,
+    }).pipe(map(value => value || {}),
+      catchError(error => {
+        console.log(error);
+        return observableOf(error);
+      }));
   }
 
   getCompetitions(creatorId?, status?) {
@@ -24,23 +58,21 @@ export class InfoService {
     if (creatorId) {
       params = {...params, creatorId};
     }
-    return this.http.get('/competitions/cluster/store/competitions', {
+    return this.http.get(this.competitionQueryEndpoint, {
       params: params,
-      headers: this.headers
     }).pipe(map(value => value || {}));
   }
 
   getCompetitor(competitionId: string, categoryId: string, fighterId: string) {
     const params = {competitionId, categoryId, fighterId: btoa(fighterId)};
-    return this.http.get('/competitions/cluster/store/competitor', {
+    return this.http.get('/competitions/api/v1/store/competitor', {
       params: params,
-      headers: this.headers
     }).pipe(map(value => value || {}));
   }
 
   getSchedule(competitionId: string) {
     const params = {competitionId};
-    return this.http.get('/competitions/cluster/store/schedule', {
+    return this.http.get('/competitions/api/v1/store/schedule', {
       params: params,
       headers: this.headers
     }).pipe(map(value => value || {}));
@@ -48,7 +80,7 @@ export class InfoService {
 
   getCategories(competitionId: string) {
     const params = {competitionId};
-    return this.http.get('/competitions/cluster/store/categories', {
+    return this.http.get('/competitions/api/v1/store/categories', {
       params: params,
       headers: this.headers
     }).pipe(map(value => value || []));
@@ -56,17 +88,15 @@ export class InfoService {
 
   getCompetitorsForCompetition(competitionId: string, pageNumber: string, pageSize: string, searchString?: string) {
     const params = {competitionId, pageNumber, pageSize, searchString};
-    return this.http.get('/competitions/cluster/store/competitors', {
+    return this.http.get('/competitions/api/v1/store/competitors', {
       params: params,
-      headers: this.headers
-    }).pipe(map(value => (value || {}) as CompetitionProperties), catchError(error => observableOf(error)), );
+    }).pipe(map(value => (value || {}) as CompetitionProperties), catchError(error => observableOf(error)));
   }
 
   getDefaultCategories(competitionId: string) {
     const params = {competitionId, includeKids: 'false'};
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + HttpAuthService.getToken(),
-      'Content-Type': 'application/json'
     });
     return this.http.get('/accounts/category/get/default', {
       params: params,
@@ -77,7 +107,7 @@ export class InfoService {
 
   getCompetitionProperties(competitionId: string) {
     const params = {competitionId};
-    return this.http.get('/competitions/cluster/store/comprops', {
+    return this.http.get('/competitions/api/v1/store/comprops', {
       params: params,
       headers: this.headers
     }).pipe(map(value => (value || {}) as CompetitionProperties));
@@ -85,7 +115,7 @@ export class InfoService {
 
   getLatestCategoryState(categoryId) {
     const params = {categoryId: btoa(categoryId)};
-    return this.http.get('/competitions/cluster/store/categorystate', {
+    return this.http.get('/competitions/api/v1/store/categorystate', {
       params: params,
       headers: this.headers
     }).pipe(map(value => (value || {})));
@@ -95,9 +125,13 @@ export class InfoService {
 
   }
 
-  sendGlobalCommand(command: Action): Observable<any> {
+  sendGlobalCommand(command: any): Observable<any> {
+    return this.sendCommand(command);
+  }
+
+  sendCommand(command: any): Observable<any> {
     const body = JSON.stringify(command);
-    return this.http.post('admin/globalcommand', body, {
+    return this.http.post(`${this.commandsEndpoint}/${command.competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'
@@ -105,39 +139,13 @@ export class InfoService {
     });
   }
 
-  sendCommand(command: Action): Observable<any> {
-    const body = JSON.stringify(command);
-    return this.http.post('admin/command', body, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/json'
-      })
-    });
-  }
-
-  sendDashboardCommand(command: Action): Observable<any> {
-    const body = JSON.stringify(command);
-    return this.http.post('admin/dashboard/command', body, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/json'
-      })
-    });
-  }
-
-  sendGlobalDashboardCommand(command: Action): Observable<any> {
-    const body = JSON.stringify(command);
-    return this.http.post('admin/dashboard/globalcommand', body, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/json'
-      })
-    });
+  sendGlobalDashboardCommand(command: any): Observable<any> {
+    return this.sendCommand(command);
   }
 
   getDashboardState(competitionId: any) {
     const params = {competitionId};
-    return this.http.get('/competitions/cluster/store/dashboardstate', {
+    return this.http.get('/competitions/api/v1/store/dashboardstate', {
       params: params,
       headers: this.headers
     }).pipe(map(value => (value || {})));
@@ -145,7 +153,7 @@ export class InfoService {
 
   getPeriodMats(competitionId: any, periodId: any) {
     const params = {competitionId, periodId};
-    return this.http.get('/competitions/cluster/store/mats', {
+    return this.http.get('/competitions/api/v1/store/mats', {
       params: params,
       headers: this.headers
     }).pipe(map(value => (value || {})));
@@ -153,7 +161,7 @@ export class InfoService {
 
   getMatFights(matId: string, maxResults: number = 10, queryString?: any) {
     const params = {matId: btoa(matId), queryString: queryString || null, maxResults: `${maxResults}`};
-    return this.http.get('/competitions/cluster/store/matfights', {
+    return this.http.get('/competitions/api/v1/store/matfights', {
       params: params,
       headers: this.headers
     }).pipe(map(value => (value || [])));

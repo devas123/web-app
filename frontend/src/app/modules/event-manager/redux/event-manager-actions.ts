@@ -101,7 +101,7 @@ export const eventManagerLoadCategories = (competitionId: string) => ({
 });
 
 export const eventManagerCompetitionSelected = (competitionProperties: CompetitionProperties) => ({
-  competitionId: competitionProperties.competitionId,
+  competitionId: competitionProperties.id,
   type: EVENT_MANAGER_COMPETITION_SELECTED,
   payload: competitionProperties
 });
@@ -144,7 +144,7 @@ export const eventManagerDefaultCategoriesLoaded = (competitionId, categories: C
 
 export const updateCompetitionProperties = (props: CompetitionProperties) => ({
   type: UPDATE_COMPETITION_PROPERTIES_COMMAND,
-  competitionId: props.competitionId,
+  competitionId: props.id,
   payload: props
 });
 

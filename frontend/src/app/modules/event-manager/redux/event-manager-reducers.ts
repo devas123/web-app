@@ -123,8 +123,11 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     }
     case EVENT_MANAGER_COMPETITIONS_LOADED: {
       const compStates = action.payload;
-      const removedState = competitionPropertiesEntitiesAdapter.removeAll(state);
-      return competitionPropertiesEntitiesAdapter.addMany(compStates, removedState);
+      if (Array.isArray(compStates)) {
+        const removedState = competitionPropertiesEntitiesAdapter.removeAll(state);
+        return competitionPropertiesEntitiesAdapter.addMany(compStates, removedState);
+      }
+      return state;
     }
 
     case EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND: {
@@ -285,7 +288,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_COMPETITION_SELECTED: {
       const newState = {
         ...state,
-        selectedEventId: action.payload.competitionId,
+        selectedEventId: action.payload.id,
         selectedEventCategories: categoriesInitialState
       };
       return competitionPropertiesEntitiesAdapter.updateOne({

@@ -68,10 +68,8 @@ export class HttpAuthService {
       return data;
     }), catchError(err => {
       localStorage.removeItem('token');
-      if (err.error.message) {
-        throw err.error.message;
-      }
-      throw new Error('Internal error occured');
+      console.error(err);
+      throw new Error(`Error when getting current user.`);
     }));
   }
 

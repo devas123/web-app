@@ -53,7 +53,7 @@
                 Starts at
               </div>
               <div class="value">
-                {{categoryStartTime | date:'dd.MM.yyyy HH:mm'}}
+                {{categoryStartTime | zdate:true}}
               </div>
             </ng-container>
             <ng-container *ngIf="!categoryStartTime">

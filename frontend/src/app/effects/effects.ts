@@ -1,20 +1,15 @@
-
-import {tap, mergeMap, catchError, map} from 'rxjs/operators';
-
-
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 
 
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Action} from '@ngrx/store';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import * as allActions from '../actions/actions';
 import * as competitionMiscActions from '../modules/competition/actions/misc';
 import {InfoService} from '../service/info.service';
 import {CommonAction, CompetitionProperties} from '../reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';
-import {EVENT_MANAGER_ADD_COMPETITOR} from '../modules/event-manager/redux/event-manager-actions';
-import {EVENT_MANAGER_REMOVE_COMPETITOR} from '../modules/event-manager/redux/event-manager-actions';
 
 @Injectable()
 export class Effects {
@@ -24,7 +19,7 @@ export class Effects {
   }
 
   @Effect()
-  getCompetitions$: Observable<Action> = this.actions$.ofType(allActions.LOAD_COMPETITIONS_LIST).pipe(
+  getCompetitions$: Observable<Action> = this.actions$.pipe(ofType(allActions.LOAD_COMPETITIONS_LIST),
     mergeMap(() =>
       this.info.getCompetitions(null, 'PUBLISHED').pipe(
         map((payload: CompetitionProperties[]) => {
@@ -34,7 +29,7 @@ export class Effects {
     ));
 
   @Effect({dispatch: false})
-  globalCommands$: Observable<Action> = this.actions$.ofType(
+  globalCommands$: Observable<Action> = this.actions$.pipe(ofType(
     allActions.CREATE_COMPETITION_COMMAND,
     allActions.START_COMPETITION_COMMAND,
     allActions.DELETE_COMPETITION_COMMAND,
@@ -48,12 +43,12 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
-    allActions.UNPUBLISH_COMPETITION_COMMAND).pipe(
+    allActions.UNPUBLISH_COMPETITION_COMMAND),
     tap(command => this.info.sendGlobalCommand(command).subscribe()));
 
 
 
   @Effect()
-  competitionSelected$: Observable<Action> = this.actions$.ofType(allActions.COMPETITION_SELECTED).pipe(
+  competitionSelected$: Observable<Action> = this.actions$.pipe(ofType(allActions.COMPETITION_SELECTED),
     map((action: CommonAction) => competitionMiscActions.loadCompetitionProperties(action.payload)));
 }

@@ -58,7 +58,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
 
   socketConnected$: Observable<boolean>;
 
-  breadcrumb: [{ name: string, stepsback: number }] = [] as [{ name: string, stepsback: number }];
+  breadcrumb: { name: string, stepsback: number }[] = [] as { name: string, stepsback: number }[];
 
   selectedCompetitionName: string;
   selectedCategory: Category;
@@ -75,7 +75,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private location: Location, private router: Router, private eventManagerService: EventManagerService) {
     this.routerSubscription.add(this.store.pipe(
       select(selectUser),
-      filter(user => user && user != null),
+      filter(user => user),
       map((user: Account) => loadMyCompetitions(user.userId))).subscribe(store));
     this.socketConnected$ = this.store.pipe(select(eventManagerGetSocketConnected));
     this.routerSubscription.add(this.store.pipe(
@@ -130,7 +130,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
     const url = this.url;
     if (url && url.lastIndexOf('eventmanager') >= 0) {
       const relativeUrl = url.substr(url.lastIndexOf('eventmanager'));
-      this.breadcrumb = [] as [{ name: string, stepsback: number }];
+      this.breadcrumb = [] as { name: string, stepsback: number }[];
       const path = relativeUrl.split('/');
       for (let i = 0; i < path.length; i++) {
         if (i > 0 && path[i - 1] === 'eventmanager' && path[i] !== 'create') {
@@ -166,7 +166,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      this.breadcrumb = [] as [{ name: string, stepsback: number }];
+      this.breadcrumb = [] as { name: string, stepsback: number }[];
     }
   }
 
