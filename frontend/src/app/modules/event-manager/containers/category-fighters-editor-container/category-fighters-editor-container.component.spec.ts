@@ -11,6 +11,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 
 
 describe('CategoryFightersEditorContainerComponent', () => {
@@ -19,7 +20,7 @@ describe('CategoryFightersEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CategoryFightersEditorContainerComponent, AddFighterComponent, FightersEditorComponent],
+      declarations: [CategoryFightersEditorContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
       imports: [SuiModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
@@ -36,8 +37,7 @@ describe('CategoryFightersEditorContainerComponent', () => {
             }
           }
         }
-      }), RouterTestingModule]
-    })
+      }), RouterTestingModule]})
       .compileComponents();
   }));
 
