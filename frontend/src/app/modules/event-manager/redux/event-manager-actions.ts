@@ -1,5 +1,5 @@
 // commands
-import {CompetitionProperties, Schedule} from '../../../reducers';
+import {CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
 import {PeriodProperties} from './event-manager-reducers';
 
@@ -8,6 +8,10 @@ export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPE
 export const EVENT_MANAGER_LOAD_CATEGORIES_COMMAND = 'EVENT_MANAGER_LOAD_CATEGORIES_COMMAND';
 export const EVENT_MANAGER_SELECT_COMPETITION_COMMAND = 'EVENT_MANAGER_SELECT_COMPETITION_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
+export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
+export const EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND = 'DELETE_REGISTRATION_PERIOD_COMMAND';
+export const EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND = 'DELETE_REGISTRATION_GROUP_COMMAND';
+export const EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION_GROUP_COMMAND';
 export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
@@ -27,7 +31,10 @@ export const EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND = 'UPDATE_COMPETITOR_COMMAN
 
 // events
 export const EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED = 'EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED';
-
+export const EVENT_MANAGER_REGISTRATION_PERIOD_ADDED = 'REGISTRATION_PERIOD_ADDED';
+export const EVENT_MANAGER_REGISTRATION_PERIOD_DELETED = 'REGISTRATION_PERIOD_DELETED';
+export const EVENT_MANAGER_REGISTRATION_GROUP_ADDED = 'REGISTRATION_GROUP_ADDED';
+export const EVENT_MANAGER_REGISTRATION_GROUP_DELETED = 'REGISTRATION_GROUP_DELETED';
 export const EVENT_MANAGER_COMPETITOR_UPDATED = 'COMPETITOR_UPDATED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED = 'CATEGORY_BRACKETS_DROPPED';
 export const EVENT_MANAGER_SCHEDULE_DROPPED = 'SCHEDULE_DROPPED';
@@ -71,6 +78,37 @@ export const loadMyCompetitions = (creatorId: any, status?: string) => ({
     status
   }
 });
+
+export const eventManagerAddRegistrationPeriod = (competitionId: string, period: RegistrationPeriod) => ({
+  type: EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
+  competitionId,
+  payload: period
+});
+
+export const eventManagerAddRegistrationGroup = (competitionId: string, periodId, group: RegistrationGroup) => ({
+  type: EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND,
+  competitionId,
+  payload: {
+    periodId,
+    group
+  }
+});
+
+export const eventManagerDeleteRegistrationPeriod = (competitionId: string, periodId: string,) => ({
+  type: EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
+  competitionId,
+  payload: periodId
+});
+
+export const eventManagerDeleteRegistrationGroup = (competitionId: string, periodId: string, groupId: string) => ({
+  type: EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+  competitionId,
+  payload: {
+    periodId,
+    groupId
+  }
+});
+
 
 export const myCompetitionsLoaded = (competitionProperties: CompetitionProperties[]) => ({
   type: EVENT_MANAGER_COMPETITIONS_LOADED,

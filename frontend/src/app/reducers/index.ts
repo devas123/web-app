@@ -23,8 +23,6 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
-import {EntitySelectors} from '@ngrx/entity/src/models';
-import {dashboardGetPeriodsCollection, periodEntityAdapter} from '../modules/event-manager/redux/dashboard-reducers';
 
 export interface AppState {
   events: EventPropsEntities;
@@ -76,20 +74,20 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 });
 
 export interface RegistrationGroup {
-  id: string
   displayName: string,
   registrationFee: number
 }
 
 export interface RegistrationPeriod {
-  id: string,
+  name: string,
   start: string,
   end: string,
   registrationGroups: RegistrationGroup[]
 }
 
 export interface RegistrationInfo {
-  registrationPeriods: RegistrationPeriod[]
+  registrationPeriods: RegistrationPeriod[],
+  registrationOpen: boolean
 }
 
 export interface CompetitionProperties {
@@ -103,7 +101,6 @@ export interface CompetitionProperties {
   bracketsPublished: boolean;
   status: string;
   endDate: string;
-  registrationOpen: boolean;
   timeZone: string
 }
 

@@ -132,43 +132,6 @@
       </div>
       <!---------->
     </div>
-
-    <div class="item" itemInput (contentEdited)="submitForm()">
-
-      <!--input  hidden field-->
-      <div class="input-content">
-        <div class="left floated content  ">
-          <div class="ui transparent inverted right floated input">
-            <div class="ui checkbox">
-              <input id="registrationOpen" name="registrationOpen" type="checkbox" formControlName="registrationOpen">
-              <label for="registrationOpen">Registration open</label>
-            </div>
-          </div>
-        </div>
-        <div class="right floated content ">
-          <i class="check link green icon hide-input-btn "></i>
-        </div>
-      </div>
-      <!---------->
-
-      <!--visible content-->
-      <div class="row-content">
-        <div class="left floated content">
-          <div class="description">Registration status</div>
-          <div class="header" *ngIf="properties?.registrationOpen">
-            Registration is open.
-          </div>
-          <div class="header" *ngIf="!properties?.registrationOpen">
-            Registration is closed.
-          </div>
-        </div>
-        <div class="right floated content">
-          <i class="edit link teal tiny  icon  show-input-btn"></i>
-        </div>
-      </div>
-      <!---------->
-    </div>
-
     <div class="item">
       <div class="left floated content">
         <div class="description">Competition ID</div>
@@ -205,6 +168,11 @@
         <div class="header">
           Status is {{properties?.status}}.
         </div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="content">
+        <a class="header" routerLink="./reg_info">Show Registration Information</a>
       </div>
     </div>
   </div>
