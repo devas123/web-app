@@ -66,6 +66,8 @@ import {FightDisplayComponent} from './components/mats-overview-component/fight-
 import {MatDisplayComponent} from './components/mats-overview-component/mat-display.component';
 import {MatDetailsComponent} from './components/mat-details/mat-details.component';
 import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
+import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
+import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 
 @NgModule({
   imports: [
@@ -90,6 +92,8 @@ import {MatDetailsContainerComponent} from './containers/mat-details-container/m
     HotkeyModule
   ],
   declarations: [
+    RegistrationInfoEditorContainerComponent,
+    RegistrationInfoEditorComponent,
     MatDetailsComponent,
     MatDetailsContainerComponent,
     MatDisplayComponent,

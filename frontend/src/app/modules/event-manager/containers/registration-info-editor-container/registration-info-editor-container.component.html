@@ -1,0 +1,6 @@
+<div class="ui segment">
+  <app-registration-info-editor (addGroup)="addRegistrationInfoGroup($event)"
+                                (addPeriod)="addRegistrationInfoPeriod($event)"
+                                [competitionId]="competitionId$ | async"
+                                [registrationInfo]="registrationInfo$ | async"></app-registration-info-editor>
+</div>

@@ -24,6 +24,7 @@ import {ScoreboardContainerComponent} from './containers/scoreboard-container/sc
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
 import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
+import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 
 export const eventManagerRoutes: Routes = [
   {
@@ -45,6 +46,10 @@ export const eventManagerRoutes: Routes = [
           {
             path: '',
             component: EventPropertiesEditorContainerComponent
+          },
+          {
+            path: 'reg_info',
+            component: RegistrationInfoEditorContainerComponent
           },
           {
             path: 'brackets',

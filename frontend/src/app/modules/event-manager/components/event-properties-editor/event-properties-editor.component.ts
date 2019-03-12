@@ -61,19 +61,6 @@ export class EventPropertiesEditorComponent implements OnChanges {
     this.form = this.fb.group({
       competitionId: ['', [Validators.required]],
       competitionName: ['', [Validators.required]],
-      registrationPeriods: this.fb.array([
-          this.fb.group({
-            start: [''],
-            end: [''],
-            registrationGroups: this.fb.array([
-              this.fb.group({
-                displayName: [''],
-                registrationFee: ['']
-              })
-            ])
-          })
-        ]
-      ),
       startDate: [''],
       endDate: [''],
       timeZone: [''],
@@ -96,7 +83,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
         bracketsPublished: this.properties.bracketsPublished || false,
         status: this.properties.status || 'UNKNOWN',
         endDate: InfoService.parseZonedDateTime(this.properties.endDate),
-        registrationOpen: this.properties.registrationOpen || false,
+        registrationOpen: (this.properties.registrationInfo && this.properties.registrationInfo.registrationOpen) || false,
       });
     }
   }

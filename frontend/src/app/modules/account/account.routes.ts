@@ -14,16 +14,7 @@ export const accountRoutes: Routes = [
       {
         path: '',
         component: AccountInfoComponent
-      },
-      {
-        path: 'eventmanager',
-        loadChildren: '../event-manager/event-manager.module#EventManagerModule',
-        data: {preload: false},
-        canActivate: [AuthGuard],
-        canLoad: [AuthGuard],
-        canActivateChild: [AuthGuard]
       }
-
     ]
   },
 ];

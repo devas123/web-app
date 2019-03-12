@@ -1,0 +1,88 @@
+<div class="ui middle aligned divided list">
+  <div class="item">
+    <div class="left floated content">
+      <div class="ui button">Add period</div>
+    </div>
+  </div>
+  <div class="item" *ngFor="let p of registrationInfo?.registrationPeriods">
+    <div class="right floated content">
+      <div class="ui button">Delete</div>
+    </div>
+    <div class="content">
+      <div class="header">
+        {{p.name}}
+      </div>
+      <div class="description">
+        Start: {{p.start | zdate}}, End: {{p.end | zdate}}
+      </div>
+      <div class="list">
+        <div class="item">
+          <div class="left floated content">
+            <div class="ui button">Add group</div>
+          </div>
+        </div>
+        <div class="item" *ngFor="let group of p.registrationGroups">
+          <div class="right floated content">
+            <div class="ui button">Delete</div>
+          </div>
+          <div class="content">
+            <div class="header">
+              {{group.displayName}}
+            </div>
+            <div class="description">
+              {{group.registrationFee}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template let-context let-modal="modal" #modalTemplate>
+  <div class="header">Add registration group</div>
+  <div class="content">
+    <form class="form" [formGroup]="groupForm">
+      <label>
+        Entry name:
+        <input type="text" formControlName="displayName">
+      </label>
+      <label>
+        Registration Fee:
+        <input type="number" formControlName="registrationFee">
+      </label>
+    </form>
+  </div>
+  <div class="actions">
+    <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
+    <button class="ui green button" (click)="modal.approve('approved')" autofocus>OK</button>
+  </div>
+</ng-template>
+
+<ng-template let-context let-periodModal="modal" #addPeriodTemplate>
+  <div class="header">Add registration period</div>
+  <div class="content">
+    <form [formGroup]="periodForm">
+      <label>
+        Period name:
+        <input type="text" formControlName="id">
+      </label>
+      <label>
+        Period start:
+        <input suiDatepicker
+               formControlName="start"
+               [pickerFirstDayOfWeek]="1">
+      </label>
+      <label>
+        Period end:
+        <input suiDatepicker
+               formControlName="end"
+               [pickerFirstDayOfWeek]="1">
+      </label>
+    </form>
+  </div>
+  <div class="actions">
+    <button class="ui red button" (click)="periodModal.deny('denied')">Cancel</button>
+    <button class="ui green button" (click)="periodModal.approve('approved')" autofocus>OK</button>
+  </div>
+</ng-template>
+

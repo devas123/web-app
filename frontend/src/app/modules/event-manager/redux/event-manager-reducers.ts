@@ -753,6 +753,8 @@ export const eventManagerGetSelectedEvent = createSelector(
   }
 );
 
+export const eventManagerGetSelectedEventRegistrationInfo = createSelector(eventManagerGetSelectedEvent, event => event && event.registrationInfo);
+
 export const eventManagerGetSelectedEventName = createSelector(eventManagerGetSelectedEvent, event => event && event.competitionName);
 
 export const eventManagerGetSelectedEventsCategoriesCollection = createSelector(eventManagerGetMyEventsCollection, state => {
