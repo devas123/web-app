@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Account} from '../model/Account';
 import {catchError, map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 
 import * as roles from '../user.roles';
@@ -43,34 +43,42 @@ export class HttpAuthService {
 
   requestToken(email: string, password: string): Observable<any> {
     const body = 'client_id=browser&username=' + email + '&password=' + password + '&grant_type=password&scope=ui';
-    return this.http.post('uaa/oauth/token', body, {
-      headers: new HttpHeaders({
-        'Authorization': 'Basic YnJvd3Nlcjp0ZXN0',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      })
-    }).pipe(map(data => {
-      return data;
-    }), catchError(err => {
-      console.log('err');
-      if (err.error.message) {
-        throw err.error.message;
-      }
-      throw new Error('Internal error occured');
-    }));
+    return of({access_token: 'asdasdasdasdasdasd'});
+    // return this.http.post('uaa/oauth/token', body, {
+    //   headers: new HttpHeaders({
+    //     'Authorization': 'Basic YnJvd3Nlcjp0ZXN0',
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   })
+    // }).pipe(map(data => {
+    //   return data;
+    // }), catchError(err => {
+    //   console.log('err');
+    //   if (err.error.message) {
+    //     throw err.error.message;
+    //   }
+    //   throw new Error('Internal error occured');
+    // }));
   }
 
   getCurrentUser(accesToken: string): Observable<any> {
-    return this.http.get('accounts/currentUser', {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + accesToken
-      })
-    }).pipe(map(data => {
-      return data;
-    }), catchError(err => {
-      localStorage.removeItem('token');
-      console.error(err);
-      throw new Error(`Error when getting current user.`);
-    }));
+    return of( {
+      email: 'test@email.ru',
+      firstName: 'firstName',
+      lastName: 'lastName',
+      password: accesToken,
+      userId: 1
+    } as Account);
+    // return this.http.get('accounts/currentUser', {
+    //   headers: new HttpHeaders({
+    //     'Authorization': 'Bearer ' + accesToken
+    //   })
+    // }).pipe(map(data => {
+    //   return data;
+    // }), catchError(err => {
+    //   localStorage.removeItem('token');
+    //   console.error(err);
+    //   throw new Error(`Error when getting current user.`);
+    // }));
   }
 
   getUserRole(competitionId: string): string {
