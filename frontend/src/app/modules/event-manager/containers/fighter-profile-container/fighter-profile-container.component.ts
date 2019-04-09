@@ -18,7 +18,6 @@ import {
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryId,
-  eventManagerGetSelectedEventSelectedCategorySelectedCompetitor,
   eventManagerGetSelectedEventSelectedCompetitor
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
@@ -32,7 +31,6 @@ import {Category, Competitor} from '../../../../commons/model/competition.model'
 export class FighterProfileContainerComponent implements OnInit, OnDestroy {
 
   eventFighter$: Observable<Competitor>;
-  categoryFighter$: Observable<Competitor>;
   category$: Observable<Category>;
   categories$: Observable<Category[]>;
   private subs = new Subscription();
@@ -40,7 +38,7 @@ export class FighterProfileContainerComponent implements OnInit, OnDestroy {
 // .map(params => atob(params['fighterId']))
   constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
     const a$ = combineLatest(
-      route.params.pipe(map(params => params['fighterId'] && atob(params['fighterId']))),
+      route.params.pipe(map(params => params['fighterId'])),
       this.store.pipe(select(eventManagerGetSelectedEventId)),
       this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)));
     this.subs.add(a$.pipe(
@@ -50,7 +48,6 @@ export class FighterProfileContainerComponent implements OnInit, OnDestroy {
       }))
       .subscribe(this.store));
     this.eventFighter$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCompetitor));
-    this.categoryFighter$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedCompetitor));
     this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
   }
@@ -62,7 +59,7 @@ export class FighterProfileContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
-  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategory: Category }) {
+  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategory: string }) {
     this.store.dispatch(eventManagerChangeCompetitorCategoryCommand(payload.fighter, payload.newCategory));
   }
 

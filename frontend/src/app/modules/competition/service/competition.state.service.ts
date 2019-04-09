@@ -51,7 +51,7 @@ export class CompetitionStateService {
       const params = new HttpParams();
       params.set('from', `${eventNumber}`);
       params.set('competitionId', competitionId);
-      params.set('categoryId', categoryId);
+      params.set('id', categoryId);
       return this.http.get('/admin/eventsrange', {params: params, headers: this.headers}).pipe(map(data => data || []));
     } else {
       return of([]);

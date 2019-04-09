@@ -32,11 +32,11 @@ export class MatsOverviewContainerComponent implements OnInit {
   }
 
   navigateToMat(matId: string) {
-    this.router.navigate([btoa(matId)], {relativeTo: this.route});
+    this.router.navigate([matId], {relativeTo: this.route});
   }
 
   navigateToScoreboard(matId: string) {
-    this.router.navigate([btoa(matId), 'scoreboard'], {relativeTo: this.route});
+    this.router.navigate([matId, 'scoreboard'], {relativeTo: this.route});
   }
 
 }

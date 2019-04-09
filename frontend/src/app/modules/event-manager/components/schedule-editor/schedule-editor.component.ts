@@ -31,6 +31,9 @@ export interface IContext {
 export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   @Input()
+  timeZone: string = 'UTC';
+
+  @Input()
   competitionId: string;
 
   @Input()
@@ -73,7 +76,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   goToCategoryEditor(categoryId: string) {
-    this.router.navigate(['..', 'categories', btoa(categoryId)], {
+    this.router.navigate(['..', 'categories', categoryId], {
       relativeTo: this.route
     });
   }
@@ -182,9 +185,9 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     if (this.categories && this.scheduleProperties) {
       const distributedCategories = this.scheduleProperties.periodPropertiesList.map(p => p.categories)
         .reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])
-        .filter(c => c && c != null && c.categoryId != null)
-        .map(c => c.categoryId);
-      this.filteredCategories = this.categories.filter(cat => distributedCategories.indexOf(cat.categoryId) < 0);
+        .filter(c => c && c != null && c.id != null)
+        .map(c => c.id);
+      this.filteredCategories = this.categories.filter(cat => distributedCategories.indexOf(cat.id) < 0);
     } else {
       this.filteredCategories = this.categories || [];
     }

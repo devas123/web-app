@@ -1,54 +1,45 @@
-<div class="ui middle aligned divided list">
-  <div class="item">
-    <div class="left floated content">
-      <div class="ui button">Add period</div>
-    </div>
-  </div>
-  <div class="item" *ngFor="let p of registrationInfo?.registrationPeriods">
-    <div class="right floated content">
-      <div class="ui button">Delete</div>
-    </div>
-    <div class="content">
-      <div class="header">
+<div class="ui button" (click)="openModal('period')">Add period</div>
+<p></p>
+<div class="ui stackable two column grid">
+  <div class="column" *ngFor="let p of registrationInfo?.registrationPeriods">
+    <div class="ui raised segment">
+      <div class="ui right floated basic button" (click)="deletePeriodEvent(p.id)">Delete</div>
+      <h4 class="header">
         {{p.name}}
-      </div>
-      <div class="description">
-        Start: {{p.start | zdate}}, End: {{p.end | zdate}}
-      </div>
-      <div class="list">
-        <div class="item">
-          <div class="left floated content">
-            <div class="ui button">Add group</div>
-          </div>
-        </div>
+      </h4>
+      <div class="description"><span style="font-style: italic">Start: </span>{{p.start | zdate:true:timeZone}}</div>
+      <div class="description"><span style="font-style: italic">End: </span>{{p.end | zdate:true:timeZone}}</div>
+      <p></p>
+      <div class="ui basic button" (click)="openModal('group', p.id)">Add Group</div>
+      <div class="ui relaxed divided list">
         <div class="item" *ngFor="let group of p.registrationGroups">
-          <div class="right floated content">
-            <div class="ui button">Delete</div>
+          <div class="right floated content" (click)="deleteGroupEvent(group.id, p.id)">
+            <a>
+              <i class="close icon"></i>
+            </a>
           </div>
+          <i class="large github middle aligned icon"></i>
           <div class="content">
-            <div class="header">
-              {{group.displayName}}
-            </div>
-            <div class="description">
-              {{group.registrationFee}}
-            </div>
+            <a class="header" (click)="selectGroup.next(group.id)">{{group.displayName}}</a>
+            <div class="description">{{group.registrationFee}}</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <ng-template let-context let-modal="modal" #modalTemplate>
   <div class="header">Add registration group</div>
   <div class="content">
-    <form class="form" [formGroup]="groupForm">
+    <form class="ui form" [formGroup]="groupForm">
       <label>
         Entry name:
-        <input type="text" formControlName="displayName">
+        <input class="ui input" type="text" formControlName="displayName">
       </label>
       <label>
         Registration Fee:
-        <input type="number" formControlName="registrationFee">
+        <input class="ui input" type="number" formControlName="registrationFee">
       </label>
     </form>
   </div>
@@ -61,20 +52,20 @@
 <ng-template let-context let-periodModal="modal" #addPeriodTemplate>
   <div class="header">Add registration period</div>
   <div class="content">
-    <form [formGroup]="periodForm">
+    <form class="ui form" [formGroup]="periodForm">
       <label>
         Period name:
-        <input type="text" formControlName="id">
+        <input class="ui input" type="text" formControlName="name">
       </label>
       <label>
         Period start:
-        <input suiDatepicker
+        <input class="ui input" suiDatepicker
                formControlName="start"
                [pickerFirstDayOfWeek]="1">
       </label>
       <label>
         Period end:
-        <input suiDatepicker
+        <input class="ui input" suiDatepicker
                formControlName="end"
                [pickerFirstDayOfWeek]="1">
       </label>

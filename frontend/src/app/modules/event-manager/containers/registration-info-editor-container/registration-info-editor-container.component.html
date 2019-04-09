@@ -1,6 +1,11 @@
-<div class="ui segment">
-  <app-registration-info-editor (addGroup)="addRegistrationInfoGroup($event)"
-                                (addPeriod)="addRegistrationInfoPeriod($event)"
-                                [competitionId]="competitionId$ | async"
-                                [registrationInfo]="registrationInfo$ | async"></app-registration-info-editor>
-</div>
+<app-registration-info-editor (addGroup)="addRegistrationInfoGroup($event)"
+                              (addPeriod)="addRegistrationInfoPeriod($event)"
+                              (deleteGroup)="deleteRegistrationInfoGroup($event)"
+                              (deletePeriod)="deleteRegistrationInfoPeriod($event)"
+                              (selectGroup)="selectRegistrationGroup($event)"
+                              [competitionId]="competitionId$ | async"
+                              [timeZone]="timeZone$ | async"
+                              [registrationInfo]="registrationInfo$ | async"
+*ngIf="!(registrationGroupSelected$ | async)"></app-registration-info-editor>
+
+<app-registration-group-editor *ngIf="registrationGroupSelected$ | async" [group]="registrationGroupSelected$ | async"></app-registration-group-editor>

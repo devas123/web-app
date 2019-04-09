@@ -28,7 +28,6 @@ import {EventManagerContainerComponent} from './containers/event-manager-contain
 import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
 import {EventPropertiesEditorComponent} from './components/event-properties-editor/event-properties-editor.component';
-import {CategoryFightersEditorContainerComponent} from './containers/category-fighters-editor-container/category-fighters-editor-container.component';
 import {FightersEditorComponent} from './components/fighters-editor/fighters-editor.component';
 import {AddFighterComponent} from './components/add-fighter/add-fighter.component';
 import {EventContainerComponent} from './containers/event-container/event-container.component';
@@ -68,6 +67,7 @@ import {MatDetailsComponent} from './components/mat-details/mat-details.componen
 import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
 import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
+import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
 
 @NgModule({
   imports: [
@@ -92,6 +92,7 @@ import {RegistrationInfoEditorContainerComponent} from './containers/registratio
     HotkeyModule
   ],
   declarations: [
+    RegistrationGroupEditorComponent,
     RegistrationInfoEditorContainerComponent,
     RegistrationInfoEditorComponent,
     MatDetailsComponent,
@@ -123,7 +124,6 @@ import {RegistrationInfoEditorContainerComponent} from './containers/registratio
     CreateCategoryComponent,
     EventPropertiesEditorContainerComponent,
     EventPropertiesEditorComponent,
-    CategoryFightersEditorContainerComponent,
     FightersEditorComponent,
     AddFighterComponent,
     EventContainerComponent,

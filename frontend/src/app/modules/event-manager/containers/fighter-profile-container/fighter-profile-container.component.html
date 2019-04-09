@@ -9,10 +9,8 @@
   <!--Save-->
   <!--</div>-->
   <p></p>
-  <ng-container *ngIf="(category$ | async)">
-    <app-fighter-profile [type]="'category'" [fighter]="categoryFighter$ | async" (categoryChanged)="sendChangeCategoryCommand($event)" (competitorChanged)="sendChangeCompetitorCommand($event)" [categories]="categories$ | async"></app-fighter-profile>
-  </ng-container>
-  <ng-container *ngIf="!(category$ | async)">
-    <app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async" (categoryChanged)="sendChangeCategoryCommand($event)" (competitorChanged)="sendChangeCompetitorCommand($event)" [categories]="categories$ | async"></app-fighter-profile>
-  </ng-container>
+  <app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async"
+                       (categoryChanged)="sendChangeCategoryCommand($event)"
+                       (competitorChanged)="sendChangeCompetitorCommand($event)"
+                       [categories]="categories$ | async"></app-fighter-profile>
 </div>

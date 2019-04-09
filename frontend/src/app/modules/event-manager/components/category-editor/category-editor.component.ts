@@ -22,7 +22,7 @@ export class CategoryEditorComponent implements OnInit {
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
   @Output()
-  addDefaultCategories = new EventEmitter<Category[]>();
+  addDefaultCategories = new EventEmitter<{competitionId: string, category: Category}[]>();
   @Output()
   generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('select')
@@ -42,7 +42,7 @@ export class CategoryEditorComponent implements OnInit {
   _categories: Category[];
 
   @Output()
-  deleteCategoryEvent: EventEmitter<Category> = new EventEmitter<Category>();
+  deleteCategoryEvent: EventEmitter<{competitionId: string, category: Category}> = new EventEmitter<{competitionId: string, category: Category}>();
   searchFilter = (options: Category[], filter: string) => {
     let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
@@ -50,15 +50,15 @@ export class CategoryEditorComponent implements OnInit {
 
     filterParts.forEach((value) => {
       filteredOptions = filteredOptions.filter(cat => {
-        return cat.categoryId
-          && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.name, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
+        return cat.id
+          && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
       });
     });
 
     return filteredOptions;
   }
   optionsFilter = (options: Category[], filter: string) => this.searchFilter(this._allDefaultCategories, filter).filter(cat => {
-    return this.categories.map(c => c.categoryId).indexOf(cat.categoryId) < 0;
+    return this.categories.map(c => c.id).indexOf(cat.id) < 0;
   }).slice(0, 10)
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
@@ -77,9 +77,9 @@ export class CategoryEditorComponent implements OnInit {
   set defaultCategories(value: Category[]) {
     if (value && value.length > 0) {
       if (this._categories && this._categories.length > 0) {
-        const ids = this._categories.map(c => c.categoryId);
+        const ids = this._categories.map(c => c.id);
         this._allDefaultCategories = value.filter(cat => {
-          return ids.indexOf(cat.categoryId) < 0;
+          return ids.indexOf(cat.id) < 0;
         });
       } else {
         this._allDefaultCategories = value;
@@ -99,9 +99,9 @@ export class CategoryEditorComponent implements OnInit {
     if (value && value.length > 0) {
       this._categories = value;
       if (this._defaultCategories && this._defaultCategories.length > 0) {
-        const ids = this._categories.map(c => c.categoryId);
+        const ids = this._categories.map(c => c.id);
         this._defaultCategories = this._defaultCategories.filter(cat => {
-          return ids.indexOf(cat.categoryId) < 0;
+          return ids.indexOf(cat.id) < 0;
         });
       }
     } else {
@@ -130,7 +130,7 @@ export class CategoryEditorComponent implements OnInit {
 
   generateRandomFighters(category: Category) {
     if (category) {
-      this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(category.competitionId, category.categoryId, 30, 20));
+      this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 30, 20));
     }
   }
 
@@ -140,7 +140,7 @@ export class CategoryEditorComponent implements OnInit {
 
   addSelectedCategories() {
     if (this.categoriesToAdd && this.categoriesToAdd.length > 0) {
-      this.addDefaultCategories.next(this.categoriesToAdd);
+      this.addDefaultCategories.next(this.categoriesToAdd.map(cat => ({competitionId: this.competition.id, category: cat})));
       if (this.select) {
         const addedCategories = [...this.categoriesToAdd];
         addedCategories.forEach(cat => this.select.deselectOption(cat));
@@ -165,11 +165,11 @@ export class CategoryEditorComponent implements OnInit {
 
 
   deleteCategory(category: Category) {
-    this.deleteCategoryEvent.next(category);
+    this.deleteCategoryEvent.next({competitionId: this.competition.id, category});
   }
 
   getCategoryId(category: Category) {
-    return btoa(category.categoryId);
+    return category.id;
   }
 
   setCategoriesToAdd(categories: Category[]) {

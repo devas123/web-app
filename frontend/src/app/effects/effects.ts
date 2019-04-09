@@ -30,7 +30,6 @@ export class Effects {
 
   @Effect({dispatch: false})
   globalCommands$: Observable<Action> = this.actions$.pipe(ofType(
-    allActions.CREATE_COMPETITION_COMMAND,
     allActions.START_COMPETITION_COMMAND,
     allActions.DELETE_COMPETITION_COMMAND,
     eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
@@ -44,7 +43,11 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
     allActions.UNPUBLISH_COMPETITION_COMMAND),
-    tap(command => this.info.sendGlobalCommand(command).subscribe()));
+    tap(command => this.info.sendCommand(command).subscribe()));
+
+  @Effect({dispatch: false})
+  createCompetition$: Observable<Action> = this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
+    tap(command => this.info.sendCreateCompetitionCommand(command).subscribe()));
 
 
 

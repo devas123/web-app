@@ -11,10 +11,12 @@
                    [categories]="categories$ | async" [header]="false"
                    (fighterAdded)="dispatchAddFighterAction($event)"></app-add-fighter>
   <app-fighters-editor
+    [categories]="categories$ | async"
     [pageNumber]="pageNumber$ | async"
     [pageSize]="pageSize$ | async"
     [collectionSize]="totalCompetitors$ | async"
     [fighters]="competitors$ | async"
+    [categoryId]="categoryId$ | async"
     [competitionId]="competitionId$ | async"
     (fighterDeleted)="deleteFighter($event)"
     (pageChanged)="changePage($event)"

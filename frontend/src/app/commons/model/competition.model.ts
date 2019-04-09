@@ -5,7 +5,7 @@ export interface Weight {
 }
 
 export interface AgeDivision {
-  name: string;
+  id: string;
   minimalAge: number;
   maximalAge: number;
 }
@@ -33,13 +33,14 @@ export interface FightResult {
 }
 
 export interface Competitor {
+  id: string;
   email: string;
   userId: string;
   firstName: string;
   lastName: string;
   birthDate: Date;
   academy: string;
-  category: Category;
+  categoryId: string;
   competitionId: string;
   registrationStatus: string;
   promo: string;
@@ -83,17 +84,19 @@ export interface Academy {
 
 export interface Category {
   ageDivision: AgeDivision;
-  categoryId: string;
-  competitionId: string;
+  id: string;
   gender: string;
   weight: Weight;
   beltType: string;
   fightDuration: number;
-  competitorsQuantity: number;
+  numberOfCompetitors: number;
   fightsNumber: number;
 }
 
 export interface CategoryState {
-  categoryId: string;
-  eventNumber: number;
+  id: string;
+  brackets: any;
+  category: Category;
+  status: string;
+  numberOfCompetitors: number;
 }

@@ -5,7 +5,7 @@ import {
   eventManagerGetSelectedEvent,
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties,
+  eventManagerGetSelectedEventScheduleProperties, eventManagerGetSelectedEventTimeZone,
   ScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
@@ -30,6 +30,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
   selectedPeriod$: Observable<DashboardPeriod>;
   subs = new Subscription();
   competitionProperties: CompetitionProperties;
+  timezone$: Observable<string>;
 
   showSchedule = false;
 
@@ -40,6 +41,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
+    this.timezone$ = this.store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.subs.add(this.selectedCompetitionProperties$.subscribe(props => this.competitionProperties = props));
   }
 
@@ -58,7 +60,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
   }
 
   selectPeriod(periodId: string) {
-    this.router.navigate([btoa(periodId)], {relativeTo: this.route});
+    this.router.navigate([periodId], {relativeTo: this.route});
   }
 
   toggleSchedule() {

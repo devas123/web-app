@@ -77,12 +77,12 @@ export class EventPropertiesEditorComponent implements OnChanges {
         competitionId: this.properties.id,
         competitionName: this.properties.competitionName,
         // registrationFee: this.properties.registrationFee,
-        startDate: InfoService.parseZonedDateTime(this.properties.startDate),
+        startDate: InfoService.parseDate(this.properties.startDate),
         timeZone: this.properties.timeZone || 'UNKNOWN',
         schedulePublished: this.properties.schedulePublished || false,
         bracketsPublished: this.properties.bracketsPublished || false,
         status: this.properties.status || 'UNKNOWN',
-        endDate: InfoService.parseZonedDateTime(this.properties.endDate),
+        endDate: InfoService.parseDate(this.properties.endDate),
         registrationOpen: (this.properties.registrationInfo && this.properties.registrationInfo.registrationOpen) || false,
       });
     }

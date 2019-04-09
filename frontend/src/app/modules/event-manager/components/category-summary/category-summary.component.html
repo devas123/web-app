@@ -1,6 +1,6 @@
 <div class="ui container">
   <h2 class="ui header">Category:
-    {{category?.gender}}/{{category?.ageDivision?.name}}/{{category?.beltType}}/{{category?.weight?.id}}</h2>
+    {{category?.gender}}/{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</h2>
   <div class="ui divider"></div>
   <div class="content">
     <div class="ui basic button" (click)="goback()">Return</div>
@@ -12,7 +12,7 @@
         <div class="center aligned header">
           <div class="ui statistic">
             <div class="value">
-              {{competitors?.length}}
+              {{competitorsSize}}
             </div>
             <div class="label">
               Competitors
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div class="ui bottom attached button" routerLink="fighters">Competitors editor</div>
+      <div class="ui bottom attached button" (click)="navigateToCategoryFighters(category?.id)">Competitors editor</div>
     </div>
     <div class="card">
       <div class="content">
