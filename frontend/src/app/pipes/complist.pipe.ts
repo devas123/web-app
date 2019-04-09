@@ -8,9 +8,9 @@ export class GroupCompListPipe implements PipeTransform {
   transform(array: Competitor[], byAcademy?: boolean): CompetitorsList[] {
     const result: CompetitorsList[] = [];
     array.forEach((competitor) => {
-      const index = (this.sortingAttrExist(byAcademy ? competitor.academy : competitor.category.categoryId, result));
+      const index = (this.sortingAttrExist(byAcademy ? competitor.academy : competitor.categoryId, result));
       index === -1 ? result.push({
-          groupingAttr: byAcademy ? competitor.academy : competitor.category.categoryId,
+          groupingAttr: byAcademy ? competitor.academy : competitor.categoryId,
         competitors: [competitor]
       })
         : result[index].competitors.push(competitor);

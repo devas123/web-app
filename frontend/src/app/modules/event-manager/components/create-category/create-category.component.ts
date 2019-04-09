@@ -48,8 +48,8 @@ export class CreateCategoryComponent implements OnInit {
     return this.form.get(['weight', 'minvalue']);
   }
 
-  get ageDivisionName() {
-    return this.form.get(['ageDivision', 'name']);
+  get ageDivisionId() {
+    return this.form.get(['ageDivision', 'id']);
   }
 
   get ageDivisionMaxAge() {
@@ -71,7 +71,7 @@ export class CreateCategoryComponent implements OnInit {
       beltType: [''],
       fightDuration: [],
       ageDivision: this.fb.group({
-        name: [''],
+        id: [''],
         minimalAge: [],
         maximalAge: []
       })
@@ -98,11 +98,10 @@ export class CreateCategoryComponent implements OnInit {
       const createCategorySubscription = this.store.pipe(select(eventManagerGetSelectedEventId), map((competitionId: string) => {
         let cat = {
           ageDivision: {
-            name: this.ageDivisionName.value,
+            id: this.ageDivisionId.value,
             maximalAge: this.ageDivisionMaxAge.value,
             minimalAge: this.ageDivisionMinAge.value
           },
-          competitionId,
           gender: this.gender.value,
           weight: {
             id: this.weightName.value,

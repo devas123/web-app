@@ -33,6 +33,7 @@
   <div class="ui clearing divider"></div>
   <ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && selectedCategory">
     <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"
+                         [competitionId]="(competition$ | async)?.id"
                          (competitorMoved)="sendCompetitorMovedAction($event)"></app-brackets-editor>
   </ng-container>
   <ng-container *ngIf="!(fights$ | async) || (fights$ | async).length === 0">

@@ -54,15 +54,9 @@ import {
   fightsInitialState
 } from '../../competition/reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
-import {
-  dashboardGetPeriodsCollection,
-  dashboardReducers,
-  DashboardState,
-  periodEntityAdapter
-} from './dashboard-reducers';
+import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
-import {EntitySelectors} from '@ngrx/entity/src/models';
 
 
 export interface EventManagerState {
@@ -151,13 +145,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
         const {from, to, category, index} = payload;
         if (category) {
           let newState = state;
-          if (from && from != null) {
+          if (from) {
             let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.id === from);
             if (updatedPeriod && updatedPeriod.categories) {
               const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.id === updatedPeriod.id);
               updatedPeriod = {
                 ...updatedPeriod,
-                categories: updatedPeriod.categories.filter(cat => cat.categoryId !== category.categoryId)
+                categories: updatedPeriod.categories.filter(cat => cat.id !== category.id)
               };
               newState = {
                 ...newState,
@@ -174,12 +168,12 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
             }
           }
 
-          if (to && to != null) {
+          if (to) {
             let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.id === to);
             if (updatedPeriod) {
               const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.id === updatedPeriod.id);
               let newCategories = [...updatedPeriod.categories, category];
-              if (index && index !== null && +index > 0) {
+              if (index && +index > 0) {
                 newCategories = [...updatedPeriod.categories.slice(0, index),
                   category, ...updatedPeriod.categories.slice(index)];
               } else {
@@ -252,20 +246,12 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       if (state.selectedEventId === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
 
         const {brackets} = payload;
-        const newCompetitors = competitorEntityAdapter.addAll(payload.competitors, competitorsInitialState);
-        const newFights = brackets && brackets.fights && fightEntityAdapter.addAll(brackets.fights, fightsInitialState);
+        const newFights = brackets && brackets.fights && fightEntityAdapter.upsertMany(brackets.fights, fightsInitialState);
         return {
           ...state,
           selectedEventCategories: {
             ...state.selectedEventCategories,
-            selectedCategoryState: {
-              categoryId: categoryId,
-              eventNumber: payload.eventOffset
-            },
-            selectedCategoryCompetitors: {
-              ...newCompetitors,
-              selectedCompetitorId: state.selectedEventCompetitors.selectedCompetitorId
-            },
+            selectedCategoryState: payload,
             selectedCategoryFights: newFights || fightsInitialState
           }
         };
@@ -275,11 +261,16 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
 
     case EVENT_MANAGER_CATEGORIES_LOADED: {
       const competitionId = action.competitionId;
-      const categories = action.payload as Category[];
+      const categoriesRaw = action.payload as any[];
+      const categories = categoriesRaw.map(rwc => ({
+        id: rwc.id,
+        ...rwc.category,
+        numberOfCompetitors: rwc.numberOfCompetitors
+      } as Category));
       if (competitionId === state.selectedEventId) {
         return {
           ...state,
-          selectedEventCategories: categoryEntityAdapter.addAll(categories, state.selectedEventCategories)
+          selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
         };
       } else {
         return state;
@@ -289,11 +280,12 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       const newState = {
         ...state,
         selectedEventId: action.payload.id,
-        selectedEventCategories: categoriesInitialState
+        selectedEventCategories: categoriesInitialState,
+        selectedEventCompetitors: competitorsInitialState,
       };
       return competitionPropertiesEntitiesAdapter.updateOne({
-        id: action.payload.competitionId,
-        changes: action.payload
+        id: action.payload.id,
+        changes: {...action.payload} as Partial<CompetitionProperties>
       }, newState);
     }
     case COMPETITION_PUBLISHED:
@@ -352,7 +344,6 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
             selectedCategoryId: null,
             selectedCategoryFights: fightsInitialState,
             selectedCategoryState: null,
-            selectedCategoryCompetitors: competitorsInitialState
           }
         };
       }
@@ -373,8 +364,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_COMPETITOR_ADDED: {
-      if (action.competitionId === state.selectedEventId && action.categoryId) {
-        let newCategoryCompetitors = state.selectedEventCategories.selectedCategoryCompetitors;
+      if (action.competitionId === state.selectedEventId && action.id) {
         let newEventCompetitors = state.selectedEventCompetitors;
         if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
           newEventCompetitors = competitorEntityAdapter.addOne(action.payload, state.selectedEventCompetitors);
@@ -383,21 +373,9 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
           ...newEventCompetitors,
           total: newEventCompetitors.total + 1
         };
-        if (action.categoryId === state.selectedEventCategories.selectedCategoryId) {
-          newCategoryCompetitors = competitorEntityAdapter.addOne(action.payload, state.selectedEventCategories.selectedCategoryCompetitors);
-        }
-        const updatedCategory = state.selectedEventCategories.entities[action.categoryId];
-        const competitorsQuantity = (updatedCategory && updatedCategory.competitorsQuantity) || 0;
         return {
           ...state,
           selectedEventCompetitors: newEventCompetitors,
-          selectedEventCategories: categoryEntityAdapter.updateOne({
-            id: action.categoryId,
-            changes: {competitorsQuantity: competitorsQuantity + 1}
-          }, {
-            ...state.selectedEventCategories,
-            selectedCategoryCompetitors: newCategoryCompetitors
-          })
         };
       }
       return state;
@@ -417,13 +395,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case BRACKETS_GENERATED: {
       if (action.competitionId === state.selectedEventId) {
         const {fights} = action.payload;
-        if (action.categoryId === state.selectedEventCategories.selectedCategoryId) {
+        if (action.id === state.selectedEventCategories.selectedCategoryId) {
           if (fights) {
             const categoryFights = fightEntityAdapter.addAll(fights, fightsInitialState);
             return {
               ...state,
               selectedEventCategories: categoryEntityAdapter.updateOne({
-                id: action.categoryId,
+                id: action.id,
                 changes: {fightsNumber: fights.length}
               }, {
                 ...state.selectedEventCategories,
@@ -436,7 +414,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
           return {
             ...state,
             selectedEventCategories: categoryEntityAdapter.updateOne({
-              id: action.categoryId,
+              id: action.id,
               changes: {fightsNumber: fights.length}
             }, state.selectedEventCategories)
           };
@@ -445,23 +423,10 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_COMPETITOR_REMOVED: {
-      if (action.competitionId === state.selectedEventId && action.categoryId) {
-        let newCategoryCompetitors = state.selectedEventCategories.selectedCategoryCompetitors;
-        if (action.categoryId === state.selectedEventCategories.selectedCategoryId) {
-          newCategoryCompetitors = competitorEntityAdapter.removeOne(action.payload.competitorId, state.selectedEventCategories.selectedCategoryCompetitors);
-        }
-        const updatedCategory = state.selectedEventCategories.entities[action.categoryId];
-        const competitorsQuantity = (updatedCategory && updatedCategory.competitorsQuantity) || 0;
+      if (action.competitionId === state.selectedEventId && action.id) {
         return {
           ...state,
           selectedEventCompetitors: competitorEntityAdapter.removeOne(action.payload.competitorId, state.selectedEventCompetitors),
-          selectedEventCategories: categoryEntityAdapter.updateOne({
-            id: action.categoryId,
-            changes: {competitorsQuantity: competitorsQuantity - 1}
-          }, {
-            ...state.selectedEventCategories,
-            selectedCategoryCompetitors: newCategoryCompetitors
-          })
         };
       }
       return state;
@@ -472,12 +437,12 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return competitionPropertiesEntitiesAdapter.removeOne(action.competitionId, state);
     case CATEGORY_STATE_DELETED:
     case CATEGORY_DELETED:
-      if (action.competitionId === state.selectedEventId && action.categoryId) {
+      if (action.competitionId === state.selectedEventId && action.id) {
         let newState = {
           ...state,
-          selectedEventCategories: categoryEntityAdapter.removeOne(action.categoryId, state.selectedEventCategories)
+          selectedEventCategories: categoryEntityAdapter.removeOne(action.id, state.selectedEventCategories)
         };
-        if (action.categoryId === newState.selectedEventCategories.selectedCategoryId) {
+        if (action.id === newState.selectedEventCategories.selectedCategoryId) {
           newState = {
             ...newState,
             selectedEventCategories: {
@@ -562,53 +527,29 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_FIGHTER_SELECTED: {
-      const {competitionId, categoryId, payload} = action;
+      const {competitionId, payload} = action;
       if (state.selectedEventId === competitionId && payload) {
-        let newState = {
+        const newState = {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: payload
           }
         };
-        if (categoryId && state.selectedEventCategories.selectedCategoryId === categoryId) {
-          newState = {
-            ...newState,
-            selectedEventCategories: {
-              ...newState.selectedEventCategories,
-              selectedCategoryCompetitors: {
-                ...newState.selectedEventCategories.selectedCategoryCompetitors,
-                selectedCompetitorId: payload
-              }
-            }
-          };
-        }
         return newState;
       }
       return state;
     }
     case EVENT_MANAGER_FIGHTER_UNSELECTED: {
-      const {competitionId, categoryId} = action;
+      const {competitionId} = action;
       if (state.selectedEventId === competitionId) {
-        let newState = {
+        const newState = {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: null
           }
         };
-        if (categoryId && state.selectedEventCategories.selectedCategoryId === categoryId) {
-          newState = {
-            ...newState,
-            selectedEventCategories: {
-              ...newState.selectedEventCategories,
-              selectedCategoryCompetitors: {
-                ...newState.selectedEventCategories.selectedCategoryCompetitors,
-                selectedCompetitorId: null
-              }
-            }
-          };
-        }
         return newState;
       }
       return state;
@@ -629,7 +570,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case CATEGORY_ADDED: {
-      const category = action.payload.category as Category;
+      const category = action.payload.categoryId as Category;
       if (action.competitionId === state.selectedEventId && category) {
         return {
           ...state,
@@ -665,11 +606,11 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED: {
-      if (action.competitionId === state.selectedEventId && action.categoryId === state.selectedEventCategories.selectedCategoryId) {
+      if (action.competitionId === state.selectedEventId && action.id === state.selectedEventCategories.selectedCategoryId) {
         return {
           ...state,
           selectedEventCategories: categoryEntityAdapter.updateOne({
-              id: action.categoryId,
+              id: action.id,
               changes: {fightsNumber: 0}
             }, {
               ...state.selectedEventCategories,
@@ -678,11 +619,11 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
           )
         };
       }
-      if (action.categoryId) {
+      if (action.id) {
         return {
           ...state,
           selectedEventCategories: categoryEntityAdapter.updateOne({
-            id: action.categoryId,
+            id: action.id,
             changes: {fightsNumber: 0}
           }, state.selectedEventCategories)
         };
@@ -692,20 +633,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_COMPETITOR_UPDATED: {
       if (action.competitionId === state.selectedEventId && action.payload) {
         const {fighter} = action.payload;
-        if (action.categoryId === state.selectedEventCategories.selectedCategoryId) {
+        if (action.id === state.selectedEventCategories.selectedCategoryId) {
           return {
             ...state,
             selectedEventCompetitors: competitorEntityAdapter.updateOne({
               id: fighter.email,
               changes: fighter
-            }, state.selectedEventCompetitors),
-            selectedEventCategories: {
-              ...state.selectedEventCategories,
-              selectedCategoryCompetitors: competitorEntityAdapter.updateOne({
-                id: fighter.email,
-                changes: fighter
-              }, state.selectedEventCategories.selectedCategoryCompetitors)
-            }
+            }, state.selectedEventCompetitors)
           };
         }
         return {
@@ -754,6 +688,7 @@ export const eventManagerGetSelectedEvent = createSelector(
 );
 
 export const eventManagerGetSelectedEventRegistrationInfo = createSelector(eventManagerGetSelectedEvent, event => event && event.registrationInfo);
+export const eventManagerGetSelectedEventTimeZone = createSelector(eventManagerGetSelectedEvent, event => event && event.timeZone);
 
 export const eventManagerGetSelectedEventName = createSelector(eventManagerGetSelectedEvent, event => event && event.competitionName);
 
@@ -761,9 +696,9 @@ export const eventManagerGetSelectedEventsCategoriesCollection = createSelector(
   return (state && state.selectedEventCategories) || categoriesInitialState;
 });
 export const eventManagerGetSelectedEventSelectedCategoryState = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedCategoryState);
+export const eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors = createSelector(eventManagerGetSelectedEventSelectedCategoryState, state => state && state.numberOfCompetitors);
 export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedCategoryId);
 export const eventManagerGetSelectedEventSelectedCategoryFightsCollection = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedCategoryFights);
-export const eventManagerGetSelectedEventSelectedCategoryCompetitorsCollection = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedCategoryCompetitors);
 
 export const {
   // select the dictionary of user entities
@@ -778,12 +713,6 @@ export const {
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategoryAllFights,
 } = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsCollection);
-
-export const {
-
-  selectEntities: eventManagerGetSelectedEventSelectedCategoryCompetitorsDictionary,
-  selectAll: eventManagerGetSelectedEventSelectedCategoryAllCompetitors,
-} = competitorEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryCompetitorsCollection);
 
 export const eventManagerGetSelectedEventSelectedCategory = createSelector(
   eventManagerGetSelectedEventCategoriesDictionary,
@@ -814,17 +743,6 @@ export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventM
 });
 
 export const eventManagerGetSelectedEventSelectedCategoryFights = eventManagerGetSelectedEventSelectedCategoryAllFights;
-export const eventManagerGetSelectedEventSelectedCategoryCompetitors = eventManagerGetSelectedEventSelectedCategoryAllCompetitors;
-export const eventManagerGetSelectedEventSelectedCategoryCompetitorsSelectedCompetitorId =
-  createSelector(eventManagerGetSelectedEventSelectedCategoryCompetitorsCollection, state => state.selectedCompetitorId);
-
-export const eventManagerGetSelectedEventSelectedCategorySelectedCompetitor = createSelector(
-  eventManagerGetSelectedEventSelectedCategoryCompetitorsDictionary,
-  eventManagerGetSelectedEventSelectedCategoryCompetitorsSelectedCompetitorId,
-  (entities, selectedId) => {
-    return selectedId && entities[selectedId];
-  }
-);
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(eventManagerGetMyEventsCollection, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

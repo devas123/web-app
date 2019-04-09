@@ -31,7 +31,7 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
   fights$: Observable<Fight[]>;
   category$: Observable<Category>;
   selectedCategory;
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.categoryId && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
   constructor(private store: Store<AppState>) {
@@ -43,17 +43,17 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
   }
 
   sendCompetitorMovedAction(payload: any) {
-    this.store.dispatch(eventManagerMoveFighter(payload.competitionId, payload.categoryId, payload));
+    this.store.dispatch(eventManagerMoveFighter(payload.competitionId, payload.id, payload));
   }
 
   setCategoryId(category: Category) {
     this.selectedCategory = category;
-    this.store.dispatch(eventManagerCategorySelected(category.competitionId, category.categoryId));
+    this.store.dispatch(eventManagerCategorySelected(this.competitionId, category.id));
   }
 
   dropSelectedBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.selectedCategory.competitionId, this.selectedCategory.categoryId));
+      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.selectedCategory.competitionId, this.selectedCategory.id));
     }
   }
 
@@ -68,7 +68,7 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
 
   generateBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerGenerateBrackets(this.selectedCategory.competitionId, this.selectedCategory.categoryId));
+      this.store.dispatch(eventManagerGenerateBrackets(this.selectedCategory.competitionId, this.selectedCategory.id));
     }
   }
 

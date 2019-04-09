@@ -3,7 +3,7 @@ import {AppState, CompetitionProperties} from '../../../../reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Category, Fight} from '../../../../commons/model/competition.model';
 import {
-  eventManagerGetSelectedEvent,
+  eventManagerGetSelectedEvent, eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryFights
 } from '../../redux/event-manager-reducers';
@@ -24,6 +24,7 @@ export class CategoryBracketsEditorContainerComponent implements OnInit, OnDestr
 
   subscription = new Subscription();
   selectedCategory: Category;
+  competitionId: string;
   competition$: Observable<CompetitionProperties>;
   fights$: Observable<Fight[]>;
   category$: Observable<Category>;
@@ -33,13 +34,14 @@ export class CategoryBracketsEditorContainerComponent implements OnInit, OnDestr
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.subscription.add(store.pipe(select(eventManagerGetSelectedEventSelectedCategory)).subscribe(cat => this.selectedCategory = cat));
+    this.subscription.add(store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
   }
 
   getName = (category: Category) => AddFighterComponent.displayCategory(category);
 
   dropSelectedBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.selectedCategory.competitionId, this.selectedCategory.categoryId));
+      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.competitionId, this.selectedCategory.id));
     }
   }
 
@@ -48,12 +50,12 @@ export class CategoryBracketsEditorContainerComponent implements OnInit, OnDestr
 
   generateBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerGenerateBrackets(this.selectedCategory.competitionId, this.selectedCategory.categoryId));
+      this.store.dispatch(eventManagerGenerateBrackets(this.competitionId, this.selectedCategory.id));
     }
   }
 
   sendCompetitorMovedAction(payload: any) {
-    this.store.dispatch(eventManagerMoveFighter(payload.competitionId, payload.categoryId, payload));
+    this.store.dispatch(eventManagerMoveFighter(payload.competitionId, payload.id, payload));
   }
 
 

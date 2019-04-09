@@ -21,7 +21,7 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 export class FighterProfileComponent implements OnInit, OnChanges {
 
   @Output()
-  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategory: Category }>();
+  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategory: string }>();
   @Output()
   competitorChanged = new EventEmitter<{ fighter: Competitor }>();
 
@@ -52,14 +52,14 @@ export class FighterProfileComponent implements OnInit, OnChanges {
   lastName: string;
   birthDate: Date;
   academy: string;
-  category: Category;
+  categoryId: Category;
   competitionId: string;
   registrationStatus: string;
   promo: string; */
 
-  displayCategory = (category: Category) => AddFighterComponent.displayCategory(category);
+  displayCategory = (category: string) => this.getCategoryName(category);
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.categoryId && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   academyFormatter = (option: Academy, query?: string) => option.name || option.id;
   academyOptionsFilter = (options: Academy[], filter: string) => options.filter(ac => ac.name && ac.name.toLowerCase().includes(filter.toLowerCase()));
 
@@ -154,7 +154,7 @@ export class FighterProfileComponent implements OnInit, OnChanges {
   changeCategory() {
     const newCategory = this.category.value;
     const fighter = this.fighter;
-    if (newCategory && fighter && fighter.category && fighter.category.categoryId !== newCategory.categoryId) {
+    if (newCategory && fighter && fighter.categoryId && fighter.categoryId !== newCategory.id) {
       this.categoryChanged.next({fighter, newCategory});
     }
   }
@@ -176,11 +176,17 @@ export class FighterProfileComponent implements OnInit, OnChanges {
         lastName: this.fighter.lastName,
         birthDate: this.fighter.birthDate,
         academy: this.fighter.academy,
-        category: AddFighterComponent.displayCategory(this.fighter.category),
+        category: this.getCategoryName(this.fighter.categoryId),
         registrationStatus: this.fighter.registrationStatus,
         promo: this.fighter.promo,
       });
     }
   }
-
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories.find(c => c.id === categoryId);
+    if (cat) {
+      return AddFighterComponent.displayCategory(cat);
+    }
+    return categoryId;
+  }
 }

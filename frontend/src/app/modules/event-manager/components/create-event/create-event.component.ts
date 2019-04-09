@@ -70,7 +70,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         props.competitionName = this.competitionName.value;
         // props.registrationFee = this.registrationFee.value || '1500';
         props.registrationInfo = regInfo;
-        props.id = btoa(this.competitionName.value).replace(/=/gi, '_');
+        props.id = '';
         props.schedulePublished = false;
         props.bracketsPublished = false;
         return createCompetition(props);

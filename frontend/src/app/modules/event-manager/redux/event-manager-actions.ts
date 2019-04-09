@@ -42,7 +42,6 @@ export const EVENT_MANAGER_ALL_BRACKETS_DROPPED = 'ALL_BRACKETS_DROPPED';
 export const EVENT_MANAGER_FIGHTER_LOADED = 'EVENT_MANAGER_FIGHTER_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED';
-export const EVENT_MANAGER_FIGHTERS_FOR_CATEGORY_PAGE_CHANGED = 'EVENT_MANAGER_FIGHTERS_FOR_CATEGORY_PAGE_CHANGED';
 export const EVENT_MANAGER_CATEGORIES_LOADED = 'EVENT_MANAGER_CATEGORIES_LOADED';
 export const EVENT_MANAGER_SCHEDULE_LOADED = 'EVENT_MANAGER_SCHEDULE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STATE_LOADED = 'EVENT_MANAGER_CATEGORY_STATE_LOADED';
@@ -82,7 +81,7 @@ export const loadMyCompetitions = (creatorId: any, status?: string) => ({
 export const eventManagerAddRegistrationPeriod = (competitionId: string, period: RegistrationPeriod) => ({
   type: EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   competitionId,
-  payload: period
+  payload: {period}
 });
 
 export const eventManagerAddRegistrationGroup = (competitionId: string, periodId, group: RegistrationGroup) => ({
@@ -94,10 +93,10 @@ export const eventManagerAddRegistrationGroup = (competitionId: string, periodId
   }
 });
 
-export const eventManagerDeleteRegistrationPeriod = (competitionId: string, periodId: string,) => ({
+export const eventManagerDeleteRegistrationPeriod = (competitionId: string, periodId: string) => ({
   type: EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   competitionId,
-  payload: periodId
+  payload: {periodId}
 });
 
 export const eventManagerDeleteRegistrationGroup = (competitionId: string, periodId: string, groupId: string) => ({
@@ -152,7 +151,7 @@ export const eventManagerSelectCompetition = (competitionId: string) => ({
 export const eventManagerAddCategory = (competitionId, category: Category) => ({
   type: ADD_CATEGORY_COMMAND,
   competitionId,
-  payload: category
+  payload: {category}
 });
 
 export const eventManagerPeriodAdded = (competitionId, period: PeriodProperties) => ({
@@ -189,7 +188,7 @@ export const updateCompetitionProperties = (props: CompetitionProperties) => ({
 export const addCompetitor = (competitionId: string, competitor: Competitor) => ({
   type: EVENT_MANAGER_ADD_COMPETITOR,
   competitionId: competitionId,
-  categoryId: competitor.category.categoryId,
+  categoryId: competitor.categoryId,
   payload: competitor
 });
 
@@ -228,8 +227,8 @@ export const eventManagerCategorySelected = (competitionId: string, categoryId: 
 });
 export const eventManagerCategoryStateLoaded = (categoryState) => ({
   type: EVENT_MANAGER_CATEGORY_STATE_LOADED,
-  competitionId: categoryState.category.competitionId,
-  categoryId: categoryState.category.categoryId,
+  competitionId: categoryState.competitionId,
+  categoryId: categoryState.category.id,
   payload: categoryState
 });
 
@@ -245,13 +244,14 @@ export const eventManagerCompetitionUnselected = ({
 export const eventManagerRemoveCompetitor = (competitor: Competitor) => ({
   type: EVENT_MANAGER_REMOVE_COMPETITOR,
   competitionId: competitor.competitionId,
-  categoryId: competitor.category.categoryId,
+  categoryId: competitor.categoryId,
   payload: {competitorId: competitor.email}
 });
 
-export const eventManagerLoadFightersForCompetition = (competitionId, pageNumber, pageSize, searchString?) => ({
+export const eventManagerLoadFightersForCompetition = (competitionId, categoryId, pageNumber, pageSize, searchString?) => ({
   type: EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
   competitionId,
+  categoryId,
   payload: {
     pageSize,
     pageNumber,
@@ -259,18 +259,12 @@ export const eventManagerLoadFightersForCompetition = (competitionId, pageNumber
   }
 });
 
-export const eventManagerCompetitionFightersPageChanged = (competitionId: string, pageNumber: number) => ({
+export const eventManagerCompetitionFightersPageChanged = (competitionId: string, categoryId, pageNumber: number) => ({
   type: EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
   competitionId,
+  categoryId,
   payload: pageNumber
 });
-
-export const eventManagerCategoryFightersPageChanged = (competitionId: string, pageNumber: number) => ({
-  type: EVENT_MANAGER_FIGHTERS_FOR_CATEGORY_PAGE_CHANGED,
-  competitionId,
-  payload: pageNumber
-});
-
 
 export const eventManagerFightersForCompetitionLoaded = (competitionId, payload) => ({
   type: EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
@@ -302,7 +296,7 @@ export const eventManagerLoadFighterCommand = (competitionId, categoryId, fighte
 export const eventManagerFighterLoaded = (competitor: Competitor) => ({
   type: EVENT_MANAGER_FIGHTER_LOADED,
   competitionId: competitor.competitionId,
-  categoryId: competitor.category.categoryId,
+  categoryId: competitor.categoryId,
   payload: competitor
 });
 
@@ -312,7 +306,7 @@ export const eventManagerFighterUnselected = (competitionId, categoryId) => ({
   categoryId
 });
 
-export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategory: Category) => ({
+export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategory: string) => ({
   type: EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
   competitionId: fighter.competitionId,
   payload: {
@@ -323,7 +317,7 @@ export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor,
 export const eventManagerUpdateCompetitorCommand = (fighter: Competitor) => ({
   type: EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   competitionId: fighter.competitionId,
-  categoryId: fighter.category.categoryId,
+  categoryId: fighter.categoryId,
   payload: {
     fighter
   }

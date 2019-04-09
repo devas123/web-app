@@ -21,7 +21,7 @@ export class MatManagementContainerComponent implements OnInit, OnDestroy {
     this.subs.add(this.route.params.pipe(
       map(p => p['matId']),
       filter(matId => matId && matId.length > 0),
-      map(matId => dashboardMatSelected(atob(matId)))).subscribe(this.store));
+      map(matId => dashboardMatSelected(matId))).subscribe(this.store));
   }
 
   ngOnInit() {

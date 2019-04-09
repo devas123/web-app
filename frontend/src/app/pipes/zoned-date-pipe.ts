@@ -1,23 +1,23 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {DateTime} from 'luxon'
+import {DateTime} from 'luxon';
+
+type dateOrStr = Date | string;
 
 @Pipe({
   name: 'zdate'
 })
 export class ZonedDatePipe implements PipeTransform {
-  transform(value?: string, showtime?: boolean): string {
+  transform(value?: dateOrStr, showtime?: boolean, zone?: string): string {
+    const z = zone || 'UTC';
     if (value) {
-      const keepZone = DateTime.fromFormat(value, "yyyy-MM-dd'T'HH:mm:ss.SZZ[z]", {
-        setZone: true
-      });
+      const keepZone = value instanceof Date ? DateTime.fromMillis(value.getTime()) : DateTime.fromISO(value, {zone: z});
       if (showtime) {
-        return keepZone.toLocaleString(DateTime.DATETIME_SHORT);
+        return keepZone.toLocaleString(DateTime.DATETIME_SHORT) + (zone ? `, ${zone}` : '');
       } else {
-        return keepZone.toLocaleString(DateTime.DATE_SHORT);
-
+        return keepZone.toLocaleString(DateTime.DATE_SHORT) + (zone ? `, ${zone}` : '');
       }
     }
-    return ''
+    return '';
   }
 }
 

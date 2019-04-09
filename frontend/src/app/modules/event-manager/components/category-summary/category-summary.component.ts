@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CategoryState} from '../../../../commons/model/competition.model';
-import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
+import {Category, Fight} from '../../../../commons/model/competition.model';
 import {obsoleteFight} from '../../redux/reducers';
 
 @Component({
@@ -17,7 +17,10 @@ export class CategorySummaryComponent implements OnInit {
   fights: Fight[];
 
   @Input()
-  competitors: Competitor[];
+  competitorsSize: number;
+
+  @Input()
+  competitionId: string;
 
   @Input()
   category: Category;
@@ -27,6 +30,9 @@ export class CategorySummaryComponent implements OnInit {
 
   @Output()
   gobackClicked = new EventEmitter<any>();
+
+  @Output()
+  categoryFightersSelected = new EventEmitter<{categoryId: string, competitionId: string}>();
 
   constructor() {
   }
@@ -39,10 +45,16 @@ export class CategorySummaryComponent implements OnInit {
   }
 
   getFightsCount() {
-    if (this.fights && this.competitors) {
-      return this.fights.filter(f => !obsoleteFight(f, this.competitors.length === 3)).length;
+    if (this.fights && this.competitorsSize) {
+      return this.fights.filter(f => !obsoleteFight(f, this.competitorsSize === 3)).length;
     } else {
       return 0;
+    }
+  }
+
+  navigateToCategoryFighters(categoryId: string) {
+    if (categoryId) {
+      this.categoryFightersSelected.next({categoryId, competitionId: this.competitionId});
     }
   }
 

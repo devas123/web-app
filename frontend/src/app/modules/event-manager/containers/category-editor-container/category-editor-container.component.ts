@@ -54,13 +54,13 @@ export class CategoryEditorContainerComponent implements OnInit, OnDestroy {
     this.router.navigate(['create'], {relativeTo: this.route});
   }
 
-  doDeleteCategory(category: Category) {
-    this.store.dispatch(deleteCategory(category.competitionId, category.categoryId));
+  doDeleteCategory({category, competitionId}) {
+    this.store.dispatch(deleteCategory(competitionId, category.id));
   }
 
-  sendAddDefaultCategoriesCommand(categories: Category[]) {
+  sendAddDefaultCategoriesCommand(categories: {competitionId: string, category: Category}[]) {
     if (categories && categories.length > 0) {
-      categories.forEach(cate => this.store.dispatch(eventManagerAddCategory(cate.competitionId, cate)));
+      categories.forEach(cate => this.store.dispatch(eventManagerAddCategory(cate.competitionId, cate.category)));
     }
   }
 

@@ -29,15 +29,15 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
 
   static displayCategory(cat: Category) {
-    if (!cat || cat == null) {
-      return '';
+    if (!!cat) {
+      return `${cat.gender}/${AddFighterComponent.getAgeDivisionName(cat)}/${cat.beltType}/${AddFighterComponent.getWeightId(cat)}`;
     }
-    return `${cat.gender}/${AddFighterComponent.getAgeDivisionName(cat)}/${cat.beltType}/${AddFighterComponent.getWeightId(cat)}`;
+    return '';
   }
 
   static getAgeDivisionName(cat: Category) {
     if (cat.ageDivision) {
-      return cat.ageDivision.name;
+      return cat.ageDivision.id;
     } else {
       return 'ALL AGES';
     }
@@ -51,7 +51,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
     }
   }
 
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.categoryId && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
   get email() {
@@ -137,11 +137,12 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
   submitForm() {
     const competitor = {
+      id: '',
       email: this.email.value,
       userId: this.userId.value,
       academy: this.academy.value,
       birthDate: this.birthDate.value,
-      category: this.category.value,
+      categoryId: this.category.value,
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       promo: this.promo.value,
@@ -151,7 +152,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
     this.fighterAdded.next(addCompetitor(this.competitionId.value, competitor));
     this.form.reset({
       competitionId: competitor.competitionId,
-      category: competitor.category
+      category: competitor.categoryId
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();

@@ -18,11 +18,11 @@ export class PeriodManagementContainerComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>) {
     this.subs.add(combineLatest(
-      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id && id != null)),
+      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => !!id)),
       this.route.params.pipe(map(params => params['periodId'])))
       .pipe(
         filter(response => response && response.length === 2 && response[0] != null),
-        map(r => dashboardPeriodSelected(atob(r[1]), r[0])))
+        map(r => dashboardPeriodSelected(r[1], r[0])))
       .subscribe(this.store));
   }
 

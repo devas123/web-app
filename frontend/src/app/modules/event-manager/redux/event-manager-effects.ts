@@ -5,10 +5,14 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {
+  EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND,
+  EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_COMPETITION_SELECTED,
   EVENT_MANAGER_CONNECT_SOCKET,
   EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
+  EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+  EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DISCONNECT_SOCKET,
   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
@@ -62,7 +66,7 @@ export class EventManagerEffects {
   loadFighter$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_FIGHTER_COMMAND),
     mergeMap((action: CommonAction) => {
-      return this.infoService.getCompetitor(action.competitionId, action.categoryId, action.payload).pipe(catchError(error => observableOf(error)));
+      return this.infoService.getCompetitor(action.competitionId, action.payload).pipe(catchError(error => observableOf(error)));
     }),
     map((payload: any) => {
       if (payload && payload.email) {
@@ -120,7 +124,7 @@ export class EventManagerEffects {
     ofType(EVENT_MANAGER_CATEGORY_SELECTED),
     mergeMap((action: CommonAction) => {
       if (action.competitionId) {
-        return this.infoService.getLatestCategoryState(action.categoryId).pipe(catchError(error => observableOf(error)));
+        return this.infoService.getLatestCategoryState(action.competitionId, action.categoryId).pipe(catchError(error => observableOf(error)));
       } else {
         return observableOf({});
       }
@@ -129,7 +133,7 @@ export class EventManagerEffects {
       if (state.category) {
         return eventManagerCategoryStateLoaded(state);
       } else {
-        return errorEvent('Error occured while loading category state: ' + JSON.stringify(state));
+        return errorEvent('Error occured while loading categoryId state: ' + JSON.stringify(state));
       }
     }));
 
@@ -139,11 +143,12 @@ export class EventManagerEffects {
     ofType(EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION),
     mergeMap((action: CommonAction) => {
       const {pageSize, pageNumber, searchString} = action.payload;
-      return this.infoService.getCompetitorsForCompetition(action.competitionId, pageNumber, pageSize, searchString);
+      const {competitionId, categoryId} = action;
+      return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString);
     }),
     map(response => {
-      if (response.total != null && response.page != null && response.id) {
-        return eventManagerFightersForCompetitionLoaded(response.id, response);
+      if (response.total != null && response.page != null && response.competitionId) {
+        return eventManagerFightersForCompetitionLoaded(response.competitionId, response);
       } else {
         return errorEvent('Error occured while loading: ' + JSON.stringify(response));
       }
@@ -183,8 +188,9 @@ export class EventManagerEffects {
       pageSize
     })))),
     map(ap => {
-      const {pageSize} = ap;
-      return eventManagerLoadFightersForCompetition(ap.action.competitionId, ap.action.payload, pageSize);
+      const {pageSize, action} = ap;
+      const {competitionId, categoryId, payload} = action;
+      return eventManagerLoadFightersForCompetition(competitionId, categoryId, payload, pageSize);
     }));
 
   @Effect({dispatch: false})
@@ -193,6 +199,10 @@ export class EventManagerEffects {
       EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
       EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
       EVENT_MANAGER_MOVE_COMPETITOR,
+      EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND,
+      EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
+      EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+      EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     tap(command => {
