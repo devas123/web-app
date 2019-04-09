@@ -4,11 +4,13 @@ import {combineLatest, Observable, Subscription} from 'rxjs';
 import {
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
-  eventManagerGetSelectedEventId
+  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventSelectedCategoryId
 } from '../../redux/event-manager-reducers';
 import {eventManagerLoadFightersForCompetition} from '../../redux/event-manager-actions';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-fighters-container',
@@ -21,20 +23,30 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
   pageSize$: Observable<number>;
 
   pageNumber$: Observable<number>;
+  categoryId$: Observable<string>;
 
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>) {
-    this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize), filter(size => size && size != null));
-    this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber), filter(number => number && number != null));
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+    this.categoryId$ = combineLatest(this.route.queryParams.pipe(map(params => params['categoryId'])), this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)))
+      .pipe(map(([routeCategoryId, stateCategoryId]) => {
+        if (routeCategoryId) {
+          return routeCategoryId;
+        } else {
+          return stateCategoryId;
+        }
+      }));
+    this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize), filter(size => size != null));
+    this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber), filter(number => number != null));
     const eventId$ = this.store.pipe(
       select(eventManagerGetSelectedEventId),
-      filter(id => id && id != null));
+      filter(id => id != null));
     this.subs.add(combineLatest(
       eventId$,
+      this.categoryId$,
       this.pageNumber$,
       this.pageSize$).pipe(map(value => {
-      return eventManagerLoadFightersForCompetition(value[0], value[1], value[2]);
+      return eventManagerLoadFightersForCompetition(value[0], value[1], value[2], value[3]);
     })).subscribe(store));
   }
 

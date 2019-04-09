@@ -42,7 +42,7 @@ export class MainMenuComponent implements OnInit {
   }
 
   eventManagerPage() {
-    this.router.navigate(['/user', this.user.userId, 'eventmanager']);
+    this.router.navigate(['/eventmanager']);
   }
 
 

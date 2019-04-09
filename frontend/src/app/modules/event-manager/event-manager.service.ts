@@ -34,6 +34,8 @@ export class EventManagerService {
   }
 
   private createSocket() {
+    this.store.dispatch(socketConnected);
+  } /*{
     try {
       console.log('Connecting to SockJS.');
       const that = this;
@@ -77,7 +79,7 @@ export class EventManagerService {
       console.error("Error while creating socket: " + e)
     }
   }
-
+*/
   // sendMessage(message: any) {
   //   if (this.connected) {
   //     this.socket.send(JSON.stringify({ text: message }));

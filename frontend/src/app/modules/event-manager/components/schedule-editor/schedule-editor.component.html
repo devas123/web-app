@@ -71,7 +71,7 @@
               <div class="ui middle aligned divided list" droppable dragHintClass="drag-hint-border"
                    [dropScope]="categoriesGroup" (onDrop)="onItemDrop($event, null)">
                 <a class="item" *ngFor="let cat of filteredCategories" draggable [dragScope]="categoriesGroup"
-                   [dragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.categoryId)">
+                   [dragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.id)">
                   <i class="circular users icon"></i>
                   <div class="content">
                     <div class="header">{{categoryName(cat)}}</div>
@@ -86,7 +86,7 @@
                 <i class="close link icon" (click)="removePeriod(period)"></i>
               </div>
               <div class="header">Period {{period?.id}}</div>
-              <div class="meta">Begins {{period?.startTime | zdate:true}}</div>
+              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
               <div class="ui middle aligned divided list" droppable [dropScope]="categoriesGroup"
                    (onDrop)="onItemDrop($event, period.id)" dragHintClass="drag-hint-border">
                 <a class="item" *ngFor="let cat of period?.categories" draggable [dragScope]="categoriesGroup"
@@ -116,6 +116,9 @@
       </div>
     </div>
   </div>
-  <app-schedule-display [competitionId]="competitionId" [schedule]="schedule" [categories]="categories"
-                        (categoryClicked)="goToCategoryEditor($event)"></app-schedule-display>
+  <app-schedule-display
+    [timeZone]="timeZone"
+    [competitionId]="competitionId" [schedule]="schedule" [categories]="categories"
+    (categoryClicked)="goToCategoryEditor($event)">
+  </app-schedule-display>
 </div>

@@ -22,7 +22,13 @@ export class FightersEditorComponent implements OnInit {
   }
 
   @Input()
+  categories: Category[];
+
+  @Input()
   competitionId: string;
+
+  @Input()
+  categoryId: string;
 
   @Input()
   fighters: Competitor[];
@@ -46,7 +52,7 @@ export class FightersEditorComponent implements OnInit {
   pageSize: number;
 
   @Output()
-  pageChanged = new EventEmitter<{ pageNumber: number, competitionId: string }>();
+  pageChanged = new EventEmitter<{ pageNumber: number, competitionId: string, categoryId: string }>();
 
   @Output()
   fighterDeleted = new EventEmitter<Competitor>();
@@ -69,12 +75,18 @@ export class FightersEditorComponent implements OnInit {
     this.fighterDeleted.next(fighter);
   }
 
-  getCategoryName(cat: Category) {
-    return AddFighterComponent.displayCategory(cat);
+  getCategoryName(categoryId: string): string {
+    if (this.categories) {
+      const cat = this.categories.find(c => c.id === categoryId);
+      if (cat) {
+        return AddFighterComponent.displayCategory(cat);
+      }
+    }
+    return categoryId;
   }
 
   selectPage(pageNumber: number) {
-    this.pageChanged.next({pageNumber, competitionId: this.competitionId});
+    this.pageChanged.next({pageNumber, competitionId: this.competitionId, categoryId: this.categoryId});
   }
 
   gotoFighterProfile(fighter: Competitor) {

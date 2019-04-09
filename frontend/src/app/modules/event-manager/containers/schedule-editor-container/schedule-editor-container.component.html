@@ -6,6 +6,7 @@
   <button class="ui basic button" (click)="toggleSchedulePropertiesEditor()">Toggle editor</button>
   <p></p>
   <app-schedule-editor [categories]="categories$ | async"
+                       [timeZone]="timeZone$ | async"
                        [schedule]="schedule$ | async"
                        [showEditor]="showEditor"
                        [competitionId]="competitionId$ | async"

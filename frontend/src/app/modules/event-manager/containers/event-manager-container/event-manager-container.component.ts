@@ -11,7 +11,6 @@ import {
 import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategorySelectedCompetitor,
   eventManagerGetSelectedEventSelectedCompetitor,
   eventManagerGetSocketConnected
 } from '../../redux/event-manager-reducers';
@@ -47,9 +46,9 @@ import {filter, map} from 'rxjs/operators';
               <div class="divider" *ngIf="i < breadcrumb.length - 1">/</div>
             </ng-container>
           </div>
+          <p></p>
+          <router-outlet></router-outlet>
         </div>
-        <p></p>
-        <router-outlet></router-outlet>
       </ng-container>
     </div>
   `,
@@ -80,37 +79,31 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
     this.socketConnected$ = this.store.pipe(select(eventManagerGetSocketConnected));
     this.routerSubscription.add(this.store.pipe(
       select(eventManagerGetSelectedEventName),
-      filter(name => name && name != null)).subscribe(name => {
+      filter(name => !!name)).subscribe(name => {
       this.selectedCompetitionName = name;
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(this.store.pipe(
       select(eventManagerGetSelectedEventSelectedCategory),
-      filter(category => category && category != null)).subscribe(category => {
+      filter(category => !!category)).subscribe(category => {
       this.selectedCategory = category;
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(this.store.pipe(
       select(eventManagerGetSelectedEventSelectedCompetitor),
-      filter(competitor => competitor && competitor != null)).subscribe(competitor => {
+      filter(competitor => !!competitor)).subscribe(competitor => {
       this.selectedCompetitor = competitor;
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(this.store.pipe(
-      select(eventManagerGetSelectedEventSelectedCategorySelectedCompetitor),
-      filter(competitor => competitor && competitor != null)).subscribe(competitor => {
-      this.selectedCategorySelectedCompetitor = competitor;
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(this.store.pipe(
       select(dashboardGetSelectedPeriod),
-      filter(period => period && period != null && period.name != null)).subscribe(period => {
+      filter(period => !!period && period.name != null)).subscribe(period => {
       this.dashboardSelectedPeriod = period.name;
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(this.store.pipe(
       select(dashboardGetSelectedPeriodSelectedMatId),
-      filter(matId => matId && matId != null)).subscribe(matId => {
+      filter(matId => !!matId)).subscribe(matId => {
       this.dashboardSelectedMat = extractMatNumberFromId(matId);
       this.createBreadcrumb();
     }));
@@ -127,7 +120,8 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
   }
 
   createBreadcrumb() {
-    const url = this.url;
+    const end = this.url.indexOf('?') >= 0 ? this.url.indexOf('?') : this.url.length;
+    const url = this.url.substring(0, end);
     if (url && url.lastIndexOf('eventmanager') >= 0) {
       const relativeUrl = url.substr(url.lastIndexOf('eventmanager'));
       this.breadcrumb = [] as { name: string, stepsback: number }[];
@@ -175,7 +169,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
     for (let i = 0; i < steps; i++) {
       newpath = newpath.slice(0, newpath.lastIndexOf('/'));
     }
-    this.router.navigateByUrl(newpath);
+    this.router.navigateByUrl(newpath).catch(reason => console.error(reason));
   }
 
   ngOnInit() {

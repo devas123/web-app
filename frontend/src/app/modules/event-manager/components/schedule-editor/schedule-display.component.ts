@@ -14,7 +14,7 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
           <div class="card" *ngFor="let period of schedule?.periods">
             <div class="content">
               <div class="header">{{period?.name}}</div>
-              <div class="meta">Begins {{period?.startTime | zdate:true}}</div>
+              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
               <div class="ui middle aligned divided list">
                 <a class="item" *ngFor="let scheduleEntry of period.schedule"
                    (click)="goToCategoryEditor(scheduleEntry?.categoryId)">
@@ -22,7 +22,7 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
                   <div class="content">
                     <div class="header">{{categoryNameForCategoryId(scheduleEntry?.categoryId)}}</div>
                     <div class="description">{{scheduleEntry?.numberOfFights}} fights</div>
-                    <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true}}</div>
+                    <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
                   </div>
                 </a>
               </div>
@@ -39,6 +39,9 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleDisplayComponent implements OnInit {
+
+  @Input()
+  timeZone: string = 'UTC';
 
   @Input()
   competitionId: string;
@@ -67,7 +70,7 @@ export class ScheduleDisplayComponent implements OnInit {
   }
 
   categoryNameForCategoryId(categoryId: string) {
-    const category = this.categories.find(cat => cat.categoryId === categoryId);
+    const category = this.categories.find(cat => cat.id === categoryId);
     if (category) {
       return this.categoryName(category);
     } else {

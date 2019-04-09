@@ -8,7 +8,7 @@ import {
   eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties,
+  eventManagerGetSelectedEventScheduleProperties, eventManagerGetSelectedEventTimeZone,
   PeriodProperties,
   ScheduleProperties
 } from '../../redux/event-manager-reducers';
@@ -29,6 +29,7 @@ export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
   scheduleProperties$: Observable<ScheduleProperties>;
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
+  timeZone$: Observable<string>;
   categories$: Observable<Category[]>;
 
   competitionId: string;
@@ -41,6 +42,7 @@ export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
     this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
+    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
   }

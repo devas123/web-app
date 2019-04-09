@@ -29,7 +29,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
     this.subs.add(this.urlProvidedFightId$.pipe(
       map(fightId => {
         if (fightId) {
-          return dashboardFightSelected(atob(fightId));
+          return dashboardFightSelected(fightId);
         }  else {
           return dashboardFightUnselected;
         }
@@ -46,7 +46,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
   }
 
   selectFightForScoreboard(fightId: string) {
-    this.router.navigate([btoa(fightId)], {relativeTo: this.route});
+    this.router.navigate([fightId], {relativeTo: this.route});
   }
 
   ngOnInit() {

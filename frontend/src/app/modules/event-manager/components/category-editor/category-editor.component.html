@@ -28,7 +28,7 @@
   </div>
   <div class="actions">
     <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
-    <button class="ui green button" [disabled]="!(categoriesToAdd && categoriesToAdd != null && competition && competition != null)" (click)="modal.approve('approved')" autofocus>Add selected
+    <button class="ui green button" [disabled]="!(!!categoriesToAdd && !!competition)" (click)="modal.approve('approved')" autofocus>Add selected
     </button>
   </div>
 </ng-template>
@@ -39,10 +39,10 @@
   <div class="content">
     <div class="ui basic button" routerLink="..">Return</div>
     <div class="ui basic button"
-         *ngIf="competition && competition != null"
+         *ngIf="!!competition"
          (click)="openModal('Select categories')">Select categories
     </div>
-    <div class="ui basic button" *ngIf="competition && competition != null"
+    <div class="ui basic button" *ngIf="!!competition"
          (click)="addCategory(competition?.id)">Create manually
     </div>
     <div class="ui icon search input">
@@ -53,7 +53,7 @@
   <div class="ui horizontal divider">
     Categories list
   </div>
-  <ng-container *ngIf="competition && competition != null">
+  <ng-container *ngIf="!!competition">
     <div class="ui relaxed divided list">
       <div *ngFor="let category of filteredCategories" class="item">
         <!--<div class="right floated content">-->
@@ -67,9 +67,9 @@
         </div>
         <i class="large github middle aligned icon"></i>
         <div class="content">
-          <a class="header" routerLink="{{getCategoryId(category)}}">{{category?.gender}}/{{category?.ageDivision?.name}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
+          <a class="header" routerLink="{{getCategoryId(category)}}">{{category?.gender}}/{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
           <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
-          <div class="description">Number of competitors: {{category?.competitorsQuantity || 0}}</div>
+          <div class="description">Number of competitors: {{category?.numberOfCompetitors || 0}}</div>
           <div class="description">Number of fights: {{category?.fightsNumber || 0}}</div>
           <div class="description">Minimal age: {{category?.ageDivision?.minimalAge > 0 ?
             category?.ageDivision?.minimalAge : 0}}

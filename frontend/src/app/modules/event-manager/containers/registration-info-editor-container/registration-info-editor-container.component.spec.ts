@@ -1,27 +1,27 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CategoryFightersEditorContainerComponent} from './category-fighters-editor-container.component';
-import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
-import {FightersEditorComponent} from '../../components/fighters-editor/fighters-editor.component';
-import {SuiModule} from 'ng2-semantic-ui'
+import {RegistrationInfoEditorContainerComponent} from './registration-info-editor-container.component';
+import {RegistrationInfoEditorComponent} from '../../components/registration-info-editor/registration-info-editor.component';
+import {RegistrationGroupEditorComponent} from '../../components/registration-group-editor/registration-group-editor.component';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {SuiDatepickerModule, SuiModalModule} from 'ng2-semantic-ui';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {RouterTestingModule} from '@angular/router/testing';
 
-
-describe('CategoryFightersEditorContainerComponent', () => {
-  let component: CategoryFightersEditorContainerComponent;
-  let fixture: ComponentFixture<CategoryFightersEditorContainerComponent>;
+describe('RegistrationInfoEditorContainerComponent', () => {
+  let component: RegistrationInfoEditorContainerComponent;
+  let fixture: ComponentFixture<RegistrationInfoEditorContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CategoryFightersEditorContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
-      imports: [SuiModule, ReactiveFormsModule, StoreModule.forRoot({
+      declarations: [RegistrationInfoEditorContainerComponent, RegistrationInfoEditorComponent, RegistrationGroupEditorComponent, TruncatePipe, ZonedDatePipe],
+      imports: [StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
       }, {
@@ -37,12 +37,13 @@ describe('CategoryFightersEditorContainerComponent', () => {
             }
           }
         }
-      }), RouterTestingModule]})
+      }), SuiDatepickerModule, ReactiveFormsModule, RouterTestingModule, SuiModalModule]
+    })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CategoryFightersEditorContainerComponent);
+    fixture = TestBed.createComponent(RegistrationInfoEditorContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

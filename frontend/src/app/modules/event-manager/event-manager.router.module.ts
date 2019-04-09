@@ -6,7 +6,6 @@ import {CategoryEditorContainerComponent} from './containers/category-editor-con
 import {EventManagerContainerComponent} from './containers/event-manager-container/event-manager-container.component';
 import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
-import {CategoryFightersEditorContainerComponent} from './containers/category-fighters-editor-container/category-fighters-editor-container.component';
 import {EventContainerComponent} from './containers/event-container/event-container.component';
 import {FightersEditorContainerComponent} from './containers/fighters-editor-container/fighters-editor-container.component';
 import {CategoryContainerComponent} from './containers/category-container/category-container.component';
@@ -24,6 +23,7 @@ import {ScoreboardContainerComponent} from './containers/scoreboard-container/sc
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
 import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
+import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 
 export const eventManagerRoutes: Routes = [
   {
@@ -45,6 +45,10 @@ export const eventManagerRoutes: Routes = [
           {
             path: '',
             component: EventPropertiesEditorContainerComponent
+          },
+          {
+            path: 'reg_info',
+            component: RegistrationInfoEditorContainerComponent
           },
           {
             path: 'brackets',
@@ -77,21 +81,21 @@ export const eventManagerRoutes: Routes = [
             component: CreateCategoryComponent
           },
           {
-            path: 'categories/:categoryId',
+            path: 'categories/:id',
             component: CategoryContainerComponent,
             children: [
               {
                 path: '',
                 component: CategorySummaryContainerComponent
               },
-              {
-                path: 'fighters',
-                component: CategoryFightersEditorContainerComponent
-              },
-              {
-                path: 'fighters/:fighterId',
-                component: FighterProfileContainerComponent
-              },
+              // {
+              //   path: 'fighters',
+              //   component: CategoryFightersEditorContainerComponent
+              // },
+              // {
+              //   path: 'fighters/:fighterId',
+              //   component: FighterProfileContainerComponent
+              // },
               {
                 path: 'brackets',
                 component: CategoryBracketsEditorContainerComponent

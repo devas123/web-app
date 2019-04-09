@@ -34,7 +34,7 @@ const maxBucketRounds = 4;
   selector: 'app-brackets-editor',
   templateUrl: './brackets-editor.component.html',
   styleUrls: ['./brackets-editor.component.scss'],
-  encapsulation: ViewEncapsulation.Native,
+  encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BracketsEditorComponent implements OnInit, OnChanges {
@@ -44,6 +44,10 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
 
   @Input()
   category: Category;
+
+  @Input()
+  competitionId: string;
+
   structuredFights: {
     totalRounds: number,
     totalFights: number,
@@ -54,10 +58,10 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
 
   calculateTotalRounds = (fights: Fight[], minRound: number) => {
     return fights.map(f => f.round).sort((a, b) => a - b).pop() + 1 - minRound;
-  };
+  }
 
 
-  // mock = mockfights.filter(f => !f.categoryId.includes('ABSOLUTE'));
+  // mock = mockfights.filter(f => !f.id.includes('ABSOLUTE'));
 
   constructor() {
   }
@@ -65,7 +69,7 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
   @Input('fights')
   set fights(f: Fight[]) {
     if (this.category) {
-      this._fights = f.filter(ff => ff.categoryId === this.category.categoryId);
+      this._fights = f.filter(ff => ff.categoryId === this.category.id);
     } else {
       this._fights = [];
     }
@@ -89,8 +93,8 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
 
   dropAllowed = (ff: Fight) => (dragData: any) => {
     const {from, competitor} = dragData;
-    return from.fightId !== ff.fightId && from.round === ff.round && !(ff.parentId1 && ff.parentId2) && competitor && competitor !== null;
-  };
+    return from.fightId !== ff.fightId && from.round === ff.round && !(ff.parentId1 && ff.parentId2) && !!competitor;
+  }
 
   onItemDrop(event: DropEvent, targetFight: Fight) {
     const index = event.index;
@@ -106,8 +110,8 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
   sendMoveCompetitorAction(event: { sourceFightId: string, competitorId: Competitor, targetFightId: string, index: number }) {
     this.competitorMoved.next({
       ...event,
-      categoryId: this.category.categoryId,
-      competitionId: this.category.competitionId
+      categoryId: this.category.id,
+      competitionId: this.competitionId
     });
   }
 
@@ -124,7 +128,7 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.category && this._fights) {
-      this._fights = this._fights.filter(ff => ff.categoryId === this.category.categoryId);
+      this._fights = this._fights.filter(ff => ff.categoryId === this.category.id);
       const roundFights = {};
 
       const minRound = this._fights.map(f => f.round).sort((a, b) => a - b)[0];

@@ -2,7 +2,7 @@ import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Academy, Category, CategoryState, Competitor, Fight} from '../../../commons/model/competition.model';
 
 export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
-  selectId: (c: Competitor) => c.email,
+  selectId: (c: Competitor) => c.id,
   sortComparer: false
 });
 
@@ -18,7 +18,7 @@ export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Figh
 
 const getAgeDivisionName = (cat: Category) => {
   if (cat.ageDivision) {
-    return cat.ageDivision.name;
+    return cat.ageDivision.id;
   } else {
     return 'ALL AGES';
   }
@@ -33,7 +33,7 @@ const getWeightId = (cat: Category) => {
 };
 
 const displayCategory = (cat: Category) => {
-  if (!cat || cat == null) {
+  if (!cat) {
     return '';
   }
   return `${cat.gender}/${getAgeDivisionName(cat)}/${cat.beltType}/${getWeightId(cat)}`;
@@ -42,16 +42,15 @@ const displayCategory = (cat: Category) => {
 const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
 
 export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapter<Category>({
-  selectId: (category: Category) => category.categoryId,
+  selectId: (category: Category) => category.id,
   sortComparer: categoriesComparer
 });
 
 
 export interface CategoriesCollection extends EntityState<Category> {
   selectedCategoryId: string | null;
-  selectedCategoryState: CategoryState | null;
+  selectedCategoryState: CategoryState;
   selectedCategoryFights: FightsCollection;
-  selectedCategoryCompetitors: CompetitorsCollection;
 }
 
 export interface FightsCollection extends EntityState<Fight> {
@@ -95,8 +94,7 @@ export const competitorsInitialState: CompetitorsCollection = competitorEntityAd
 export const categoriesInitialState: CategoriesCollection = categoryEntityAdapter.getInitialState({
   selectedCategoryId: null,
   selectedCategoryState: null,
-  selectedCategoryFights: fightsInitialState,
-  selectedCategoryCompetitors: competitorsInitialState
+  selectedCategoryFights: fightsInitialState
 });
 
 const addMenuItem = (oldMenu, item) => {

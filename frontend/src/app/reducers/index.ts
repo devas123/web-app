@@ -23,8 +23,6 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
-import {EntitySelectors} from '@ngrx/entity/src/models';
-import {dashboardGetPeriodsCollection, periodEntityAdapter} from '../modules/event-manager/redux/dashboard-reducers';
 
 export interface AppState {
   events: EventPropsEntities;
@@ -76,20 +74,24 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 });
 
 export interface RegistrationGroup {
-  id: string
-  displayName: string,
-  registrationFee: number
+  id: string;
+  displayName: string;
+  registrationFee: number;
+  registrationPeriodId: string;
 }
 
 export interface RegistrationPeriod {
-  id: string,
-  start: string,
-  end: string,
-  registrationGroups: RegistrationGroup[]
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  competitionId: string;
+  registrationGroups: RegistrationGroup[];
 }
 
 export interface RegistrationInfo {
-  registrationPeriods: RegistrationPeriod[]
+  registrationPeriods: RegistrationPeriod[];
+  registrationOpen: boolean;
 }
 
 export interface CompetitionProperties {
@@ -103,8 +105,7 @@ export interface CompetitionProperties {
   bracketsPublished: boolean;
   status: string;
   endDate: string;
-  registrationOpen: boolean;
-  timeZone: string
+  timeZone: string;
 }
 
 export interface Error {
@@ -120,43 +121,34 @@ export function competitionList(state: EventPropsEntities = competitionPropertie
       const newState = competitionPropertiesEntitiesAdapter.removeAll(state);
       return competitionPropertiesEntitiesAdapter.upsertMany(updates, newState);
     case competitorsActions.COMPETITOR_ADDED: {
-      const {categoryId, competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId && state.selectedEventCategories.selectedCategoryId === categoryId) {
+      const {competitor} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
         return {
           ...state,
-          selectedEventCategories: {
-            ...state.selectedEventCategories,
-            selectedCategoryCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCategories.selectedCategoryCompetitors)
-          }
+          selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
         };
       } else {
         return state;
       }
     }
     case competitorsActions.COMPETITOR_UPDATED: {
-      const {categoryId, competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId && state.selectedEventCategories.selectedCategoryId === categoryId) {
+      const {competitor} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
         const update = {id: competitor.email, changes: competitor};
         return {
           ...state,
-          selectedEventCategories: {
-            ...state.selectedEventCategories,
-            selectedCategoryCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCategories.selectedCategoryCompetitors)
-          }
+          selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors),
         };
       } else {
         return state;
       }
     }
     case competitorsActions.COMPETITOR_REMOVED: {
-      const {categoryId, email} = action.payload;
-      if (state.selectedEventId === action.competitionId && state.selectedEventCategories.selectedCategoryId === categoryId) {
+      const {fighterId} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
         return {
           ...state,
-          selectedEventCategories: {
-            ...state.selectedEventCategories,
-            selectedCategoryCompetitors: competitorEntityAdapter.removeOne(email, state.selectedEventCategories.selectedCategoryCompetitors)
-          }
+          selectedEventCompetitors: competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
         };
       } else {
         return state;

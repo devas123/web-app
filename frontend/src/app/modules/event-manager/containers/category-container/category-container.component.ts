@@ -19,12 +19,12 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
     const a$ = combineLatest(
-      this.route.params.pipe(filter(params => params['categoryId'] && params['categoryId'] != null), map(params => params['categoryId'])),
-      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id && id != null)));
+      this.route.params.pipe(filter(params => params['id'] && params['id'] != null), map(params => params['id'])),
+      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id != null)));
     this.subs.add(a$.pipe(
       map((result: string[]) => {
         this.competitionId = result[1];
-        return eventManagerCategorySelected(result[1], atob(result[0]));
+        return eventManagerCategorySelected(result[1], result[0]);
       })
     ).subscribe(this.store));
   }
