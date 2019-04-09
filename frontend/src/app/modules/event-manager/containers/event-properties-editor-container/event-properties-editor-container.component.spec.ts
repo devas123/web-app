@@ -11,6 +11,7 @@ import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 
 
 describe('EventPropertiesEditorContainerComponent', () => {
@@ -19,7 +20,7 @@ describe('EventPropertiesEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventPropertiesEditorContainerComponent, EventPropertiesEditorComponent, ZonedDatePipe],
+      declarations: [EventPropertiesEditorContainerComponent, EventPropertiesEditorComponent, ZonedDatePipe, TruncatePipe],
       imports: [ReactiveFormsModule, SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
