@@ -1,6 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RegistrationInfoEditorContainerComponent } from './registration-info-editor-container.component';
+import {RegistrationInfoEditorContainerComponent} from './registration-info-editor-container.component';
+import {RegistrationInfoEditorComponent} from '../../components/registration-info-editor/registration-info-editor.component';
+import {RegistrationGroupEditorComponent} from '../../components/registration-group-editor/registration-group-editor.component';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {SuiDatepickerModule, SuiModalModule} from 'ng2-semantic-ui';
+import {ReactiveFormsModule} from '@angular/forms';
+import {combineReducers, StoreModule} from '@ngrx/store';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {initialAccountState} from '../../../account/flux/account.state';
+import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('RegistrationInfoEditorContainerComponent', () => {
   let component: RegistrationInfoEditorContainerComponent;
@@ -8,9 +20,26 @@ describe('RegistrationInfoEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegistrationInfoEditorContainerComponent ]
+      declarations: [RegistrationInfoEditorContainerComponent, RegistrationInfoEditorComponent, RegistrationGroupEditorComponent, TruncatePipe, ZonedDatePipe],
+      imports: [StoreModule.forRoot({
+        ...reducers,
+        'eventManagerState': combineReducers(eventManagerReducers())
+      }, {
+        initialState: {
+          events: competitionPropertiesEntitiesInitialState,
+          accountState: initialAccountState,
+          eventManagerState: {
+            myEvents: competitionPropertiesEntitiesInitialState,
+            socketConnected: false,
+            dashboardState: {
+              dashboardSocketConnected: false,
+              eventPeriods: periodsInitialState
+            }
+          }
+        }
+      }), SuiDatepickerModule, ReactiveFormsModule, RouterTestingModule, SuiModalModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

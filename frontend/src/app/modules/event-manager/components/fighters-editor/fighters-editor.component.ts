@@ -76,9 +76,11 @@ export class FightersEditorComponent implements OnInit {
   }
 
   getCategoryName(categoryId: string): string {
-    const cat = this.categories.find(c => c.id === categoryId);
-    if (cat) {
-      return AddFighterComponent.displayCategory(cat);
+    if (this.categories) {
+      const cat = this.categories.find(c => c.id === categoryId);
+      if (cat) {
+        return AddFighterComponent.displayCategory(cat);
+      }
     }
     return categoryId;
   }

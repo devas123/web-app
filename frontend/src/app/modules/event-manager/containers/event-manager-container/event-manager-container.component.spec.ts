@@ -11,6 +11,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {InfoService} from '../../../../service/info.service';
 
 describe('EventManagerContainerComponent', () => {
   let component: EventManagerContainerComponent;
@@ -18,7 +20,7 @@ describe('EventManagerContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventManagerContainerComponent, TruncatePipe],
+      declarations: [EventManagerContainerComponent, TruncatePipe, ZonedDatePipe],
       imports: [SuiModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
@@ -36,7 +38,7 @@ describe('EventManagerContainerComponent', () => {
           }
         }
       }), HttpClientModule],
-      providers: [EventManagerService]
+      providers: [EventManagerService, InfoService]
     })
       .compileComponents();
   }));

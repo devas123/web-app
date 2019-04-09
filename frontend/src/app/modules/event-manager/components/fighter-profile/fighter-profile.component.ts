@@ -88,7 +88,6 @@ export class FighterProfileComponent implements OnInit, OnChanges {
   }
 
 
-
   get academy() {
     return this.form.get('academy');
   }
@@ -182,10 +181,13 @@ export class FighterProfileComponent implements OnInit, OnChanges {
       });
     }
   }
+
   getCategoryName(categoryId: string): string {
-    const cat = this.categories.find(c => c.id === categoryId);
-    if (cat) {
-      return AddFighterComponent.displayCategory(cat);
+    if (this.categories) {
+      const cat = this.categories.find(c => c.id === categoryId);
+      if (cat) {
+        return AddFighterComponent.displayCategory(cat);
+      }
     }
     return categoryId;
   }

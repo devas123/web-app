@@ -7,11 +7,12 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../../reducer
 import {eventManagerReducers} from './redux/event-manager-reducers';
 import {initialAccountState} from '../account/flux/account.state';
 import {periodsInitialState} from './redux/dashboard-reducers';
+import {InfoService} from '../../service/info.service';
 
 describe('EventManagerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [EventManagerService],
+      providers: [EventManagerService, InfoService],
       imports: [HttpClientModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
