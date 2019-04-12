@@ -25,6 +25,7 @@ import {Location} from '@angular/common';
       [categoryStartTime]="categoryStartTime$ | async"
       [competitionId]="competitionId$ | async"
       (gobackClicked)="goback()"
+      (categoryBracketsSelected)="navigateToCategoryBrackets($event)"
       (categoryFightersSelected)="navigateToCategoryFighters($event)">
     </app-category-summary>`,
   styleUrls: ['./category-summary-container.component.css']
@@ -61,6 +62,10 @@ export class CategorySummaryContainerComponent implements OnInit {
 
   navigateToCategoryFighters({categoryId, competitionId}) {
     this.router.navigate(['/eventmanager', competitionId, 'fighters'], {queryParams: {categoryId}}).catch(reason => console.error(`Navigation failed: ${reason}`));
+  }
+
+  navigateToCategoryBrackets({categoryId, competitionId}) {
+    this.router.navigate(['/eventmanager', competitionId, 'brackets'], {queryParams: {categoryId}}).catch(reason => console.error(`Navigation failed: ${reason}`));
   }
 
 }

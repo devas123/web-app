@@ -32,7 +32,10 @@ export class CategorySummaryComponent implements OnInit {
   gobackClicked = new EventEmitter<any>();
 
   @Output()
-  categoryFightersSelected = new EventEmitter<{categoryId: string, competitionId: string}>();
+  categoryFightersSelected = new EventEmitter<{ categoryId: string, competitionId: string }>();
+
+  @Output()
+  categoryBracketsSelected = new EventEmitter<{ categoryId: string, competitionId: string }>();
 
   constructor() {
   }
@@ -55,6 +58,12 @@ export class CategorySummaryComponent implements OnInit {
   navigateToCategoryFighters(categoryId: string) {
     if (categoryId) {
       this.categoryFightersSelected.next({categoryId, competitionId: this.competitionId});
+    }
+  }
+
+  navigateToCategoryBrackets(categoryId: string) {
+    if (categoryId) {
+      this.categoryBracketsSelected.next({categoryId, competitionId: this.competitionId});
     }
   }
 

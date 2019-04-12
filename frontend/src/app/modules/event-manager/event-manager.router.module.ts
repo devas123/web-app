@@ -11,7 +11,6 @@ import {FightersEditorContainerComponent} from './containers/fighters-editor-con
 import {CategoryContainerComponent} from './containers/category-container/category-container.component';
 import {CategorySummaryContainerComponent} from './containers/category-summary-container/category-summary-container.component';
 import {BracketsEditorContainerComponent} from './containers/brackets-editor-container/brackets-editor-container.component';
-import {CategoryBracketsEditorContainerComponent} from './containers/category-brackets-editor-container/category-brackets-editor-container.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
 import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
@@ -87,18 +86,6 @@ export const eventManagerRoutes: Routes = [
               {
                 path: '',
                 component: CategorySummaryContainerComponent
-              },
-              // {
-              //   path: 'fighters',
-              //   component: CategoryFightersEditorContainerComponent
-              // },
-              // {
-              //   path: 'fighters/:fighterId',
-              //   component: FighterProfileContainerComponent
-              // },
-              {
-                path: 'brackets',
-                component: CategoryBracketsEditorContainerComponent
               }
             ]
           },

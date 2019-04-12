@@ -26,12 +26,12 @@ export class RegistrationInfoEditorContainerComponent implements OnInit, OnDestr
   registrationInfo$: Observable<RegistrationInfo>;
   competitionId$: Observable<string>;
   timeZone$: Observable<string>;
-  registrationGroupSelected$: Observable<string | boolean>;
+  selectedRegistrationGroup$: Observable<string | boolean>;
 
   subs = new Subscription();
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
-    this.registrationGroupSelected$ = route.queryParams.pipe(
+    this.selectedRegistrationGroup$ = route.queryParams.pipe(
       map(params => params['group']),
       startWith(false)
     );
@@ -63,7 +63,7 @@ export class RegistrationInfoEditorContainerComponent implements OnInit, OnDestr
         return {...params, group: groupId};
       }),
       map(queryParams => {
-        this.router.navigate(['.'], {queryParams}).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
+        this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
       } )
     ).subscribe();
   }
