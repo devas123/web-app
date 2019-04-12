@@ -69,7 +69,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
   }
 
   get periodName() {
-    return this.periodForm.get('id');
+    return this.periodForm.get('name');
   }
 
   get periodStart() {
@@ -109,7 +109,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
         } else {
           const group = this.groupForm.value as RegistrationGroup;
           group.registrationPeriodId = periodId;
-          group.id = `${periodId}-group-${btoa(group.displayName)}`;
+          group.id = '';
           this.addGroup.next({competitionId: this.competitionId, periodId: periodId, group});
           this.groupForm.reset();
         }

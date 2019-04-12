@@ -40,7 +40,6 @@ import {CommonsModule} from '../../commons/commons.module';
 import {BracketsEditorComponent} from './components/brackets-editor/brackets-editor.component';
 import {BracketsEditorContainerComponent} from './containers/brackets-editor-container/brackets-editor-container.component';
 import {BracketMatchComponent} from './components/brackets-editor/bracket-match/bracket-match.component';
-import {CategoryBracketsEditorContainerComponent} from './containers/category-brackets-editor-container/category-brackets-editor-container.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {ScheduleEditorComponent} from './components/schedule-editor/schedule-editor.component';
 import {NgDragDropModule} from '../dragdrop/ng-drag-drop.module';
@@ -111,7 +110,6 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     DashboardComponentComponent,
     MatManagementComponent,
     MatManagementContainerComponent,
-    CategoryBracketsEditorContainerComponent,
     ScheduleEditorContainerComponent,
     ScheduleEditorComponent,
     MyEventsComponent,

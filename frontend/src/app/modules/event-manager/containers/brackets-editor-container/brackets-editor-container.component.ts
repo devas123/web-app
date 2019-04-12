@@ -1,20 +1,26 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {
   eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventId, eventManagerGetSelectedEventSelectedCategory,
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryFights
 } from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, Fight} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
   eventManagerCategorySelected,
-  eventManagerCategoryUnselected, eventManagerDropAllBracketsCommand, eventManagerDropCategoryBracketsCommand,
-  eventManagerGenerateBrackets, eventManagerMoveFighter
+  eventManagerCategoryUnselected,
+  eventManagerDropAllBracketsCommand,
+  eventManagerDropCategoryBracketsCommand,
+  eventManagerGenerateBrackets,
+  eventManagerMoveFighter
 } from '../../redux/event-manager-actions';
-import {Fight} from '../../../../commons/model/competition.model';
+import {map} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-brackets-editor-container',
@@ -30,12 +36,19 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
   categories$: Observable<Category[]>;
   fights$: Observable<Fight[]>;
   category$: Observable<Category>;
-  selectedCategory;
+  selectedCategory: Category;
   optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
-  constructor(private store: Store<AppState>) {
-    this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+    const competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
+    const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
+    this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
+    this.subs.add(combineLatest(competitionId$, categoryId$).subscribe(([competitionId, categoryId]) => {
+      if (competitionId && categoryId) {
+        this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
+      }
+    }));
     this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
@@ -47,13 +60,16 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
   }
 
   setCategoryId(category: Category) {
-    this.selectedCategory = category;
-    this.store.dispatch(eventManagerCategorySelected(this.competitionId, category.id));
+    if (!this.selectedCategory || this.selectedCategory.id !== category.id) {
+      const queryParams = {categoryId: category.id};
+      this.selectedCategory = category;
+      this.router.navigate(['eventmanager', this.competitionId, 'brackets'], {queryParams}).catch(error => console.error(error));
+    }
   }
 
   dropSelectedBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.selectedCategory.competitionId, this.selectedCategory.id));
+      this.store.dispatch(eventManagerDropCategoryBracketsCommand(this.competitionId, this.selectedCategory.id));
     }
   }
 
@@ -68,15 +84,14 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
 
   generateBrackets() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerGenerateBrackets(this.selectedCategory.competitionId, this.selectedCategory.id));
+      this.store.dispatch(eventManagerGenerateBrackets(this.competitionId, this.selectedCategory.id));
     }
   }
 
   ngOnDestroy() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerCategoryUnselected(this.selectedCategory.competitionId));
+      this.store.dispatch(eventManagerCategoryUnselected(this.competitionId));
     }
     this.subs.unsubscribe();
   }
-
 }
