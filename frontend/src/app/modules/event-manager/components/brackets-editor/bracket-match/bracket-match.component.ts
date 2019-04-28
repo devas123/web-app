@@ -29,9 +29,9 @@ export class BracketMatchComponent implements OnInit {
     const index = event.index;
     const {from, competitor} = event.dragData;
     this.competitorDropped.next({
-      sourceFightId: from.fightId,
+      sourceFightId: from.id,
       competitorId: competitor.email,
-      targetFightId: targetFight.fightId,
+      targetFightId: targetFight.id,
       index
     });
   }

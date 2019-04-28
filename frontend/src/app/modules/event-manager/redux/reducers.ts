@@ -12,7 +12,7 @@ export const obsoleteFight = (f: Fight, threeCompetitorCategory: boolean) => {
   if ((f.parentId1 !== null) || (f.parentId2 !== null)) {
     return false;
   }
-  return f.competitors.filter(it => compNotEmpty(it.competitor)).length !== 2;
+  return f.scores.filter(it => compNotEmpty(it.competitor)).length !== 2;
 };
 
 export const compNotEmpty = (comp: Competitor) => {

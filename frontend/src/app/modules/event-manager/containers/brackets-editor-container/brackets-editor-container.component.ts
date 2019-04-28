@@ -19,7 +19,7 @@ import {
   eventManagerGenerateBrackets,
   eventManagerMoveFighter
 } from '../../redux/event-manager-actions';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -52,7 +52,7 @@ export class BracketsEditorContainerComponent implements OnInit, OnDestroy {
     this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
-    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));
   }
 
   sendCompetitorMovedAction(payload: any) {

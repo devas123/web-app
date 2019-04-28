@@ -8,5 +8,5 @@
       </div>
     </a>
   </div>
-  <app-scoreboard-component [fight]="selectedFight$ | async"></app-scoreboard-component>
+  <app-scoreboard-component (goMatViewClicked)="selectFightForScoreboard(null)" [fight]="selectedFight$ | async"></app-scoreboard-component>
 </div>

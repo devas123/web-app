@@ -12,7 +12,7 @@ export const academyEntityAdapter: EntityAdapter<Academy> = createEntityAdapter<
 });
 
 export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Fight>({
-  selectId: (fight: Fight) => fight.fightId,
+  selectId: (fight: Fight) => fight.id,
   sortComparer: false
 });
 

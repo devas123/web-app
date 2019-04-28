@@ -1,19 +1,19 @@
 <ul class="matchup" [ngClass]="{championship: isChampionship}">
   <li class="team team-top" draggable [dragScope]="'dragScope' + fight?.round"
-      [dragData]="{from: fight, competitor: fight?.competitors[0]?.competitor}">
+      [dragData]="{from: fight, competitor: fight?.scores[0]?.competitor}">
     <div class="brackets_fighter">
-      <div class="brackets_fighter-name">{{fight?.competitors[0]?.competitor | getname:true}}&nbsp;</div>
-      <div class="brackets_fighter-team">{{fight?.competitors[0]?.competitor?.academy}}&nbsp;</div>
+      <div class="brackets_fighter-name">{{fight?.scores[0]?.competitor | getname:true}}&nbsp;</div>
+      <div class="brackets_fighter-team">{{fight?.scores[0]?.competitor?.academy | truncate}}&nbsp;</div>
     </div>
     <div class="brackets_score-block">
       <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>
     </div>
   </li>
   <li class="team team-bottom" draggable [dragScope]="'dragScope' + fight?.round"
-      [dragData]="{from: fight, competitor: fight?.competitors[1]?.competitor}">
+      [dragData]="{from: fight, competitor: fight?.scores[1]?.competitor}">
     <div class="brackets_fighter">
-      <div class="brackets_fighter-name">{{fight?.competitors[1]?.competitor | getname:true}}&nbsp;</div>
-      <div class="brackets_fighter-team">{{fight?.competitors[1]?.competitor?.academy}}&nbsp;</div>
+      <div class="brackets_fighter-name">{{fight?.scores[1]?.competitor | getname:true}}&nbsp;</div>
+      <div class="brackets_fighter-team">{{fight?.scores[1]?.competitor?.academy | truncate}}&nbsp;</div>
     </div>
     <div class="brackets_score-block">
       <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>

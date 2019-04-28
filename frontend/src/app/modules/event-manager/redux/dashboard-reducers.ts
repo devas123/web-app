@@ -17,9 +17,8 @@ import {
   DASHBOARD_STATE_LOADED,
   DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND
 } from './dashboard-actions';
-import {EVENT_MANAGER_COMPETITION_SELECTED, EVENT_MANAGER_COMPETITION_UNSELECTED,} from './event-manager-actions';
+import {EVENT_MANAGER_COMPETITION_SELECTED, EVENT_MANAGER_COMPETITION_UNSELECTED, } from './event-manager-actions';
 import {getEventManagerState} from './reducers';
-import {EntitySelectors} from '@ngrx/entity/src/models';
 
 
 export interface DashboardState {
@@ -37,14 +36,8 @@ export interface DashboardPeriod {
 
 export interface Mat {
   matId: string;
-  periodId: string;
   numberOfFights: number;
   topFiveFights: Fight[];
-  matScoreboardState: ScoreBoardState;
-}
-
-export interface ScoreBoardState {
-  fight: Fight;
 }
 
 export interface PeriodsCollection extends EntityState<DashboardPeriod> {
@@ -87,22 +80,18 @@ export const dashboardGetSelectedPeriodMatsCollection = createSelector(dashboard
 
 export const {
   selectEntities: dasboardGetSelectedPeriodMatsDictionary,
-  selectAll: dashboardGetSelectedPeriodAllMats
+  selectAll: dashboardGetSelectedPeriodAllMats,
+  selectIds: dashboardGetSelectedPeriodAllMatIds,
 } = matEntityAdapter.getSelectors(dashboardGetSelectedPeriodMatsCollection);
-
-export const extractMatNumberFromId = (matId: string) => {
-  const parts = matId.split('-');
-  return parts[parts.length - 1];
-};
 
 export const dashboardGetSelectedPeriodMats = dashboardGetSelectedPeriodAllMats;
 export const dashboardGetSelectedPeriodSelectedMatId = createSelector(dashboardGetSelectedPeriodMatsCollection, state => state && state.selectedMatId);
+export const dashboardGetSelectedPeriodSelectedMatNumber = createSelector(dashboardGetSelectedPeriodSelectedMatId, dashboardGetSelectedPeriodAllMatIds, (id, matIds: string[]) => id && matIds.indexOf(id));
 export const dashboardGetSelectedPeriodSelectedMat = createSelector(dashboardGetSelectedPeriodSelectedMatId, dasboardGetSelectedPeriodMatsDictionary, (id, entities) => id && entities[id]);
 
 export const dashboardGetSelectedPeriodSelectedMatFightsCollection = createSelector(dashboardGetSelectedPeriodMatsCollection, state => state && state.selectedMatFights);
 export const dashboardGetSelectedPeriodSelectedMatSelectedFightId = createSelector(dashboardGetSelectedPeriodSelectedMatFightsCollection, state => state && state.selectedFightId);
-export const dashboardGetSelectedPeriodSelectedMatScoreboardState = createSelector(dashboardGetSelectedPeriodSelectedMat, state => state && state.matScoreboardState);
-export const dashboardGetSelectedPeriodSelectedMatScoreboardStateFight = createSelector(dashboardGetSelectedPeriodSelectedMatScoreboardState, state => state && state.fight);
+
 
 export const {
   // select the dictionary of user entities

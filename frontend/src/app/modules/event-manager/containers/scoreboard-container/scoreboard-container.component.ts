@@ -23,7 +23,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
   urlProvidedFightId$: Observable<string>;
 
   constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
-    this.urlProvidedFightId$ = this.route.params.pipe(
+    this.urlProvidedFightId$ = this.route.queryParams.pipe(
       map(params => params['fightId'])
     );
     this.subs.add(this.urlProvidedFightId$.pipe(
@@ -46,8 +46,14 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
   }
 
   selectFightForScoreboard(fightId: string) {
-    this.router.navigate([fightId], {relativeTo: this.route});
+    if (fightId) {
+      const queryParams = {fightId};
+      this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(error => console.log(error));
+    } else {
+      this.router.navigate(['.'], {relativeTo: this.route}).catch(error => console.log(error));
+    }
   }
+
 
   ngOnInit() {
   }

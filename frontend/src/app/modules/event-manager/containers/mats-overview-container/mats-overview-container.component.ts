@@ -32,11 +32,6 @@ export class MatsOverviewContainerComponent implements OnInit {
   }
 
   navigateToMat(matId: string) {
-    this.router.navigate([matId], {relativeTo: this.route});
+    this.router.navigate([matId], {relativeTo: this.route}).catch(error => console.error(error));
   }
-
-  navigateToScoreboard(matId: string) {
-    this.router.navigate([matId, 'scoreboard'], {relativeTo: this.route});
-  }
-
 }

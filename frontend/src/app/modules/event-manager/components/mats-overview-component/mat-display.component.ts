@@ -5,7 +5,6 @@ import {Mat} from '../../redux/dashboard-reducers';
 @Component({
   selector: 'app-mat-display',
   template: `
-    <button class="tiny ui compact right floated button" (click)="scoreboardSelected.next(mat)">Scoreboard</button>
     <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Mat view</button>
     <div class="header">{{title}}</div>
     <div class="ui middle aligned divided list">
@@ -27,9 +26,6 @@ export class MatDisplayComponent implements OnInit {
 
   @Input()
   mat: Mat;
-
-  @Output()
-  scoreboardSelected = new EventEmitter<Mat>();
 
   @Output()
   detailsViewSelected = new EventEmitter<Mat>();

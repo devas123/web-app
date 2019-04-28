@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CategoryState} from '../../../../commons/model/competition.model';
-import {Category, Fight} from '../../../../commons/model/competition.model';
-import {obsoleteFight} from '../../redux/reducers';
+import {Category, CategoryState} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-category-summary',
@@ -12,12 +10,6 @@ export class CategorySummaryComponent implements OnInit {
 
   @Input()
   categoryState: CategoryState;
-
-  @Input()
-  fights: Fight[];
-
-  @Input()
-  competitorsSize: number;
 
   @Input()
   competitionId: string;
@@ -45,14 +37,6 @@ export class CategorySummaryComponent implements OnInit {
 
   goback() {
     this.gobackClicked.next('');
-  }
-
-  getFightsCount() {
-    if (this.fights && this.competitorsSize) {
-      return this.fights.filter(f => !obsoleteFight(f, this.competitorsSize === 3)).length;
-    } else {
-      return 0;
-    }
   }
 
   navigateToCategoryFighters(categoryId: string) {
