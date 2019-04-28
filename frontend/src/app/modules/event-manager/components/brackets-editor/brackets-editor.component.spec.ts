@@ -4,6 +4,7 @@ import {BracketsEditorComponent} from './brackets-editor.component';
 import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
 import {BracketMatchComponent} from './bracket-match/bracket-match.component';
 import {GetNamePipe} from '../../../../pipes/get-name.pipe';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 
 describe('BracketsEditorComponent', () => {
   let component: BracketsEditorComponent;
@@ -11,7 +12,7 @@ describe('BracketsEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BracketsEditorComponent, BracketMatchComponent, GetNamePipe],
+      declarations: [BracketsEditorComponent, BracketMatchComponent, GetNamePipe, TruncatePipe],
       imports: [NgDragDropModule]
     })
       .compileComponents();

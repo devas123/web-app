@@ -20,7 +20,6 @@ import {MatsOverviewContainerComponent} from './containers/mats-overview-contain
 import {MatManagementContainerComponent} from './containers/mat-management-container/mat-management-container.component';
 import {ScoreboardContainerComponent} from './containers/scoreboard-container/scoreboard-container.component';
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
-import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 
@@ -114,14 +113,6 @@ export const eventManagerRoutes: Routes = [
                     children: [
                       {
                         path: '',
-                        component: MatDetailsContainerComponent,
-                      },
-                      {
-                        path: 'scoreboard',
-                        component: ScoreboardContainerComponent
-                      },
-                      {
-                        path: 'scoreboard/:fightId',
                         component: ScoreboardContainerComponent
                       }
                     ]

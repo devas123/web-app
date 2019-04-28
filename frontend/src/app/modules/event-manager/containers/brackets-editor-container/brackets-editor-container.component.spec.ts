@@ -12,6 +12,7 @@ import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 
 describe('BracketsEditorContainerComponent', () => {
   let component: BracketsEditorContainerComponent;
@@ -19,7 +20,7 @@ describe('BracketsEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BracketsEditorContainerComponent, BracketsEditorComponent, BracketMatchComponent, GetNamePipe],
+      declarations: [BracketsEditorContainerComponent, BracketsEditorComponent, BracketMatchComponent, GetNamePipe, TruncatePipe],
       imports: [SuiSelectModule, RouterTestingModule, NgDragDropModule.forRoot(), StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())

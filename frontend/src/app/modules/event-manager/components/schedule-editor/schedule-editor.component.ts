@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Schedule} from '../../../../reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PeriodProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
@@ -31,7 +21,7 @@ export interface IContext {
 export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   @Input()
-  timeZone: string = 'UTC';
+  timeZone = 'UTC';
 
   @Input()
   competitionId: string;
@@ -78,7 +68,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   goToCategoryEditor(categoryId: string) {
     this.router.navigate(['..', 'categories', categoryId], {
       relativeTo: this.route
-    });
+    }).catch(error => console.error('Navigation failed', error));
   }
 
 
@@ -143,7 +133,8 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       .open(config)
       .onApprove(() => {
         const periodProperties = {
-          id: this.periodName.value,
+          id: '',
+          name: this.periodName.value,
           startTime: this.periodStartTime.value,
           numberOfMats: this.numberOfMats.value,
           timeBetweenFights: this.timeBetweenFights.value,
@@ -185,7 +176,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     if (this.categories && this.scheduleProperties) {
       const distributedCategories = this.scheduleProperties.periodPropertiesList.map(p => p.categories)
         .reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])
-        .filter(c => c && c != null && c.id != null)
+        .filter(c => !!c && c.id != null)
         .map(c => c.id);
       this.filteredCategories = this.categories.filter(cat => distributedCategories.indexOf(cat.id) < 0);
     } else {

@@ -67,6 +67,7 @@ export interface EventManagerState {
 
 export interface PeriodProperties {
   id: string;
+  name: string;
   startTime: Date;
   numberOfMats: number;
   timeBetweenFights: number;
@@ -146,9 +147,9 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
         if (category) {
           let newState = state;
           if (from) {
-            let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.id === from);
+            let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.name === from);
             if (updatedPeriod && updatedPeriod.categories) {
-              const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.id === updatedPeriod.id);
+              const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.name === updatedPeriod.name);
               updatedPeriod = {
                 ...updatedPeriod,
                 categories: updatedPeriod.categories.filter(cat => cat.id !== category.id)
@@ -169,9 +170,9 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
           }
 
           if (to) {
-            let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.id === to);
+            let updatedPeriod = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.find(value => value.name === to);
             if (updatedPeriod) {
-              const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.id === updatedPeriod.id);
+              const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.name === updatedPeriod.name);
               let newCategories = [...updatedPeriod.categories, category];
               if (index && +index > 0) {
                 newCategories = [...updatedPeriod.categories.slice(0, index),
@@ -218,13 +219,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
 
         if (updatedSourceFight) {
           updates.push({
-            id: updatedSourceFight.fightId,
+            id: updatedSourceFight.id,
             changes: updatedSourceFight
           });
         }
         if (updatedTargetFight) {
           updates.push({
-            id: updatedTargetFight.fightId,
+            id: updatedTargetFight.id,
             changes: updatedTargetFight
           });
         }
@@ -265,6 +266,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       const categories = categoriesRaw.map(rwc => ({
         id: rwc.id,
         ...rwc.category,
+        fightsNumber: rwc.fightsNumber,
         numberOfCompetitors: rwc.numberOfCompetitors
       } as Category));
       if (competitionId === state.selectedEventId) {

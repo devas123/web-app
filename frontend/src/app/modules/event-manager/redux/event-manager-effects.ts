@@ -42,7 +42,7 @@ import {AppState, CommonAction, CompetitionProperties, Schedule} from '../../../
 import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
-import {Category, Competitor} from '../../../commons/model/competition.model';
+import {Competitor} from '../../../commons/model/competition.model';
 import {errorEvent} from '../../../actions/actions';
 import {eventManagerGetSelectedEventCompetitorsPageSize} from './event-manager-reducers';
 
@@ -56,9 +56,9 @@ export class EventManagerEffects {
     }),
     map((payload: any) => {
       if (Array.isArray(payload)) {
-        return myCompetitionsLoaded(payload as CompetitionProperties[])
+        return myCompetitionsLoaded(payload as CompetitionProperties[]);
       } else {
-        return errorEvent(payload)
+        return errorEvent(payload);
       }
     }));
 
@@ -92,7 +92,7 @@ export class EventManagerEffects {
     mergeMap(props => {
       if (props.id) {
         return this.eventManagerService.selectCompetition(props.id)
-          .pipe(mapTo(eventManagerCompetitionSelected(props)))
+          .pipe(mapTo(eventManagerCompetitionSelected(props)));
       } else {
         return observableOf(errorEvent('Error occured while loading competition properties: ' + JSON.stringify(props)));
       }
@@ -160,7 +160,7 @@ export class EventManagerEffects {
     ofType(EVENT_MANAGER_LOAD_CATEGORIES_COMMAND),
     mergeMap((action: CommonAction) => {
       return this.infoService.getCategories(action.payload).pipe(map(payload => {
-        const categories = (payload || []) as Category[];
+        const categories = (payload || []) as any[];
         return eventManagerCategoriesLoaded(action.payload, categories);
       }), catchError(error => observableOf(errorEvent(error))));
     }));

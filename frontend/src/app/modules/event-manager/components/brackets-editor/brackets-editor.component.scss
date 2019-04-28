@@ -1,3 +1,7 @@
+
+$fighter-background: #c2d0d9;
+$background: rgba(100, 100, 100, 0.4);
+
 .hero {
   position: relative;
   text-align: center;
@@ -50,8 +54,7 @@
 
 section.brackets_container_section {
   overflow: hidden;
-  background-color: #e1e1e1;
-  background-color: rgba(225, 225, 225, 0.9);
+  background-color: $background;
   font-size: 12px;
   padding: 40px 0;
 }
@@ -143,13 +146,13 @@ section.brackets_container_section {
   width: 80%;
 }
 
-$fighter-background: #c2d0d9;
 
 .brackets_fighter-name {
   padding: 0 5px;
   text-transform: capitalize;
   background-color: $fighter-background;
   overflow: hidden;
+  width: 100%;
 }
 
 .brackets_fighter-team {
@@ -159,6 +162,7 @@ $fighter-background: #c2d0d9;
   font-weight: lighter;
   font-size: 10px;
   overflow: hidden;
+  width: 100%;
 }
 
 .brackets_score-block {
@@ -183,7 +187,7 @@ $fighter-background: #c2d0d9;
   text-align: center;
 }
 
-$team-border: 1px solid #1B1C1D;
+$team-border: 1px solid $background;
 
 .team-top {
   border-bottom: $team-border;
@@ -227,7 +231,7 @@ $team-border: 1px solid #1B1C1D;
 .round-details {
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 13px;
-  color: #2C7399;
+  color: #42b4eb;
   text-transform: uppercase;
   text-align: center;
   height: 40px;

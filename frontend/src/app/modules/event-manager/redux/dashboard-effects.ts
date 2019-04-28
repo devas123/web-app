@@ -62,7 +62,7 @@ export class DashboardEffects {
   dashboardLoadMatFights$ = this.actions$.pipe(
     ofType(DASHBOARD_MAT_SELECTED),
     mergeMap((command: any) => {
-      return this.infoService.getMatFights(command.payload).pipe(
+      return this.infoService.getMatFights(command.competitionId, command.payload).pipe(
         catchError(error => observableOf(errorEvent(error))),
         map((fights: any) => {
           if (!fights || fights.type === ERROR_OCCURRED) {

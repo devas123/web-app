@@ -114,7 +114,7 @@ export const myCompetitionsLoaded = (competitionProperties: CompetitionPropertie
   payload: competitionProperties
 });
 
-export const eventManagerCategoriesLoaded = (competitionId: string, categories: Category[]) => ({
+export const eventManagerCategoriesLoaded = (competitionId: string, categories: any[]) => ({
   type: EVENT_MANAGER_CATEGORIES_LOADED,
   payload: categories,
   competitionId

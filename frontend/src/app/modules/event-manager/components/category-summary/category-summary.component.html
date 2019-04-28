@@ -12,7 +12,7 @@
         <div class="center aligned header">
           <div class="ui statistic">
             <div class="value">
-              {{competitorsSize}}
+              {{category?.numberOfCompetitors || 0}}
             </div>
             <div class="label">
               Competitors
@@ -26,15 +26,15 @@
       <div class="content">
         <div class="center aligned header">
           <div class="ui statistic">
-            <ng-container *ngIf="fights && fights?.length > 0">
+            <ng-container *ngIf="category?.fightsNumber > 0">
               <div class="value">
-                {{getFightsCount()}}
+                {{category?.fightsNumber || 0}}
               </div>
               <div class="label">
                 Fights
               </div>
             </ng-container>
-            <ng-container *ngIf="!fights || fights?.length <= 0">
+            <ng-container *ngIf="!category?.fightsNumber || category?.fightsNumber <= 0">
               <div class="text value">
                 Brackets not generated
               </div>

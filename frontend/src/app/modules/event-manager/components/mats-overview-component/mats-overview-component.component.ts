@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {extractMatNumberFromId, Mat} from '../../redux/dashboard-reducers';
+import {Mat} from '../../redux/dashboard-reducers';
 import {Competitor} from '../../../../commons/model/competition.model';
 
 @Component({
@@ -16,9 +16,6 @@ export class MatsOverviewComponentComponent implements OnInit {
   competitorClicked = new EventEmitter<Competitor>();
 
   @Output()
-  scoreboardClicked = new EventEmitter<string>();
-
-  @Output()
   matDetailsClicked = new EventEmitter<string>();
 
   constructor() { }
@@ -31,7 +28,7 @@ export class MatsOverviewComponentComponent implements OnInit {
     this.competitorClicked.next(competitor);
   }
 
-  matName = (matId: string) => 'Mat ' + (+extractMatNumberFromId(matId) + 1);
+  matName = (matId: string) => 'Mat ' + (this.mats.map(mat => mat.matId).indexOf(matId) + 1);
 
   ngOnInit() {
   }

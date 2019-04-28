@@ -4,22 +4,22 @@ import {Competitor, Fight} from '../../../../commons/model/competition.model';
 @Component({
   selector: 'app-fight-display',
   template: `
-    <table class="ui very basic collapsing celled table" (click)="selectFight(fight?.fightId)">
+    <table class="ui very basic collapsing celled table" (click)="selectFight(fight?.id)">
       <tbody>
       <tr>
         <td>
           <h4 class="ui image header">
-            <div class="content" (click)="selectCompetitor(fight?.competitors[0]?.competitor)">
-              {{fight?.competitors[0]?.competitor?.firstName}}  {{fight?.competitors[0]?.competitor?.lastName}}
-              <div class="sub header">{{fight?.competitors[0]?.competitor?.academy}}</div>
+            <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
+              {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
+              <div class="sub header">{{fight?.scores[0]?.competitor?.academy}}</div>
             </div>
           </h4>
         </td>
         <td>
           <h4 class="ui image header">
-            <div class="content" (click)="selectCompetitor(fight?.competitors[1]?.competitor)">
-              {{fight?.competitors[1]?.competitor?.firstName}} {{fight?.competitors[1]?.competitor?.lastName}}
-              <div class="sub header">{{fight?.competitors[1]?.competitor?.academy}}</div>
+            <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
+              {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
+              <div class="sub header">{{fight?.scores[1]?.competitor?.academy}}</div>
             </div>
           </h4>
         </td>

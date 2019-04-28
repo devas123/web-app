@@ -62,8 +62,6 @@ import {ScheduleDisplayComponent} from './components/schedule-editor/schedule-di
 import {DashboardEffects} from './redux/dashboard-effects';
 import {FightDisplayComponent} from './components/mats-overview-component/fight-display.component';
 import {MatDisplayComponent} from './components/mats-overview-component/mat-display.component';
-import {MatDetailsComponent} from './components/mat-details/mat-details.component';
-import {MatDetailsContainerComponent} from './containers/mat-details-container/mat-details-container.component';
 import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
@@ -94,8 +92,6 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     RegistrationGroupEditorComponent,
     RegistrationInfoEditorContainerComponent,
     RegistrationInfoEditorComponent,
-    MatDetailsComponent,
-    MatDetailsContainerComponent,
     MatDisplayComponent,
     FightDisplayComponent,
     ScheduleDisplayComponent,
