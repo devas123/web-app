@@ -93,16 +93,16 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
 
   dropAllowed = (ff: Fight) => (dragData: any) => {
     const {from, competitor} = dragData;
-    return from.fightId !== ff.fightId && from.round === ff.round && !(ff.parentId1 && ff.parentId2) && !!competitor;
+    return from.id !== ff.id && from.round === ff.round && !(ff.parentId1 && ff.parentId2) && !!competitor;
   }
 
   onItemDrop(event: DropEvent, targetFight: Fight) {
     const index = event.index;
     const {from, competitor} = event.dragData;
     this.sendMoveCompetitorAction({
-      sourceFightId: from.fightId,
+      sourceFightId: from.id,
       competitorId: competitor.email,
-      targetFightId: targetFight.fightId,
+      targetFightId: targetFight.id,
       index
     });
   }

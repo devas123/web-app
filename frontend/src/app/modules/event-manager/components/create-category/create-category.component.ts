@@ -105,8 +105,8 @@ export class CreateCategoryComponent implements OnInit {
           gender: this.gender.value,
           weight: {
             id: this.weightName.value,
-            minvalue: this.weightMinValue.value,
-            maxvalue: this.weightMaxValue.value,
+            minValue: this.weightMinValue.value,
+            maxValue: this.weightMaxValue.value,
           },
           beltType: this.beltType.value,
           fightDuration: this.fightDuration.value,

@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {Category, CategoryState, Fight} from '../../../../commons/model/competition.model';
+import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategoryFights,
-  eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
   eventManagerGetSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
@@ -20,8 +18,6 @@ import {Location} from '@angular/common';
     <app-category-summary
       [category]="category$ | async"
       [categoryState]="categoryState$ | async"
-      [competitorsSize]="competitorsSize$ | async"
-      [fights]="fights$ | async"
       [categoryStartTime]="categoryStartTime$ | async"
       [competitionId]="competitionId$ | async"
       (gobackClicked)="goback()"
@@ -34,10 +30,6 @@ export class CategorySummaryContainerComponent implements OnInit {
 
   categoryState$: Observable<CategoryState>;
 
-  fights$: Observable<Fight[]>;
-
-  competitorsSize$: Observable<number>;
-
   category$: Observable<Category>;
   competitionId$: Observable<string>;
 
@@ -47,8 +39,6 @@ export class CategorySummaryContainerComponent implements OnInit {
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
     this.categoryState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
-    this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
-    this.competitorsSize$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));
     this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
   }
 

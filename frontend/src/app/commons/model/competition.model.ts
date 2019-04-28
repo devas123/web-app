@@ -1,7 +1,7 @@
 export interface Weight {
   id: string;
-  maxvalue: number;
-  minvalue: number;
+  maxValue: number;
+  minValue: number;
 }
 
 export interface AgeDivision {
@@ -54,7 +54,7 @@ export interface Score {
 }
 
 export interface Fight {
-  fightId: string;
+  id: string;
   categoryId: string;
   parentId1: string;
   parentId2: string;
@@ -63,7 +63,7 @@ export interface Fight {
   competitionId: string;
   internalId: string;
   duration: number;
-  competitors: { competitor: Competitor, score: Score }[];
+  scores: { competitor: Competitor, score: Score }[];
   round: number;
   stage: string;
   fightResult: FightResult;

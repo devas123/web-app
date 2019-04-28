@@ -26,6 +26,9 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
   fullScreenToggled = new EventEmitter<boolean>();
 
   @Output()
+  goMatViewClicked = new EventEmitter();
+
+  @Output()
   fightResultUpdated = new EventEmitter<{ fight: Fight, competitor: Competitor, score: Score, reason: string | null }>();
 
   @Output()
@@ -58,10 +61,14 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
     this.fullScreen = true;
   }
 
+  goMatView() {
+    this.goMatViewClicked.next();
+  }
+
   initHotkeys() {
     this._hotkeysService.add(new Hotkey('q', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score) {
           score.score.points += 1;
           this.updateCompetitorPoints(score);
@@ -72,7 +79,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('w', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score) {
           score.score.points += 2;
           this.updateCompetitorPoints(score);
@@ -83,7 +90,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('e', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score) {
           score.score.points += 3;
           this.updateCompetitorPoints(score);
@@ -95,7 +102,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('r', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score) {
           score.score.advantages += 1;
           this.updateCompetitorPoints(score);
@@ -106,7 +113,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('t', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score) {
           score.score.penalties += 1;
           this.updateCompetitorPoints(score);
@@ -117,7 +124,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('y', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score && score.score.points - 1 >= 0) {
           score.score.points -= 1;
           this.updateCompetitorPoints(score);
@@ -129,7 +136,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('u', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score && score.score.advantages - 1 >= 0) {
           score.score.advantages -= 1;
           this.updateCompetitorPoints(score);
@@ -141,7 +148,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('i', () => {
       if (this.fight) {
-        const score = this.fight.competitors[0];
+        const score = this.fight.scores[0];
         if (score && score.score.penalties - 1 >= 0) {
           score.score.penalties -= 1;
           this.updateCompetitorPoints(score);
@@ -153,7 +160,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('a', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score) {
           score.score.points += 1;
           this.updateCompetitorPoints(score);
@@ -164,7 +171,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('s', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score) {
           score.score.points += 2;
           this.updateCompetitorPoints(score);
@@ -175,7 +182,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('d', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score) {
           score.score.points += 3;
           this.updateCompetitorPoints(score);
@@ -187,7 +194,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('f', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score) {
           score.score.advantages += 1;
           this.updateCompetitorPoints(score);
@@ -198,7 +205,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('g', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score) {
           score.score.penalties += 1;
           this.updateCompetitorPoints(score);
@@ -209,7 +216,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('h', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score && score.score.points - 1 >= 0) {
           score.score.points -= 1;
           this.updateCompetitorPoints(score);
@@ -221,7 +228,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('j', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score && score.score.advantages - 1 >= 0) {
           score.score.advantages -= 1;
           this.updateCompetitorPoints(score);
@@ -253,7 +260,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
     this._hotkeysService.add(new Hotkey('k', () => {
       if (this.fight) {
-        const score = this.fight.competitors[1];
+        const score = this.fight.scores[1];
         if (score && score.score.penalties - 1 >= 0) {
           score.score.penalties -= 1;
           this.updateCompetitorPoints(score);
@@ -271,7 +278,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
     }));
 
 
-    const score1 = this.fight.competitors[1];
+    const score1 = this.fight.scores[1];
     if (score1 && score1.score.points - 1 > 0) {
       score1.score.points -= 1;
       this.updateCompetitorPoints(score1);
@@ -282,11 +289,11 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
      if (this.fight) {
      const  stage = 'FINISHED';
      const scores = this.fight.scores;
-     const competitors = this.fight.competitors;
+     const scores = this.fight.scores;
 
 
      this.updateFightResults(this.fight,
-     new FightResult().fillResult(competitors[0].email, ""), stage, scores);
+     new FightResult().fillResult(scores[0].email, ""), stage, scores);
      return false;
      }
      }));
@@ -296,11 +303,11 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
      if (this.fight) {
      const  stage = 'FINISHED';
      const scores = this.fight.scores;
-     const competitors = this.fight.competitors;
+     const scores = this.fight.scores;
 
 
      this.updateFightResults(this.fight,
-     new FightResult().fillResult(competitors[1].email, ""), stage, scores);
+     new FightResult().fillResult(scores[1].email, ""), stage, scores);
      return false;
      }}));*/
 
@@ -334,7 +341,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
       }
 
       if (this.fight.stage !== 'FINISHED') {
-        // this.updateFightStage(this.fight.fightId,
+        // this.updateFightStage(this.fight.id,
         //   stage);
       }
       return false;

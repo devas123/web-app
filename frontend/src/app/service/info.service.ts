@@ -165,8 +165,8 @@ export class InfoService {
     }).pipe(map(value => (value || {})));
   }
 
-  getMatFights(matId: string, maxResults: number = 10, queryString?: any) {
-    const params = {matId, queryString: queryString || null, maxResults: `${maxResults}`};
+  getMatFights(competitionId: string, matId: string, maxResults: number = 10, queryString?: any) {
+    const params = {competitionId, matId, queryString: queryString || null, maxResults: `${maxResults}`};
     return this.http.get('/competitions/api/v1/store/matfights', {
       params: params,
       headers: this.headers

@@ -3,28 +3,15 @@ import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
-import {
-  eventManagerConnectSocket,
-  eventManagerDisconnectSocket,
-  loadMyCompetitions
-} from '../../redux/event-manager-actions';
-import {
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCompetitor,
-  eventManagerGetSocketConnected
-} from '../../redux/event-manager-reducers';
+import {eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
+import {eventManagerGetSelectedEventName, eventManagerGetSelectedEventSelectedCategory, eventManagerGetSelectedEventSelectedCompetitor, eventManagerGetSocketConnected} from '../../redux/event-manager-reducers';
 import {NavigationEnd, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {EventManagerService} from '../../event-manager.service';
-import {
-  dashboardGetSelectedPeriod,
-  dashboardGetSelectedPeriodSelectedMatId,
-  extractMatNumberFromId
-} from '../../redux/dashboard-reducers';
-import {filter, map} from 'rxjs/operators';
+import {dashboardGetSelectedPeriod, dashboardGetSelectedPeriodSelectedMatNumber} from '../../redux/dashboard-reducers';
+import {filter, map, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-event-manager-container',
@@ -102,9 +89,10 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatId),
-      filter(matId => !!matId)).subscribe(matId => {
-      this.dashboardSelectedMat = extractMatNumberFromId(matId);
+      select(dashboardGetSelectedPeriodSelectedMatNumber),
+      filter(matId => matId != null))
+      .subscribe(matId => {
+      this.dashboardSelectedMat = matId.toString();
       this.createBreadcrumb();
     }));
     this.routerSubscription.add(router.events.subscribe((val) => {

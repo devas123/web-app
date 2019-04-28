@@ -1,56 +1,64 @@
-<div class="wrapper" id="fullscr" *ngIf="fight && fight != null">
+<ng-container *ngIf="!!fight">
   <button class="ui button" (click)="goFullScreen()">Go fullscreen</button>
-  <div class="participant participant_red">
-    <div class="participant__data ">
-      <div class="participant__data-box">
-        <div class="participant__name">
-          {{fight.competitors[0]?.competitor | getname}}
+  <button class="ui button" (click)="goMatView()">Mat view</button>
+  <div class="ui divider"></div>
+  <div class="wrapper" id="fullscr">
+    <div class="participant participant_red">
+      <div class="participant__data ">
+        <div class="participant__data-box">
+          <div class="participant__name">
+            {{fight.scores[0]?.competitor | getname}}
+          </div>
+          <div class="participant__team">{{fight.scores[0]?.competitor?.academy | truncate:30}}</div>
+          <button class="ui button" *ngIf="showButtons"
+                  (click)="setWinner(fight.scores[0]?.competitor, getScore(fight.scores[0]))">Winner
+          </button>
         </div>
-        <div class="participant__team">{{fight.competitors[0]?.competitor?.academy | truncate:30}}</div>
-        <button class="ui button" *ngIf="showButtons" (click)="setWinner(fight.competitors[0]?.competitor, getScore(fight.competitors[0]))">Winner</button>
       </div>
-    </div>
-    <div class="participant__point participant__point_red">
-      {{getScore(fight.competitors[0])?.points}}
-    </div>
-    <div class="participant__extra-points">
-      <div class="participant__extra-points-item">{{getScore(fight.competitors[0]).advantages}}</div>
-      <div class="participant__extra-points-penalties-item">
-        {{getScore(fight.competitors[0]).penalties}}
+      <div class="participant__point participant__point_red">
+        {{getScore(fight.scores[0])?.points}}
       </div>
-    </div>
-  </div>
-  <div class="participant participant_blue">
-    <div class="participant__point participant__point_blue">
-      {{getScore(fight.competitors[1]).points}}
-    </div>
-    <div class="participant__extra-points">
-      <div class="participant__extra-points-item">{{getScore(fight.competitors[1]).advantages}}</div>
-      <div class="participant__extra-points-penalties-item">
-        {{getScore(fight.competitors[1]).penalties}}
-      </div>
-    </div>
-    <div class="participant__data">
-      <div class="participant__data-box">
-        <div class="participant__name">
-          {{fight.competitors[1].competitor | getname}}
+      <div class="participant__extra-points">
+        <div class="participant__extra-points-item">{{getScore(fight.scores[0]).advantages}}</div>
+        <div class="participant__extra-points-penalties-item">
+          {{getScore(fight.scores[0]).penalties}}
         </div>
-        <div class="participant__team">{{fight.competitors[1]?.competitor.academy | truncate:30}}</div>
-        <button class="ui button" *ngIf="showButtons" (click)="setWinner(fight.competitors[1]?.competitor, getScore(fight.competitors[1]))">Winner</button>
       </div>
     </div>
-  </div>
-  <div class="info">
-    <div class="info__time"
-         [ngClass]="{'red': currentFightMinutes == 0 && (currentFightSeconds < 10 && currentFightSeconds != 0)}">
-      {{(currentFightMinutes < 10 &&
+    <div class="participant participant_blue">
+      <div class="participant__point participant__point_blue">
+        {{getScore(fight.scores[1]).points}}
+      </div>
+      <div class="participant__extra-points">
+        <div class="participant__extra-points-item">{{getScore(fight.scores[1]).advantages}}</div>
+        <div class="participant__extra-points-penalties-item">
+          {{getScore(fight.scores[1]).penalties}}
+        </div>
+      </div>
+      <div class="participant__data">
+        <div class="participant__data-box">
+          <div class="participant__name">
+            {{fight.scores[1].competitor | getname}}
+          </div>
+          <div class="participant__team">{{fight.scores[1]?.competitor.academy | truncate:30}}</div>
+          <button class="ui button" *ngIf="showButtons"
+                  (click)="setWinner(fight.scores[1]?.competitor, getScore(fight.scores[1]))">Winner
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="info">
+      <div class="info__time"
+           [ngClass]="{'red': currentFightMinutes == 0 && (currentFightSeconds < 10 && currentFightSeconds != 0)}">
+        {{(currentFightMinutes < 10 &&
       currentFightMinutes != 0 ? "0" : "") + currentFightMinutes + ":" + (currentFightSeconds < 10 ? "0" : "") + currentFightSeconds}}
-    </div>
-    <div class="info__round">
-      <div class="info__round-box">
-        <div class="info__round-name" *ngIf="stageName">{{stageName}}</div>
-        <div class="info__category">{{displayCategory(category)}}</div>
+      </div>
+      <div class="info__round">
+        <div class="info__round-box">
+          <div class="info__round-name" *ngIf="stageName">{{stageName}}</div>
+          <div class="info__category">{{displayCategory(category)}}</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>
