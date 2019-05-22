@@ -4,17 +4,17 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 import {flyOut} from '../../../../../animations/flyOut';
 import {HttpAuthService} from '../../../service/AuthService';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {displayErrors, regexpValidator} from '../authorization.component';
+import {regexpValidator} from '../authorization.component';
 
 
 
 
-import {Transition, TransitionController, TransitionDirection} from "ng2-semantic-ui";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../../../reducers/index";
-import {authorizeUser} from "../../../flux/actions";
-import {Router} from "@angular/router";
-import {Account} from "../../../model/Account";
+import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic-ui';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../reducers/index';
+import {authorizeUser} from '../../../flux/actions';
+import {Router} from '@angular/router';
+import {Account} from '../../../model/Account';
 
 declare var $: any;
 
@@ -67,32 +67,33 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
 
   get firstName() {
-    return this.userForm.get('firstName')
+    return this.userForm.get('firstName');
   }
 
   get lastName() {
-    return this.userForm.get('lastName')
+    return this.userForm.get('lastName');
   }
 
   get email() {
-    return this.userForm.get('email')
+    return this.userForm.get('email');
   }
 
   get password() {
-    return this.userForm.get(['passwords', 'password'])
+    return this.userForm.get(['passwords', 'password']);
   }
 
   get confirmPassword() {
-    return this.userForm.get(['passwords', 'confirmPassword'])
+    return this.userForm.get(['passwords', 'confirmPassword']);
   }
 
   displayErrorList() {
+    return false;
    // return displayErrors(this.userForm)
   }
 
   ngOnInit() {
     this.transitionController = new TransitionController();
-    this.animate("fly left");
+    this.animate('fly left');
   }
 
   ngOnDestroy(): void {
@@ -114,8 +115,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     })).subscribe(data => this.processing = false, error2 => {
       this.processing = false;
       this.error = error2;
-      $(".shaked").transition("shake");
-    })
+      $('.shaked').transition('shake');
+    });
   }
 
   onClick() {
@@ -123,7 +124,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   }
 
 
-  public animate(transitionName: string = "scale", transitionDirection = TransitionDirection.In) {
+  public animate(transitionName: string = 'scale', transitionDirection = TransitionDirection.In) {
     this.transitionController.animate(
       new Transition(transitionName, 500, transitionDirection));
 
