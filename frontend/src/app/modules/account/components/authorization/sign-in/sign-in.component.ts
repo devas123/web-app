@@ -32,6 +32,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   displayErrorList() {
+    return false;
   //  return displayErrors(this.form)
   }
 

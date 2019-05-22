@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {EffectsModule} from '@ngrx/effects';
 import {RegistrationService} from './service/registration.service';
 import {CompetitorsEffects, FightsEffects} from './effects';
@@ -16,15 +15,18 @@ import {CompetitionInfoComponent} from './containers/competition-info/competitio
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 import {CompetitionDivisionsComponent} from './components/competition-main-info/competition-divisions/competition-divisions.component';
+import {CommonsModule} from '../../commons/commons.module';
+import {BrowserModule} from '@angular/platform-browser';
 
 @NgModule({
   imports: [
-    CommonModule,
+    CommonsModule,
     EffectsModule.forFeature([CompetitorsEffects, MiscEffects, FightsEffects, TemplateEffects]),
     RouterModule.forChild(compRoutes),
     SuiSidebarModule,
     ReactiveFormsModule,
-    NgxMdModule
+    NgxMdModule,
+    BrowserModule
   ],
   declarations: [CompetitionInfoComponent, CompetitionMainInfoComponent, CompetitionDescriptionComponent, CompetitionDivisionsComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]
