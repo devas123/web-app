@@ -37,4 +37,4 @@ FROM nginx
 
 WORKDIR /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /app/dist ./
+COPY --from=build /app/dist/frontend ./
