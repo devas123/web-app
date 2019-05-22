@@ -34,7 +34,7 @@
     "full-icu": "^1.2.1",
     "hammerjs": "^2.0.8",
     "intl": "^1.2.5",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "luxon": "^1.11.3",
     "ng2-semantic-ui": "^0.9.7",
     "ng2-stomp-service": "^1.2.2",
@@ -52,7 +52,7 @@
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.13.3",
+    "@angular-devkit/build-angular": "^0.13.9",
     "@angular/cli": "^7.3.3",
     "@angular/compiler-cli": "^7.2.6",
     "@angular/language-service": "^7.2.6",
@@ -71,6 +71,7 @@
     "karma-jasmine": "^2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
     "ngrx-store-freeze": "^0.2.4",
+    "node-sass": "^4.12.0",
     "protractor": "^5.4.2",
     "rxjs-tslint": "^0.1.5",
     "ts-node": "^7.0.1",
