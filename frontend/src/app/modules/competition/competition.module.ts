@@ -16,7 +16,6 @@ import {CompetitionMainInfoComponent} from './components/competition-main-info/c
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 import {CompetitionDivisionsComponent} from './components/competition-main-info/competition-divisions/competition-divisions.component';
 import {CommonsModule} from '../../commons/commons.module';
-import {BrowserModule} from '@angular/platform-browser';
 
 @NgModule({
   imports: [
@@ -25,8 +24,7 @@ import {BrowserModule} from '@angular/platform-browser';
     RouterModule.forChild(compRoutes),
     SuiSidebarModule,
     ReactiveFormsModule,
-    NgxMdModule,
-    BrowserModule
+    NgxMdModule
   ],
   declarations: [CompetitionInfoComponent, CompetitionMainInfoComponent, CompetitionDescriptionComponent, CompetitionDivisionsComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]
