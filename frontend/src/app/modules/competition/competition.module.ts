@@ -16,10 +16,12 @@ import {CompetitionMainInfoComponent} from './components/competition-main-info/c
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 import {CompetitionDivisionsComponent} from './components/competition-main-info/competition-divisions/competition-divisions.component';
 import {CommonsModule} from '../../commons/commons.module';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   imports: [
     CommonsModule,
+    CommonModule,
     EffectsModule.forFeature([CompetitorsEffects, MiscEffects, FightsEffects, TemplateEffects]),
     RouterModule.forChild(compRoutes),
     SuiSidebarModule,
