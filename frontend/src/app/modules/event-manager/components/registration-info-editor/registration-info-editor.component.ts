@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,
 import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
+import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
 import {InfoService} from '../../../../service/info.service';
 
 @Component({
@@ -13,10 +13,10 @@ import {InfoService} from '../../../../service/info.service';
 })
 export class RegistrationInfoEditorComponent implements OnInit {
 
-  @ViewChild('modalTemplate')
+  @ViewChild('modalTemplate', {static: false})
   public modalTemplate: ModalTemplate<IContext, string, string>;
 
-  @ViewChild('addPeriodTemplate')
+  @ViewChild('addPeriodTemplate', {static: false})
   public addPeriodTemplate: ModalTemplate<IContext, string, string>;
 
   @Input()

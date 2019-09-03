@@ -1,18 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpAuthService} from "../../service/AuthService";
+import {HttpAuthService} from '../../service/AuthService';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
-import {Transition, TransitionController, TransitionDirection} from "ng2-semantic-ui";
-import {AccountState} from "../../flux/account.state";
-import {Store} from "@ngrx/store";
-import {Router} from "@angular/router";
+import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
+import {AccountState} from '../../flux/account.state';
+import {Store} from '@ngrx/store';
+import {Router} from '@angular/router';
 
 export function displayErrors(formGroup: FormGroup): boolean {
-  let fields = Object.keys(formGroup.controls);
-  for (let x in fields) {
+  const fields = Object.keys(formGroup.controls);
+  for (const x in fields) {
     const field = fields[x];
     const control = formGroup.get(field);
     if (control instanceof FormControl) {
-      if ((control.touched || control.dirty) && control.invalid) return true;
+      if ((control.touched || control.dirty) && control.invalid) { return true; }
     } else if (control instanceof FormGroup) {
       if (this.displayErrors(control)) {
         return true;
@@ -33,7 +33,7 @@ export function regexpValidator(nameRe: RegExp): ValidatorFn {
   selector: 'app-authorization',
   templateUrl: './authorization.component.html',
   styleUrls: ['./authorization.component.css'],
-  providers:[HttpAuthService]
+  providers: [HttpAuthService]
 })
 export class AuthorizationComponent implements OnInit {
 
@@ -49,7 +49,7 @@ export class AuthorizationComponent implements OnInit {
   }
 
 
-  public animate(transitionName: string = "scale") {
+  public animate(transitionName: string = 'scale') {
     this.transitionController.animate(
       new Transition(transitionName, 500, TransitionDirection.In));
   }

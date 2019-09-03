@@ -9,7 +9,7 @@ import {regexpValidator} from '../authorization.component';
 
 
 
-import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic-ui';
+import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../reducers/index';
 import {authorizeUser} from '../../../flux/actions';

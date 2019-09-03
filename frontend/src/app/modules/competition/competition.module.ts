@@ -4,7 +4,7 @@ import {RegistrationService} from './service/registration.service';
 import {CompetitorsEffects, FightsEffects} from './effects';
 import {RouterModule} from '@angular/router';
 import {compRoutes} from './competition.routes';
-import {SuiSidebarModule} from 'ng2-semantic-ui';
+import {SuiSidebarModule} from 'ng2-semantic';
 import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';

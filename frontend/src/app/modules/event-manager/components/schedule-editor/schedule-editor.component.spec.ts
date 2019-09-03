@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ScheduleEditorComponent} from './schedule-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from 'ng2-semantic-ui'
+import {SuiModule} from 'ng2-semantic'
 import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
 import {ScheduleDisplayComponent} from './schedule-display.component';
 import {RouterTestingModule} from '@angular/router/testing';

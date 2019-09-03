@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import {SuiMultiSelect} from 'ng2-semantic-ui/dist/modules/select/components/multi-select';
 import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
+import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
+import {SuiMultiSelect} from 'ng2-semantic';
 
 
 @Component({
@@ -25,7 +25,7 @@ export class CategoryEditorComponent implements OnInit {
   addDefaultCategories = new EventEmitter<{competitionId: string, category: Category}[]>();
   @Output()
   generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
-  @ViewChild('select')
+  @ViewChild('select', {static: false})
   select: SuiMultiSelect<any, any>;
 
   @Input()
@@ -33,7 +33,7 @@ export class CategoryEditorComponent implements OnInit {
 
   @Input()
   competition: CompetitionProperties;
-  @ViewChild('modalTemplate')
+  @ViewChild('modalTemplate', {static: false})
   public modalTemplate: ModalTemplate<IContext, string, string>;
   categoriesToAdd: Category[];
 

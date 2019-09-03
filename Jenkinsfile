@@ -6,6 +6,7 @@ node {
     }
     stage("test") {
         docker.build("web-app:test", "-f Dockerfile.test .").inside {
+		    sh 'npm config set registry http://95.169.186.20:4873/'
             sh 'npm --prefix frontend prune'
             sh 'npm --prefix frontend install'
             sh 'npm --prefix frontend run test-headless'

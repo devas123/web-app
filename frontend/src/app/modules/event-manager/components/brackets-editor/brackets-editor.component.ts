@@ -5,12 +5,11 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output,
+  Output, SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {Fight} from '../../../../commons/model/competition.model';
-import {SimpleChanges} from '@angular/core/src/metadata/lifecycle_hooks';
 import {DropEvent} from '../../../dragdrop/shared/drop-event.model';
 
 interface LRBucket {

@@ -4,7 +4,6 @@ import {appRoutes} from './main.routes';
 
 import {AppComponent} from './app-component/app.component';
 import {MainMenuComponent} from './components/main-menu/main-menu.component';
-import {SuiDropdownModule, SuiModule} from 'ng2-semantic-ui';
 import {RouterModule} from '@angular/router';
 import {AccountModule} from './modules/account/account.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -28,7 +27,7 @@ import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
 import {NgDragDropModule} from './modules/dragdrop/ng-drag-drop.module';
 import {HotkeyModule} from 'angular2-hotkeys';
-
+import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
 
 @NgModule({
   declarations: [

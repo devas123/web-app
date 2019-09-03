@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ScheduleEditorContainerComponent} from './schedule-editor-container.component';
 import {ScheduleEditorComponent} from '../../components/schedule-editor/schedule-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from 'ng2-semantic-ui';
+import {SuiModule} from 'ng2-semantic';
 import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
 import {ScheduleDisplayComponent} from '../../components/schedule-editor/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';

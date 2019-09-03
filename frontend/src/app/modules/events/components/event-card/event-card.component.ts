@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CompetitionProperties} from "../../../../reducers";
-import {Transition, TransitionController, TransitionDirection} from "ng2-semantic-ui";
+import {Transition, TransitionController, TransitionDirection} from "ng2-semantic";
 import {Router} from "@angular/router";
 
 @Component({
