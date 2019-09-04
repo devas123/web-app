@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SignInComponent} from './sign-in.component';
-import {SuiTransitionModule} from 'ng2-semantic-ui';
+import {SuiTransitionModule} from 'ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpAuthService} from '../../../service/AuthService';
 import {combineReducers, StoreModule} from '@ngrx/store';

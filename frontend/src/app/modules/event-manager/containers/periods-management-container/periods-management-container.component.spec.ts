@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PeriodsManagementContainerComponent} from './periods-management-container.component';
 
-import {SuiModule} from 'ng2-semantic-ui'
+import {SuiModule} from 'ng2-semantic'
 import {ScheduleDisplayComponent} from '../../components/schedule-editor/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';

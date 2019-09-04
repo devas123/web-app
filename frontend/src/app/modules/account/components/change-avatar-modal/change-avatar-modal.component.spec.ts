@@ -7,6 +7,7 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../r
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
+import {HttpClientModule} from '@angular/common/http';
 
 
 describe('ChangeAvatarModalComponent', () => {
@@ -16,7 +17,7 @@ describe('ChangeAvatarModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ChangeAvatarModalComponent],
-      imports: [AvatarModule, StoreModule.forRoot({
+      imports: [HttpClientModule, AvatarModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
       }, {

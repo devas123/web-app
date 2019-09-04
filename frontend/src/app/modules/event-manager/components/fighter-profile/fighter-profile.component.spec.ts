@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FighterProfileComponent} from './fighter-profile.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiDatepickerModule, SuiSelectModule} from 'ng2-semantic-ui'
+import {SuiDatepickerModule, SuiSelectModule} from 'ng2-semantic'
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 
 describe('FighterProfileComponent', () => {

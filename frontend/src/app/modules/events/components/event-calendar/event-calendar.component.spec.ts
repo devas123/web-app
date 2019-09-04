@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {EventCalendarComponent} from './event-calendar.component';
 import {EventListComponent} from '../event-list/event-list.component';
 import {EventCardComponent} from '../event-card/event-card.component';
-import {SuiModule} from 'ng2-semantic-ui'
+import {SuiModule} from 'ng2-semantic'
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';

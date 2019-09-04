@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {FightersEditorContainerComponent} from './fighters-editor-container.component';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {FightersEditorComponent} from '../../components/fighters-editor/fighters-editor.component';
-import {SuiModule} from 'ng2-semantic-ui'
+import {SuiModule} from 'ng2-semantic'
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';

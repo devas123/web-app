@@ -3,7 +3,7 @@ import {Schedule} from '../../../../reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PeriodProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
+import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -59,7 +59,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   categoriesGroup = 'CATEGORIES';
 
-  @ViewChild('modalTemplate')
+  @ViewChild('modalTemplate', {static: false})
   public modalTemplate: ModalTemplate<IContext, string, string>;
 
   constructor(private fb: FormBuilder, public modalService: SuiModalService, private router: Router, private route: ActivatedRoute) {
