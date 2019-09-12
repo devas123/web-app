@@ -28,27 +28,31 @@ export class MainMenuComponent implements OnInit {
     });
   }
 
+  private navigate(location: any[]) {
+    this.router.navigate(location).catch(error => console.error(`Navigation error ${location}: ${error}`));
+  }
+
   eventsNav() {
-    this.router.navigate(['/events']);
+    this.navigate(['/events']);
   }
 
   loginNav() {
-    this.router.navigate(['/login']);
+    this.navigate(['/login']);
   }
 
 
   accountPage() {
-    this.router.navigate(['/user', this.user.userId]);
+    this.navigate(['/user', this.user.userId]);
   }
 
   eventManagerPage() {
-    this.router.navigate(['/eventmanager']);
+    this.navigate(['/eventmanager']);
   }
 
 
   logout() {
     this.store.dispatch(logout());
-    this.router.navigate(['/']);
+    this.navigate(['/']);
   }
 
 
