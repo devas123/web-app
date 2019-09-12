@@ -7,6 +7,7 @@ WORKDIR /app
 FROM base AS dependencies
 COPY frontend/package*.json ./
 # Установить зависимости приложения, включая предназначенные для разработки ('devDependencies')
+RUN npm config set registry http://95.169.186.20:4873/
 RUN npm install
 
 # ---- Скопировать файлы/билд ----
@@ -24,6 +25,7 @@ RUN npm run build-prod
 #FROM node:8.9-alpine AS release
 ## Создать директорию app
 #WORKDIR /app
+##RUN npm config set registry http://95.169.186.20:4873/
 ## Необязательно
 ## RUN npm -g install serve
 #COPY --from=dependencies /app/package.json ./
