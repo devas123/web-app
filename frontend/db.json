@@ -1,230 +1,45 @@
 {
-  "competitionsettings": [
+  "competition": [
     {
-      "id": 1,
-      "competitionId": "id1",
-      "competitionName": "UAEJJF Europe Continental PRO",
-      "startDate": "25.10.2017",
-      "endDate": "26.10.2017"
-    },
-    {
-      "id": 2,
-      "competitionId": "id2",
-      "competitionName": "Power Open Brazilian Jiu-Jitsu",
-      "startDate": "15.05.2018",
-      "endDate": "15.06.2018"
-    },
-    {
-      "id": 3,
-      "competitionId": "id3",
-      "competitionName": "Power Open Brazilian Jiu-Jitsu",
-      "startDate": "15.05.2018",
-      "endDate": "15.06.2018"
-    },
-    {
-      "id": 4,
-      "competitionId": "id4",
-      "competitionName": "Power Open Brazilian Jiu-Jitsu",
-      "startDate": "15.05.2018",
-      "endDate": "15.06.2018"
-    },
-    {
-      "id": 5,
-      "competitionId": "id5",
-      "competitionName": "Power Open Brazilian Jiu-Jitsu",
-      "startDate": "15.05.2018",
-      "endDate": "15.06.2018"
-    }
-  ],
-  "state": [
-    {
-      "id": "id1",
-      "competitionId": "id1",
-      "eventNumber": "0",
-      "fights": [],
-      "categories": [],
-      "schedule": {},
-      "competitors": [],
-      "properties": {
-        "bracketsPublished": false,
-        "schedulePublished": false,
-        "numberOfMats": 4,
+      "_id": "5d7a3895f1dfaff69f6e2394",
+      "infoTemplate": "",
+      "creatorId": "1",
+      "id": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+      "competitionName": "asdasdqweqwrqwrqwrqwrqwr",
+      "startDate": "2019-09-12T12:22:45.568Z",
+      "schedulePublished": false,
+      "bracketsPublished": false,
+      "status": "CREATED",
+      "endDate": "2019-09-12T12:22:45.568Z",
+      "registrationInfo": {
+        "id": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
         "registrationOpen": true,
-        "started": false
-      }
-    },
-    {
-      "id": "id2",
-      "competitionId": "id2",
-      "eventNumber": "10",
-      "fights": [],
-      "categories": [],
-      "schedule": {},
-      "competitors": [],
-      "properties": {
-        "bracketsPublished": true,
-        "schedulePublished": true,
-        "numberOfMats": 4,
-        "registrationOpen": false,
-        "started": true
-      }
+        "registrationPeriods": []
+      },
+      "timeZone": "Europe/Moscow",
+      "creationTimestamp": 0
     }
   ],
-  "template": [
+  "comprops": [
     {
-      "id": "id1",
-      "template": "privet valera"
-    },
-    {
-      "id": "id2",
-      "template": "## 123"
+      "_id": "5d7a3895f1dfaff69f6e2394",
+      "infoTemplate": "",
+      "creatorId": "1",
+      "id": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+      "competitionName": "asdasdqweqwrqwrqwrqwrqwr",
+      "startDate": "2019-09-12T12:22:45.568Z",
+      "schedulePublished": false,
+      "bracketsPublished": false,
+      "status": "CREATED",
+      "endDate": "2019-09-12T12:22:45.568Z",
+      "registrationInfo": {
+        "id": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+        "registrationOpen": true,
+        "registrationPeriods": []
+      },
+      "timeZone": "Europe/Moscow",
+      "creationTimestamp": 0
     }
-  ],
-  "category": [
-    {
-      "id": "MALE/MASTER 1/WHITE/Rooster",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "MASTER 1",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Rooster",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "WHITE",
-      "fightDuration": 5
-    },
-    {
-      "id": "MALE/MASTER 1/WHITE/Light",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "MASTER 1",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Light",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "WHITE",
-      "fightDuration": 5
-    },
-    {
-      "id": "MALE/MASTER 1/BLUE/Rooster",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "MASTER 1",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Rooster",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    },
-    {
-      "id": "MALE/MASTER 1/BLUE/Light",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "MASTER 1",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Light",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    },
-    {
-      "id": "MALE/ADULT/BLUE/Rooster",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "ADULT",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Rooster",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    },
-    {
-      "id": "MALE/ADULT/BLUE/Light",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "ADULT",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "MALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Light",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    },
-    {
-      "id": "FEMALE/ADULT/BLUE/Rooster",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "ADULT",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "FEMALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Rooster",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    },
-    {
-      "id": "FEMALE/ADULT/BLUE/Light",
-      "_class": "com.compmanager.model.Category",
-      "ageDivision": {
-        "_id": "ADULT",
-        "minimalAge": 30,
-        "maximalAge": 2147483647
-      },
-      "gender": "FEMALE",
-      "competitionId": "pobjj",
-      "weight": {
-        "_id": "Light",
-        "maxvalue": "57.5",
-        "minvalue": "0"
-      },
-      "beltType": "BLUE",
-      "fightDuration": 5
-    }
-  ],
-  "events": []
+  ]
+
 }
