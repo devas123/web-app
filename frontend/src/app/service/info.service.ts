@@ -7,7 +7,7 @@ import {CompetitionProperties} from '../reducers';
 import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
-import {environment, mocks} from '../../environments/environment';
+import {environment} from '../../environments/environment';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
