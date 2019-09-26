@@ -26,17 +26,18 @@ export const environment = {
   matFights: '/competitions/api/v1/store/matfights'
 };
 
+const comprops = '/jsserver/competition';
 
 export const mocks = {
   commandsEndpoint: '/jsserver/command',
-  competitionQueryEndpoint: '/jsserver/competition',
+  competitionQueryEndpoint: comprops,
   competitorQueryEndpoint: '/jsserver/competitor',
   competitorEdpoint: '/jsserver/competitor',
   scheduleEndpoint: '/jsserver/schedule',
   categoriesEndpoint: '/jsserver/categories',
   competitorsEndpoint: '/jsserver/competitors',
   defaultCategories: '/jsserver/defaultcategories',
-  compProperties: '/jsserver/comprops',
+  compProperties: comprops,
   categoryState: '/jsserver/categorystate',
   dashboardState: '/jsserver/dashboardstate',
   mats: '/jsserver/mats',

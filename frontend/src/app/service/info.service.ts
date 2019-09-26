@@ -25,22 +25,25 @@ const {
   dashboardState,
   mats,
   matFights
-} = mocks;
+} = environment;
 
 @Injectable()
 export class InfoService {
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   static parseDate(dateStr: string): Date {
-    if (!dateStr) {
-      return null;
+    if (dateStr) {
+      const keepZone = DateTime.fromISO(dateStr);
+      return new Date(keepZone.toString());
     }
-    const keepZone = DateTime.fromISO(dateStr);
-    return new Date(keepZone.toString());
+    return null;
   }
 
   static formatDate(date: Date, timeZone: string): string {
-    return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format);
+    if (date) {
+      return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format);
+    }
+    return '';
   }
 
   constructor(private http: HttpClient) {
