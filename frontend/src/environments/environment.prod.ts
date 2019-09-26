@@ -1,14 +1,3 @@
-export const environment = {
-  production: true,
-  mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
-  dashboardErrorQueue: `/state/dashboard/errors`,
-  dashboardEventQueue: `/state/dashboard/events`,
-  eventQueue: `/state/events`,
-  errorQueue: `/state/errors`,
-  webSocketUrl: `/query/api/v1/sockjs/competition`,
-};
-
-
 export const urls = {
   commandsEndpoint: '/competitions/api/v1/command',
   competitionQueryEndpoint: '/query/api/v1/competition',
@@ -23,4 +12,15 @@ export const urls = {
   dashboardState: '/competitions/api/v1/store/dashboardstate',
   mats: '/competitions/api/v1/store/mats',
   matFights: '/competitions/api/v1/store/matfights'
+};
+
+export const environment = {
+  production: true,
+  mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
+  dashboardErrorQueue: `/state/dashboard/errors`,
+  dashboardEventQueue: `/state/dashboard/events`,
+  eventQueue: `/state/events`,
+  errorQueue: `/state/errors`,
+  webSocketUrl: `/query/api/v1/sockjs/competition`,
+  ...urls
 };
