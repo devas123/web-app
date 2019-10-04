@@ -1,11 +1,4 @@
-import {
-  AppState,
-  CompetitionProperties,
-  competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
-  EventPropsEntities,
-  scheduleInitialState
-} from '../../../reducers';
+import {AppState, CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
 import {
   BRACKETS_GENERATED,
   CATEGORY_ADDED,
@@ -14,6 +7,9 @@ import {
   COMPETITION_CREATED,
   COMPETITION_PROPERTIES_UPDATED,
   EVENT_MANAGER_ALL_BRACKETS_DROPPED,
+  EVENT_MANAGER_BREADCRUMB_CLEAR,
+  EVENT_MANAGER_BREADCRUMB_POP,
+  EVENT_MANAGER_BREADCRUMB_PUSH,
   EVENT_MANAGER_CATEGORIES_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORY_MOVED,
@@ -34,6 +30,9 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
+  EVENT_MANAGER_HEADER_SET,
+  EVENT_MANAGER_MENU_CLEAR,
+  EVENT_MANAGER_MENU_SET,
   EVENT_MANAGER_PERIOD_ADDED,
   EVENT_MANAGER_PERIOD_REMOVED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
@@ -45,24 +44,54 @@ import {
 } from './event-manager-actions';
 import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
-import {
-  categoriesInitialState,
-  categoryEntityAdapter,
-  competitorEntityAdapter,
-  competitorsInitialState,
-  fightEntityAdapter,
-  fightsInitialState
-} from '../../competition/reducers';
+import {categoriesInitialState, categoryEntityAdapter, competitorEntityAdapter, competitorsInitialState, fightEntityAdapter, fightsInitialState} from '../../competition/reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
 import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
+import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+
+export interface BreadCrumbItem {
+  name: string;
+  level: number;
+  last?: boolean;
+}
+
+export interface MenuItem {
+  name: string;
+  class?: string | { [p: string]: any };
+  style?: string;
+  action?: () => any;
+  labelHtml?: string;
+}
+
+export interface HeaderDescription {
+  header: string;
+  subheader: string | null;
+  headerHtml: string | null;
+}
+
+export interface MenuItemEntities extends EntityState<MenuItem> {
+  selectedMenuItemId: string | null;
+}
+
+export const menuItemEntitiesAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({
+  selectId: (menuItem: MenuItem) => menuItem.name,
+  sortComparer: false
+});
+
+export const menuItemInitialState: MenuItemEntities = menuItemEntitiesAdapter.getInitialState({
+  selectedMenuItemId: null
+});
 
 
 export interface EventManagerState {
   myEvents: EventPropsEntities;
   dashboardState: DashboardState;
   socketConnected: boolean;
+  breadcrumb: BreadCrumbItem[];
+  menu: MenuItemEntities;
+  header: HeaderDescription;
 }
 
 export interface PeriodProperties {
@@ -82,6 +111,22 @@ export interface ScheduleProperties {
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
+export const eventManagerGetBreadcrumbRaw = createSelector(getEventManagerState, state => state.breadcrumb);
+export const eventManagerGetBreadcrumb = createSelector(eventManagerGetBreadcrumbRaw, breadcrumb => breadcrumb && breadcrumb.map((b, index, ar) => (<BreadCrumbItem>{
+  ...b,
+  level: ar.length - index - 1,
+  last: index === ar.length - 1
+})));
+export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
+export const eventManagerGetMenuEntities = createSelector(getEventManagerState, state => state.menu);
+export const eventManagerGetSelectedMenuId = createSelector(eventManagerGetMenuEntities, state => state.selectedMenuItemId);
+export const {
+  selectAll: getAllMenuItems,
+  selectEntities: getMenuItemsDictionary
+} = menuItemEntitiesAdapter.getSelectors(eventManagerGetMenuEntities);
+export const eventManagerGetMenu = getAllMenuItems;
+export const eventManagerShouldDisplayMenu = createSelector(getAllMenuItems, menu => menu && menu.length > 0);
+export const eventManagerGetSelectedMenuItem = createSelector([eventManagerGetSelectedMenuId, getMenuItemsDictionary], (id, entities) => id && entities[id]);
 
 export const {
   selectEntities: selectMyCompetitions,
@@ -545,14 +590,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_FIGHTER_UNSELECTED: {
       const {competitionId} = action;
       if (state.selectedEventId === competitionId) {
-        const newState = {
+        return {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: null
           }
         };
-        return newState;
       }
       return state;
     }
@@ -664,11 +708,57 @@ export interface State extends AppState {
 }
 
 
+export function breadcrumbReducer(state: BreadCrumbItem[] = [], action: CommonAction): BreadCrumbItem[] {
+  switch (action.type) {
+    case EVENT_MANAGER_BREADCRUMB_PUSH: {
+      const item = action.payload as BreadCrumbItem;
+      return [...state, item].sort((a, b) => a.level - b.level);
+    }
+    case EVENT_MANAGER_BREADCRUMB_POP: {
+      const itemsN = action.payload || 1;
+      return state.slice(0, state.length - itemsN);
+    }
+    case EVENT_MANAGER_BREADCRUMB_CLEAR: {
+      return [];
+    }
+  }
+  return state;
+}
+
+function menuReducer(state: MenuItemEntities = menuItemInitialState, action: CommonAction): MenuItemEntities {
+  switch (action.type) {
+    case EVENT_MANAGER_MENU_SET: {
+      const menu = action.payload as MenuItem[];
+      return menuItemEntitiesAdapter.addAll(menu, menuItemInitialState);
+    }
+    case EVENT_MANAGER_MENU_CLEAR: {
+      return menuItemInitialState;
+    }
+  }
+  return state;
+
+}
+
+function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
+  switch (action.type) {
+    case EVENT_MANAGER_HEADER_SET: {
+      return action.payload as HeaderDescription;
+    }
+    case EVENT_MANAGER_MENU_CLEAR: {
+      return null;
+    }
+  }
+  return state;
+}
+
 export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
   return {
     myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
-    dashboardState: dashboardReducers
+    dashboardState: dashboardReducers,
+    breadcrumb: breadcrumbReducer,
+    menu: menuReducer,
+    header: headerReducer
   };
 }
 

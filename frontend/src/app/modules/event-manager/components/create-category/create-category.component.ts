@@ -5,8 +5,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
+import {BreadCrumbItem, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 
 @Component({
   selector: 'app-create-category',
@@ -14,13 +15,20 @@ import {Category} from '../../../../commons/model/competition.model';
   styleUrls: ['./create-category.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateCategoryComponent implements OnInit {
+export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
 
   form: FormGroup;
 
   step = 0;
 
-  constructor(private fb: FormBuilder, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Create Category',
+        level: 2
+      },
+      menu: []
+    });
     this.createForm();
   }
 

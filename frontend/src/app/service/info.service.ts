@@ -7,7 +7,7 @@ import {CompetitionProperties} from '../reducers';
 import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
-import {environment} from '../../environments/environment';
+import {environment, mocks} from '../../environments/environment';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -25,7 +25,7 @@ const {
   dashboardState,
   mats,
   matFights
-} = environment;
+} = mocks;
 
 @Injectable()
 export class InfoService {
@@ -49,9 +49,9 @@ export class InfoService {
   constructor(private http: HttpClient) {
   }
 
-  subscribeToCompetition(userId: string, competitionId: string) {
+  subscribeToCompetition(userId: string | number, competitionId: string) {
     const params = {
-      userId,
+      userId: `${userId}`,
       competitionId
     };
     return this.http.get(competitionQueryEndpoint + '/select', {

@@ -1,49 +1,43 @@
-
 import {map} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventId,
-  eventManagerGetSelectedEventName,
+  BreadCrumbItem,
+  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties, eventManagerGetSelectedEventTimeZone,
+  eventManagerGetSelectedEventScheduleProperties,
   PeriodProperties,
   ScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
-import {
-  eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule,
-  eventManagerPeriodAdded,
-  eventManagerPeriodRemoved
-} from '../../redux/event-manager-actions';
+import {eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved} from '../../redux/event-manager-actions';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-schedule-editor-container',
   templateUrl: './schedule-editor-container.component.html',
   styleUrls: ['./schedule-editor-container.component.css']
 })
-export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
+export class ScheduleEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
   schedule$: Observable<Schedule>;
   scheduleProperties$: Observable<ScheduleProperties>;
-  competitionName$: Observable<string>;
-  competitionId$: Observable<string>;
-  timeZone$: Observable<string>;
-  categories$: Observable<Category[]>;
-
   competitionId: string;
   showEditor = false;
 
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>) {
+  constructor(store: Store<AppState>) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Schedule',
+        level: 2
+      },
+      menu: []
+    });
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
-    this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
-    this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
-    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
   }
 
@@ -56,6 +50,7 @@ export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    super.ngOnDestroy();
   }
 
   addPeriod(period: PeriodProperties) {

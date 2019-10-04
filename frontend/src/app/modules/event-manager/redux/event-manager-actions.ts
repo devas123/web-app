@@ -1,7 +1,7 @@
 // commands
 import {CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
-import {PeriodProperties} from './event-manager-reducers';
+import {BreadCrumbItem, HeaderDescription, MenuItem, PeriodProperties} from './event-manager-reducers';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
@@ -52,6 +52,17 @@ export const EVENT_MANAGER_FIGHTER_UNSELECTED = 'EVENT_MANAGER_FIGHTER_UNSELECTE
 export const EVENT_MANAGER_CATEGORY_SELECTED = 'EVENT_MANAGER_CATEGORY_SELECTED';
 export const EVENT_MANAGER_CATEGORY_UNSELECTED = 'EVENT_MANAGER_CATEGORY_UNSELECTED';
 export const EVENT_MANAGER_COMPETITION_UNSELECTED = 'EVENT_MANAGER_COMPETITION_UNSELECTED';
+
+
+export const EVENT_MANAGER_BREADCRUMB_PUSH = 'EVENT_MANAGER_BREADCRUMB_PUSH';
+export const EVENT_MANAGER_BREADCRUMB_POP = 'EVENT_MANAGER_BREADCRUMB_POP';
+export const EVENT_MANAGER_BREADCRUMB_CLEAR = 'EVENT_MANAGER_BREADCRUMB_CLEAR';
+
+export const EVENT_MANAGER_MENU_SET = 'EVENT_MANAGER_MENU_SET';
+export const EVENT_MANAGER_MENU_CLEAR = 'EVENT_MANAGER_MENU_CLEAR';
+export const EVENT_MANAGER_HEADER_SET = 'EVENT_MANAGER_HEADER_HTML_SET';
+export const EVENT_MANAGER_HEADER_REMOVE = 'EVENT_MANAGER_HEADER_HTML_REMOVE';
+
 export const COMPETITION_CREATED = 'COMPETITION_CREATED';
 export const CATEGORY_ADDED = 'CATEGORY_ADDED';
 export const CATEGORY_DELETED = 'CATEGORY_DELETED';
@@ -70,6 +81,39 @@ export const EVENT_MANAGER_CATEGORY_MOVED = 'EVENT_MANAGER_CATEGORY_MOVED';
 
 export const EVENT_MANAGER_SOCKET_CONNECTED = 'EVENT_MANAGER_SOCKET_CONNECTED';
 export const EVENT_MANAGER_SOCKET_DISCONNECTED = 'EVENT_MANAGER_SOCKET_DISCONNECTED';
+
+export const eventManagerBreadcrumbClear = {
+  type: EVENT_MANAGER_BREADCRUMB_CLEAR
+};
+
+export const eventManagerMenuClear = {
+  type: EVENT_MANAGER_MENU_CLEAR
+};
+
+export const eventManagerHeaderClear = {
+  type: EVENT_MANAGER_HEADER_REMOVE
+};
+
+export const eventManagerMenuSet = (payload: MenuItem[]) => ({
+  type: EVENT_MANAGER_MENU_SET,
+  payload
+});
+
+export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
+  type: EVENT_MANAGER_HEADER_SET,
+  payload
+});
+
+
+export const eventManagerBreadcrumbPush = (payload: BreadCrumbItem) => ({
+  type: EVENT_MANAGER_BREADCRUMB_PUSH,
+  payload
+});
+
+export const eventManagerBreadcrumbPop = (items: number) => ({
+  type: EVENT_MANAGER_BREADCRUMB_POP,
+  payload: items
+});
 
 export const loadMyCompetitions = (creatorId: any, status?: string) => ({
   type: EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND, payload: {
@@ -300,10 +344,9 @@ export const eventManagerFighterLoaded = (competitor: Competitor) => ({
   payload: competitor
 });
 
-export const eventManagerFighterUnselected = (competitionId, categoryId) => ({
+export const eventManagerFighterUnselected = (competitionId) => ({
   type: EVENT_MANAGER_FIGHTER_UNSELECTED,
   competitionId,
-  categoryId
 });
 
 export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategory: string) => ({

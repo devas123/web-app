@@ -7,6 +7,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
 import {AppState, CompetitionProperties, RegistrationInfo, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
+import {BreadCrumbItem} from '../../redux/event-manager-reducers';
 
 @Component({
   selector: 'app-create-event',
@@ -14,16 +16,28 @@ import {Account} from '../../../account/model/Account';
   styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent implements OnInit, OnDestroy {
+export class CreateEventComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   @Output()
   createCompetition: EventEmitter<CompetitionProperties>;
   private createCompetitionSubscription: Subscription;
 
-  constructor(private fb: FormBuilder, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+
+  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Create event',
+        level: 1
+      },
+      menu: [],
+      header: {
+        header: 'Create event'
+      }
+    });
     this.createForm();
   }
+
 
   get competitionName() {
     return this.form.get('competitionName');
@@ -54,6 +68,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     if (this.createCompetitionSubscription) {
       this.createCompetitionSubscription.unsubscribe();
     }
@@ -75,7 +90,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         props.bracketsPublished = false;
         return createCompetition(props);
       })).subscribe(this.store);
-    this.router.navigate(['..'], {relativeTo: this.route});
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
   }
 
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {selectAccountState} from '../../reducers';
+import {AppState, selectAccountState} from '../../reducers';
 import {AccountState} from '../../modules/account/flux/account.state';
 import {logout} from '../../modules/account/flux/actions';
 import {Account} from '../../modules/account/model/Account';
@@ -19,7 +19,7 @@ export class MainMenuComponent implements OnInit {
 
   public user: Account;
 
-  constructor(private router: Router, private store: Store<AccountState>, public sanitizer: DomSanitizer) {
+  constructor(private router: Router, private store: Store<AppState>, public sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {

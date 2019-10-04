@@ -65,6 +65,10 @@ import {MatDisplayComponent} from './components/mats-overview-component/mat-disp
 import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
+import {BreadcrumbComponent} from './containers/event-manager-container/breadcrumb.component';
+import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
+import {FlexibleColumnDirective} from './containers/event-manager-container/flexible.column.directive';
+import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
 
 @NgModule({
   imports: [
@@ -89,6 +93,10 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     HotkeyModule
   ],
   declarations: [
+    DynamicHeaderDirective,
+    FlexibleColumnDirective,
+    EventManagerMenuComponent,
+    BreadcrumbComponent,
     RegistrationGroupEditorComponent,
     RegistrationInfoEditorContainerComponent,
     RegistrationInfoEditorComponent,

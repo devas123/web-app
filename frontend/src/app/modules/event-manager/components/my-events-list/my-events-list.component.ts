@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CompetitionProperties} from "../../../../reducers";
+import {CompetitionProperties} from '../../../../reducers';
 
 @Component({
   selector: 'app-my-events-list',
@@ -36,23 +36,23 @@ export class MyEventsListComponent implements OnInit {
   }
 
   deleteEvent(event: CompetitionProperties) {
-    this.eventDeleted.next(event)
+    this.eventDeleted.next(event);
   }
 
   publishEvent(event: CompetitionProperties) {
-    this.eventPublished.next(event)
+    this.eventPublished.next(event);
   }
 
   unpublishEvent(event: CompetitionProperties) {
-    this.eventUnpublished.next(event)
+    this.eventUnpublished.next(event);
   }
 
 
   editCategories(competitionId: string) {
-    this.editCategoriesPressed.next(competitionId)
+    this.editCategoriesPressed.next(competitionId);
   }
 
   editEvent(eventId: string) {
-    this.editEventPressed.next(eventId)
+    this.editEventPressed.next(eventId);
   }
 }

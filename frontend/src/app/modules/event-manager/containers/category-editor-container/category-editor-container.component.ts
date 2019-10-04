@@ -1,22 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
-import {
-  eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventDefaultCategories,
-  eventManagerGetSelectedEventSelectedCategoryState
-} from '../../redux/event-manager-reducers';
-import {CategoryState} from '../../../../commons/model/competition.model';
+import {BreadCrumbItem, eventManagerGetSelectedEvent, eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventSelectedCategoryState} from '../../redux/event-manager-reducers';
+import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCategory, eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {Category} from '../../../../commons/model/competition.model';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-category-editor-container',
   template: `
     <div class="ui container">
-      <app-category-editor [categories]="cat$ | async"
+      <app-category-editor [categories]="categories$ | async"
                            [defaultCategories]="defaultCategories$ | async"
                            [competition]="competition$ | async"
                            [selectedCategoryState]="catState$ | async"
@@ -26,9 +22,7 @@ import {Category} from '../../../../commons/model/competition.model';
       (generateRandomFightersEvent)="generateRandomFighters($event)"></app-category-editor>
     </div> `
 })
-export class CategoryEditorContainerComponent implements OnInit, OnDestroy {
-
-  cat$: Observable<Category[]>;
+export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
 
   competition$: Observable<CompetitionProperties>;
 
@@ -37,17 +31,21 @@ export class CategoryEditorContainerComponent implements OnInit, OnDestroy {
   catState$: Observable<CategoryState>;
 
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
-    this.cat$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Categories',
+        level: 2,
+      },
+      menu: []
+    });
     this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
     this.catState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
     this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
   }
 
-  ngOnInit() {
-  }
 
-  ngOnDestroy() {
+  ngOnInit() {
   }
 
   addCategory() {

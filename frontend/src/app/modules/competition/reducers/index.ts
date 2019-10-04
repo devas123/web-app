@@ -32,7 +32,7 @@ const getWeightId = (cat: Category) => {
   }
 };
 
-const displayCategory = (cat: Category) => {
+export const displayCategory = (cat: Category) => {
   if (!cat) {
     return '';
   }

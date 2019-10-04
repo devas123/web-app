@@ -1,6 +1,6 @@
 import {combineLatest, from, Observable, Subscription} from 'rxjs';
 
-import {filter, map, mergeMap} from 'rxjs/operators';
+import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
@@ -14,6 +14,7 @@ import {
   eventManagerUpdateCompetitorCommand
 } from '../../redux/event-manager-actions';
 import {
+  BreadCrumbItem,
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
@@ -22,32 +23,45 @@ import {
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-fighter-profile-container',
   templateUrl: './fighter-profile-container.component.html',
   styleUrls: ['./fighter-profile-container.component.css']
 })
-export class FighterProfileContainerComponent implements OnInit, OnDestroy {
+export class FighterProfileContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   eventFighter$: Observable<Competitor>;
   category$: Observable<Category>;
   categories$: Observable<Category[]>;
   private subs = new Subscription();
 
-// .map(params => atob(params['fighterId']))
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
-    const a$ = combineLatest(
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: store.pipe(
+        select(eventManagerGetSelectedEventSelectedCompetitor),
+        filter(f => !!f),
+        map(f => <BreadCrumbItem>{
+          name: f.firstName + ' ' + f.lastName,
+          level: 3
+        })),
+      menu: []
+    });
+    const a$ = combineLatest([
       route.params.pipe(map(params => params['fighterId'])),
       this.store.pipe(select(eventManagerGetSelectedEventId)),
-      this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)));
+      this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))]);
     this.subs.add(a$.pipe(
       filter(value => value[0] && value[1] && value[0] !== null && value[1] !== null),
       mergeMap(response => {
         return from([eventManagerLoadFighterCommand(response[1], response[2], response[0]), eventManagerFighterSelected(response[1], response[2], response[0])]);
       }))
       .subscribe(this.store));
-    this.eventFighter$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCompetitor));
+    this.eventFighter$ = this.store.pipe(
+      select(eventManagerGetSelectedEventSelectedCompetitor),
+      filter(f => !!f)
+    );
     this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
   }
@@ -68,19 +82,13 @@ export class FighterProfileContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    const a$ = combineLatest(
-      this.store.pipe(select(eventManagerGetSelectedEventId)),
-      this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)));
-    this.subs.add(a$
-      .pipe(
-        map(response => eventManagerFighterUnselected(response[0], response[1])))
-      .subscribe(event => {
-          this.store.dispatch(event);
-          this.subs.unsubscribe();
-        }, () => {
-        },
-        () => this.subs.unsubscribe()));
+    this.store.pipe(
+      select(eventManagerGetSelectedEventId),
+      map(response => eventManagerFighterUnselected(response)),
+      take(1))
+      .subscribe(this.store);
     this.subs.unsubscribe();
+    super.ngOnDestroy();
   }
 
 }

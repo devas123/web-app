@@ -6,6 +6,7 @@ import {eventManagerCategorySelected, eventManagerCategoryUnselected} from '../.
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {Subscription, combineLatest} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
+import {EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-category-container',
@@ -18,9 +19,9 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
-    const a$ = combineLatest(
+    const a$ = combineLatest([
       this.route.params.pipe(filter(params => params['id'] && params['id'] != null), map(params => params['id'])),
-      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id != null)));
+      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id != null))]);
     this.subs.add(a$.pipe(
       map((result: string[]) => {
         this.competitionId = result[1];
@@ -40,3 +41,4 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
   }
 
 }
+

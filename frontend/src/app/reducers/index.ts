@@ -7,7 +7,7 @@ import {environment} from '../../environments/environment';
  * ensure that none of the reducers accidentally mutates the state.
  */
 import {storeFreeze} from 'ngrx-store-freeze';
-import {AccountState} from '../modules/account/flux/account.state';
+import {AccountState, initialAccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {
@@ -179,10 +179,10 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
 
-export const selectCompetitionListState = state => (state && state.events) || competitionPropertiesEntitiesInitialState;
+export const selectCompetitionListState = (state: AppState) => (state && state.events) || competitionPropertiesEntitiesInitialState;
 export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);
 const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state && state.selectedEventCategories);
-export const selectAccountState = state => state && state.accountState;
+export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
 
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
 export const selectUserId = createSelector(selectUser, state => state && state.userId);

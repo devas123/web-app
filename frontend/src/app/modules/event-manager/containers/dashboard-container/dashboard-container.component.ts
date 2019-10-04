@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
@@ -17,7 +17,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
 
   subs = new Subscription();
 
-  constructor(private router: Router, private store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(private router: Router, private store: Store<AppState>) {
     this.subs.add(
       this.store.pipe(
         select(eventManagerGetSelectedEventId),

@@ -39,7 +39,7 @@ export class FightersEditorContainerComponent implements OnInit {
 
   constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
     this.categoryId$ = this.route.queryParams.pipe(map(params => params['id'] as string, startWith('')));
-    this.categories$ = combineLatest(this.store.pipe(select(eventManagerGetSelectedEventCategories)), this.categoryId$).pipe(map(result => {
+    this.categories$ = combineLatest([this.store.pipe(select(eventManagerGetSelectedEventCategories)), this.categoryId$]).pipe(map(result => {
       const cats = result[0];
       const catId = result[1];
       if (catId && catId.length > 0 && cats) {

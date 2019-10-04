@@ -4,7 +4,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
 import {select, Store} from '@ngrx/store';
-import {selectAccountState} from '../../../../reducers';
+import {AppState, selectAccountState} from '../../../../reducers';
 import {Account} from '../../model/Account';
 
 declare var $: any;
@@ -20,7 +20,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   avatarSrc = 'assets/images/empty.png';
   public user: Account;
 
-  constructor(public sanitizer: DomSanitizer, private store: Store<AccountState>) {
+  constructor(public sanitizer: DomSanitizer, private store: Store<AppState>) {
 
   }
 

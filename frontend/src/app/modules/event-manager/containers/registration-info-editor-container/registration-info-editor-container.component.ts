@@ -1,27 +1,26 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
+  BreadCrumbItem,
   eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventRegistrationInfo,
-  eventManagerGetSelectedEventTimeZone
+  eventManagerGetSelectedEventTimeZone,
+  HeaderDescription
 } from '../../redux/event-manager-reducers';
-import {
-  eventManagerAddRegistrationGroup,
-  eventManagerAddRegistrationPeriod,
-  eventManagerDeleteRegistrationGroup,
-  eventManagerDeleteRegistrationPeriod
-} from '../../redux/event-manager-actions';
+import {eventManagerAddRegistrationGroup, eventManagerAddRegistrationPeriod, eventManagerDeleteRegistrationGroup, eventManagerDeleteRegistrationPeriod} from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
-import {map, startWith} from 'rxjs/operators';
+import {filter, map, startWith} from 'rxjs/operators';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-registration-info-editor-container',
   templateUrl: './registration-info-editor-container.component.html',
   styleUrls: ['./registration-info-editor-container.component.css']
 })
-export class RegistrationInfoEditorContainerComponent implements OnInit, OnDestroy {
+export class RegistrationInfoEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   registrationInfo$: Observable<RegistrationInfo>;
   competitionId$: Observable<string>;
@@ -30,7 +29,23 @@ export class RegistrationInfoEditorContainerComponent implements OnInit, OnDestr
 
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+    super(store, <ComponentCommonMetadataProvider>{
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
+        map(name => (<HeaderDescription>{
+          header: 'Registration Info',
+          subheader: name
+        }))),
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Reg. Info',
+        level: 2
+      },
+      menu: [
+        {
+          name: 'Add period',
+        }
+      ]
+    });
     this.selectedRegistrationGroup$ = route.queryParams.pipe(
       map(params => params['group']),
       startWith(false)
@@ -72,6 +87,7 @@ export class RegistrationInfoEditorContainerComponent implements OnInit, OnDestr
   }
 
   ngOnDestroy(): void {
+    super.ngOnDestroy();
     this.subs.unsubscribe();
   }
 

@@ -16,9 +16,9 @@
     </button>
   </div>
   <div class="ui basic segment" [suiCollapse]="!showSchedule">
-    <app-schedule-display [categories]="selectedCompetitionCategories$ | async"
+    <app-schedule-display [categories]="categories$ | async"
                           [schedule]="selectedCompetitionSchedule$ | async"
-                          [timeZone]="timezone$ | async"
+                          [timeZone]="timeZone$ | async"
                           [competitionId]="(selectedCompetitionProperties$ | async)?.id"
                           (categoryClicked)="navigateToCategory($event)"></app-schedule-display>
   </div>
@@ -30,7 +30,7 @@
         </div>
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
-        <div class="meta">Begins {{period?.startTime | zdate:true:(timezone$ | async)}}</div>
+        <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
         <div class="meta">{{period?.matIds?.length + ' mats'}}</div>
       </div>
     </div>

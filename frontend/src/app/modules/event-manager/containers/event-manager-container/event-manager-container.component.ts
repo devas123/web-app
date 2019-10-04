@@ -1,155 +1,85 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
-import {eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventName, eventManagerGetSelectedEventSelectedCategory, eventManagerGetSelectedEventSelectedCompetitor, eventManagerGetSocketConnected} from '../../redux/event-manager-reducers';
-import {NavigationEnd, Router} from '@angular/router';
+import {eventManagerBreadcrumbClear, eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
+import {
+  BreadCrumbItem,
+  eventManagerGetBreadcrumb,
+  eventManagerGetHeaderDescription,
+  eventManagerGetMenu,
+  eventManagerGetSocketConnected,
+  eventManagerShouldDisplayMenu,
+  HeaderDescription,
+  MenuItem
+} from '../../redux/event-manager-reducers';
+import {Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
-import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {EventManagerService} from '../../event-manager.service';
-import {dashboardGetSelectedPeriod, dashboardGetSelectedPeriodSelectedMatNumber} from '../../redux/dashboard-reducers';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from './common-classes';
 
 @Component({
   selector: 'app-event-manager-container',
   template: `
-    <div>
-      <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
-        <div class="ui medium text loader">
-          Connecting to server.
-          <p></p>
-          <button class="ui button" (click)="cancelConnect()">Cancel</button>
-        </div>
-      </sui-dimmer>
-      <ng-container *ngIf="socketConnected$ | async">
-        <div class="ui container">
-          <div class="ui breadcrumb">
-            <ng-container *ngFor="let b of breadcrumb; let i = index">
-              <a class="section" [ngClass]="{active: i == breadcrumb.length - 1}"
-                 (click)="goback(b.stepsback)">{{b.name | truncate}}</a>
-              <div class="divider" *ngIf="i < breadcrumb.length - 1">/</div>
-            </ng-container>
-          </div>
-          <p></p>
-          <router-outlet></router-outlet>
-        </div>
-      </ng-container>
-    </div>
+      <div>
+          <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
+              <div class="ui medium text loader">
+                  Connecting to server.
+                  <p></p>
+                  <button class="ui button" (click)="cancelConnect()">Cancel</button>
+              </div>
+          </sui-dimmer>
+          <ng-container *ngIf="socketConnected$ | async">
+              <div class="ui two column stackable grid container">
+                  <div class="ui sixteen wide column">
+                      <app-breadcrumb [breadcrumb]="breadcrumb$ | async" (itemClicked)="goback($event.level)"></app-breadcrumb>
+                  </div>
+                  <div class="sixteen wide column" app-dynamic-header [hederDescription]="header$ | async"></div>
+                  <app-eventmanager-menu [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="displayMenu$ | async"></app-eventmanager-menu>
+                  <div app-flex-col [menuDisplayed]="displayMenu$ | async">
+                      <router-outlet></router-outlet>
+                  </div>
+              </div>
+          </ng-container>
+      </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventManagerContainerComponent implements OnInit, OnDestroy {
+export class EventManagerContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   socketConnected$: Observable<boolean>;
 
-  breadcrumb: { name: string, stepsback: number }[] = [] as { name: string, stepsback: number }[];
-
-  selectedCompetitionName: string;
-  selectedCategory: Category;
-  dashboardSelectedPeriod: string;
-  dashboardSelectedMat: string;
-  selectedCompetitor: Competitor;
-  selectedCategorySelectedCompetitor: Competitor;
-
+  breadcrumb$: Observable<BreadCrumbItem[]>;
+  menu$: Observable<MenuItem[]>;
+  header$: Observable<HeaderDescription>;
+  displayMenu$: Observable<boolean>;
   routerSubscription: Subscription = new Subscription();
 
+  url: string[];
 
-  url: string;
-
-  constructor(private store: Store<AppState>, private location: Location, private router: Router, private eventManagerService: EventManagerService) {
+  constructor(store: Store<AppState>, private location: Location, private router: Router, private eventManagerService: EventManagerService) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Event Manager',
+        level: 0
+      },
+      menu: []
+    });
     this.routerSubscription.add(this.store.pipe(
       select(selectUser),
-      filter(user => user),
+      filter(user => !!user),
       map((user: Account) => loadMyCompetitions(user.userId))).subscribe(store));
     this.socketConnected$ = this.store.pipe(select(eventManagerGetSocketConnected));
-    this.routerSubscription.add(this.store.pipe(
-      select(eventManagerGetSelectedEventName),
-      filter(name => !!name)).subscribe(name => {
-      this.selectedCompetitionName = name;
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(this.store.pipe(
-      select(eventManagerGetSelectedEventSelectedCategory),
-      filter(category => !!category)).subscribe(category => {
-      this.selectedCategory = category;
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(this.store.pipe(
-      select(eventManagerGetSelectedEventSelectedCompetitor),
-      filter(competitor => !!competitor)).subscribe(competitor => {
-      this.selectedCompetitor = competitor;
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(this.store.pipe(
-      select(dashboardGetSelectedPeriod),
-      filter(period => !!period && period.name != null)).subscribe(period => {
-      this.dashboardSelectedPeriod = period.name;
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatNumber),
-      filter(matId => matId != null))
-      .subscribe(matId => {
-      this.dashboardSelectedMat = matId.toString();
-      this.createBreadcrumb();
-    }));
-    this.routerSubscription.add(router.events.subscribe((val) => {
-      if (val instanceof NavigationEnd) {
-        this.url = val.url;
-        this.createBreadcrumb();
-      }
-    }));
+    this.breadcrumb$ = this.store.pipe(select(eventManagerGetBreadcrumb));
+    this.menu$ = this.store.pipe(select(eventManagerGetMenu));
+    this.header$ = this.store.pipe(select(eventManagerGetHeaderDescription));
+    this.displayMenu$ = this.store.pipe(select(eventManagerShouldDisplayMenu));
   }
 
   cancelConnect() {
     this.router.navigate(['/']).then(() => this.eventManagerService.dropConnection());
-  }
-
-  createBreadcrumb() {
-    const end = this.url.indexOf('?') >= 0 ? this.url.indexOf('?') : this.url.length;
-    const url = this.url.substring(0, end);
-    if (url && url.lastIndexOf('eventmanager') >= 0) {
-      const relativeUrl = url.substr(url.lastIndexOf('eventmanager'));
-      this.breadcrumb = [] as { name: string, stepsback: number }[];
-      const path = relativeUrl.split('/');
-      for (let i = 0; i < path.length; i++) {
-        if (i > 0 && path[i - 1] === 'eventmanager' && path[i] !== 'create') {
-          this.breadcrumb.push({name: this.selectedCompetitionName, stepsback: path.length - i - 1});
-        } else if (i > 0 && path[i - 1] === 'categories' && path[i] !== 'create') {
-          this.breadcrumb.push({
-            name: AddFighterComponent.displayCategory(this.selectedCategory),
-            stepsback: path.length - i - 1
-          });
-        } else if (i > 0 && path[i - 1] === 'dashboard') {
-          this.breadcrumb.push({
-            name: this.dashboardSelectedPeriod,
-            stepsback: path.length - i - 1
-          });
-        } else if (i > 1 && path[i - 2] === 'dashboard') {
-          this.breadcrumb.push({
-            name: 'Mat ' + (+this.dashboardSelectedMat + 1),
-            stepsback: path.length - i - 1
-          });
-        } else if (i > 0 && path[i - 1] === 'fighters') {
-          let competitor: Competitor = null;
-          if (path.find(value => value === 'categories')) {
-            competitor = this.selectedCategorySelectedCompetitor;
-          } else {
-            competitor = this.selectedCompetitor;
-          }
-          this.breadcrumb.push({
-            name: (competitor && `${competitor.firstName} ${competitor.lastName}`) || 'unknown',
-            stepsback: path.length - i - 1
-          });
-        } else {
-          this.breadcrumb.push({name: path[i], stepsback: path.length - i - 1});
-        }
-      }
-    } else {
-      this.breadcrumb = [] as { name: string, stepsback: number }[];
-    }
   }
 
   goback(steps) {
@@ -169,6 +99,7 @@ export class EventManagerContainerComponent implements OnInit, OnDestroy {
       this.routerSubscription.unsubscribe();
     }
     this.store.dispatch(eventManagerDisconnectSocket);
+    this.store.dispatch(eventManagerBreadcrumbClear);
   }
 
 }

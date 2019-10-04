@@ -2,32 +2,39 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {Observable} from 'rxjs';
-import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
+import {BreadCrumbItem, eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-my-events',
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css']
 })
-export class MyEventsComponent implements OnInit, OnDestroy {
+export class MyEventsComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   events$: Observable<CompetitionProperties[]>;
 
-
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      menu: [
+        {
+          name: 'New event',
+          action: () => router.navigate(['create'], {relativeTo: route})
+        }
+      ],
+      header: {
+        header: 'Event list'
+      }
+    });
     this.events$ = store.pipe(select(eventManagerGetMyEventsProperties));
   }
 
   ngOnInit() {
   }
 
-  ngOnDestroy() {
-  }
-
-  navigateCreateCompetition(): void {
-    this.router.navigate(['create'], {relativeTo: this.route});
+  ngOnDestroy(): void {
   }
 
   sendDeleteCommand(props: CompetitionProperties) {

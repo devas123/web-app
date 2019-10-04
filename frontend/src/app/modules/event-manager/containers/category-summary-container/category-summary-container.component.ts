@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
+  BreadCrumbItem,
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
@@ -11,22 +12,25 @@ import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {filter, map} from 'rxjs/operators';
+import {displayCategory} from '../../../competition/reducers';
 
 @Component({
   selector: 'app-category-summary-container',
   template: `
-    <app-category-summary
-      [category]="category$ | async"
-      [categoryState]="categoryState$ | async"
-      [categoryStartTime]="categoryStartTime$ | async"
-      [competitionId]="competitionId$ | async"
-      (gobackClicked)="goback()"
-      (categoryBracketsSelected)="navigateToCategoryBrackets($event)"
-      (categoryFightersSelected)="navigateToCategoryFighters($event)">
-    </app-category-summary>`,
+      <app-category-summary
+              [category]="category$ | async"
+              [categoryState]="categoryState$ | async"
+              [categoryStartTime]="categoryStartTime$ | async"
+              [competitionId]="competitionId$ | async"
+              (gobackClicked)="goback()"
+              (categoryBracketsSelected)="navigateToCategoryBrackets($event)"
+              (categoryFightersSelected)="navigateToCategoryFighters($event)">
+      </app-category-summary>`,
   styleUrls: ['./category-summary-container.component.css']
 })
-export class CategorySummaryContainerComponent implements OnInit {
+export class CategorySummaryContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
 
   categoryState$: Observable<CategoryState>;
 
@@ -35,12 +39,21 @@ export class CategorySummaryContainerComponent implements OnInit {
 
   categoryStartTime$: Observable<Date>;
 
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
-    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat),
+        map(cat => (<BreadCrumbItem>{
+          name: displayCategory(cat),
+          level: 3,
+        }))),
+      menu: []
+    });
+    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
     this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
     this.categoryState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
     this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
   }
+
 
   ngOnInit() {
   }

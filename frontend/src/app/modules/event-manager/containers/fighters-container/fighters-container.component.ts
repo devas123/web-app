@@ -2,6 +2,7 @@ import {filter, map} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {
+  BreadCrumbItem,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventId,
@@ -11,14 +12,15 @@ import {eventManagerLoadFightersForCompetition} from '../../redux/event-manager-
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-fighters-container',
   template: `
-    <router-outlet></router-outlet>`,
+      <router-outlet></router-outlet>`,
   styleUrls: ['./fighters-container.component.css']
 })
-export class FightersContainerComponent implements OnInit, OnDestroy {
+export class FightersContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   pageSize$: Observable<number>;
 
@@ -27,8 +29,15 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
 
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
-    this.categoryId$ = combineLatest(this.route.queryParams.pipe(map(params => params['categoryId'])), this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId)))
+  constructor(store: Store<AppState>, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Fighters',
+        level: 2
+      },
+      menu: []
+    });
+    this.categoryId$ = combineLatest([this.route.queryParams.pipe(map(params => params['categoryId'])), this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))])
       .pipe(map(([routeCategoryId, stateCategoryId]) => {
         if (routeCategoryId) {
           return routeCategoryId;
@@ -41,11 +50,11 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
     const eventId$ = this.store.pipe(
       select(eventManagerGetSelectedEventId),
       filter(id => id != null));
-    this.subs.add(combineLatest(
+    this.subs.add(combineLatest([
       eventId$,
       this.categoryId$,
       this.pageNumber$,
-      this.pageSize$).pipe(map(value => {
+      this.pageSize$]).pipe(map(value => {
       return eventManagerLoadFightersForCompetition(value[0], value[1], value[2], value[3]);
     })).subscribe(store));
   }
@@ -55,6 +64,7 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    super.ngOnDestroy();
   }
 
 }

@@ -1,43 +1,39 @@
-<div class="ui container">
-  <div class="ui description">{{(competition$ | async)?.competitionName}}</div>
-  <div class="ui description">Brackets</div>
-  <div class="ui divider"></div>
-  <div class="content">
-    <div class="ui basic button" routerLink="..">Return</div>
-    <sui-select class="selection" [placeholder]="(category$ | async) && formatter(category$ | async) || 'Select Category'"
-                (selectedOptionChange)="setCategoryId($event)"
-                [options]="categories$ | async"
-                [isSearchable]="true"
-                [isDisabled]="false"
-                [optionsFilter]="optionsFilter"
-                [optionFormatter]="formatter"
-                #select>
-      <sui-select-option *ngFor="let option of select.filteredOptions"
-                         [value]="option">
-      </sui-select-option>
-    </sui-select>
-    <button class="ui basic button"
-            *ngIf="(!(fights$ | async) || (fights$ | async).length === 0) && !(competition$ | async)?.bracketsPublished"
-            [disabled]="!selectedCategory"
-            (click)="generateBrackets()">Generate
-    </button>
-    <button class="ui basic button"
-            *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && !(competition$ | async)?.bracketsPublished"
-            (click)="dropSelectedBrackets()">Drop selected
-    </button>
-    <button class="ui basic button"
-            *ngIf="!(competition$ | async)?.bracketsPublished"
-            (click)="dropAllBrackets()">Drop all
-    </button>
-  </div>
-  <div class="ui clearing divider"></div>
-  <ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && (category$ | async)?.id">
-    <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"
-                         [competitionId]="(competition$ | async)?.id"
-                         (competitorMoved)="sendCompetitorMovedAction($event)"></app-brackets-editor>
-  </ng-container>
-  <ng-container *ngIf="(!(fights$ | async) || (fights$ | async).length === 0) && selectedCategory">
-    <div class="ui header">No brackets for this category.</div>
-  </ng-container>
+
+<div class="content">
+  <div class="ui basic button" routerLink="..">Return</div>
+  <sui-select class="selection" [placeholder]="(category$ | async) && formatter(category$ | async) || 'Select Category'"
+              (selectedOptionChange)="setCategoryId($event)"
+              [options]="categories$ | async"
+              [isSearchable]="true"
+              [isDisabled]="false"
+              [optionsFilter]="optionsFilter"
+              [optionFormatter]="formatter"
+              #select>
+    <sui-select-option *ngFor="let option of select.filteredOptions"
+                       [value]="option">
+    </sui-select-option>
+  </sui-select>
+  <button class="ui basic button"
+          *ngIf="(!(fights$ | async) || (fights$ | async).length === 0) && !(competition$ | async)?.bracketsPublished"
+          [disabled]="!selectedCategory"
+          (click)="generateBrackets()">Generate
+  </button>
+  <button class="ui basic button"
+          *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && !(competition$ | async)?.bracketsPublished"
+          (click)="dropSelectedBrackets()">Drop selected
+  </button>
+  <button class="ui basic button"
+          *ngIf="!(competition$ | async)?.bracketsPublished"
+          (click)="dropAllBrackets()">Drop all
+  </button>
 </div>
+<div class="ui clearing divider"></div>
+<ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && (category$ | async)?.id">
+  <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"
+                       [competitionId]="(competition$ | async)?.id"
+                       (competitorMoved)="sendCompetitorMovedAction($event)"></app-brackets-editor>
+</ng-container>
+<ng-container *ngIf="(!(fights$ | async) || (fights$ | async).length === 0) && selectedCategory">
+  <div class="ui header">No brackets for this category.</div>
+</ng-container>
 

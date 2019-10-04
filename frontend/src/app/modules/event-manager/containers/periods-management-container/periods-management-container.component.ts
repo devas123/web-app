@@ -1,47 +1,45 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
-import {
-  eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties, eventManagerGetSelectedEventTimeZone,
-  ScheduleProperties
-} from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {BreadCrumbItem, eventManagerGetSelectedEvent, eventManagerGetSelectedEventSchedule, eventManagerGetSelectedEventScheduleProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {dashboardGetPeriods, dashboardGetSelectedPeriod, DashboardPeriod} from '../../redux/dashboard-reducers';
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-periods-management-container',
   templateUrl: './periods-management-container.component.html',
   styleUrls: ['./periods-management-container.component.css']
 })
-export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
+export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
   periods$: Observable<DashboardPeriod[]>;
   selectedCompetitionProperties$: Observable<CompetitionProperties>;
   selectedCompetitionSchedule$: Observable<Schedule>;
-  selectedCompetitionCategories$: Observable<Category[]>;
   selectedCompetitionScheduleProperties$: Observable<ScheduleProperties>;
   selectedPeriod$: Observable<DashboardPeriod>;
   subs = new Subscription();
   competitionProperties: CompetitionProperties;
-  timezone$: Observable<string>;
 
   showSchedule = false;
 
-  constructor(private store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      breadCrumbItem: <BreadCrumbItem>{
+        name: 'Periods',
+        level: 3
+      },
+      menu: []
+    });
     this.periods$ = store.pipe(select(dashboardGetPeriods));
     this.selectedCompetitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
-    this.selectedCompetitionCategories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
-    this.timezone$ = this.store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.subs.add(this.selectedCompetitionProperties$.subscribe(props => this.competitionProperties = props));
   }
 
@@ -60,7 +58,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
   }
 
   selectPeriod(periodId: string) {
-    this.router.navigate([periodId], {relativeTo: this.route});
+    this.router.navigate([periodId], {relativeTo: this.route}).catch(r => console.log(`Error selecting period: ${r}`));
   }
 
   toggleSchedule() {
@@ -86,6 +84,7 @@ export class PeriodsManagementContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+    super.ngOnDestroy();
   }
 
 }
