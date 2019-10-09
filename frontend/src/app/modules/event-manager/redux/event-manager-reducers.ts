@@ -725,7 +725,7 @@ export function breadcrumbReducer(state: BreadCrumbItem[] = [], action: CommonAc
   return state;
 }
 
-function menuReducer(state: MenuItemEntities = menuItemInitialState, action: CommonAction): MenuItemEntities {
+export function menuReducer(state: MenuItemEntities = menuItemInitialState, action: CommonAction): MenuItemEntities {
   switch (action.type) {
     case EVENT_MANAGER_MENU_SET: {
       const menu = action.payload as MenuItem[];
@@ -739,7 +739,7 @@ function menuReducer(state: MenuItemEntities = menuItemInitialState, action: Com
 
 }
 
-function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
+export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {
     case EVENT_MANAGER_HEADER_SET: {
       return action.payload as HeaderDescription;

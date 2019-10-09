@@ -50,6 +50,10 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
           name: 'Dashboard',
           action: () => this.navigate('dashboard/')
         },
+        {
+          name: 'Registration Info',
+          action: () => this.navigate('reg_info/')
+        }
       ]
     });
     this.competitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));

@@ -21,10 +21,21 @@ export class DynamicHeaderDirective implements OnChanges {
     this.renderer.appendChild(root, h2);
   }
 
+  private addDescriptionTag(t: string, root: any) {
+    const div = this.renderer.createElement('div');
+    this.renderer.addClass(div, 'ui');
+    this.renderer.addClass(div, 'description');
+    const text = this.renderer.createText(t);
+    this.renderer.appendChild(div, text);
+    this.renderer.appendChild(root, div);
+  }
+
+
   ngOnChanges(changes: SimpleChanges) {
     const el = this.ref.nativeElement;
     if (this.hederDescription) {
       const {headerHtml, subheader, header} = this.hederDescription;
+      this.renderer.setStyle(el, 'display', 'grid');
       if (headerHtml) {
         this.renderer.setProperty(el, 'innerHTML', headerHtml);
       } else {
@@ -35,7 +46,7 @@ export class DynamicHeaderDirective implements OnChanges {
           this.addHeaderTag('h2', header, el);
         }
         if (subheader) {
-          this.addHeaderTag('h4', subheader, el);
+          this.addDescriptionTag(subheader, el);
         }
       }
     } else {

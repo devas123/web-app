@@ -1,157 +1,132 @@
-<div class="ui container">
-<!--  <h2 class="ui header">Properties Editor</h2>-->
-<!--  <div class="ui divider"></div>-->
-<!--  <button class="ui basic button" routerLink="categories/">-->
-<!--    Categories-->
-<!--  </button>-->
-<!--  <button class="ui basic button" routerLink="fighters/">-->
-<!--    Participants-->
-<!--  </button>-->
-<!--  <button class="ui basic button" routerLink="brackets/">-->
-<!--    Brackets-->
-<!--  </button>-->
-<!--  <button class="ui basic button" routerLink="schedule/">-->
-<!--    Schedule-->
-<!--  </button>-->
-<!--  <button class="ui basic button" routerLink="dashboard/">-->
-<!--    Dashboard-->
-<!--  </button>-->
-<!--  <p></p>-->
-  <div class="ui middle aligned large selection animated divided list" [formGroup]="form">
-    <div class="item" itemInput (contentEdited)="submitForm()">
+<div class="ui top aligned large divided list" [formGroup]="form">
+  <div class="item" itemInput (contentEdited)="submitForm()">
 
-      <!--input  hidden field-->
-      <div class="input-content">
-        <div class="left floated content">
-          <div class="ui transparent inverted right floated input">
-            <div class="description">Competition Name:<span>&nbsp;&nbsp;</span></div>
-            <input type="text" formControlName="competitionName">
-          </div>
-        </div>
-        <div class="right floated content ">
-          <i class="check link green icon hide-input-btn "></i>
-        </div>
-      </div>
-      <!---------->
-
-      <!--visible content-->
-      <div class="row-content">
-        <div class="left floated content">
-          <div class="description">Competition Name</div>
-          <div class="header">{{properties?.competitionName}}</div>
-        </div>
-        <div class="right floated content">
-          <i class="edit link teal tiny  icon  show-input-btn"></i>
-        </div>
-      </div>
-      <!---------->
-    </div>
-    <div class="item" itemInput (contentEdited)="submitForm()">
-
-      <!--input  hidden field-->
-      <div class="input-content">
-        <div class="left floated content  ">
-          <div class="ui transparent inverted right floated input">
-            <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
-            <input suiDatepicker
-                   name="startDate"
-                   formControlName="startDate"
-                   [pickerMode]="'date'"
-                   [pickerUseNativeOnMobile]="false">
-          </div>
-        </div>
-        <div class="right floated content ">
-          <i class="check link green icon hide-input-btn "></i>
-        </div>
-      </div>
-      <!---------->
-
-      <!--visible content-->
-      <div class="row-content">
-        <div class="left floated content ">
-          <div class="description">Start Date</div>
-          <div class="header">{{(properties?.startDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
-        </div>
-        <div class="right floated content">
-          <i class="edit link teal tiny  icon  show-input-btn"></i>
-        </div>
-      </div>
-      <!---------->
-    </div>
-
-    <div class="item" itemInput (contentEdited)="submitForm()">
-
-      <!--input  hidden field-->
-      <div class="input-content">
-        <div class="left floated content  ">
-          <div class="ui transparent inverted right floated input">
-            <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
-            <input suiDatepicker
-                   name="endDate"
-                   formControlName="endDate"
-                   [pickerMode]="'date'"
-                   [pickerUseNativeOnMobile]="false">
-          </div>
-        </div>
-        <div class="right floated content ">
-          <i class="check link green icon hide-input-btn "></i>
-        </div>
-      </div>
-      <!---------->
-
-      <!--visible content-->
-      <div class="row-content">
-        <div class="left floated content ">
-          <div class="description">End Date</div>
-          <div class="header">{{(properties?.endDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
-        </div>
-        <div class="right floated content">
-          <i class="edit link teal tiny  icon  show-input-btn"></i>
-        </div>
-      </div>
-      <!---------->
-    </div>
-    <div class="item">
+    <!--input  hidden field-->
+    <div class="input-content">
       <div class="left floated content">
-        <div class="description">Competition ID</div>
-        <div class="header">
-          {{properties?.id | truncate:25}}
+        <div class="ui transparent inverted right floated input">
+          <div class="description">Competition Name:<span>&nbsp;&nbsp;</span></div>
+          <input type="text" formControlName="competitionName">
         </div>
       </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
     </div>
-    <div class="item">
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
       <div class="left floated content">
-        <div class="description">Schedule</div>
-        <div class="header" *ngIf="properties?.schedulePublished">
-          Schedule is generated.
-        </div>
-        <div class="header" *ngIf="!properties?.schedulePublished">
-          Schedule is not generated.
-        </div>
+        <div class="description">Competition Name</div>
+        <div class="header">{{properties?.competitionName}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
       </div>
     </div>
-    <div class="item">
-      <div class="left floated content">
-        <div class="description">Brackets</div>
-        <div class="header" *ngIf="properties?.bracketsPublished">
-          Brackets are generated.
-        </div>
-        <div class="header" *ngIf="!properties?.bracketsPublished">
-          Brackets are not generated.
-        </div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="left floated content">
-        <div class="description">Status</div>
-        <div class="header">
-          Status is {{properties?.status}}.
+    <!---------->
+  </div>
+  <div class="item" itemInput (contentEdited)="submitForm()">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
+          <input suiDatepicker
+                 name="startDate"
+                 formControlName="startDate"
+                 [pickerMode]="'date'"
+                 [pickerUseNativeOnMobile]="false">
         </div>
       </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
     </div>
-    <div class="item">
-      <div class="content">
-        <a class="header" routerLink="./reg_info">Show Registration Information</a>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Start Date</div>
+        <div class="header">{{(properties?.startDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="submitForm()">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
+          <input suiDatepicker
+                 name="endDate"
+                 formControlName="endDate"
+                 [pickerMode]="'date'"
+                 [pickerUseNativeOnMobile]="false">
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">End Date</div>
+        <div class="header">{{(properties?.endDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+  <div class="item">
+    <div class="left floated content">
+      <div class="description">Competition ID</div>
+      <div class="header">
+        {{properties?.id | truncate:25}}
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="left floated content">
+      <div class="description">Schedule</div>
+      <div class="header" *ngIf="properties?.schedulePublished">
+        Schedule is generated.
+      </div>
+      <div class="header" *ngIf="!properties?.schedulePublished">
+        Schedule is not generated.
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="left floated content">
+      <div class="description">Brackets</div>
+      <div class="header" *ngIf="properties?.bracketsPublished">
+        Brackets are generated.
+      </div>
+      <div class="header" *ngIf="!properties?.bracketsPublished">
+        Brackets are not generated.
+      </div>
+    </div>
+  </div>
+  <div class="item">
+    <div class="left floated content">
+      <div class="description">Status</div>
+      <div class="header">
+         {{properties?.status}}
       </div>
     </div>
   </div>

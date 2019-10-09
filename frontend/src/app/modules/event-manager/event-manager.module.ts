@@ -69,6 +69,8 @@ import {BreadcrumbComponent} from './containers/event-manager-container/breadcru
 import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
 import {FlexibleColumnDirective} from './containers/event-manager-container/flexible.column.directive';
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
+import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
+import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
 
 @NgModule({
   imports: [
@@ -93,6 +95,8 @@ import {DynamicHeaderDirective} from './containers/event-manager-container/dynam
     HotkeyModule
   ],
   declarations: [
+    AddGroupFormComponent,
+    AddPeriodFormComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,
@@ -138,7 +142,11 @@ import {DynamicHeaderDirective} from './containers/event-manager-container/dynam
     FighterProfileContainerComponent,
     FighterProfileComponent,
     FightersContainerComponent],
-  providers: [EventManagerService]
+  providers: [EventManagerService],
+  entryComponents: [
+    AddGroupFormComponent,
+    AddPeriodFormComponent
+  ]
 })
 export class EventManagerModule {
 }

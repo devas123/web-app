@@ -23,29 +23,29 @@ import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from 
 @Component({
   selector: 'app-event-manager-container',
   template: `
-      <div>
-          <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
-              <div class="ui medium text loader">
-                  Connecting to server.
-                  <p></p>
-                  <button class="ui button" (click)="cancelConnect()">Cancel</button>
-              </div>
-          </sui-dimmer>
-          <ng-container *ngIf="socketConnected$ | async">
-              <div class="ui two column stackable grid container">
-                  <div class="ui sixteen wide column">
-                      <app-breadcrumb [breadcrumb]="breadcrumb$ | async" (itemClicked)="goback($event.level)"></app-breadcrumb>
-                  </div>
-                  <div class="sixteen wide column" app-dynamic-header [hederDescription]="header$ | async"></div>
+      <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
+          <div class="ui medium text loader">
+              Connecting to server.
+              <p></p>
+              <button class="ui button" (click)="cancelConnect()">Cancel</button>
+          </div>
+      </sui-dimmer>
+      <ng-container *ngIf="socketConnected$ | async">
+          <p></p>
+          <div class="ui grid container">
+              <div class="row" app-dynamic-header [hederDescription]="header$ | async"></div>
+              <div class="row">
                   <app-eventmanager-menu [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="displayMenu$ | async"></app-eventmanager-menu>
-                  <div app-flex-col [menuDisplayed]="displayMenu$ | async">
+                  <div app-flex-col [menuDisplayed]="displayMenu$ | async" id="maincontent">
                       <router-outlet></router-outlet>
                   </div>
               </div>
-          </ng-container>
-      </div>
+          </div>
+      </ng-container>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [`
+  `]
 })
 export class EventManagerContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 

@@ -7,7 +7,6 @@ import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic'
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
-
 export interface IContext {
   data: string;
 }
