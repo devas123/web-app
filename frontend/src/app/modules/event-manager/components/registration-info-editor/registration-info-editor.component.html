@@ -1,28 +1,35 @@
-<div class="ui button" (click)="openAddPeriodModal()">Add period</div>
-<p></p>
-<div class="ui stackable two column grid">
+<div class="period_grid" [ngStyle]="ngStyle">
   <div class="column" *ngFor="let p of registrationInfo?.registrationPeriods">
-    <div class="ui segment">
-      <div class="ui right floated basic button" (click)="deletePeriodEvent(p.id)">Delete</div>
-      <h4 class="header">
-        {{p.name}}
-      </h4>
-      <div class="description"><span class="italic">Start: </span>{{p.start | zdate:true:timeZone}}</div>
-      <div class="description"><span class="italic">End: </span>{{p.end | zdate:true:timeZone}}</div>
-      <p></p>
-      <div class="ui basic button" (click)="openGroupModal(p.id)">Add Group</div>
-      <div class="ui relaxed divided list">
-        <div class="item" *ngFor="let group of p.registrationGroups">
-          <div class="right floated content" (click)="deleteGroupEvent(group.id, p.id)">
-            <a>
-              <i class="close icon"></i>
-            </a>
+    <div class="ui fluid card">
+      <div class="content">
+        <div class="header">
+          {{p.name}}
+        </div>
+      </div>
+      <div class="content">
+        <div class="ui sub header">
+          <i class="clock icon"></i>
+          {{p.start | zdate:true}} - {{p.end | zdate:true}}
+        </div>
+        <div class="ui relaxed list">
+          <div class="item" *ngFor="let group of p.registrationGroups">
+            <div class="right floated content" (click)="deleteGroupEvent(group.id, p.id)">
+              <a>
+                <i class="close icon"></i>
+              </a>
+            </div>
+            <div class="content">
+              <a class="header" (click)="selectGroup.next(group.id)">{{group.displayName}}</a>
+              <div class="description">{{group.registrationFee}}</div>
+            </div>
           </div>
-          <i class="large github middle aligned icon"></i>
-          <div class="content">
-            <a class="header" (click)="selectGroup.next(group.id)">{{group.displayName}}</a>
-            <div class="description">{{group.registrationFee}}</div>
-          </div>
+        </div>
+      </div>
+      <div class="extra content">
+        <div class="ui button" (click)="openGroupModal(p.id)">Add Group</div>
+        <div class="ui icon button" (click)="deletePeriodEvent(p.id)">
+          <i class="trash icon"></i>
+          Delete Period
         </div>
       </div>
     </div>

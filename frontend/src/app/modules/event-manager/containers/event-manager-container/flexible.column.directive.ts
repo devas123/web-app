@@ -6,14 +6,14 @@ import {Directive, HostBinding, Input} from '@angular/core';
 export class FlexibleColumnDirective {
 
   @HostBinding('class')
-  _menuDisplayed: string;
+  _class: string;
 
   @Input()
-  set menuDisplayed(value: boolean) {
+  set shrink(value: boolean) {
     if (value) {
-      this._menuDisplayed = 'ui twelve wide column';
+      this._class = 'ui twelve wide column';
     } else {
-      this._menuDisplayed = 'ui sixteen wide column';
+      this._class = 'ui sixteen wide column';
     }
   }
 

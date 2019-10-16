@@ -1,7 +1,7 @@
 import {Action} from '@ngrx/store';
 import {CompetitionProperties} from '../reducers';
 
-//Commands
+// Commands
 export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';
 export const CREATE_COMPETITION_COMMAND = 'CREATE_COMPETITION_COMMAND';
 export const START_COMPETITION_COMMAND = 'START_COMPETITION_COMMAND';
@@ -11,7 +11,8 @@ export const DELETE_COMPETITION_COMMAND = 'DELETE_COMPETITION_COMMAND';
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 
 
-//Events
+// Events
+export const MENU_BUTTON_DISPLAY_SET = 'MENU_BUTTON_DISPLAY_SET';
 export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
 export const COMPETITION_LIST_LOADED = 'COMPETITION_LIST_LOADED';
 export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
@@ -21,8 +22,9 @@ export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
 
 export const ERROR_OCCURRED = 'ERROR_EVENT';
 
-export const errorEvent = (text: string) => { return {type: ERROR_OCCURRED, payload: text} as Action };
-export const competitionsLoaded = (payload: CompetitionProperties[]) => { return {type: COMPETITION_LIST_LOADED, payload} };
+export const menuButtonDisplaySet = (payload: boolean) => ({type: MENU_BUTTON_DISPLAY_SET, payload});
+export const errorEvent = (text: string) => ({type: ERROR_OCCURRED, payload: text} as Action);
+export const competitionsLoaded = (payload: CompetitionProperties[]) => ({type: COMPETITION_LIST_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
 export const competitionSelected = (competitionId: string) => ({type: COMPETITION_SELECTED, payload: competitionId});
 export const publishCompetition = (competitionId: string) => ({

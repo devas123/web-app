@@ -1,12 +1,12 @@
-<app-registration-info-editor (addGroup)="addRegistrationInfoGroup($event)"
-                              (addPeriod)="addRegistrationInfoPeriod($event)"
+<app-registration-info-editor (addGroupModal)="openGroupModal($event)"
                               (deleteGroup)="deleteRegistrationInfoGroup($event)"
                               (deletePeriod)="deleteRegistrationInfoPeriod($event)"
                               (selectGroup)="selectRegistrationGroup($event)"
+                              [colunmsNumber] = "columsNumber$ | async"
                               [competitionId]="competitionId$ | async"
                               [timeZone]="timeZone$ | async"
                               [registrationInfo]="registrationInfo$ | async"
-*ngIf="!(selectedRegistrationGroup$ | async)"></app-registration-info-editor>
+                              *ngIf="!(selectedRegistrationGroup$ | async)"></app-registration-info-editor>
 
 <app-registration-group-editor *ngIf="selectedRegistrationGroup$ | async" [group]="selectedRegistrationGroup$ | async"></app-registration-group-editor>
 

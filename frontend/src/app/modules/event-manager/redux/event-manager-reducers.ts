@@ -1,4 +1,13 @@
-import {AppState, CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
+import {
+  AppState,
+  CommonAction,
+  CompetitionProperties,
+  competitionPropertiesEntitiesAdapter,
+  competitionPropertiesEntitiesInitialState,
+  EventPropsEntities,
+  menuButtonDisplay,
+  scheduleInitialState
+} from '../../../reducers';
 import {
   BRACKETS_GENERATED,
   CATEGORY_ADDED,
@@ -30,6 +39,7 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
+  EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_MENU_CLEAR,
   EVENT_MANAGER_MENU_SET,
@@ -80,8 +90,8 @@ export const menuItemEntitiesAdapter: EntityAdapter<MenuItem> = createEntityAdap
   sortComparer: false
 });
 
-export const menuItemInitialState: MenuItemEntities = menuItemEntitiesAdapter.getInitialState({
-  selectedMenuItemId: null
+export const menuItemInitialState = menuItemEntitiesAdapter.getInitialState({
+  selectedMenuItemId: null,
 });
 
 
@@ -118,14 +128,14 @@ export const eventManagerGetBreadcrumb = createSelector(eventManagerGetBreadcrum
   last: index === ar.length - 1
 })));
 export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
-export const eventManagerGetMenuEntities = createSelector(getEventManagerState, state => state.menu);
+export const eventManagerGetMenuEntities = createSelector(getEventManagerState, state => (state && state.menu) || menuItemInitialState);
 export const eventManagerGetSelectedMenuId = createSelector(eventManagerGetMenuEntities, state => state.selectedMenuItemId);
 export const {
   selectAll: getAllMenuItems,
   selectEntities: getMenuItemsDictionary
 } = menuItemEntitiesAdapter.getSelectors(eventManagerGetMenuEntities);
 export const eventManagerGetMenu = getAllMenuItems;
-export const eventManagerShouldDisplayMenu = createSelector(getAllMenuItems, menu => menu && menu.length > 0);
+export const eventManagerShouldShrinkMainContent = createSelector(getAllMenuItems, menuButtonDisplay, (menu, button) => !button && (menu && menu.length > 0));
 export const eventManagerGetSelectedMenuItem = createSelector([eventManagerGetSelectedMenuId, getMenuItemsDictionary], (id, entities) => id && entities[id]);
 
 export const {
@@ -744,7 +754,7 @@ export function headerReducer(state: HeaderDescription = null, action: CommonAct
     case EVENT_MANAGER_HEADER_SET: {
       return action.payload as HeaderDescription;
     }
-    case EVENT_MANAGER_MENU_CLEAR: {
+    case EVENT_MANAGER_HEADER_REMOVE: {
       return null;
     }
   }

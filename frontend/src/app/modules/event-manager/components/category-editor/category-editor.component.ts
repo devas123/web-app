@@ -1,32 +1,30 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
-import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
+import {ModalTemplate} from 'ng2-semantic';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
-import {SuiMultiSelect} from 'ng2-semantic';
 
 
 @Component({
   selector: 'app-category-editor',
   templateUrl: './category-editor.component.html',
-  styleUrls: ['./category-editor.component.css'],
+  styleUrls: ['./category-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryEditorComponent implements OnInit {
 
   _allDefaultCategories: Category[];
   filteredCategories: Category[];
+
   searchStr;
+
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
   @Output()
-  addDefaultCategories = new EventEmitter<{competitionId: string, category: Category}[]>();
+  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
   @Output()
   generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
-  @ViewChild('select', {static: false})
-  select: SuiMultiSelect<any, any>;
 
   @Input()
   selectedCategoryState: CategoryState;
@@ -35,14 +33,13 @@ export class CategoryEditorComponent implements OnInit {
   competition: CompetitionProperties;
   @ViewChild('modalTemplate', {static: false})
   public modalTemplate: ModalTemplate<IContext, string, string>;
-  categoriesToAdd: Category[];
 
   _defaultCategories: Category[];
 
   _categories: Category[];
 
   @Output()
-  deleteCategoryEvent: EventEmitter<{competitionId: string, category: Category}> = new EventEmitter<{competitionId: string, category: Category}>();
+  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
   searchFilter = (options: Category[], filter: string) => {
     let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
@@ -57,12 +54,8 @@ export class CategoryEditorComponent implements OnInit {
 
     return filteredOptions;
   }
-  optionsFilter = (options: Category[], filter: string) => this.searchFilter(this._allDefaultCategories, filter).filter(cat => {
-    return this.categories.map(c => c.id).indexOf(cat.id) < 0;
-  }).slice(0, 10)
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
-  constructor(public modalService: SuiModalService) {
+  constructor() {
   }
 
 
@@ -138,32 +131,6 @@ export class CategoryEditorComponent implements OnInit {
     this.createCustomCategoryClicked.next(competitionId);
   }
 
-  addSelectedCategories() {
-    if (this.categoriesToAdd && this.categoriesToAdd.length > 0) {
-      this.addDefaultCategories.next(this.categoriesToAdd.map(cat => ({competitionId: this.competition.id, category: cat})));
-      if (this.select) {
-        const addedCategories = [...this.categoriesToAdd];
-        addedCategories.forEach(cat => this.select.deselectOption(cat));
-      }
-      this.categoriesToAdd = [];
-    }
-  }
-
-  public openModal(dynamicContent: string = 'Period properties') {
-    const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
-
-
-    config.closeResult = 'closed!';
-    config.context = {data: dynamicContent};
-
-    this.modalService
-      .open(config)
-      .onApprove(() => {
-        this.addSelectedCategories();
-      });
-  }
-
-
   deleteCategory(category: Category) {
     this.deleteCategoryEvent.next({competitionId: this.competition.id, category});
   }
@@ -171,11 +138,6 @@ export class CategoryEditorComponent implements OnInit {
   getCategoryId(category: Category) {
     return category.id;
   }
-
-  setCategoriesToAdd(categories: Category[]) {
-    this.categoriesToAdd = categories;
-  }
-
 
   // navigateBack() {
   //   this.location.back();

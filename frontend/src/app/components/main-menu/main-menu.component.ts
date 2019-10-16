@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectAccountState} from '../../reducers';
@@ -15,17 +15,18 @@ declare var $: any;
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.css']
 })
-export class MainMenuComponent implements OnInit {
+export class MainMenuComponent {
 
+  @Input()
+  sidebarRef: any;
+
+  @Input()
   public user: Account;
 
-  constructor(private router: Router, private store: Store<AppState>, public sanitizer: DomSanitizer) {
-  }
+  @Input()
+  displayButton: boolean;
 
-  ngOnInit() {
-    this.store.pipe(select(selectAccountState)).subscribe((data: AccountState) => {
-      this.user = data.user ? {...data.user, avatar: data.user.avatar || 'assets/images/empty.png'} : data.user;
-    });
+  constructor(private router: Router, private store: Store<AppState>, public sanitizer: DomSanitizer) {
   }
 
   private navigate(location: any[]) {

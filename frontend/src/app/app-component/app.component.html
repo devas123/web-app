@@ -1,6 +1,17 @@
 <div class="wrapper">
 
-  <app-main-menu></app-main-menu>
-  <router-outlet></router-outlet>
+  <sui-sidebar-container>
+    <sui-sidebar id="mainsidebar" #sidebar [transition]="'overlay'" class="vertical mainmenu">
+      <a *ngFor="let m of menu$ | async" class="item" [ngClass]="m.class" (click)="m.action(); sidebar.close()">
+        {{m.name}}
+      </a>
+    </sui-sidebar>
+
+    <sui-sidebar-sibling [isDimmedWhenVisible]="true">
+      <app-main-menu [sidebarRef]="sidebar" [user]="user$ | async"
+                     [displayButton]="displayMenuButton$ | async"></app-main-menu>
+      <router-outlet></router-outlet>
+    </sui-sidebar-sibling>
+  </sui-sidebar-container>
 
 </div>

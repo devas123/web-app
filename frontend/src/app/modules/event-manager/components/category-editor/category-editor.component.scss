@@ -1,0 +1,31 @@
+.categorycontainer {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+
+  .ui.basic.segment.categoryline {
+    background-color: #2b3035;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 0;
+
+    .header {
+
+      font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .header:hover {
+      text-shadow: 1px 1px wheat;
+    }
+
+    .description {
+      font-size: 14px;
+      font-weight: lighter;
+      opacity: 50%;
+    }
+  }
+}
+

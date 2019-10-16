@@ -1,9 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
-import {FormBuilder} from '@angular/forms';
-import {SuiModalService} from 'ng2-semantic';
-import {AddGroupModal, IAddGroupResult} from './add-group-form.component';
-import {AddPeriodModal, IAddPeriodResult} from './add-period-form.component';
+import {RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
 
 @Component({
   selector: 'app-registration-info-editor',
@@ -12,6 +8,15 @@ import {AddPeriodModal, IAddPeriodResult} from './add-period-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrationInfoEditorComponent implements OnInit {
+
+  private ngStyle = {'grid-template-columns': 'repeat(2, 50%)'};
+
+  @Input()
+  set colunmsNumber(value: number) {
+    if (value) {
+      this.ngStyle = {'grid-template-columns': `repeat(${value}, ${100 / value}%)`};
+    }
+  }
 
   @Input()
   competitionId: string;
@@ -26,7 +31,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
   addPeriod = new EventEmitter<{ competitionId: string, period: RegistrationPeriod }>();
 
   @Output()
-  addGroup = new EventEmitter<{ competitionId: string, periodId: string, group: RegistrationGroup }>();
+  addGroupModal = new EventEmitter<{ competitionId: string, periodId: string }>();
 
   @Output()
   deletePeriod = new EventEmitter<{ competitionId: string, periodId: string }>();
@@ -37,8 +42,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
   @Output()
   selectGroup = new EventEmitter<string>();
 
-
-  constructor(private fb: FormBuilder, private modalService: SuiModalService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -52,18 +56,10 @@ export class RegistrationInfoEditorComponent implements OnInit {
     this.deletePeriod.next({competitionId: this.competitionId, periodId});
   }
 
-  public openGroupModal(periodId: string) {
-    this.modalService.open(new AddGroupModal(periodId, this.competitionId))
-      .onApprove((result: IAddGroupResult) => this.addGroup.next(result))
-      .onDeny(_ => { /* deny callback */
-      });
-  }
-
-  public openAddPeriodModal() {
-    this.modalService.open(new AddPeriodModal(this.competitionId, this.timeZone))
-      .onApprove((result: IAddPeriodResult) => this.addPeriod.next(result))
-      .onDeny(_ => { /* deny callback */
-      });
+  openGroupModal(periodId: string) {
+    if (periodId && this.competitionId) {
+      this.addGroupModal.next({competitionId: this.competitionId, periodId});
+    }
   }
 
 }

@@ -71,6 +71,7 @@ import {FlexibleColumnDirective} from './containers/event-manager-container/flex
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
 import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
+import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
 
 @NgModule({
   imports: [
@@ -97,6 +98,7 @@ import {AddGroupFormComponent} from './components/registration-info-editor/add-g
   declarations: [
     AddGroupFormComponent,
     AddPeriodFormComponent,
+    SelectCategoriesModalComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,
@@ -145,7 +147,8 @@ import {AddGroupFormComponent} from './components/registration-info-editor/add-g
   providers: [EventManagerService],
   entryComponents: [
     AddGroupFormComponent,
-    AddPeriodFormComponent
+    AddPeriodFormComponent,
+    SelectCategoriesModalComponent
   ]
 })
 export class EventManagerModule {

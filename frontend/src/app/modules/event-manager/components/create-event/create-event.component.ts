@@ -1,4 +1,4 @@
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
@@ -21,7 +21,7 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
   form: FormGroup;
   @Output()
   createCompetition: EventEmitter<CompetitionProperties>;
-  private createCompetitionSubscription: Subscription;
+  private createCompetitionSubscription = new Subscription();
 
 
   constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
@@ -75,8 +75,9 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
   }
 
   submitForm() {
-    this.createCompetitionSubscription = this.store.pipe(
+    this.createCompetitionSubscription.add(this.store.pipe(
       select(selectUser),
+      take(1),
       map((user: Account) => {
         const props = {} as CompetitionProperties;
         const regInfo = {} as RegistrationInfo;
@@ -89,7 +90,7 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
         props.schedulePublished = false;
         props.bracketsPublished = false;
         return createCompetition(props);
-      })).subscribe(this.store);
+      })).subscribe(this.store));
     this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
   }
 

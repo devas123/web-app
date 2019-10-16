@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {AppState, selectUser} from '../../../../reducers';
+import {AppState, menuButtonDisplay, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
 import {eventManagerBreadcrumbClear, eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
 import {
@@ -10,7 +10,7 @@ import {
   eventManagerGetHeaderDescription,
   eventManagerGetMenu,
   eventManagerGetSocketConnected,
-  eventManagerShouldDisplayMenu,
+  eventManagerShouldShrinkMainContent,
   HeaderDescription,
   MenuItem
 } from '../../redux/event-manager-reducers';
@@ -19,6 +19,7 @@ import {Location} from '@angular/common';
 import {EventManagerService} from '../../event-manager.service';
 import {filter, map} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from './common-classes';
+import {BreakpointObserver} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-event-manager-container',
@@ -30,22 +31,21 @@ import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from 
               <button class="ui button" (click)="cancelConnect()">Cancel</button>
           </div>
       </sui-dimmer>
+      <p></p>
       <ng-container *ngIf="socketConnected$ | async">
-          <p></p>
           <div class="ui grid container">
-              <div class="row" app-dynamic-header [hederDescription]="header$ | async"></div>
               <div class="row">
-                  <app-eventmanager-menu [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="displayMenu$ | async"></app-eventmanager-menu>
-                  <div app-flex-col [menuDisplayed]="displayMenu$ | async" id="maincontent">
+                  <div class="column" app-dynamic-header [hederDescription]="header$ | async"></div>
+              </div>
+              <div class="row">
+                  <app-eventmanager-menu *ngIf="!(displayAsSidebar$ | async)" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
+                  <div app-flex-col [shrink]="shrinkMainContent$ | async" id="maincontent">
                       <router-outlet></router-outlet>
                   </div>
               </div>
           </div>
       </ng-container>
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-  `]
+  `
 })
 export class EventManagerContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
@@ -54,12 +54,14 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
   breadcrumb$: Observable<BreadCrumbItem[]>;
   menu$: Observable<MenuItem[]>;
   header$: Observable<HeaderDescription>;
-  displayMenu$: Observable<boolean>;
+  shrinkMainContent$: Observable<boolean>;
   routerSubscription: Subscription = new Subscription();
-
+  displayAsSidebar$: Observable<boolean>;
   url: string[];
 
-  constructor(store: Store<AppState>, private location: Location, private router: Router, private eventManagerService: EventManagerService) {
+  constructor(store: Store<AppState>, private location: Location,
+              private router: Router, private eventManagerService: EventManagerService,
+              private observer: BreakpointObserver) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Event Manager',
@@ -75,7 +77,8 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
     this.breadcrumb$ = this.store.pipe(select(eventManagerGetBreadcrumb));
     this.menu$ = this.store.pipe(select(eventManagerGetMenu));
     this.header$ = this.store.pipe(select(eventManagerGetHeaderDescription));
-    this.displayMenu$ = this.store.pipe(select(eventManagerShouldDisplayMenu));
+    this.shrinkMainContent$ = this.store.pipe(select(eventManagerShouldShrinkMainContent));
+    this.displayAsSidebar$ = this.store.pipe(select(menuButtonDisplay));
   }
 
   cancelConnect() {

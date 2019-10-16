@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
+import {AppState, RegistrationInfo} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {
   BreadCrumbItem,
   eventManagerGetSelectedEventId,
@@ -12,8 +12,12 @@ import {
 } from '../../redux/event-manager-reducers';
 import {eventManagerAddRegistrationGroup, eventManagerAddRegistrationPeriod, eventManagerDeleteRegistrationGroup, eventManagerDeleteRegistrationPeriod} from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, startWith} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {SuiModalService} from 'ng2-semantic';
+import {AddGroupModal, IAddGroupResult} from '../../components/registration-info-editor/add-group-form.component';
+import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-info-editor/add-period-form.component';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -26,10 +30,9 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   competitionId$: Observable<string>;
   timeZone$: Observable<string>;
   selectedRegistrationGroup$: Observable<string | boolean>;
+  columsNumber$: Observable<number>;
 
-  subs = new Subscription();
-
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private modalService: SuiModalService, private observer: BreakpointObserver) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
@@ -42,12 +45,22 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       },
       menu: [
         {
+          name: 'Return',
+          action: () => this.goBack()
+        },
+        {
           name: 'Add period',
+          action: () => combineLatest([this.competitionId$, this.timeZone$]).pipe(
+            filter(([competitionId, timezone]) => !!competitionId && !!timezone),
+            take(1)).subscribe(([competitionId, timezone]) => this.openAddPeriodModal(competitionId, timezone))
         }
       ]
     });
+    this.columsNumber$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
+      map(b => b.matches ? 1 : 2)
+    );
     this.selectedRegistrationGroup$ = route.queryParams.pipe(
-      map(params => params['group']),
+      switchMap(params => of(params['group'])),
       startWith(false)
     );
     this.registrationInfo$ = store.select(eventManagerGetSelectedEventRegistrationInfo);
@@ -55,11 +68,38 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
     this.timeZone$ = store.select(eventManagerGetSelectedEventTimeZone);
   }
 
-  addRegistrationInfoGroup(data: { competitionId: string, periodId: string, group: RegistrationGroup }) {
+  public goBack() {
+    const url = this.router.url;
+    if (url.indexOf('?') > 0) {
+      this.router.navigate(['.'], {queryParams: {}, relativeTo: this.route})
+        .catch(error => console.error(error));
+    } else {
+      this.router.navigate(['..'], {relativeTo: this.route}).catch(error => console.error(error));
+    }
+  }
+
+  public openGroupModal({competitionId, periodId}) {
+    if (periodId) {
+      this.modalService.open(new AddGroupModal(periodId, competitionId))
+        .onApprove((result: IAddGroupResult) => this.addRegistrationInfoGroup(result))
+        .onDeny(_ => { /* deny callback */
+        });
+    }
+  }
+
+  public openAddPeriodModal(competitionId, timeZone) {
+    console.log('HERE');
+    this.modalService.open(new AddPeriodModal(competitionId, timeZone))
+      .onApprove((result: IAddPeriodResult) => this.addRegistrationInfoPeriod(result))
+      .onDeny(_ => { /* deny callback */
+      });
+  }
+
+  addRegistrationInfoGroup(data: IAddGroupResult) {
     this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.group));
   }
 
-  addRegistrationInfoPeriod(data: { competitionId: string, period: RegistrationPeriod }) {
+  addRegistrationInfoPeriod(data: IAddPeriodResult) {
     this.store.dispatch(eventManagerAddRegistrationPeriod(data.competitionId, data.period));
   }
 
@@ -73,14 +113,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   selectRegistrationGroup(groupId: string) {
-    this.route.queryParams.pipe(
-      map(params => {
-        return {...params, group: groupId};
-      }),
-      map(queryParams => {
-        this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
-      } )
-    ).subscribe();
+    this.router.navigate(['.'], {queryParams: {group: groupId}, queryParamsHandling: 'merge', relativeTo: this.route}).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
   }
 
   ngOnInit() {
@@ -88,7 +121,6 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-    this.subs.unsubscribe();
   }
 
 }

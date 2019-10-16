@@ -1,3 +1,18 @@
 span.italic {
-  font-style: italic
+  font-weight: bold;
+}
+
+.ui.basic.segment {
+  background-color: #2b3035;
+  border-radius: 5px;
+}
+
+.period_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  grid-gap: 1em;
+}
+
+.ui.button {
+  background-image: unset;
 }
