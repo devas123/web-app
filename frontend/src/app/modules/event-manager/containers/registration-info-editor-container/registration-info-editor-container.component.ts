@@ -18,6 +18,7 @@ import {SuiModalService} from 'ng2-semantic';
 import {AddGroupModal, IAddGroupResult} from '../../components/registration-info-editor/add-group-form.component';
 import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-info-editor/add-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -32,7 +33,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   selectedRegistrationGroup$: Observable<string | boolean>;
   columsNumber$: Observable<number>;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private modalService: SuiModalService, private observer: BreakpointObserver) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
@@ -55,7 +56,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
             take(1)).subscribe(([competitionId, timezone]) => this.openAddPeriodModal(competitionId, timezone))
         }
       ]
-    });
+    }, menuService);
     this.columsNumber$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
       map(b => b.matches ? 1 : 2)
     );

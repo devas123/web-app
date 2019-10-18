@@ -8,9 +8,11 @@
       </div>
       <div class="content">
         <div class="ui sub header">
-          <i class="clock icon"></i>
+          <i class="calendar check outline icon"></i>
           {{p.start | zdate:true}} - {{p.end | zdate:true}}
         </div>
+      </div>
+      <div class="content">
         <div class="ui relaxed list">
           <div class="item" *ngFor="let group of p.registrationGroups">
             <div class="right floated content" (click)="deleteGroupEvent(group.id, p.id)">
@@ -26,10 +28,10 @@
         </div>
       </div>
       <div class="extra content">
-        <div class="ui button" (click)="openGroupModal(p.id)">Add Group</div>
+        <div class="ui icon button" (click)="openGroupModal(p.id)">
+          <i class="plus icon"></i></div>
         <div class="ui icon button" (click)="deletePeriodEvent(p.id)">
           <i class="trash icon"></i>
-          Delete Period
         </div>
       </div>
     </div>

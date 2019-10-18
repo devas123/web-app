@@ -1,7 +1,7 @@
 // commands
 import {CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
 import {Category, Competitor} from '../../../commons/model/competition.model';
-import {BreadCrumbItem, HeaderDescription, MenuItem, PeriodProperties} from './event-manager-reducers';
+import {BreadCrumbItem, HeaderDescription, PeriodProperties} from './event-manager-reducers';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
@@ -58,9 +58,6 @@ export const EVENT_MANAGER_BREADCRUMB_PUSH = 'EVENT_MANAGER_BREADCRUMB_PUSH';
 export const EVENT_MANAGER_BREADCRUMB_POP = 'EVENT_MANAGER_BREADCRUMB_POP';
 export const EVENT_MANAGER_BREADCRUMB_CLEAR = 'EVENT_MANAGER_BREADCRUMB_CLEAR';
 
-export const EVENT_MANAGER_MENU_SET = 'EVENT_MANAGER_MENU_SET';
-export const EVENT_MANAGER_MENU_CLEAR = 'EVENT_MANAGER_MENU_CLEAR';
-export const EVENT_MANAGER_MENU_SET_DISPLAY = 'EVENT_MANAGER_MENU_SET_DISPLAY';
 export const EVENT_MANAGER_HEADER_SET = 'EVENT_MANAGER_HEADER_HTML_SET';
 export const EVENT_MANAGER_HEADER_REMOVE = 'EVENT_MANAGER_HEADER_HTML_REMOVE';
 
@@ -86,19 +83,9 @@ export const EVENT_MANAGER_SOCKET_DISCONNECTED = 'EVENT_MANAGER_SOCKET_DISCONNEC
 export const eventManagerBreadcrumbClear = {
   type: EVENT_MANAGER_BREADCRUMB_CLEAR
 };
-
-export const eventManagerMenuClear = {
-  type: EVENT_MANAGER_MENU_CLEAR
-};
-
 export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
-
-export const eventManagerMenuSet = (payload: MenuItem[]) => ({
-  type: EVENT_MANAGER_MENU_SET,
-  payload
-});
 
 export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
   type: EVENT_MANAGER_HEADER_SET,

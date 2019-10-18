@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+@import "calendar.min.css";
+@import "assets/css/dragula.css";
+
+.ui.button {
+  background-image: unset;
+}
+
+.customcontainer {
+  margin-bottom: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+
+  .ui.basic.segment.customline {
+    background-color: #2b3035;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 0;
+
+    .action_buttons {
+      padding-top: 1rem;
+    }
+
+    .header {
+      font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 1);
+      text-decoration-style: solid;
+      text-size-adjust: 100%;
+    }
+
+    .description {
+      font-size: 14px;
+      font-weight: lighter;
+      color: #7A8288;
+      opacity: 50%;
+    }
+
+    .ui.pagination.menu {
+      border: 0;
+    }
+  }
+}
+

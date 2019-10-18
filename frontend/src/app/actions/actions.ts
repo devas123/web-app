@@ -12,7 +12,6 @@ export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 
 
 // Events
-export const MENU_BUTTON_DISPLAY_SET = 'MENU_BUTTON_DISPLAY_SET';
 export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
 export const COMPETITION_LIST_LOADED = 'COMPETITION_LIST_LOADED';
 export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
@@ -22,7 +21,6 @@ export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
 
 export const ERROR_OCCURRED = 'ERROR_EVENT';
 
-export const menuButtonDisplaySet = (payload: boolean) => ({type: MENU_BUTTON_DISPLAY_SET, payload});
 export const errorEvent = (text: string) => ({type: ERROR_OCCURRED, payload: text} as Action);
 export const competitionsLoaded = (payload: CompetitionProperties[]) => ({type: COMPETITION_LIST_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};

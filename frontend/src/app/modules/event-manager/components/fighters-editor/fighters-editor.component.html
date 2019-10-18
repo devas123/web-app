@@ -1,19 +1,21 @@
-<div class="ui relaxed divided list" *ngIf="fighters && fighters.length > 0">
-  <div class="item" *ngFor="let fighter of fighters">
-    <div class="right floated content">
-      <div class="ui basic button" (click)="deleteFighter(fighter)">Delete</div>
-    </div>
-    <i class="large github middle aligned icon"></i>
-    <div class="content">
-      <a class="header" (click)="gotoFighterProfile(fighter)">{{fighter?.firstName}} {{fighter?.lastName}}</a>
-      <div class="description">Email: {{fighter?.email}}</div>
-      <div class="description">Birth date: {{fighter?.birthDate | zdate:false}}</div>
-      <div class="description">Academy: {{fighter?.academy}}</div>
-      <div class="description">Category: {{getCategoryName(fighter?.categoryId)}}</div>
-      <div class="description">Registration status: {{fighter?.registrationStatus}}</div>
+<div class="ui customcontainer" *ngIf="fighters && fighters.length > 0">
+  <div class="ui basic segment customline" *ngFor="let fighter of fighters">
+    <a class="ui header link" (click)="gotoFighterProfile(fighter)">{{fighter?.firstName}} {{fighter?.lastName}}</a>
+    <div class="description">Email: {{fighter?.email}}</div>
+    <div class="description">Birth date: {{fighter?.birthDate | zdate:false}}</div>
+    <div class="description">Academy: {{fighter?.academy}}</div>
+    <div class="description">Category: {{getCategoryName(fighter?.categoryId)}}</div>
+    <div class="description">Registration status: {{fighter?.registrationStatus}}</div>
+    <div class="action_buttons">
+      <div class="ui icon button" (click)="gotoFighterProfile(fighter)">
+        <i class="edit icon"></i>
+      </div>
+      <div class="ui icon button" (click)="deleteFighter(fighter)">
+        <i class="trash icon"></i>
+      </div>
     </div>
   </div>
-  <div class="ui segment">
+  <div class="ui basic segment customline">
     <sui-pagination [collectionSize]="collectionSize"
                     [pageSize]="pageSize"
                     [maxSize]="5"
@@ -21,5 +23,6 @@
                     [hasEllipses]="true"
                     (pageChange)="selectPage($event)" #pagination>
     </sui-pagination>
+    <div class="total">Total: {{total}}</div>
   </div>
 </div>

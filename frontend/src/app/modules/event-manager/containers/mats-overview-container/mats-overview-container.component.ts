@@ -13,6 +13,7 @@ import {
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {BreadCrumbItem} from '../../redux/event-manager-reducers';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -22,7 +23,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   selectedPeriod$: Observable<DashboardPeriod>;
   selectedPeriodMats$: Observable<Mat[]>;
 
-  constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>) {
+  constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: store.pipe(select(dashboardGetSelectedPeriod), filter(p => !!p),
         map(per => <BreadCrumbItem>{
@@ -30,7 +31,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
           level: 3
         })),
       menu: []
-    });
+    }, menuService);
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
   }

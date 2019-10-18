@@ -1,8 +1,6 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
-import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate} from 'ng2-semantic';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
 
 
@@ -17,7 +15,7 @@ export class CategoryEditorComponent implements OnInit {
   _allDefaultCategories: Category[];
   filteredCategories: Category[];
 
-  searchStr;
+  searchStr: string;
 
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
@@ -31,8 +29,18 @@ export class CategoryEditorComponent implements OnInit {
 
   @Input()
   competition: CompetitionProperties;
-  @ViewChild('modalTemplate', {static: false})
-  public modalTemplate: ModalTemplate<IContext, string, string>;
+
+  @Input()
+  set searchString(value: string) {
+    if (value) {
+      const searchStr = value;
+      this.filteredCategories = this.searchFilter(this._categories, searchStr);
+      this.searchStr = searchStr;
+    } else {
+      this.filteredCategories = this._categories;
+      this.searchStr = null;
+    }
+  }
 
   _defaultCategories: Category[];
 
@@ -53,7 +61,7 @@ export class CategoryEditorComponent implements OnInit {
     });
 
     return filteredOptions;
-  }
+  };
 
   constructor() {
   }
@@ -107,17 +115,6 @@ export class CategoryEditorComponent implements OnInit {
     }
   }
 
-  searchStringChanged(event: any) {
-    if (event && event.target && event.target.value) {
-      const searchStr = event.target.value;
-      this.filteredCategories = this.searchFilter(this._categories, searchStr);
-      this.searchStr = searchStr;
-    } else {
-      this.filteredCategories = this._categories;
-      this.searchStr = null;
-    }
-  }
-
   ngOnInit() {
   }
 
@@ -127,9 +124,6 @@ export class CategoryEditorComponent implements OnInit {
     }
   }
 
-  addCategory(competitionId: string) {
-    this.createCustomCategoryClicked.next(competitionId);
-  }
 
   deleteCategory(category: Category) {
     this.deleteCategoryEvent.next({competitionId: this.competition.id, category});

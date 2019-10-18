@@ -7,6 +7,7 @@ import {ActivatedRoute} from '@angular/router';
 import {BreadCrumbItem, eventManagerGetSelectedEvent, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {eventManagerCompetitionUnselected, eventManagerSelectCompetition} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 
 @Component({
@@ -19,14 +20,14 @@ export class EventContainerComponent extends EventManagerRouterEntryComponent im
   private competitionProperties$: Observable<CompetitionProperties>;
   private readonly compIdSubscription: Subscription;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<BreadCrumbItem>{
           name: name,
           level: 1,
         }))),
-    });
+    }, menuService);
     this.compIdSubscription = this.route.params.pipe(map(params => params['competitionId']), map(compId => eventManagerSelectCompetition(compId))).subscribe(this.store);
     this.competitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
   }

@@ -23,6 +23,7 @@ import {
 import {filter, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-brackets-editor-container',
@@ -32,7 +33,7 @@ import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from 
 export class BracketsEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Brackets',
@@ -47,7 +48,7 @@ export class BracketsEditorContainerComponent extends EventManagerRouterEntryCom
         })
       ),
       menu: []
-    });
+    }, menuService);
     const competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));

@@ -27,7 +27,8 @@ import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
 import {NgDragDropModule} from './modules/dragdrop/ng-drag-drop.module';
 import {HotkeyModule} from 'angular2-hotkeys';
-import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
+import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
+import {MenuService} from './components/main-menu/menu.service';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
     BrowserAnimationsModule,
     SuiModule,
     SuiDropdownModule,
+    SuiSidebarModule,
     AccountModule,
     AvatarModule,
     RouterModule.forRoot(
@@ -63,6 +65,7 @@ import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
   ],
   providers: [HttpClient,
     InfoService,
+    MenuService,
     HttpAuthService,
     AccountService,
     SignUpGuard,

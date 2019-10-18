@@ -1,21 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, menuButtonDisplay, selectAccountState} from '../reducers';
+import {AppState, selectAccountState} from '../reducers';
 import {authorizeToken} from '../modules/account/flux/actions';
-import {from, Observable, Subscription} from 'rxjs';
-import {eventManagerGetMenu, MenuItem} from '../modules/event-manager/redux/event-manager-reducers';
+import {Observable, Subscription} from 'rxjs';
+import {MenuItem} from '../modules/event-manager/redux/event-manager-reducers';
 import {AccountState} from '../modules/account/flux/account.state';
 import {Account} from '../modules/account/model/Account';
-import {filter, map, mergeMap, tap} from 'rxjs/operators';
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {menuButtonDisplaySet} from '../actions/actions';
+import {map, tap} from 'rxjs/operators';
+import {MenuService} from '../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
   title = 'app';
   displayMenuButton$: Observable<boolean>;
@@ -23,15 +22,16 @@ export class AppComponent implements OnInit {
   menu$: Observable<MenuItem[]>;
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>, private observer: BreakpointObserver) {
-    this.displayMenuButton$ = store.pipe(
-      select(menuButtonDisplay)
-    );
-    this.menu$ = store.pipe(
-      select(eventManagerGetMenu),
-      tap(m => console.log(JSON.stringify(m)))
-    );
-    this.subs.add(observer.observe([Breakpoints.Handset, Breakpoints.Small, Breakpoints.Medium]).pipe(mergeMap(b => from([menuButtonDisplaySet(b.matches)]))).subscribe(store));
+  @ViewChild('sidebar', {static: false})
+  private _sidebar: any;
+
+  @ViewChild('childcontainer', {static: false, read: ViewContainerRef})
+  childcontainer: ViewContainerRef;
+
+  constructor(private store: Store<AppState>, private menuService: MenuService) {
+    this.displayMenuButton$ = menuService.displaySidebar$;
+    this.menu$ = menuService.menu$.pipe(tap(m => m.filter(me => !!me.itemDisplayAction).forEach(me => setTimeout(() => me.itemDisplayAction(this.childcontainer)))),
+      map(m => m.filter(me => !me.itemDisplayAction)));
     this.user$ = this.store.pipe(select(selectAccountState), map((data: AccountState) => {
       return data.user ? {...data.user, avatar: data.user.avatar || 'assets/images/empty.png'} : data.user;
     }));
@@ -42,5 +42,11 @@ export class AppComponent implements OnInit {
     if (localStorage.getItem('token')) {
       this.store.dispatch(authorizeToken(localStorage.getItem('token')));
     }
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.menuService.sidebar = this._sidebar;
+    });
   }
 }

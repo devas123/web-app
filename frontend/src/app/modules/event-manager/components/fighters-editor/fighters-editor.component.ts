@@ -7,7 +7,7 @@ import {SuiPagination} from 'ng2-semantic';
 @Component({
   selector: 'app-fighters-editor',
   templateUrl: './fighters-editor.component.html',
-  styleUrls: ['./fighters-editor.component.css'],
+  styleUrls: ['./fighters-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FightersEditorComponent implements OnInit {
@@ -35,6 +35,9 @@ export class FightersEditorComponent implements OnInit {
 
   @Input()
   collectionSize: number;
+
+  @Input()
+  total: number;
 
   @Input()
   set pageNumber(value: number) {

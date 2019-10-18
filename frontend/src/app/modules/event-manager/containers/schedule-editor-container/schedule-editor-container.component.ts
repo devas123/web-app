@@ -14,6 +14,8 @@ import {
 import {Category} from '../../../../commons/model/competition.model';
 import {eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved} from '../../redux/event-manager-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {ActivatedRoute} from '@angular/router';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-schedule-editor-container',
@@ -28,14 +30,14 @@ export class ScheduleEditorContainerComponent extends BasicCompetitionInfoContai
 
   subs = new Subscription();
 
-  constructor(store: Store<AppState>) {
+  constructor(store: Store<AppState>, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Schedule',
         level: 2
       },
       menu: []
-    });
+    }, menuService);
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));

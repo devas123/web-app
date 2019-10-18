@@ -118,7 +118,39 @@
       }
     }
   ],
-  "competitors": [],
+  "competitors": {
+    "competitionId": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+    "data": [
+      {
+        "id": "asd12125qwdasdqw412",
+        "email": "aasd@bvbq.ru",
+        "userId": "23",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "birthDate": "2019-09-12T12:22:45.568Z",
+        "academy": "academy1",
+        "categoryId": "category1",
+        "competitionId": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+        "registrationStatus": "unknown",
+        "promo": ""
+      },
+      {
+        "id": "asd12125qwdasdqw41242124",
+        "email": "aaseewqwrd@bvbq.ru",
+        "userId": "423",
+        "firstName": "firstName1",
+        "lastName": "lastName1",
+        "birthDate": "2019-09-12T12:22:45.568Z",
+        "academy": "academy1",
+        "categoryId": "category1",
+        "competitionId": "bdca361138f346130e89bc42eef06e2a8a7567f609f7b8820fa3502f4a3eedb2",
+        "registrationStatus": "unknown",
+        "promo": ""
+      }
+    ],
+    "total": 2,
+    "page": 1
+  },
   "command": [
     {
       "type": "CREATE_COMPETITION_COMMAND",

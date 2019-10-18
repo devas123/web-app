@@ -15,6 +15,7 @@ import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {displayCategory} from '../../../competition/reducers';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-category-summary-container',
@@ -39,7 +40,7 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
 
   categoryStartTime$: Observable<Date>;
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat),
         map(cat => (<BreadCrumbItem>{
@@ -47,7 +48,7 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
           level: 3,
         }))),
       menu: []
-    });
+    }, menuService);
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
     this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
     this.categoryState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));

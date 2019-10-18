@@ -1,4 +1,4 @@
-import {COMPETITION_LIST_LOADED, MENU_BUTTON_DISPLAY_SET} from '../actions/actions';
+import {COMPETITION_LIST_LOADED} from '../actions/actions';
 import {Action, ActionReducer, ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 /**
@@ -27,7 +27,6 @@ import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-r
 export interface AppState {
   events: EventPropsEntities;
   accountState: AccountState;
-  displayMenuButton: boolean;
 }
 
 export interface CommonAction extends Action {
@@ -161,18 +160,9 @@ export function competitionList(state: EventPropsEntities = competitionPropertie
   }
 }
 
-
-export function displayMenuButtonReducer(state: boolean = false, action: CommonAction): boolean {
-  if (action.type === MENU_BUTTON_DISPLAY_SET) {
-    return action.payload || false;
-  }
-  return state;
-}
-
 export const reducers: ActionReducerMap<AppState> = {
   events: competitionList,
   accountState: accountStateReducer,
-  displayMenuButton: displayMenuButtonReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
@@ -192,7 +182,6 @@ export const selectCompetitionListState = (state: AppState) => (state && state.e
 export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);
 const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state && state.selectedEventCategories);
 export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
-export const menuButtonDisplay = (state: AppState) => (state && state.displayMenuButton) || false;
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
 export const selectUserId = createSelector(selectUser, state => state && state.userId);
 

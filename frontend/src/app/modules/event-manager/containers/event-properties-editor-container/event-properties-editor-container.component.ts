@@ -2,12 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {BreadCrumbItem, eventManagerGetSelectedEvent, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
-import {eventManagerHeaderClear, eventManagerMenuClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
+import {eventManagerGetSelectedEvent, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-event-properties-editor-container',
@@ -18,7 +19,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
   competitionProperties$: Observable<CompetitionProperties>;
 
 
-  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
@@ -55,7 +56,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
           action: () => this.navigate('reg_info/')
         }
       ]
-    });
+    }, menuService);
     this.competitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
   }
 
@@ -64,7 +65,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
 
   ngOnDestroy(): void {
     this.store.dispatch(eventManagerHeaderClear);
-    this.store.dispatch(eventManagerMenuClear);
+    this.menuService.clear();
   }
 
   updateProperties(properties: CompetitionProperties) {

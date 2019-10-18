@@ -13,6 +13,7 @@ import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-fighters-container',
@@ -20,7 +21,7 @@ import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from 
       <router-outlet></router-outlet>`,
   styleUrls: ['./fighters-container.component.css']
 })
-export class FightersContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class FightersContainerComponent implements OnInit, OnDestroy {
 
   pageSize$: Observable<number>;
 
@@ -29,15 +30,9 @@ export class FightersContainerComponent extends EventManagerRouterEntryComponent
 
   subs = new Subscription();
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute) {
-    super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Fighters',
-        level: 2
-      },
-      menu: []
-    });
-    this.categoryId$ = combineLatest([this.route.queryParams.pipe(map(params => params['categoryId'])), this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))])
+  constructor(private store: Store<AppState>, private route: ActivatedRoute) {
+    this.categoryId$ = combineLatest([this.route.queryParams.pipe(map(params => params['categoryId'])),
+      this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))])
       .pipe(map(([routeCategoryId, stateCategoryId]) => {
         if (routeCategoryId) {
           return routeCategoryId;
@@ -64,7 +59,6 @@ export class FightersContainerComponent extends EventManagerRouterEntryComponent
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-    super.ngOnDestroy();
   }
 
 }

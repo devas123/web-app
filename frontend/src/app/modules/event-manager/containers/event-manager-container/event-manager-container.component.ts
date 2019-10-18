@@ -1,25 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {AppState, menuButtonDisplay, selectUser} from '../../../../reducers';
+import {AppState, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
 import {eventManagerBreadcrumbClear, eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
-import {
-  BreadCrumbItem,
-  eventManagerGetBreadcrumb,
-  eventManagerGetHeaderDescription,
-  eventManagerGetMenu,
-  eventManagerGetSocketConnected,
-  eventManagerShouldShrinkMainContent,
-  HeaderDescription,
-  MenuItem
-} from '../../redux/event-manager-reducers';
+import {BreadCrumbItem, eventManagerGetBreadcrumb, eventManagerGetHeaderDescription, eventManagerGetSocketConnected, HeaderDescription, MenuItem} from '../../redux/event-manager-reducers';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {EventManagerService} from '../../event-manager.service';
 import {filter, map} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from './common-classes';
-import {BreakpointObserver} from '@angular/cdk/layout';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-event-manager-container',
@@ -38,7 +29,7 @@ import {BreakpointObserver} from '@angular/cdk/layout';
                   <div class="column" app-dynamic-header [hederDescription]="header$ | async"></div>
               </div>
               <div class="row">
-                  <app-eventmanager-menu *ngIf="!(displayAsSidebar$ | async)" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
+                  <app-eventmanager-menu *ngIf="(displayAsSidebar$ | async) !== true" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
                   <div app-flex-col [shrink]="shrinkMainContent$ | async" id="maincontent">
                       <router-outlet></router-outlet>
                   </div>
@@ -60,37 +51,30 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
   url: string[];
 
   constructor(store: Store<AppState>, private location: Location,
-              private router: Router, private eventManagerService: EventManagerService,
-              private observer: BreakpointObserver) {
+              private router: Router, private eventManagerService: EventManagerService, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Event Manager',
         level: 0
       },
       menu: []
-    });
+    }, menuService);
     this.routerSubscription.add(this.store.pipe(
       select(selectUser),
       filter(user => !!user),
       map((user: Account) => loadMyCompetitions(user.userId))).subscribe(store));
     this.socketConnected$ = this.store.pipe(select(eventManagerGetSocketConnected));
     this.breadcrumb$ = this.store.pipe(select(eventManagerGetBreadcrumb));
-    this.menu$ = this.store.pipe(select(eventManagerGetMenu));
+    this.menu$ = menuService.menu$;
     this.header$ = this.store.pipe(select(eventManagerGetHeaderDescription));
-    this.shrinkMainContent$ = this.store.pipe(select(eventManagerShouldShrinkMainContent));
-    this.displayAsSidebar$ = this.store.pipe(select(menuButtonDisplay));
+    this.displayAsSidebar$ = menuService.displaySidebar$;
+    this.shrinkMainContent$ = combineLatest([this.menu$, this.displayAsSidebar$]).pipe(
+      map(([menu, button]) => !button && (menu && menu.length > 0))
+    );
   }
 
   cancelConnect() {
     this.router.navigate(['/']).then(() => this.eventManagerService.dropConnection());
-  }
-
-  goback(steps) {
-    let newpath = this.location.path(false);
-    for (let i = 0; i < steps; i++) {
-      newpath = newpath.slice(0, newpath.lastIndexOf('/'));
-    }
-    this.router.navigateByUrl(newpath).catch(reason => console.error(reason));
   }
 
   ngOnInit() {

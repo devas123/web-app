@@ -1,13 +1,4 @@
-import {
-  AppState,
-  CommonAction,
-  CompetitionProperties,
-  competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
-  EventPropsEntities,
-  menuButtonDisplay,
-  scheduleInitialState
-} from '../../../reducers';
+import {AppState, CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
 import {
   BRACKETS_GENERATED,
   CATEGORY_ADDED,
@@ -41,8 +32,6 @@ import {
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
-  EVENT_MANAGER_MENU_CLEAR,
-  EVENT_MANAGER_MENU_SET,
   EVENT_MANAGER_PERIOD_ADDED,
   EVENT_MANAGER_PERIOD_REMOVED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
@@ -58,8 +47,8 @@ import {categoriesInitialState, categoryEntityAdapter, competitorEntityAdapter, 
 import {Category, Competitor} from '../../../commons/model/competition.model';
 import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
-import {InjectionToken} from '@angular/core';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {EmbeddedViewRef, InjectionToken, ViewContainerRef} from '@angular/core';
+import {Observable} from 'rxjs';
 
 export interface BreadCrumbItem {
   name: string;
@@ -68,11 +57,12 @@ export interface BreadCrumbItem {
 }
 
 export interface MenuItem {
-  name: string;
+  name: string | Observable<string>;
   class?: string | { [p: string]: any };
   style?: string;
   action?: () => any;
-  labelHtml?: string;
+  label?: string;
+  itemDisplayAction?: (container: ViewContainerRef) => EmbeddedViewRef<any>;
 }
 
 export interface HeaderDescription {
@@ -81,26 +71,11 @@ export interface HeaderDescription {
   headerHtml: string | null;
 }
 
-export interface MenuItemEntities extends EntityState<MenuItem> {
-  selectedMenuItemId: string | null;
-}
-
-export const menuItemEntitiesAdapter: EntityAdapter<MenuItem> = createEntityAdapter<MenuItem>({
-  selectId: (menuItem: MenuItem) => menuItem.name,
-  sortComparer: false
-});
-
-export const menuItemInitialState = menuItemEntitiesAdapter.getInitialState({
-  selectedMenuItemId: null,
-});
-
-
 export interface EventManagerState {
   myEvents: EventPropsEntities;
   dashboardState: DashboardState;
   socketConnected: boolean;
   breadcrumb: BreadCrumbItem[];
-  menu: MenuItemEntities;
   header: HeaderDescription;
 }
 
@@ -128,15 +103,6 @@ export const eventManagerGetBreadcrumb = createSelector(eventManagerGetBreadcrum
   last: index === ar.length - 1
 })));
 export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
-export const eventManagerGetMenuEntities = createSelector(getEventManagerState, state => (state && state.menu) || menuItemInitialState);
-export const eventManagerGetSelectedMenuId = createSelector(eventManagerGetMenuEntities, state => state.selectedMenuItemId);
-export const {
-  selectAll: getAllMenuItems,
-  selectEntities: getMenuItemsDictionary
-} = menuItemEntitiesAdapter.getSelectors(eventManagerGetMenuEntities);
-export const eventManagerGetMenu = getAllMenuItems;
-export const eventManagerShouldShrinkMainContent = createSelector(getAllMenuItems, menuButtonDisplay, (menu, button) => !button && (menu && menu.length > 0));
-export const eventManagerGetSelectedMenuItem = createSelector([eventManagerGetSelectedMenuId, getMenuItemsDictionary], (id, entities) => id && entities[id]);
 
 export const {
   selectEntities: selectMyCompetitions,
@@ -586,14 +552,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_FIGHTER_SELECTED: {
       const {competitionId, payload} = action;
       if (state.selectedEventId === competitionId && payload) {
-        const newState = {
+        return {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: payload
           }
         };
-        return newState;
       }
       return state;
     }
@@ -735,20 +700,6 @@ export function breadcrumbReducer(state: BreadCrumbItem[] = [], action: CommonAc
   return state;
 }
 
-export function menuReducer(state: MenuItemEntities = menuItemInitialState, action: CommonAction): MenuItemEntities {
-  switch (action.type) {
-    case EVENT_MANAGER_MENU_SET: {
-      const menu = action.payload as MenuItem[];
-      return menuItemEntitiesAdapter.addAll(menu, menuItemInitialState);
-    }
-    case EVENT_MANAGER_MENU_CLEAR: {
-      return menuItemInitialState;
-    }
-  }
-  return state;
-
-}
-
 export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {
     case EVENT_MANAGER_HEADER_SET: {
@@ -767,7 +718,6 @@ export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
     socketConnected: socketStateReducer,
     dashboardState: dashboardReducers,
     breadcrumb: breadcrumbReducer,
-    menu: menuReducer,
     header: headerReducer
   };
 }

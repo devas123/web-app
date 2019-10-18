@@ -8,6 +8,7 @@ import {eventManagerAddCategory} from '../../redux/event-manager-actions';
 import {BreadCrumbItem, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-create-category',
@@ -21,14 +22,14 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
 
   step = 0;
 
-  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Create Category',
         level: 2
       },
       menu: []
-    });
+    }, menuService);
     this.createForm();
   }
 

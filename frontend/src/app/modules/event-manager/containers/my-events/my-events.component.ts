@@ -6,6 +6,7 @@ import {BreadCrumbItem, eventManagerGetMyEventsProperties} from '../../redux/eve
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-my-events',
@@ -16,7 +17,7 @@ export class MyEventsComponent extends EventManagerRouterEntryComponent implemen
 
   events$: Observable<CompetitionProperties[]>;
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       menu: [
         {
@@ -27,7 +28,7 @@ export class MyEventsComponent extends EventManagerRouterEntryComponent implemen
       header: {
         header: 'Event list'
       }
-    });
+    }, menuService);
     this.events$ = store.pipe(select(eventManagerGetMyEventsProperties));
   }
 

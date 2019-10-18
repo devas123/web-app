@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {MenuItem} from '../../redux/event-manager-reducers';
 
 @Component({
@@ -10,6 +10,7 @@ import {MenuItem} from '../../redux/event-manager-reducers';
                   <a *ngFor="let m of menu" class="item" [ngClass]="m.class" (click)="itemClicked.next(m)">
                       {{m.name}}
                   </a>
+                  <div #container></div>
               </div>
           </div>
       </div>
@@ -31,8 +32,25 @@ import {MenuItem} from '../../redux/event-manager-reducers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventManagerMenuComponent {
+
+  @ViewChild('container', {static: false, read: ViewContainerRef})
+  container: ViewContainerRef;
+
   @Input()
-  menu: MenuItem[];
+  set menu(value: MenuItem[]) {
+    if (value) {
+      value.filter(mi => !!mi.itemDisplayAction).forEach(mi => setTimeout(() => mi.itemDisplayAction(this.container)));
+      this._menu = value.filter(mi => !mi.itemDisplayAction);
+    } else {
+      this._menu = [];
+    }
+  }
+
+  get menu() {
+    return this._menu;
+  }
+
+  private _menu: MenuItem[];
 
   @Input()
   displayMenu = false;

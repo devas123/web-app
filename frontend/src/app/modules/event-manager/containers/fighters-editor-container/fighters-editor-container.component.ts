@@ -12,21 +12,19 @@ import {
   eventManagerGetSelectedEventName
 } from '../../redux/event-manager-reducers';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
-import {
-  eventManagerCategorySelected,
-  eventManagerCompetitionFightersPageChanged,
-  eventManagerRemoveCompetitor
-} from '../../redux/event-manager-actions';
+import {eventManagerCompetitionFightersPageChanged, eventManagerRemoveCompetitor} from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {map, startWith} from 'rxjs/operators';
+import {filter, map, startWith, take} from 'rxjs/operators';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-fighters-container',
   templateUrl: './fighters-editor-container.component.html',
   styleUrls: ['./fighters-editor-container.component.css']
 })
-export class FightersEditorContainerComponent implements OnInit {
+export class FightersEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
   categoryId$: Observable<string>;
@@ -37,7 +35,23 @@ export class FightersEditorContainerComponent implements OnInit {
   categories$: Observable<Category[]>;
   addFighterOpen = false;
 
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
+    super(store, <ComponentCommonMetadataProvider>{
+      header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
+        header: 'Fighters',
+        subheader: name
+      }))),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.navigateBack()
+        },
+        {
+          name: 'Add fighter',
+          action: () => this.addFighterOpen = true
+        }
+      ]
+    }, menuService);
     this.categoryId$ = this.route.queryParams.pipe(map(params => params['id'] as string, startWith('')));
     this.categories$ = combineLatest([this.store.pipe(select(eventManagerGetSelectedEventCategories)), this.categoryId$]).pipe(map(result => {
       const cats = result[0];

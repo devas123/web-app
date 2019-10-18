@@ -7,7 +7,7 @@ import {CompetitionProperties} from '../reducers';
 import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
-import {mocks} from '../../environments/environment';
+import {environment, mocks} from '../../environments/environment';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -24,7 +24,7 @@ const {
   dashboardState,
   mats,
   matFights
-} = mocks;
+} = environment.production ? environment : mocks;
 
 @Injectable()
 export class InfoService {
@@ -103,12 +103,17 @@ export class InfoService {
 
 
   getCompetitorsForCompetition(competitionId: string, categoryId: string, pageNumber: string, pageSize: string, searchString?: string) {
-    const params = {
+    let params: any = {
       competitionId,
-      categoryId: categoryId || '',
-      pageNumber, pageSize,
-      searchString: searchString || ''
+      // pageNumber,
+      // pageSize
     };
+    if (categoryId && categoryId.length > 0) {
+      params = {...params, categoryId};
+    }
+    if (searchString && searchString.length > 0) {
+      params = {...params, searchString};
+    }
     return this.http.get(competitorsEndpoint, {
       params: params,
     }).pipe(map(value => (value || {}) as CompetitionProperties), catchError(error => observableOf(error)));

@@ -24,6 +24,7 @@ import {
 import {Location} from '@angular/common';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-fighter-profile-container',
@@ -37,7 +38,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
   categories$: Observable<Category[]>;
   private subs = new Subscription();
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: store.pipe(
         select(eventManagerGetSelectedEventSelectedCompetitor),
@@ -47,7 +48,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
           level: 3
         })),
       menu: []
-    });
+    }, menuService);
     const a$ = combineLatest([
       route.params.pipe(map(params => params['fighterId'])),
       this.store.pipe(select(eventManagerGetSelectedEventId)),

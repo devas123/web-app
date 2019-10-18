@@ -9,6 +9,7 @@ import {dashboardGetPeriods, dashboardGetSelectedPeriod, DashboardPeriod} from '
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-periods-management-container',
@@ -27,14 +28,14 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
 
   showSchedule = false;
 
-  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       breadCrumbItem: <BreadCrumbItem>{
         name: 'Periods',
         level: 3
       },
       menu: []
-    });
+    }, menuService);
     this.periods$ = store.pipe(select(dashboardGetPeriods));
     this.selectedCompetitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));

@@ -5,6 +5,7 @@
       <a *ngFor="let m of menu$ | async" class="item" [ngClass]="m.class" (click)="m.action(); sidebar.close()">
         {{m.name}}
       </a>
+      <div #childcontainer></div>
     </sui-sidebar>
 
     <sui-sidebar-sibling [isDimmedWhenVisible]="true">

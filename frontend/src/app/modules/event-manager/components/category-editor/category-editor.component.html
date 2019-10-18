@@ -1,31 +1,31 @@
-<div class="content">
-  <div class="ui icon search input">
-    <i class="search icon"></i>
-    <input type="text" placeholder="Search categories..." (change)="searchStringChanged($event)">
-  </div>
-</div>
 <ng-container *ngIf="!!competition">
-  <div class="categorycontainer">
-    <div *ngFor="let category of filteredCategories" class="ui basic segment categoryline">
+  <div class="customcontainer">
+    <div *ngFor="let category of filteredCategories" class="ui basic segment customline">
       <!--<div class="right floated content">-->
       <!--<div class="ui button" (click)="editCategories(event.competitionId)">Category Editor</div>-->
       <!--<div class="ui button" (click)="publishEvent(event)">Publish</div>-->
       <!--<div class="ui button" (click)="deleteEvent(event)">Delete</div>-->
       <!--</div>-->
-      <div class="content">
-        <a class="header" routerLink="{{getCategoryId(category)}}">{{category?.gender}}/{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
-        <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
-        <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
-        <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
-        <div class="description">Age: {{category?.ageDivision?.minimalAge > 0 ?
-            category?.ageDivision?.minimalAge : 0}}{{category?.ageDivision?.maximalAge < 100 ?
-            ' - ' + category?.ageDivision?.maximalAge : '+'}}
+      <a class="ui header link" routerLink="{{getCategoryId(category)}}">{{category?.gender}}
+        /{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
+      <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
+      <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
+      <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
+      <div class="description">Age: {{category?.ageDivision?.minimalAge > 0 ?
+          category?.ageDivision?.minimalAge : 0}}{{category?.ageDivision?.maximalAge < 100 ?
+          ' - ' + category?.ageDivision?.maximalAge : '+'}}
+      </div>
+      <div class="description">Weight (kg): {{category?.weight?.minValue > 0 ?
+          category?.weight?.minValue : 0}}{{category?.weight?.maxValue < 100 ?
+          ' - ' + category?.weight?.maxValue : '+'}}
+      </div>
+      <div class="action_buttons">
+        <div class="ui icon button" routerLink="{{getCategoryId(category)}}">
+          <i class="edit icon"></i>
         </div>
-        <div class="description">Weight (kg): {{category?.weight?.minValue > 0 ?
-            category?.weight?.minValue : 0}}{{category?.weight?.maxValue < 100 ?
-            ' - ' + category?.weight?.maxValue : '+'}}
+        <div class="ui icon button" (click)="deleteCategory(category)">
+          <i class="trash icon"></i>
         </div>
-        <div class="ui button" (click)="deleteCategory(category)">Delete</div>
         <div class="ui button" (click)="generateRandomFighters(category)">Generate Fighters</div>
       </div>
     </div>

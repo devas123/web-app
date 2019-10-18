@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {
@@ -16,12 +16,22 @@ import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '..
 import {filter, map, mergeAll, take} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
 import {SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-category-editor-container',
   template: `
+      <ng-template #search>
+          <div class="item">
+              <div class="ui icon search input">
+                  <i class="search icon"></i>
+                  <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
+              </div>
+          </div>
+      </ng-template>
       <div class="ui container">
           <app-category-editor [categories]="categories$ | async"
+                               [searchString]="searchString$ | async"
                                [defaultCategories]="defaultCategories$ | async"
                                [competition]="competition$ | async"
                                [selectedCategoryState]="catState$ | async"
@@ -39,8 +49,13 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
 
   catState$: Observable<CategoryState>;
 
+  searchString$ = new BehaviorSubject<string>(null);
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, public modalService: SuiModalService) {
+  @ViewChild('search', {static: true})
+  search: TemplateRef<any>;
+
+
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, public modalService: SuiModalService, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
         header: 'Categories',
@@ -58,9 +73,13 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
         {
           name: 'Create manually',
           action: () => this.addCategory()
+        },
+        {
+          name: 'Search',
+          itemDisplayAction: container => this.menuService.createView(container, this.search, {implicit$: this.search})
         }
       ]
-    });
+    }, menuService);
     this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
     this.catState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
     this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
