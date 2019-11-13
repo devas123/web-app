@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Fight} from '../../../../../commons/model/competition.model';
-import {DropEvent} from '../../../../dragdrop/shared/drop-event.model';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-bracket-match',
@@ -25,9 +25,9 @@ export class BracketMatchComponent implements OnInit {
   }
 
 
-  onItemDrop(event: DropEvent, targetFight: Fight) {
-    const index = event.index;
-    const {from, competitor} = event.dragData;
+  onItemDrop(event: CdkDragDrop<Fight[]>, targetFight: Fight) {
+    const index = event.currentIndex;
+    const {from, competitor} = event.item.data;
     this.competitorDropped.next({
       sourceFightId: from.id,
       competitorId: competitor.email,

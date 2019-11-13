@@ -1,77 +1,18 @@
-<ng-template let-context let-modal="modal" #modalTemplate>
-  <div class="header">Add Period</div>
-  <div class="content">
-    <p>{{ context.data }}</p>
-  </div>
-  <div class="content">
-    <div class="ui form" [formGroup]="periodForm"
-         [ngClass]="{error: (periodForm.touched || periodForm.dirty) && periodForm.invalid}">
-      <div class="fields">
-        <div class="three wide field"
-             [ngClass]="{error: numberOfMats.invalid && (numberOfMats.touched || numberOfMats.dirty)}">
-          <label>Number of mats</label>
-          <div class="ui input">
-            <input type="number" name="numberOfMats" placeholder="Number of mats" formControlName="numberOfMats">
-          </div>
-        </div>
-        <div class="three wide field"
-             [ngClass]="{error: timeBetweenFights.invalid && (timeBetweenFights.touched || timeBetweenFights.dirty)}">
-          <label>Time between fights</label>
-          <div class="ui input">
-            <input type="number" name="timeBetweenFights" placeholder="Minutes"
-                   formControlName="timeBetweenFights">
-          </div>
-        </div>
-        <div class="three wide field"
-             [ngClass]="{error: riskPercent.invalid && (riskPercent.touched || riskPercent.dirty)}">
-          <label>Risk percent</label>
-          <div class="ui input">
-            <input type="number" name="riskPercent" placeholder="Risk percent" formControlName="riskPercent">
-          </div>
-        </div>
-        <div class="field"
-             [ngClass]="{error: periodName.invalid && (periodName.touched || periodName.dirty)}">
-          <label>Period name</label>
-          <div class="ui input">
-            <input type="text" name="periodName" placeholder="Period name" formControlName="periodName">
-          </div>
-        </div>
-        <div class="field">
-          <label>Start time</label>
-          <div class="ui input">
-            <input suiDatepicker
-                   name="periodStartTime"
-                   placeholder="Start time"
-                   formControlName="periodStartTime"
-                   [pickerMode]="'datetime'"
-                   [pickerUseNativeOnMobile]="false">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="actions">
-    <button class="ui red button" (click)="modal.deny('denied')">Cancel</button>
-    <button class="ui green button" [disabled]="periodForm.invalid" (click)="modal.approve('approved')" autofocus>OK
-    </button>
-  </div>
-</ng-template>
 <div class="ui segments">
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment">
-
       <div class="field">
-        <button class="ui basic button" (click)="openModal('Input period properties')">Add period</button>
+        <button class="ui button" (click)="openModal()">Add period</button>
       </div>
       <div class="ui basic segment">
-        <div class="ui three stackable cards">
+        <div class="ui stackable cards" cdkDropListGroup>
           <div class="card">
             <div class="content">
               <div class="meta">Categories</div>
-              <div class="ui middle aligned divided list" droppable dragHintClass="drag-hint-border"
-                   [dropScope]="categoriesGroup" (onDrop)="onItemDrop($event, null)">
-                <a class="item" *ngFor="let cat of filteredCategories" draggable [dragScope]="categoriesGroup"
-                   [dragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.id)">
+              <div class="inner-list list-container" [ngClass]="{'empty-container': !filteredCategories || filteredCategories.length === 0}" cdkDropList [cdkDropListData]="filteredCategories"
+                   (cdkDropListDropped)="onItemDropBack($event)">
+                <a class="item" *ngFor="let cat of filteredCategories" cdkDrag
+                   [cdkDragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.id)">
                   <i class="circular users icon"></i>
                   <div class="content">
                     <div class="header">{{categoryName(cat)}}</div>
@@ -87,10 +28,10 @@
               </div>
               <div class="header">Period {{period?.name}}</div>
               <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
-              <div class="ui middle aligned divided list" droppable [dropScope]="categoriesGroup"
-                   (onDrop)="onItemDrop($event, period.name)" dragHintClass="drag-hint-border">
-                <a class="item" *ngFor="let cat of period?.categories" draggable [dragScope]="categoriesGroup"
-                   [dragData]="{id: period.name, cat: cat}">
+              <div class="inner-list list-container" [ngClass]="{'empty-container': !period?.categories || period?.categories.length === 0}" cdkDropList [cdkDropListData]="period?.categories"
+                   (cdkDropListDropped)="onItemDrop($event, period.name)">
+                <a class="item" *ngFor="let cat of period?.categories" cdkDrag
+                   [cdkDragData]="{id: period.name, cat: cat}">
                   <i class="circular users icon"></i>
                   <div class="content">
                     <div class="header">{{categoryName(cat)}}</div>
@@ -104,15 +45,11 @@
           </div>
         </div>
       </div>
-      <div class="fields">
-        <div class="field">
-          <button class="ui basic button" [disabled]="filteredCategories.length > 0"
-                  (click)="sendGenerateSchedule()">Create schedule
-          </button>
-        </div>
-        <div class="field">
-          <button class="ui basic button" (click)="sendDropSchedule()">Drop schedule</button>
-        </div>
+      <div>
+        <button class="ui button" [disabled]="filteredCategories.length > 0"
+                (click)="sendGenerateSchedule()">Create schedule
+        </button>
+        <button class="ui button" (click)="sendDropSchedule()">Drop schedule</button>
       </div>
     </div>
   </div>

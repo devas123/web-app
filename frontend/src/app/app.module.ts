@@ -25,7 +25,6 @@ import {AuthGuard} from './modules/account/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
-import {NgDragDropModule} from './modules/dragdrop/ng-drag-drop.module';
 import {HotkeyModule} from 'angular2-hotkeys';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
@@ -38,7 +37,6 @@ import {MenuService} from './components/main-menu/menu.service';
     HomeComponent
   ],
   imports: [
-    NgDragDropModule.forRoot(),
     CommonsModule,
     NgxMdModule.forRoot(),
     BrowserModule,

@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {Fight} from '../../../../commons/model/competition.model';
-import {DropEvent} from '../../../dragdrop/shared/drop-event.model';
+import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
+import {DragData} from '../../containers/brackets-editor-container/brackets-editor-container.component';
 
 interface LRBucket {
   totalRounds: number;
@@ -90,14 +91,14 @@ export class BracketsEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  dropAllowed = (ff: Fight) => (dragData: any) => {
-    const {from, competitor} = dragData;
+  dropAllowed = (ff: Fight) => (item: CdkDrag<DragData>) => {
+    const {from, competitor} = item.data;
     return from.id !== ff.id && from.round === ff.round && !(ff.parentId1 && ff.parentId2) && !!competitor;
   }
 
-  onItemDrop(event: DropEvent, targetFight: Fight) {
-    const index = event.index;
-    const {from, competitor} = event.dragData;
+  onItemDrop(event: CdkDragDrop<Fight[]>, targetFight: Fight) {
+    const index = event.currentIndex;
+    const {from, competitor} = event.item.data;
     this.sendMoveCompetitorAction({
       sourceFightId: from.id,
       competitorId: competitor.email,

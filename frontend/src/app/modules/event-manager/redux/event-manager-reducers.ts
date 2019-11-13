@@ -82,7 +82,7 @@ export interface EventManagerState {
 export interface PeriodProperties {
   id: string;
   name: string;
-  startTime: Date;
+  startTime: String;
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
@@ -788,6 +788,10 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
 
 export const eventManagerGetSelectedEventScheduleProperties = createSelector(eventManagerGetMyEventsCollection, state => {
   return state && state.selectedEventSchedule && state.selectedEventSchedule.scheduleProperties;
+});
+
+export const eventManagerGetSelectedEventScheduleEmpty = createSelector(eventManagerGetMyEventsCollection, state => {
+  return !(!!state && !!state.selectedEventSchedule && !!state.selectedEventSchedule.scheduleProperties);
 });
 
 export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventManagerGetMyEventsCollection, state => {

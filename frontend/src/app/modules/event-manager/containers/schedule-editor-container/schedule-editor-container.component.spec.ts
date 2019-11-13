@@ -4,7 +4,6 @@ import {ScheduleEditorContainerComponent} from './schedule-editor-container.comp
 import {ScheduleEditorComponent} from '../../components/schedule-editor/schedule-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SuiModule} from 'ng2-semantic';
-import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
 import {ScheduleDisplayComponent} from '../../components/schedule-editor/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
@@ -20,7 +19,7 @@ describe('ScheduleEditorContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ScheduleEditorContainerComponent, ScheduleEditorComponent, ScheduleDisplayComponent, ZonedDatePipe],
-      imports: [ReactiveFormsModule, SuiModule, NgDragDropModule, StoreModule.forRoot({
+      imports: [ReactiveFormsModule, SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
       }, {

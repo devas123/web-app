@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
+    "json-server": "json-server --watch db.json",
     "start": "ng serve --proxy-config proxy.conf.js",
     "start-aot": "ng serve --proxy-config proxy.conf.js --aot",
     "build": "ng build",

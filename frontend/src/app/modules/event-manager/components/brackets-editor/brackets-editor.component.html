@@ -5,9 +5,8 @@
         <div class="split split-one">
           <div class="round round-one current" *ngIf="getRoundFights(0, bucket?.left, i)">
             <div class="round-details">{{getRoundName(getRoundFights(0, bucket?.left, i)?.round)}}<br/></div>
-            <div *ngFor="let fight of getRoundFights(0, bucket?.left, i)?.fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(0, bucket?.left, i)?.fights" cdkDropList [cdkDropListData]="getRoundFights(0, bucket?.left, i)?.fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"
                                  (competitorDropped)="sendMoveCompetitorAction($event)"></app-bracket-match>
             </div>
@@ -15,18 +14,16 @@
 
           <div class="round round-two" *ngIf="getRoundFights(1, bucket?.left, i)">
             <div class="round-details">{{getRoundName(getRoundFights(1, bucket?.left, i)?.round)}}<br/></div>
-            <div *ngFor="let fight of getRoundFights(1, bucket?.left, i).fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(1, bucket?.left, i).fights" cdkDropList [cdkDropListData]="getRoundFights(1, bucket?.left, i).fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"></app-bracket-match>
             </div>
           </div>  <!-- END ROUND TWO -->
 
           <div class="round round-three" *ngIf="getRoundFights(2, bucket?.left, i)">
             <div class="round-details">{{getRoundName(getRoundFights(2, bucket?.left, i)?.round)}}<br/></div>
-            <div *ngFor="let fight of getRoundFights(2, bucket?.left, i).fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(2, bucket?.left, i).fights" cdkDropList [cdkDropListData]="getRoundFights(2, bucket?.left, i).fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"></app-bracket-match>
             </div>
           </div>  <!-- END ROUND THREE -->
@@ -47,9 +44,8 @@
 
           <div class="round round-three" *ngIf="getRoundFights(2, bucket?.right, i)">
             <div class="round-details">{{getRoundName(getRoundFights(2, bucket?.right, i)?.round)}}</div>
-            <div *ngFor="let fight of getRoundFights(2, bucket?.right, i).fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(2, bucket?.right, i).fights" cdkDropList [cdkDropListData]="getRoundFights(2, bucket?.right, i).fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"></app-bracket-match>
             </div>
           </div>  <!-- END ROUND THREE -->
@@ -57,18 +53,16 @@
 
           <div class="round round-two" *ngIf="getRoundFights(1, bucket?.right, i)">
             <div class="round-details">{{getRoundName(getRoundFights(1, bucket?.right, i)?.round)}}</div>
-            <div *ngFor="let fight of getRoundFights(1, bucket?.right, i).fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(1, bucket?.right, i).fights" cdkDropList [cdkDropListData]="getRoundFights(1, bucket?.right, i).fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"></app-bracket-match>
             </div>
           </div>  <!-- END ROUND TWO -->
 
           <div class="round round-one current" *ngIf="getRoundFights(0, bucket?.right, i)">
             <div class="round-details">{{getRoundName(getRoundFights(0, bucket?.right, i)?.round)}}</div>
-            <div *ngFor="let fight of getRoundFights(0, bucket?.right, i).fights" droppable
-                 dragHintClass="drag-hint-border"
-                 [dropScope]="dropAllowed(fight)" (onDrop)="onItemDrop($event, fight)">
+            <div *ngFor="let fight of getRoundFights(0, bucket?.right, i).fights" cdkDropList [cdkDropListData]="getRoundFights(0, bucket?.right, i).fights"
+                 [cdkDropListEnterPredicate]="dropAllowed(fight)" (cdkDropListDropped)="onItemDrop($event, fight)">
               <app-bracket-match [fight]="fight"></app-bracket-match>
             </div>
           </div>  <!-- END ROUND ONE -->

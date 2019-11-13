@@ -1,11 +1,12 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Schedule} from '../../../../reducers';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {PeriodProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
+import {SuiModalService} from 'ng2-semantic';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {ActivatedRoute, Router} from '@angular/router';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {AddSchedulePeriodModal, IAddSchedulePeriodResult} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 
 export interface IContext {
   data: string;
@@ -37,8 +38,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   @Input()
   showEditor;
 
-  periodForm: FormGroup;
-
   @Output()
   scheduleDropped = new EventEmitter<string>();
 
@@ -56,39 +55,14 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   filteredCategories = [] as Category[];
 
-  categoriesGroup = 'CATEGORIES';
 
-  @ViewChild('modalTemplate', {static: false})
-  public modalTemplate: ModalTemplate<IContext, string, string>;
-
-  constructor(private fb: FormBuilder, public modalService: SuiModalService, private router: Router, private route: ActivatedRoute) {
+  constructor(public modalService: SuiModalService, private router: Router, private route: ActivatedRoute) {
   }
 
   goToCategoryEditor(categoryId: string) {
     this.router.navigate(['..', 'categories', categoryId], {
       relativeTo: this.route
     }).catch(error => console.error('Navigation failed', error));
-  }
-
-
-  get numberOfMats() {
-    return this.periodForm.get('numberOfMats');
-  }
-
-  get timeBetweenFights() {
-    return this.periodForm.get('timeBetweenFights');
-  }
-
-  get riskPercent() {
-    return this.periodForm.get('riskPercent');
-  }
-
-  get periodName() {
-    return this.periodForm.get('periodName');
-  }
-
-  get periodStartTime() {
-    return this.periodForm.get('periodStartTime');
   }
 
   categoryName(cat: Category) {
@@ -113,44 +87,33 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     this.scheduleDropped.next(this.competitionId);
   }
 
-  public openModal(dynamicContent: string = 'Period properties') {
-    const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
-
-
-    config.closeResult = 'closed!';
-    config.context = {data: dynamicContent};
-
-    this.periodForm = this.fb.group({
-      periodName: ['', [Validators.required]],
-      periodStartTime: ['', [Validators.required]],
-      numberOfMats: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
-      timeBetweenFights: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
-      riskPercent: [0.1, [Validators.min(0), Validators.max(1)]]
-    });
-
+  public openModal() {
     this.modalService
-      .open(config)
-      .onApprove(() => {
-        const periodProperties = {
-          id: '',
-          name: this.periodName.value,
-          startTime: this.periodStartTime.value,
-          numberOfMats: this.numberOfMats.value,
-          timeBetweenFights: this.timeBetweenFights.value,
-          riskPercent: this.riskPercent.value,
-          categories: [] as Category[]
-        } as PeriodProperties;
+      .open(new AddSchedulePeriodModal(this.competitionId, this.timeZone))
+      .onApprove((result: IAddSchedulePeriodResult) => {
+        const periodProperties = result.properties;
         if (periodProperties) {
           this.periodAdded.next(periodProperties);
         }
-        this.periodForm.reset();
       });
   }
 
-  onItemDrop(e: any, to: string) {
+  onItemDropBack(e: CdkDragDrop<Category[]>) {
     // Get the dropped data here
-    const {id, cat} = e.dragData;
-    const index = e.index;
+    const {id, cat} = e.item.data;
+    const index = e.currentIndex;
+    this.categoryMoved.next({
+      category: cat,
+      from: id,
+      to: null,
+      index
+    });
+  }
+
+  onItemDrop(e: CdkDragDrop<Category[]>, to: string) {
+    // Get the dropped data here
+    const {id, cat} = e.item.data;
+    const index = e.currentIndex;
     this.categoryMoved.next({
       category: cat,
       from: id,

@@ -1,19 +1,11 @@
-<div class="ui container" *ngIf="competitionName$ | async">
-  <h2 class="ui header">{{competitionName$ | async}}</h2>
-  <h4 class="ui description">Schedule</h4>
-  <div class="ui divider"></div>
-  <button class="ui basic button" routerLink="..">Return</button>
-  <button class="ui basic button" (click)="toggleSchedulePropertiesEditor()">Toggle editor</button>
-  <p></p>
-  <app-schedule-editor [categories]="categories$ | async"
-                       [timeZone]="timeZone$ | async"
-                       [schedule]="schedule$ | async"
-                       [showEditor]="showEditor"
-                       [competitionId]="competitionId$ | async"
-                       [scheduleProperties]="scheduleProperties$ | async"
-                       (periodAdded)="addPeriod($event)"
-                       (periodRemoved)="removePeriod($event)"
-                       (categoryMoved)="moveCategory($event)"
-                       (generateSchedule)="sendGenerateSchedule($event)"
-                       (scheduleDropped)="sendDropSchedule($event)"></app-schedule-editor>
-</div>
+<app-schedule-editor [categories]="categories$ | async"
+                     [timeZone]="timeZone$ | async"
+                     [schedule]="schedule$ | async"
+                     [showEditor]="showEditor"
+                     [competitionId]="competitionId"
+                     [scheduleProperties]="scheduleProperties$ | async"
+                     (periodAdded)="addPeriod($event)"
+                     (periodRemoved)="removePeriod($event)"
+                     (categoryMoved)="moveCategory($event)"
+                     (generateSchedule)="sendGenerateSchedule($event)"
+                     (scheduleDropped)="sendDropSchedule($event)"></app-schedule-editor>

@@ -10,7 +10,7 @@ import {
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryFights, HeaderDescription
 } from '../../redux/event-manager-reducers';
-import {Category, Fight} from '../../../../commons/model/competition.model';
+import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
   eventManagerCategorySelected,
@@ -24,6 +24,11 @@ import {filter, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+
+export interface DragData {
+  from: Fight;
+  competitor: Competitor;
+}
 
 @Component({
   selector: 'app-brackets-editor-container',

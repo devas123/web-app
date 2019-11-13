@@ -42,7 +42,6 @@ import {BracketsEditorContainerComponent} from './containers/brackets-editor-con
 import {BracketMatchComponent} from './components/brackets-editor/bracket-match/bracket-match.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {ScheduleEditorComponent} from './components/schedule-editor/schedule-editor.component';
-import {NgDragDropModule} from '../dragdrop/ng-drag-drop.module';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
 import {FighterProfileComponent} from './components/fighter-profile/fighter-profile.component';
 import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
@@ -72,6 +71,8 @@ import {DynamicHeaderDirective} from './containers/event-manager-container/dynam
 import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
 import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
 
 @NgModule({
   imports: [
@@ -91,11 +92,12 @@ import {SelectCategoriesModalComponent} from './components/category-editor/selec
     EventManagerRouterModule,
     SuiPaginationModule,
     SuiMessageModule,
-    NgDragDropModule,
     CommonsModule,
-    HotkeyModule
+    HotkeyModule,
+    DragDropModule
   ],
   declarations: [
+    AddSchedulePeriodFormComponent,
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
@@ -148,7 +150,8 @@ import {SelectCategoriesModalComponent} from './components/category-editor/selec
   entryComponents: [
     AddGroupFormComponent,
     AddPeriodFormComponent,
-    SelectCategoriesModalComponent
+    SelectCategoriesModalComponent,
+    AddSchedulePeriodFormComponent
   ]
 })
 export class EventManagerModule {

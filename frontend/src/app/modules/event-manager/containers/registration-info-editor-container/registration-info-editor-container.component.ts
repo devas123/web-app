@@ -33,7 +33,8 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   selectedRegistrationGroup$: Observable<string | boolean>;
   columsNumber$: Observable<number>;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
+              private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
@@ -89,7 +90,6 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   public openAddPeriodModal(competitionId, timeZone) {
-    console.log('HERE');
     this.modalService.open(new AddPeriodModal(competitionId, timeZone))
       .onApprove((result: IAddPeriodResult) => this.addRegistrationInfoPeriod(result))
       .onDeny(_ => { /* deny callback */
