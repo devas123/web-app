@@ -21,7 +21,7 @@
     <div class="ui text loader">Loading</div>
   </sui-dimmer>
 </div>
-<app-bracket *ngIf="(category$ | async) && (fights$ | async)" [fights]="fights$ | async"></app-bracket>
+<app-bracket *ngIf="(category$ | async) && (fights$ | async) && !(fightsAreLoading$ | async)" [fights]="fights$ | async" [bucketsize]="bucketsize$ | async"></app-bracket>
 <!--<ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && (category$ | async)?.id">-->
 <!--  <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"-->
 <!--                       [competitionId]="(competition$ | async)?.id"-->

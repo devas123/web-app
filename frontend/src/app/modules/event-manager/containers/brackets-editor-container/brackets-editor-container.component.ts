@@ -25,6 +25,7 @@ import {filter, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 export interface DragData {
   from: Fight;
@@ -46,11 +47,12 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   fightsAreLoading$: Observable<boolean>;
   category$: Observable<Category>;
   selectedCategory: Category;
+  bucketsize$: Observable<number>;
 
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, menuService: MenuService) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private observer: BreakpointObserver, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(
         select(eventManagerGetSelectedEventName),
@@ -100,6 +102,9 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));
+    this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
+      map(b => b.matches ? 2 : 3)
+    );
   }
 
   goBack() {

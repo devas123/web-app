@@ -3,10 +3,10 @@
      [attr.width]="rowWidthPx">
   <svg:svg
     [attr.id]="'fight' + i"
-    [attr.height]="(100 / enrichedFights.length) + '%'"
+    [attr.height]="(100 / fights.length) + '%'"
     [attr.y]="spaceBetween[i]"
-    [attr.width]="rowWidthPx * 0.9"
-    *ngFor="let fight of enrichedFights; trackBy: trackByFights; let i = index">
+    [attr.width]="rowWidthPx * competitorsWidthPercent"
+    *ngFor="let fight of fights; trackBy: trackByFights; let i = index">
     <svg:svg
       [attr.id]="'fightslot' + i"
       [attr.height]="slotHeightPx * 0.8"
@@ -80,24 +80,20 @@
       </ng-container>
     </svg:svg>
   </svg:svg>
-  <svg:svg
-    *ngFor="let fight of enrichedFights; trackBy: trackByFights; let k = index"
-    [attr.id]="'pathAndWinner' + k"
-    [attr.height]="slotHeightPx * totalfights / enrichedFights.length"
-    [attr.y]="k * slotHeightPx * totalfights / enrichedFights.length - 0.1 * slotHeightPx"
-    [attr.x]="rowWidthPx * 0.9"
-    [attr.width]="rowWidthPx * 0.1">
-    <svg:g>
-      <svg:path *ngIf="enrichedFights.length > 1" [attr.d]="paths[k % 2]"
-                style="stroke: gold; fill: none"/>
-      <svg:path *ngIf="enrichedFights.length == 1" [attr.d]="paths[2]"
-                style="stroke: gold; fill: none"/>
-      <svg:text
-        *ngIf="fight.fightResult && fight.fightResult.winnerId && fight?.stage === 'FINISHED'"
-        x="6"
-        [attr.y]="0.5 * slotHeightPx * totalfights / enrichedFights.length - 10"
-        class="winner">{{fight | getwinner | getname:true}}
-      </svg:text>
-    </svg:g>
-  </svg:svg>
+  <ng-container *ngIf="drawConnections">
+    <svg:svg
+      *ngFor="let fight of fights; trackBy: trackByFights; let k = index"
+      [attr.id]="'path' + k"
+      [attr.height]="slotHeightPx * totalfights / fights.length"
+      [attr.y]="k * slotHeightPx * totalfights / fights.length - 0.1 * slotHeightPx"
+      [attr.x]="rowWidthPx * competitorsWidthPercent"
+      [attr.width]="rowWidthPx * pathWidthPercent">
+      <svg:g>
+        <svg:path *ngIf="fights.length > 1" [attr.d]="paths[k % 2]"
+                  style="stroke: gold; fill: none"/>
+        <svg:path *ngIf="fights.length == 1" [attr.d]="paths[2]"
+                  style="stroke: gold; fill: none"/>
+      </svg:g>
+    </svg:svg>
+  </ng-container>
 </svg:svg>

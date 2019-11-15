@@ -3,8 +3,32 @@
 }
 
 .bracket-page {
+  background-color: #2b3035;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  padding: 1em;
+  justify-content: start;
+  justify-items: start;
+  border-radius: 3px;
+
+  .ui.header {
+    text-align: center;
+  }
+}
+
+.all-buckets-page {
+  display: flex;
+  flex-direction: column;
   padding-left: 1em;
+  > div {
+    margin-top: 1em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 1em;
+    }
+  }
 }

@@ -14,7 +14,6 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   }
 
   public slotYOffset: string;
-  public fightInPercent: number;
   public spaceBetween: Array<string>;
   public offset: number;
   public paths: Array<string>;
@@ -37,21 +36,22 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   @Input()
   public slotHeightPx = 80;
 
-  public enrichedFights: Fight[];
+  @Input()
+  public drawConnections = true;
 
-  static getOneFightInPercent(fightsNumber: number, totalFightsNumber: number) {
-    return 100 * fightsNumber / totalFightsNumber;
-  }
+  public competitorsWidthPercent = 0.9;
+  public pathWidthPercent = 1 - this.competitorsWidthPercent;
+
+  @Input()
+  public oneFightInPercent: number;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.initialized) {
-      this.enrichedFights = [];
       this.updateDimensions();
     }
   }
 
   updateDimensions() {
-    this.getExtraFights(this.round, this.fights);
     this.calculateDimensions();
   }
 
@@ -63,29 +63,6 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     }
   }
 
-  getExtraFights(round: number, fights: Fight[]) {
-    if (!this.enrichedFights || this.enrichedFights.length === 0) {
-      if (round === 0 && fights.length < this.totalfights) {
-        const extraFights = [] as Fight[];
-        fights.forEach(f => extraFights.push(f));
-        let i = fights.length;
-        while (i++ < this.totalfights) {
-          const f = {
-            id: '' + i,
-            round: this.round,
-            scores: [],
-            stage: 'BYE'
-          } as Fight;
-          extraFights.push(f);
-        }
-        this.enrichedFights = extraFights;
-      } else {
-        this.enrichedFights = fights;
-      }
-    }
-    return this.enrichedFights;
-  }
-
   trackByFights = (index: number, fight: Fight) => fight.id;
 
 
@@ -93,11 +70,11 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     if (this.round === 0) {
       return 0;
     }
-    return this.slotHeightPx * (this.totalfights - (this.totalfights / Math.pow(2, this.round))) / (2 * this.enrichedFights.length);
+    return this.slotHeightPx * (this.totalfights - (this.totalfights / Math.pow(2, this.round))) / (2 * this.fights.length);
   }
 
   getSpaceBetween(index: number) {
-    return index * 100 / this.enrichedFights.length + '%';
+    return index * 100 / this.fights.length + '%';
   }
 
   public onItemDrop(e: any, f: Fight) {
@@ -112,15 +89,12 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   }
 
   calculateDimensions() {
-    this.fightInPercent = BracketRoundComponent.getOneFightInPercent(this.enrichedFights.length, this.totalfights);
-    this.slotYOffset = this.getSlotYOffset(this.fightInPercent);
+    this.slotYOffset = this.getSlotYOffset(this.oneFightInPercent);
     this.spaceBetween = [];
-    for (const i of this.enrichedFights.map(f => this.enrichedFights.indexOf(f))) {
-      this.spaceBetween.push(this.getSpaceBetween(i));
-    }
+    this.fights.forEach((f, i) => this.spaceBetween.push(this.getSpaceBetween(i)));
     this.offset = this.getOffset();
     this.paths = [];
-    const lineBoxHeight = this.slotHeightPx * this.totalfights / this.enrichedFights.length;
+    const lineBoxHeight = this.slotHeightPx * this.totalfights / this.fights.length;
     const lineBoxLength = this.rowWidthPx * 0.1;
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7} v${lineBoxHeight * 0.5} h${lineBoxLength * 0.3}`);
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7} v-${lineBoxHeight * 0.5} h${lineBoxLength * 0.3}`);
