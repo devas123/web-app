@@ -1,15 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output, SimpleChanges,
-  ViewEncapsulation
-} from '@angular/core';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
-import {Fight} from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
 import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
 import {DragData} from '../../containers/brackets-editor-container/brackets-editor-container.component';
 

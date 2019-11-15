@@ -1,4 +1,4 @@
-import {filter, map, startWith, take} from 'rxjs/operators';
+import {filter, map, startWith, take, tap} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
@@ -30,6 +30,7 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
   schedule$: Observable<Schedule>;
   scheduleProperties$: Observable<ScheduleProperties>;
   categories$: Observable<Category[]>;
+  scheduleEmpty$: Observable<boolean>;
   timeZone$: Observable<string>;
   competitionId: string;
   showEditor = false;
@@ -56,8 +57,9 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
     this.showEditor = false;
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
+    this.scheduleEmpty$ =  this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
     this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
-    setTimeout(() => this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty), startWith(true)).subscribe(s => this.showEditor = s)));
+    setTimeout(() => this.subs.add(this.scheduleEmpty$.pipe(take(1), startWith(true), tap(console.log)).subscribe(s => this.showEditor = s)));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
   }

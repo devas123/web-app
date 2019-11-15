@@ -1,0 +1,103 @@
+<svg:svg xmlns:svg="https://www.w3.org/2000/svg"
+     [attr.height]="slotHeightPx * totalfights"
+     [attr.width]="rowWidthPx">
+  <svg:svg
+    [attr.id]="'fight' + i"
+    [attr.height]="(100 / enrichedFights.length) + '%'"
+    [attr.y]="spaceBetween[i]"
+    [attr.width]="rowWidthPx * 0.9"
+    *ngFor="let fight of enrichedFights; trackBy: trackByFights; let i = index">
+    <svg:svg
+      [attr.id]="'fightslot' + i"
+      [attr.height]="slotHeightPx * 0.8"
+      [attr.y]="slotYOffset">
+
+      <ng-container *ngFor="let _ of competitorsNumbers; let ci = index">
+        <svg:svg
+          height="49%"
+          [attr.id]="'fight_' + i + '_competitor_' + ci"
+          [attr.y]="ci * 50 + '%'">
+          <svg:g>
+            <svg:rect
+              width="100%"
+              height="100%"
+              rx="3"
+              class="compholder"
+              fill="#7A8288"
+            />
+            <svg:text
+              *ngIf="ci <=  fight?.scores?.length - 1"
+              class="fighter draggable"
+              x="10"
+              y="70%">{{fight?.scores[ci]?.competitor | getname:true}}
+            </svg:text>
+            <svg:svg *ngIf="fight?.stage === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
+              <svg:g>
+                <svg:rect
+                  x="33%"
+                  height="100%"
+                  width="67%"
+                  fill="#7A8288"
+                  rx="3"/>
+
+                <svg:text
+                  [attr.x]="57 - (fight.scores[ci]?.score?.points?.toString().length - 1) * 15 + '%'"
+                  y="65%"
+                  style="fill: white; stroke-width: 2; font-size: 18px;">{{fight.scores[ci]?.score?.points}}
+                </svg:text>
+              </svg:g>
+
+              <svg:g>
+                <svg:rect
+                  x="0"
+                  height="50%"
+                  width="33%"
+                  fill="lightcoral"
+                  rx="3"/>
+
+                <svg:text
+                  x="8%"
+                  y="40%">{{fight.scores[ci]?.score?.penalties}}
+                </svg:text>
+              </svg:g>
+
+              <svg:g>
+                <svg:rect
+                  x="0"
+                  y="50%"
+                  height="50%"
+                  width="33%"
+                  fill="yellow"
+                  rx="3"/>
+                <svg:text
+                  [attr.x]="8 - (fight.scores[ci]?.score?.advantages?.toString().length - 1) * 6 + '%'"
+                  y="90%">{{fight.scores[ci]?.score?.advantages}}
+                </svg:text>
+              </svg:g>
+            </svg:svg>
+          </svg:g>
+        </svg:svg>
+      </ng-container>
+    </svg:svg>
+  </svg:svg>
+  <svg:svg
+    *ngFor="let fight of enrichedFights; trackBy: trackByFights; let k = index"
+    [attr.id]="'pathAndWinner' + k"
+    [attr.height]="slotHeightPx * totalfights / enrichedFights.length"
+    [attr.y]="k * slotHeightPx * totalfights / enrichedFights.length - 0.1 * slotHeightPx"
+    [attr.x]="rowWidthPx * 0.9"
+    [attr.width]="rowWidthPx * 0.1">
+    <svg:g>
+      <svg:path *ngIf="enrichedFights.length > 1" [attr.d]="paths[k % 2]"
+                style="stroke: gold; fill: none"/>
+      <svg:path *ngIf="enrichedFights.length == 1" [attr.d]="paths[2]"
+                style="stroke: gold; fill: none"/>
+      <svg:text
+        *ngIf="fight.fightResult && fight.fightResult.winnerId && fight?.stage === 'FINISHED'"
+        x="6"
+        [attr.y]="0.5 * slotHeightPx * totalfights / enrichedFights.length - 10"
+        class="winner">{{fight | getwinner | getname:true}}
+      </svg:text>
+    </svg:g>
+  </svg:svg>
+</svg:svg>

@@ -1,0 +1,21 @@
+.matchup {
+  margin: 0;
+  width: 100%;
+  padding: 10px 0;
+  height: 120px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.match {
+  display: grid;
+  background-color: #2b3e40;
+}
+
+
+.fighter-top, .fighter-bottom {
+  display: flex;
+  .fighter {
+
+  }
+}

@@ -1,0 +1,12 @@
+.compholder {
+  fill: white;
+  &:hover {
+    fill: #7A8288;
+  }
+}
+
+
+.draggable {
+  cursor: grab;
+}
+

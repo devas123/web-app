@@ -1,10 +1,8 @@
 <div class="ui segments">
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment">
-      <div class="field">
-        <button class="ui button" (click)="openModal()">Add period</button>
-      </div>
-      <div class="ui basic segment">
+      <button class="ui button" *ngIf="scheduleEmpty" (click)="openModal()">Add period</button>
+      <div class="ui basic segment" *ngIf="scheduleEmpty">
         <div class="ui stackable cards" cdkDropListGroup>
           <div class="card">
             <div class="content">
@@ -46,16 +44,18 @@
         </div>
       </div>
       <div>
-        <button class="ui button" [disabled]="filteredCategories.length > 0"
+        <button class="ui button" *ngIf="scheduleEmpty" [disabled]="filteredCategories.length > 0"
                 (click)="sendGenerateSchedule()">Create schedule
         </button>
-        <button class="ui button" (click)="sendDropSchedule()">Drop schedule</button>
+        <button class="ui button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
       </div>
     </div>
   </div>
   <app-schedule-display
     [timeZone]="timeZone"
-    [competitionId]="competitionId" [schedule]="schedule" [categories]="categories"
+    [competitionId]="competitionId"
+    [schedule]="schedule"
+    [categories]="categories"
     (categoryClicked)="goToCategoryEditor($event)">
   </app-schedule-display>
 </div>

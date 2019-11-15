@@ -5,9 +5,12 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'app-bracket-match',
   templateUrl: './bracket-match.component.html',
-  styleUrls: ['./bracket-match.component.css']
+  styleUrls: ['./bracket-match.component.scss']
 })
 export class BracketMatchComponent implements OnInit {
+
+  @Input()
+  old: boolean;
 
   @Input()
   fight: Fight;

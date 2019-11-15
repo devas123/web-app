@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {MenuItem} from '../../redux/event-manager-reducers';
 
 @Component({
@@ -7,9 +7,11 @@ import {MenuItem} from '../../redux/event-manager-reducers';
       <div class="ui four wide column menublock" *ngIf="displayMenu">
           <div class="ui basic segment" id="menucontainer">
               <div class="ui left vertical secondary menu">
-                  <a *ngFor="let m of menu" class="item" [ngClass]="m.class" (click)="itemClicked.next(m)">
-                      {{m.name}}
-                  </a>
+                  <ng-container *ngFor="let m of menu">
+                      <a *ngIf="(!m.showCondition) || (m.showCondition() | async)" class="item" [ngClass]="m.class" (click)="itemClicked.next(m)">
+                          {{m.name}}
+                      </a>
+                  </ng-container>
                   <div #container></div>
               </div>
           </div>
@@ -28,18 +30,17 @@ import {MenuItem} from '../../redux/event-manager-reducers';
       `.ui.left.secondary.vertical.menu a.item:hover {
           background-color: #121719;
       }`,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  ]
 })
 export class EventManagerMenuComponent {
-
   @ViewChild('container', {static: false, read: ViewContainerRef})
   container: ViewContainerRef;
 
   @Input()
   set menu(value: MenuItem[]) {
     if (value) {
-      value.filter(mi => !!mi.itemDisplayAction).forEach(mi => setTimeout(() => mi.itemDisplayAction(this.container)));
+      const _displayActions = value.filter(mi => !!mi.itemDisplayAction);
+      _displayActions.forEach(mi => setTimeout(() => mi.itemDisplayAction(this.container)));
       this._menu = value.filter(mi => !mi.itemDisplayAction);
     } else {
       this._menu = [];
@@ -57,6 +58,4 @@ export class EventManagerMenuComponent {
 
   @Output()
   itemClicked = new EventEmitter<MenuItem>();
-
-
 }

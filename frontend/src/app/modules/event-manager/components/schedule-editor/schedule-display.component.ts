@@ -8,8 +8,6 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
   template: `
     <div [suiCollapse]="!schedule?.periods  || schedule?.periods?.length === 0">
       <div class="ui basic segment">
-        <h3 class="ui header">Schedule:</h3>
-        <p></p>
         <div class="ui two stackable cards">
           <div class="card" *ngFor="let period of schedule?.periods">
             <div class="content">

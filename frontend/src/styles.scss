@@ -2,8 +2,21 @@
 @import "calendar.min.css";
 @import "assets/css/dragula.css";
 
+$background_color: #2b3035;
+$header_color: rgba(255, 255, 255, 1);
+$description_color: #7A8288;
+$dialog_input_text_color: lemonchiffon;
+
 .ui.button {
   background-image: unset;
+}
+
+.ui.card {
+  background-color: $background_color;
+}
+
+.ui.cards > .card {
+  background-color: $background_color;
 }
 
 .customcontainer {
@@ -12,7 +25,7 @@
   grid-gap: 1rem;
 
   .ui.basic.segment.customline {
-    background-color: #2b3035;
+    background-color: $background_color;
     border-radius: 5px;
     padding: 1rem;
     margin-bottom: 0;
@@ -25,15 +38,14 @@
       font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
       font-size: 15px;
       font-weight: bold;
-      color: rgba(255, 255, 255, 1);
+      color: $header_color;
       text-decoration-style: solid;
-      text-size-adjust: 100%;
     }
 
     .description {
       font-size: 14px;
       font-weight: lighter;
-      color: #7A8288;
+      color: $description_color;
       opacity: 50%;
     }
 
@@ -41,5 +53,37 @@
       border: 0;
     }
   }
+}
+
+input {
+  background-color: transparent !important;
+  color: $dialog_input_text_color;
+}
+
+.ui.search {
+  background-color: transparent;
+  color: $dialog_input_text_color;
+}
+
+.ui.input input {
+  background-color: transparent;
+  color: $dialog_input_text_color;
+}
+
+.ui.input input:active,
+.ui.input.down input {
+  background-color: transparent;
+}
+
+.ui.input input:focus {
+  background-color: transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+  -webkit-box-shadow: 0 0 0 30px black inset !important;
+  background-color: transparent !important;
 }
 

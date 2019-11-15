@@ -1,0 +1,15 @@
+.selection {
+  width: 100%;
+}
+
+.ui.basic.segment {
+  padding-top: 0;
+}
+
+.rounded {
+  border-radius: 3px;
+}
+
+.ui.dimmer.transparent {
+  background-color: transparent;
+}

@@ -91,17 +91,19 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   periodForm: FormGroup;
 
   triggerAddSchedulePeriod() {
-    const properties = {
-      id: '',
-      name: this.periodName.value,
-      startTime: InfoService.formatDate(this.periodStartTime.value, this.modal.context.timeZone),
-      numberOfMats: this.numberOfMats.value,
-      timeBetweenFights: this.timeBetweenFights.value,
-      riskPercent: this.riskPercent.value,
-      categories: [] as Category[]
-    } as PeriodProperties;
-    this.periodForm.reset();
-    this.modal.approve({properties});
+    if (this.periodName.value) {
+      const properties = {
+        id: btoa(this.periodName.value),
+        name: this.periodName.value,
+        startTime: InfoService.formatDate(this.periodStartTime.value, this.modal.context.timeZone),
+        numberOfMats: this.numberOfMats.value,
+        timeBetweenFights: this.timeBetweenFights.value,
+        riskPercent: this.riskPercent.value,
+        categories: [] as Category[]
+      } as PeriodProperties;
+      this.periodForm.reset();
+      this.modal.approve({properties});
+    }
   }
 
 

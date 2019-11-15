@@ -1,0 +1,10 @@
+.round {
+  min-width: 50px;
+}
+
+.bracket-page {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding-left: 1em;
+}

@@ -73,6 +73,8 @@ import {AddGroupFormComponent} from './components/registration-info-editor/add-g
 import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
+import {BracketRoundComponent} from './components/brackets-editor/bracketround/bracketround.component';
+import {BracketComponent} from './components/brackets-editor/bracket/bracket.component';
 
 @NgModule({
   imports: [
@@ -97,6 +99,8 @@ import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-conta
     DragDropModule
   ],
   declarations: [
+    BracketComponent,
+    BracketRoundComponent,
     AddSchedulePeriodFormComponent,
     AddGroupFormComponent,
     AddPeriodFormComponent,

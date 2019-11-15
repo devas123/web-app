@@ -1,20 +1,44 @@
-<ul class="matchup" [ngClass]="{championship: isChampionship}">
-  <li class="team team-top" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[0]?.competitor}">
-    <div class="brackets_fighter">
-      <div class="brackets_fighter-name">{{fight?.scores[0]?.competitor | getname:true}}&nbsp;</div>
-      <div class="brackets_fighter-team">{{fight?.scores[0]?.competitor?.academy | truncate}}&nbsp;</div>
+<ng-container *ngIf="old">
+  <ul class="matchup" [ngClass]="{championship: isChampionship}">
+    <li class="team team-top" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[0]?.competitor}">
+      <div class="brackets_fighter">
+        <div class="brackets_fighter-name">{{fight?.scores[0]?.competitor | getname:true}}&nbsp;</div>
+        <div class="brackets_fighter-team">{{fight?.scores[0]?.competitor?.academy | truncate}}&nbsp;</div>
+      </div>
+      <div class="brackets_score-block">
+        <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>
+      </div>
+    </li>
+    <li class="team team-bottom" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[1]?.competitor}">
+      <div class="brackets_fighter">
+        <div class="brackets_fighter-name">{{fight?.scores[1]?.competitor | getname:true}}&nbsp;</div>
+        <div class="brackets_fighter-team">{{fight?.scores[1]?.competitor?.academy | truncate}}&nbsp;</div>
+      </div>
+      <div class="brackets_score-block">
+        <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>
+      </div>
+    </li>
+  </ul>
+</ng-container>
+<ng-container *ngIf="!old">
+  <section class="match" [ngClass]="{championship: isChampionship}">
+    <div class="fighter-top" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[0]?.competitor}">
+      <div class="fighter">
+        <div class="fighter-name">{{fight?.scores[0]?.competitor | getname:true}}&nbsp;</div>
+        <div class="fighter-team">{{fight?.scores[0]?.competitor?.academy | truncate}}&nbsp;</div>
+      </div>
+      <div class="score-block">
+        <div class="score">{{fight?.round}}-{{fight?.numberInRound}}</div>
+      </div>
     </div>
-    <div class="brackets_score-block">
-      <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>
+    <div class="fighter-bottom" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[1]?.competitor}">
+      <div class="fighter">
+        <div class="fighter-name">{{fight?.scores[1]?.competitor | getname:true}}&nbsp;</div>
+        <div class="fighter-team">{{fight?.scores[1]?.competitor?.academy | truncate}}&nbsp;</div>
+      </div>
+      <div class="score-block">
+        <div class="score">{{fight?.round}}-{{fight?.numberInRound}}</div>
+      </div>
     </div>
-  </li>
-  <li class="team team-bottom" cdkDrag [cdkDragData]="{from: fight, competitor: fight?.scores[1]?.competitor}">
-    <div class="brackets_fighter">
-      <div class="brackets_fighter-name">{{fight?.scores[1]?.competitor | getname:true}}&nbsp;</div>
-      <div class="brackets_fighter-team">{{fight?.scores[1]?.competitor?.academy | truncate}}&nbsp;</div>
-    </div>
-    <div class="brackets_score-block">
-      <div class="brackets_score">{{fight?.round}}-{{fight?.numberInRound}}</div>
-    </div>
-  </li>
-</ul>
+  </section>
+</ng-container>

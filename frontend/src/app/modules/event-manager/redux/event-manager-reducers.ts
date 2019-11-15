@@ -62,6 +62,7 @@ export interface MenuItem {
   style?: string;
   action?: () => any;
   label?: string;
+  showCondition?: () => Observable<boolean>;
   itemDisplayAction?: (container: ViewContainerRef) => EmbeddedViewRef<any>;
 }
 
@@ -86,12 +87,12 @@ export interface PeriodProperties {
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
-  categories: Array<Category>;
+  categories: Category[];
 }
 
 export interface ScheduleProperties {
   competitionId: string;
-  periodPropertiesList: Array<PeriodProperties>;
+  periodPropertiesList: PeriodProperties[];
 }
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
@@ -791,7 +792,7 @@ export const eventManagerGetSelectedEventScheduleProperties = createSelector(eve
 });
 
 export const eventManagerGetSelectedEventScheduleEmpty = createSelector(eventManagerGetMyEventsCollection, state => {
-  return !(!!state && !!state.selectedEventSchedule && !!state.selectedEventSchedule.scheduleProperties);
+  return !(!!state && !!state.selectedEventSchedule && !!state.selectedEventSchedule.periods && state.selectedEventSchedule.periods.length > 0);
 });
 
 export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventManagerGetMyEventsCollection, state => {
@@ -799,6 +800,7 @@ export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventM
 });
 
 export const eventManagerGetSelectedEventSelectedCategoryFights = eventManagerGetSelectedEventSelectedCategoryAllFights;
+export const eventManagerGetSelectedEventSelectedCategoryFightsAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryId, eventManagerGetSelectedEventSelectedCategoryAllFights, (categoryId, fights) => (categoryId && categoryId.length > 0) && (!fights || fights.length === 0));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(eventManagerGetMyEventsCollection, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

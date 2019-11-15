@@ -1,14 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {
-  BreadCrumbItem,
   eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId, eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategoryFights, HeaderDescription
+  eventManagerGetSelectedEventSelectedCategoryFights,
+  eventManagerGetSelectedEventSelectedCategoryFightsAreLoading,
+  HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
@@ -22,7 +23,7 @@ import {
 } from '../../redux/event-manager-actions';
 import {filter, map, tap} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 export interface DragData {
@@ -35,15 +36,22 @@ export interface DragData {
   templateUrl: './brackets-editor-container.component.html',
   styleUrls: ['./brackets-editor-container.component.css']
 })
-export class BracketsEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class BracketsEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
+  private competitionId: string;
+  private subs = new Subscription();
+
+  competition$: Observable<CompetitionProperties>;
+  fights$: Observable<Fight[]>;
+  fightsAreLoading$: Observable<boolean>;
+  category$: Observable<Category>;
+  selectedCategory: Category;
+
+  @ViewChild('categorySelect', {static: true})
+  categorySelect: TemplateRef<any>;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Brackets',
-        level: 2
-      },
       header: store.pipe(
         select(eventManagerGetSelectedEventName),
         filter(name => !!name),
@@ -52,32 +60,53 @@ export class BracketsEditorContainerComponent extends EventManagerRouterEntryCom
           subheader: name
         })
       ),
-      menu: []
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.goBack(),
+        },
+        {
+          name: 'Generate',
+          action: () => this.generateBrackets(),
+          showCondition: () => combineLatest([this.fights$, this.competition$]).pipe(map(([fights, competition]) => (!fights || fights.length === 0) && (!!competition && !competition.bracketsPublished)))
+        },
+        {
+          name: 'Drop selected',
+          action: () => this.dropSelectedBrackets(),
+          showCondition: () => combineLatest([this.fights$, this.competition$])
+            .pipe(map(([fights, competition]) => (!fights || fights.length === 0) && (!!competition && !competition.bracketsPublished))).pipe(map(res => !res))
+        },
+        {
+          name: 'Drop all',
+          action: () => this.dropAllBrackets(),
+          showCondition: () => combineLatest([this.fights$, this.competition$])
+            .pipe(map(([fights, competition]) => (!fights || fights.length === 0) && (!!competition && !competition.bracketsPublished))).pipe(map(res => !res))
+        },
+        {
+          name: 'Select',
+          itemDisplayAction: container => this.menuService.createView(container, this.categorySelect, {implicit$: this.categorySelect})
+        }
+      ]
     }, menuService);
     const competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
-    this.subs.add(combineLatest(competitionId$, categoryId$).subscribe(([competitionId, categoryId]) => {
+    this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
       if (competitionId && categoryId) {
         this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
       }
     }));
     this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
+    this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));
   }
 
-  private competitionId: string;
-  private subs = new Subscription();
+  goBack() {
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(console.log);
+  }
 
-  competition$: Observable<CompetitionProperties>;
-  categories$: Observable<Category[]>;
-  fights$: Observable<Fight[]>;
-  category$: Observable<Category>;
-  selectedCategory: Category;
-
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
   sendCompetitorMovedAction(payload: any) {

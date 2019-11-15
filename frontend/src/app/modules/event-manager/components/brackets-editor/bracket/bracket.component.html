@@ -1,0 +1,5 @@
+<div class="bracket-page">
+  <div *ngFor="let round of rounds" [style.width]="rowWidthPx">
+    <app-bracketround [rowWidthPx]="rowWidthPx" [totalfights]="getFightsNumber(rounds.length)" [fights]="getFightsForRound(round)" [round]="round"></app-bracketround>
+  </div>
+</div>

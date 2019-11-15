@@ -19,7 +19,6 @@ export class MenuService {
 
   private embeddedViews: EmbeddedViewRef<any>[] = [];
 
-
   constructor(private observer: BreakpointObserver) {
     this._displaySidebar$ = observer.observe([Breakpoints.Handset, Breakpoints.Small, Breakpoints.Medium]).pipe(map(p => p.matches));
   }

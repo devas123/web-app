@@ -8,10 +8,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodModal, IAddSchedulePeriodResult} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 
-export interface IContext {
-  data: string;
-}
-
 @Component({
   selector: 'app-schedule-editor',
   templateUrl: './schedule-editor.component.html',
@@ -22,6 +18,9 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   @Input()
   timeZone = 'UTC';
+
+  @Input()
+  scheduleEmpty = false;
 
   @Input()
   competitionId: string;

@@ -2,6 +2,10 @@
 $fighter-background: #c2d0d9;
 $background: rgba(100, 100, 100, 0.4);
 
+.brackets_container_section {
+  border-radius: 3px;
+}
+
 .hero {
   position: relative;
   text-align: center;
@@ -130,15 +134,6 @@ section.brackets_container_section {
 
 .split-two .round {
   margin: 0 0 0 2.5%;
-}
-
-.matchup {
-  margin: 0;
-  width: 100%;
-  padding: 10px 0;
-  height: 120px;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
 }
 
 .brackets_fighter {
@@ -438,3 +433,25 @@ $drag-over-color: #0e7e95;
     font-size: 18px;
   }
 }
+
+//new grid!
+
+.brackets_grid_container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 1em;
+  border-radius: 3px;
+  justify-content: space-between;
+  align-content: center;
+  grid-auto-flow: row dense;
+}
+
+.brackets_grid_column {
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0 1em 0;
+  > div {
+    margin-top: 1em;
+  }
+}
+
