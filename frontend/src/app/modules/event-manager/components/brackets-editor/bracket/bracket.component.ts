@@ -9,9 +9,6 @@ import {Fight} from '../../../../../commons/model/competition.model';
 })
 export class BracketComponent implements OnInit, OnDestroy {
 
-  rounds: number[];
-  _fights: Fight[];
-
   @Input()
   set fights(fights: Fight[]) {
     if (fights) {
@@ -23,11 +20,14 @@ export class BracketComponent implements OnInit, OnDestroy {
     }
   }
 
+  rounds: number[];
+  _fights: Fight[];
+
+  public rowWidthPx = 200;
+
   getFightsForRound(round) {
     return this._fights.filter(f => f.round === round);
   }
-
-  public rowWidthPx = 200;
 
   ngOnDestroy(): void {
   }

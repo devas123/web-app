@@ -37,9 +37,7 @@ import {CategorySummaryContainerComponent} from './containers/category-summary-c
 import {CategorySummaryComponent} from './components/category-summary/category-summary.component';
 import {EventManagerRouterModule} from './event-manager.router.module';
 import {CommonsModule} from '../../commons/commons.module';
-import {BracketsEditorComponent} from './components/brackets-editor/brackets-editor.component';
 import {BracketsEditorContainerComponent} from './containers/brackets-editor-container/brackets-editor-container.component';
-import {BracketMatchComponent} from './components/brackets-editor/bracket-match/bracket-match.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {ScheduleEditorComponent} from './components/schedule-editor/schedule-editor.component';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
@@ -129,7 +127,6 @@ import {BracketComponent} from './components/brackets-editor/bracket/bracket.com
     ScheduleEditorContainerComponent,
     ScheduleEditorComponent,
     MyEventsComponent,
-    BracketMatchComponent,
     CreateEventComponent,
     MyEventsListComponent,
     CategoryEditorComponent,
@@ -145,7 +142,6 @@ import {BracketComponent} from './components/brackets-editor/bracket/bracket.com
     CategoryContainerComponent,
     CategorySummaryContainerComponent,
     CategorySummaryComponent,
-    BracketsEditorComponent,
     BracketsEditorContainerComponent,
     FighterProfileContainerComponent,
     FighterProfileComponent,

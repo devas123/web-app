@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {Competitor, Fight, Score} from '../../../../../commons/model/competition.model';
 
 
@@ -29,12 +29,13 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   @Input()
   public fights: Fight[];
 
-  public slotHeightPx: number;
-
   public competitorsNumbers: number[] = [];
 
   @Input()
-  public rowWidthPx: number;
+  public rowWidthPx = 300;
+
+  @Input()
+  public slotHeightPx = 80;
 
   public enrichedFights: Fight[];
 
@@ -111,10 +112,6 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   }
 
   calculateDimensions() {
-    this.slotHeightPx = 80;
-    if (!this.rowWidthPx) {
-      this.rowWidthPx = 300;
-    }
     this.fightInPercent = BracketRoundComponent.getOneFightInPercent(this.enrichedFights.length, this.totalfights);
     this.slotYOffset = this.getSlotYOffset(this.fightInPercent);
     this.spaceBetween = [];

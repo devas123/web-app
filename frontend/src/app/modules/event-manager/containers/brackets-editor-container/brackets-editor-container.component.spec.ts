@@ -2,8 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BracketsEditorContainerComponent} from './brackets-editor-container.component';
 import {SuiSelectModule} from 'ng2-semantic';
-import {BracketsEditorComponent} from '../../components/brackets-editor/brackets-editor.component';
-import {BracketMatchComponent} from '../../components/brackets-editor/bracket-match/bracket-match.component';
 import {GetNamePipe} from '../../../../pipes/get-name.pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
@@ -19,7 +17,7 @@ describe('BracketsEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [BracketsEditorContainerComponent, BracketsEditorComponent, BracketMatchComponent, GetNamePipe, TruncatePipe],
+      declarations: [BracketsEditorContainerComponent, GetNamePipe, TruncatePipe],
       imports: [SuiSelectModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers())
