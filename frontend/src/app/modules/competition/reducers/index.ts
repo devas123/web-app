@@ -1,5 +1,7 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Academy, Category, CategoryState, Competitor, Fight} from '../../../commons/model/competition.model';
+import {CommonAction} from '../../../reducers';
+import {FightsEditorAction} from '../../event-manager/redux/event-manager-actions';
 
 export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
   selectId: (c: Competitor) => c.id,
@@ -46,11 +48,27 @@ export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapte
   sortComparer: categoriesComparer
 });
 
+export interface FightsEditorChange {
+  id: string;
+  selectedFightIds: string[];
+  changePatches: any[];
+  changeInversePatches: any[];
+}
+
+export interface FightsEditorState extends EntityState<FightsEditorChange> {
+  selectedChangeId: string | null;
+}
+
+export const fightsEditorChangeEntityAdapter: EntityAdapter<FightsEditorChange> = createEntityAdapter(
+  {selectId: (change: FightsEditorChange) => change.id, sortComparer: false}
+);
+
 
 export interface CategoriesCollection extends EntityState<Category> {
   selectedCategoryId: string | null;
   selectedCategoryState: CategoryState;
   selectedCategoryFights: FightsCollection;
+  selectedEventFightsEditorState: FightsEditorState;
 }
 
 export interface FightsCollection extends EntityState<Fight> {
@@ -71,6 +89,10 @@ export interface AcademiesCollection extends EntityState<Academy> {
   pageSize: number;
   pageNumber: number;
 }
+
+export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getInitialState({
+  selectedChangeId: null
+});
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
   selectedFightId: null,
@@ -94,28 +116,6 @@ export const competitorsInitialState: CompetitorsCollection = competitorEntityAd
 export const categoriesInitialState: CategoriesCollection = categoryEntityAdapter.getInitialState({
   selectedCategoryId: null,
   selectedCategoryState: null,
-  selectedCategoryFights: fightsInitialState
+  selectedCategoryFights: fightsInitialState,
+  selectedEventFightsEditorState: fightsEditorInitialState
 });
-
-const addMenuItem = (oldMenu, item) => {
-  if (oldMenu.map(i => i.index).indexOf(item.index) < 0) {
-    return [...oldMenu, item];
-  }
-  return oldMenu;
-};
-
-// reducers
-// properties: {
-//   infoTemplate: '',
-//     creatorId: '',
-//     bracketsPublished: false,
-//     competitionId: '',
-//     competitionName: '',
-//     endDate: '',
-//     startDate: '',
-//     status: 'CREATED',
-//     registrationFee: '0',
-//     registrationOpen: false,
-//     schedulePublished: false
-// }
-

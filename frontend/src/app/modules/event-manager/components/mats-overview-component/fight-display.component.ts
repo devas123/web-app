@@ -1,31 +1,25 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-fight-display',
   template: `
-    <table class="ui very basic collapsing celled table" (click)="selectFight(fight?.id)">
-      <tbody>
-      <tr>
-        <td>
-          <h4 class="ui image header">
-            <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
-              {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
-              <div class="sub header">{{fight?.scores[0]?.competitor?.academy}}</div>
-            </div>
-          </h4>
-        </td>
-        <td>
-          <h4 class="ui image header">
-            <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
-              {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
-              <div class="sub header">{{fight?.scores[1]?.competitor?.academy}}</div>
-            </div>
-          </h4>
-        </td>
-      </tr>
-      </tbody>
-    </table>`
+      <div class="fight-display-container" (click)="selectFight(fight?.id)">
+          <div>
+              <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
+                  {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
+                  <div class="sub header">{{fight?.scores[0]?.competitor?.academy}}</div>
+              </div>
+          </div>
+          <div>
+              <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
+                  {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
+                  <div class="sub header">{{fight?.scores[1]?.competitor?.academy}}</div>
+              </div>
+          </div>
+      </div>`,
+  styleUrls: ['mats-overview-component.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FightDisplayComponent implements OnInit {
 

@@ -1,7 +1,9 @@
 // commands
-import {CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
-import {Category, Competitor} from '../../../commons/model/competition.model';
+import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
+import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
 import {BreadCrumbItem, HeaderDescription, PeriodProperties} from './event-manager-reducers';
+import {createAction, props} from '@ngrx/store';
+import {FightsEditorChange} from '../../competition/reducers';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
@@ -13,6 +15,7 @@ export const EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND = 'DELETE_REGISTRA
 export const EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND = 'DELETE_REGISTRATION_GROUP_COMMAND';
 export const EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION_GROUP_COMMAND';
 export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
+export const EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND = 'EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
 export const EVENT_MANAGER_ADD_COMPETITOR = 'ADD_COMPETITOR_COMMAND';
@@ -79,6 +82,16 @@ export const EVENT_MANAGER_CATEGORY_MOVED = 'EVENT_MANAGER_CATEGORY_MOVED';
 
 export const EVENT_MANAGER_SOCKET_CONNECTED = 'EVENT_MANAGER_SOCKET_CONNECTED';
 export const EVENT_MANAGER_SOCKET_DISCONNECTED = 'EVENT_MANAGER_SOCKET_DISCONNECTED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED = 'EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED = 'EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED = 'EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED = 'EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED = 'EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED';
+export const EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED = 'EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED';
+
+export interface FightsEditorAction extends CommonAction {
+  name: string;
+}
 
 export const eventManagerBreadcrumbClear = {
   type: EVENT_MANAGER_BREADCRUMB_CLEAR
@@ -86,6 +99,14 @@ export const eventManagerBreadcrumbClear = {
 export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
+
+export const eventManagerFightsEditorChangeAdded = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED, props<{ change: FightsEditorChange }>());
+export const eventManagerFightsEditorChangeRemoved = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED, props<{ id: string }>());
+export const eventManagerFightsEditorChangeUpdated = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED, props<{ change: FightsEditorChange }>());
+export const eventManagerFightForChangeSelected = createAction(EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED, props<{ fightId: string }>());
+export const eventManagerFightsForChangeUnselected = createAction(EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED);
+export const eventManagerFightsEditorSubmitChanges = createAction(EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND, props<{ changes: FightsEditorChange[], competitionId: string, categoryId: string }>());
+export const eventManagerFightsEditorChangesSubmitted = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED);
 
 export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
   type: EVENT_MANAGER_HEADER_SET,
@@ -211,10 +232,10 @@ export const eventManagerDefaultCategoriesLoaded = (competitionId, categories: C
   payload: categories
 });
 
-export const updateCompetitionProperties = (props: CompetitionProperties) => ({
+export const updateCompetitionProperties = (compprops: CompetitionProperties) => ({
   type: UPDATE_COMPETITION_PROPERTIES_COMMAND,
-  competitionId: props.id,
-  payload: props
+  competitionId: compprops.id,
+  payload: compprops
 });
 
 export const addCompetitor = (competitionId: string, competitor: Competitor) => ({

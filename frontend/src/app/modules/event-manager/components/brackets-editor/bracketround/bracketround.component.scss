@@ -1,12 +1,18 @@
 .compholder {
   fill: white;
-  &:hover {
-    fill: #7A8288;
-  }
 }
 
+.selectable {
+  rect.compholder {
+    stroke: #824116;
+    fill: #62ccff;
+  }
+  cursor: pointer;
+}
 
-.draggable {
-  cursor: grab;
+.hoverable {
+  &:hover {
+    mask: url(#mask-selected);
+  }
 }
 

@@ -21,13 +21,5 @@
     <div class="ui text loader">Loading</div>
   </sui-dimmer>
 </div>
-<app-bracket *ngIf="(category$ | async) && (fights$ | async) && !(fightsAreLoading$ | async)" [fights]="fights$ | async" [bucketsize]="bucketsize$ | async"></app-bracket>
-<!--<ng-container *ngIf="(fights$ | async) && (fights$ | async).length !== 0 && (category$ | async)?.id">-->
-<!--  <app-brackets-editor [category]="category$ | async" [fights]="fights$ | async"-->
-<!--                       [competitionId]="(competition$ | async)?.id"-->
-<!--                       (competitorMoved)="sendCompetitorMovedAction($event)"></app-brackets-editor>-->
-<!--</ng-container>-->
-<!--<ng-container *ngIf="(!(fights$ | async) || (fights$ | async).length === 0) && selectedCategory">-->
-<!--  <div class="ui header">No brackets for this category.</div>-->
-<!--</ng-container>-->
-
+<app-fights-editor-container *ngIf="editMode"></app-fights-editor-container>
+<app-bracket *ngIf="(category$ | async) && (fights$ | async) && !(fightsAreLoading$ | async)" [fights]="fights$ | async" [bucketsize]="bucketsize$ | async" [editMode]="editMode" (fightSelected)="addFightToCurrentChange($event)" [changeFightsIds]="changeFightsIds$ | async"></app-bracket>

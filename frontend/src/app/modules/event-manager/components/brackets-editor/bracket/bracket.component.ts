@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Fight} from '../../../../../commons/model/competition.model';
 
 @Component({
@@ -8,6 +8,12 @@ import {Fight} from '../../../../../commons/model/competition.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BracketComponent implements OnInit, OnDestroy, OnChanges {
+
+  @Input()
+  editMode = false;
+
+  @Input()
+  changeFightsIds: string[];
 
   @Input()
   set fights(fights: Fight[]) {
@@ -27,9 +33,19 @@ export class BracketComponent implements OnInit, OnDestroy, OnChanges {
   _flatRoundsReversed: number[] = [];
 
   public rowWidthPx = 200;
+
+  @Output()
+  fightSelected = new EventEmitter<string>();
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('fights') || changes.hasOwnProperty('bucketsize')) {
       this.calculateRounds();
+    }
+  }
+
+  addFightToCurrentChange(fight: string) {
+    if (this.editMode && fight) {
+      this.fightSelected.next(fight);
     }
   }
 

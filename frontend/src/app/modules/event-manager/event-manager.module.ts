@@ -73,6 +73,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
 import {BracketRoundComponent} from './components/brackets-editor/bracketround/bracketround.component';
 import {BracketComponent} from './components/brackets-editor/bracket/bracket.component';
+import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
+import {FightsEditorComponent} from './components/brackets-editor/fights-editor/fights-editor.component';
 
 @NgModule({
   imports: [
@@ -97,6 +99,8 @@ import {BracketComponent} from './components/brackets-editor/bracket/bracket.com
     DragDropModule
   ],
   declarations: [
+    FightsEditorComponent,
+    FightsEditorContainerComponent,
     BracketComponent,
     BracketRoundComponent,
     AddSchedulePeriodFormComponent,

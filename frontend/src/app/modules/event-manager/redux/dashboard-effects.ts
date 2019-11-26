@@ -1,12 +1,12 @@
 import {Observable, of as observableOf} from 'rxjs';
 
-import {catchError, filter, map, mergeMap, tap as observableDo} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 
 
-import {AppState} from '../../../reducers';
+import {AppState, CommonAction} from '../../../reducers';
 import {InfoService} from '../../../service/info.service';
 import {ERROR_OCCURRED, errorEvent} from '../../../actions/actions';
 import {
@@ -79,8 +79,8 @@ export class DashboardEffects {
       DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
       DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
       DASHBOARD_DELETE_PERIOD_COMMAND),
-    observableDo(command => {
-      return this.infoService.sendGlobalDashboardCommand(command).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
+    tap((command: CommonAction) => {
+      return this.infoService.sendGlobalDashboardCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
     }));
 
   constructor(private actions$: Actions,

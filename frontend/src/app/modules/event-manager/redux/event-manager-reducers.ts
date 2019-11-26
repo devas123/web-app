@@ -29,6 +29,11 @@ import {
   EVENT_MANAGER_FIGHTER_UNSELECTED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED,
+  EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED, EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
@@ -41,14 +46,27 @@ import {
   FIGHTS_START_TIME_UPDATED,
   SCHEDULE_GENERATED
 } from './event-manager-actions';
+import * as uuidv4 from 'uuid/v4';
 import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
-import {categoriesInitialState, categoryEntityAdapter, competitorEntityAdapter, competitorsInitialState, fightEntityAdapter, fightsInitialState} from '../../competition/reducers';
-import {Category, Competitor} from '../../../commons/model/competition.model';
+import {
+  categoriesInitialState,
+  categoryEntityAdapter,
+  competitorEntityAdapter,
+  competitorsInitialState,
+  fightEntityAdapter,
+  FightsEditorChange,
+  fightsEditorChangeEntityAdapter,
+  fightsEditorInitialState,
+  fightsInitialState
+} from '../../competition/reducers';
+import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
 import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
 import {EmbeddedViewRef, InjectionToken, ViewContainerRef} from '@angular/core';
 import {Observable} from 'rxjs';
+import produce, {applyPatches, Draft} from 'immer';
+import {Update} from '@ngrx/entity';
 
 export interface BreadCrumbItem {
   name: string;
@@ -57,7 +75,7 @@ export interface BreadCrumbItem {
 }
 
 export interface MenuItem {
-  name: string | Observable<string>;
+  name: string;
   class?: string | { [p: string]: any };
   style?: string;
   action?: () => any;
@@ -122,8 +140,90 @@ export function socketStateReducer(state: boolean = false, action): boolean {
   }
 }
 
+const fightsEditorChangeHandler = produce((state: Draft<EventPropsEntities>, action) => {
+  switch (action.type) {
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED: {
+      if (state && state.selectedEventCategories) {
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorInitialState;
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        const change = action.change as FightsEditorChange;
+        const fights = change.selectedFightIds.map(id => state.selectedEventCategories.selectedCategoryFights.entities[id]);
+        const updatedFights = applyPatches(fights, change.changePatches);
+        const updates = updatedFights.map(uf => (<Update<Fight>>{
+          id: uf.id,
+          changes: uf
+        }));
+        state.selectedEventCategories.selectedCategoryFights = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryFights);
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne(<Update<FightsEditorChange>>{id: change.id, changes: change}, {
+          ...state.selectedEventCategories.selectedEventFightsEditorState,
+          selectedChangeId: null
+        });
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.id) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.removeOne(action.id, state.selectedEventCategories.selectedEventFightsEditorState);
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne({
+          id: action.change.id,
+          changes: action.change
+        }, state.selectedEventCategories.selectedEventFightsEditorState);
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState) {
+        if (!state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+          const id = uuidv4().toString();
+          state.selectedEventCategories.selectedEventFightsEditorState =
+            fightsEditorChangeEntityAdapter.addOne(<FightsEditorChange>{changeInversePatches: [], changePatches: [], selectedFightIds: [], id}, {
+              ...state.selectedEventCategories.selectedEventFightsEditorState,
+              selectedChangeId: id
+            });
+        }
+        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+        if (selectedChange.selectedFightIds.indexOf(action.fightId) < 0) {
+          if (selectedChange.selectedFightIds.length < 2) {
+            selectedChange.selectedFightIds.push(action.fightId);
+          } else {
+            selectedChange.selectedFightIds = [...selectedChange.selectedFightIds.slice(1), action.fightId];
+          }
+        }
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState
+        && state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+        selectedChange.selectedFightIds = [];
+      }
+    }
+  }
+});
+
 export function myEventsReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
   switch (action.type) {
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
+      return fightsEditorChangeHandler(state, action);
+    }
     case COMPETITION_PROPERTIES_UPDATED: {
       const competitionId = action.competitionId;
       if (competitionId === state.selectedEventId) {
@@ -388,7 +488,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_COMPETITOR_ADDED: {
-      if (action.competitionId === state.selectedEventId && action.id) {
+      if (action.competitionId === state.selectedEventId) {
         let newEventCompetitors = state.selectedEventCompetitors;
         if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
           newEventCompetitors = competitorEntityAdapter.addOne(action.payload, state.selectedEventCompetitors);
@@ -502,12 +602,10 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       if (state.selectedEventId === competitionId && payload) {
         const {schedule} = payload;
         if (schedule) {
-          const newState = {
+          return {
             ...state,
             selectedEventSchedule: schedule
           };
-          console.log(newState);
-          return newState;
         } else {
           return state;
         }
@@ -765,6 +863,7 @@ export const {
 
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategoryAllFights,
+  selectEntities: eventManagerGetSelectedEventSelectedCategoryFightsEntities
 } = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsCollection);
 
 export const eventManagerGetSelectedEventSelectedCategory = createSelector(
@@ -787,6 +886,32 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
   }
 });
 
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorState = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedEventFightsEditorState);
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorState, cats => cats.selectedChangeId);
+export const {
+  selectAll: eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAll,
+  selectEntities: eventManagerGetSelectedEventSelectedCategoryFightsEditorStateEntities,
+  selectIds: eventManagerGetSelectedEventSelectedCategoryFightsEditorSelectStateIds,
+} = fightsEditorChangeEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsEditorState);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateIds =
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorSelectStateIds;
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges =
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAll;
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateEntities,
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId, (entities, id) => id && entities[id]);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds =
+  createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange, change => (change && change.selectedFightIds) || []);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights = createSelector(
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange,
+  eventManagerGetSelectedEventSelectedCategoryFightsEntities,
+  (change, fightsEntities) => {
+    return (change && fightsEntities && change.selectedFightIds && change.selectedFightIds.map(id => fightsEntities[id]).filter(f => !!f)) || [];
+  });
+
 export const eventManagerGetSelectedEventScheduleProperties = createSelector(eventManagerGetMyEventsCollection, state => {
   return state && state.selectedEventSchedule && state.selectedEventSchedule.scheduleProperties;
 });
@@ -800,7 +925,8 @@ export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventM
 });
 
 export const eventManagerGetSelectedEventSelectedCategoryFights = eventManagerGetSelectedEventSelectedCategoryAllFights;
-export const eventManagerGetSelectedEventSelectedCategoryFightsAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryId, eventManagerGetSelectedEventSelectedCategoryAllFights, (categoryId, fights) => (categoryId && categoryId.length > 0) && (!fights || fights.length === 0));
+export const eventManagerGetSelectedEventSelectedCategoryFightsAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryId, eventManagerGetSelectedEventSelectedCategoryAllFights,
+  (categoryId, fights) => (categoryId && categoryId.length > 0) && (!fights || fights.length === 0));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(eventManagerGetMyEventsCollection, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

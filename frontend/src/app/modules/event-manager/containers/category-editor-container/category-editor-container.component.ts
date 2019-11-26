@@ -13,9 +13,9 @@ import {Category, CategoryState} from '../../../../commons/model/competition.mod
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCategory, eventManagerAddCategory} from '../../redux/event-manager-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
-import {filter, map, mergeAll, take} from 'rxjs/operators';
+import {filter, map, mergeAll, mergeMap, take} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
-import {SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
+import {ISelectCategoriesResult, SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
@@ -90,9 +90,11 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
       take(1),
       map(([categories, competition]) =>
         this.modalService
-          .open(new SelectCategoriesModal(this.defaultCategories$.pipe(mergeAll(), filter(cat => !categories.find(value => cat.id === value.id))), competition))
-          .onApprove((categoriesToAdd: Category[]) => {
-            this.addSelectedCategories(categoriesToAdd, competition.id);
+          .open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
+            return !categories.find(value => cat.id === value.id);
+          }))), competition))
+          .onApprove((result: ISelectCategoriesResult) => {
+            this.addSelectedCategories(result.categoriesToAdd, competition.id);
           }))).subscribe();
   }
 
@@ -115,6 +117,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   sendAddDefaultCategoriesCommand(categories: { competitionId: string, category: Category }[]) {
+    console.log(categories);
     if (categories && categories.length > 0) {
       categories.forEach(cate => this.store.dispatch(eventManagerAddCategory(cate.competitionId, cate.category)));
     }

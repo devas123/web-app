@@ -1,6 +1,6 @@
 import {Observable, of as observableOf} from 'rxjs';
 
-import {catchError, map, mapTo, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mapTo, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -16,6 +16,7 @@ import {
   EVENT_MANAGER_DISCONNECT_SOCKET,
   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
+  EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   EVENT_MANAGER_LOAD_CATEGORIES_COMMAND,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
@@ -31,6 +32,7 @@ import {
   eventManagerDisconnectSocket,
   eventManagerFighterLoaded,
   eventManagerFightersForCompetitionLoaded,
+  eventManagerFightsEditorChangesSubmitted,
   eventManagerLoadCategories,
   eventManagerLoadFightersForCompetition,
   eventManagerScheduleLoaded,
@@ -44,10 +46,17 @@ import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {Competitor} from '../../../commons/model/competition.model';
 import {errorEvent} from '../../../actions/actions';
-import {eventManagerGetSelectedEventCompetitorsPageSize} from './event-manager-reducers';
+import {eventManagerGetSelectedEventCompetitorsPageSize, eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges} from './event-manager-reducers';
 
 @Injectable()
 export class EventManagerEffects {
+  @Effect()
+  sendFightEditChanges$: Observable<Action> = this.actions$.pipe(
+    ofType(EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND),
+    map(() => eventManagerFightsEditorChangesSubmitted())
+  );
+
+
   @Effect()
   loadMyCompetitions$: Observable<Action> = this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND),
@@ -204,9 +213,10 @@ export class EventManagerEffects {
       EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
+      EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
-    tap(command => {
-      return this.infoService.sendCommand(command).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
+    mergeMap((command: CommonAction) => {
+      return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error))));
     }));
 
   @Effect({dispatch: false})

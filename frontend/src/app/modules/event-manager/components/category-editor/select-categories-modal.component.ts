@@ -4,10 +4,10 @@ import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {Category} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
-import {filter, take} from 'rxjs/operators';
+import {filter, map, take, tap, toArray} from 'rxjs/operators';
 
 export interface ISelecetDefaultCategoriesContext {
-  defaultCategories: Observable<Category>;
+  defaultCategories: Observable<Category[]>;
   competition: CompetitionProperties;
 }
 
@@ -16,7 +16,7 @@ export interface ISelectCategoriesResult {
 }
 
 export class SelectCategoriesModal extends ComponentModalConfig<ISelecetDefaultCategoriesContext, ISelectCategoriesResult, void> {
-  constructor(defaultCategories: Observable<Category>, competition: CompetitionProperties, size = ModalSize.Small) {
+  constructor(defaultCategories: Observable<Category[]>, competition: CompetitionProperties, size = ModalSize.Small) {
     super(SelectCategoriesModalComponent, {defaultCategories, competition});
 
     this.isClosable = true;
@@ -26,7 +26,7 @@ export class SelectCategoriesModal extends ComponentModalConfig<ISelecetDefaultC
 }
 
 @Component({
-  selector: 'app-add-group-form',
+  selector: 'app-select-category-form',
   template: `
       <div class="header">Select categories to add...</div>
       <div class="content">
@@ -69,12 +69,16 @@ export class SelectCategoriesModalComponent implements OnInit {
     this.categoriesToAdd = categories;
   }
 
-  optionsLookup = (query: string, initial?: Category[]) => this.modal.context.defaultCategories.pipe(take(50), filter(cat => {
+  optionsLookup = async (query: string, initial?: Category[]) => {
     const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
-    const filterParts = query.split(/\W/);
-    return filterParts.map((value) => cat.id && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value)))
-      .reduce((previousValue, currentValue) => previousValue || currentValue);
-  })).toPromise();
+    return await this.modal.context.defaultCategories.pipe(
+      take(1),
+      map(c => c.filter(cat => {
+        const filterParts = query.split(/\W/);
+        return filterParts.map((value) => cat.id && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value)))
+          .reduce((previousValue, currentValue) => previousValue || currentValue);
+      }))).toPromise();
+  };
 
   formatter = (option: Category) => AddFighterComponent.displayCategory(option);
 

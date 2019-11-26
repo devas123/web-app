@@ -25,7 +25,7 @@ export class Effects {
         map((payload: CompetitionProperties[]) => {
           return allActions.competitionsLoaded(payload);
         }),
-        catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))),)
+        catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
     ));
 
   @Effect({dispatch: false})
@@ -43,12 +43,11 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
     allActions.UNPUBLISH_COMPETITION_COMMAND),
-    tap(command => this.info.sendCommand(command).subscribe()));
+    mergeMap((command: CommonAction) => this.info.sendCommand(command, command.competitionId)));
 
   @Effect({dispatch: false})
   createCompetition$: Observable<Action> = this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
     tap(command => this.info.sendCreateCompetitionCommand(command).subscribe()));
-
 
 
   @Effect()

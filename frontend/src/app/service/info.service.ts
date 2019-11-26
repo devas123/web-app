@@ -8,6 +8,7 @@ import {Category} from '../commons/model/competition.model';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
 import {environment, mocks} from '../../environments/environment';
+import produce from 'immer';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -28,7 +29,23 @@ const {
 
 @Injectable()
 export class InfoService {
+
+  constructor(private http: HttpClient) {
+  }
+
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  commandFields = [
+    'payload',
+    'type',
+    'correlationId',
+    'competitionId',
+    'categoryId',
+    'matId',
+    'metadata',
+    'executed',
+    'id',
+  ];
 
   static parseDate(dateStr: string): Date {
     if (dateStr) {
@@ -43,9 +60,6 @@ export class InfoService {
       return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format);
     }
     return '';
-  }
-
-  constructor(private http: HttpClient) {
   }
 
   subscribeToCompetition(userId: string | number, competitionId: string) {
@@ -167,12 +181,25 @@ export class InfoService {
         'Content-Type': 'application/json'
       })
     });
-
   }
 
-  sendCommand(command: any): Observable<any> {
-    const body = JSON.stringify(command);
-    return this.http.post(`${commandsEndpoint}/${command.competitionId}`, body, {
+  normalizeCommand = command => {
+    return produce(command, draft => {
+      const payload = {};
+      for (const key of Object.keys(draft)) {
+        if (this.commandFields.indexOf(key) < 0) {
+          payload[key] = draft[key];
+          delete draft[key];
+        }
+      }
+      draft.payload = payload;
+    });
+  };
+
+  sendCommand(command: any, competitionId: string): Observable<any> {
+    const normalizedCommand = this.normalizeCommand(command);
+    const body = JSON.stringify(normalizedCommand);
+    return this.http.post(`${commandsEndpoint}/${competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'
@@ -180,8 +207,8 @@ export class InfoService {
     });
   }
 
-  sendGlobalDashboardCommand(command: any): Observable<any> {
-    return this.sendCommand(command);
+  sendGlobalDashboardCommand(command: any, competitionId: string): Observable<any> {
+    return this.sendCommand(command, competitionId);
   }
 
 

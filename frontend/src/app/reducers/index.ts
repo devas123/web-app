@@ -21,7 +21,7 @@ import {
   competitorsInitialState
 } from '../modules/competition/reducers';
 import * as competitorsActions from '../modules/competition/actions/competitors';
-import {Category, Period} from '../commons/model/competition.model';
+import {Category, Fight, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
 
 export interface AppState {

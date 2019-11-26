@@ -1,18 +1,23 @@
 <svg:svg xmlns:svg="https://www.w3.org/2000/svg"
-     [attr.height]="slotHeightPx * totalfights"
-     [attr.width]="rowWidthPx">
+         [attr.height]="slotHeightPx * bracketHeightInFights"
+         [attr.width]="rowWidthPx">
+  <mask id="mask-selected">
+    <rect width="100%" height="100%" fill="gray"></rect>
+  </mask>
   <svg:svg
     [attr.id]="'fight' + i"
     [attr.height]="(100 / fights.length) + '%'"
     [attr.y]="spaceBetween[i]"
     [attr.width]="rowWidthPx * competitorsWidthPercent"
-    *ngFor="let fight of fights; trackBy: trackByFights; let i = index">
+    [ngClass]="{hoverable: true, selectable: canSelectFight(fight)}"
+    *ngFor="let fight of fights; trackBy: trackByFights; let i = index"
+  (click)="selectFightForEdit(fight)">
     <svg:svg
       [attr.id]="'fightslot' + i"
       [attr.height]="slotHeightPx * 0.8"
       [attr.y]="slotYOffset">
 
-      <ng-container *ngFor="let _ of competitorsNumbers; let ci = index">
+      <ng-container *ngFor="let _ of [2, 2]; let ci = index">
         <svg:svg
           height="49%"
           [attr.id]="'fight_' + i + '_competitor_' + ci"
@@ -25,12 +30,14 @@
               class="compholder"
               fill="#7A8288"
             />
+            <!--      fighter name      -->
             <svg:text
               *ngIf="ci <=  fight?.scores?.length - 1"
-              class="fighter draggable"
+              class="fighter"
               x="10"
               y="70%">{{fight?.scores[ci]?.competitor | getname:true}}
             </svg:text>
+            <!--      score      -->
             <svg:svg *ngIf="fight?.stage === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
               <svg:g>
                 <svg:rect
@@ -52,8 +59,7 @@
                   x="0"
                   height="50%"
                   width="33%"
-                  fill="lightcoral"
-                  rx="3"/>
+                  fill="lightcoral"/>
 
                 <svg:text
                   x="8%"
@@ -67,8 +73,7 @@
                   y="50%"
                   height="50%"
                   width="33%"
-                  fill="yellow"
-                  rx="3"/>
+                  fill="yellow"/>
                 <svg:text
                   [attr.x]="8 - (fight.scores[ci]?.score?.advantages?.toString().length - 1) * 6 + '%'"
                   y="90%">{{fight.scores[ci]?.score?.advantages}}
@@ -84,8 +89,8 @@
     <svg:svg
       *ngFor="let fight of fights; trackBy: trackByFights; let k = index"
       [attr.id]="'path' + k"
-      [attr.height]="slotHeightPx * totalfights / fights.length"
-      [attr.y]="k * slotHeightPx * totalfights / fights.length - 0.1 * slotHeightPx"
+      [attr.height]="slotHeightPx * bracketHeightInFights / fights.length"
+      [attr.y]="k * slotHeightPx * bracketHeightInFights / fights.length - 0.1 * slotHeightPx"
       [attr.x]="rowWidthPx * competitorsWidthPercent"
       [attr.width]="rowWidthPx * pathWidthPercent">
       <svg:g>
