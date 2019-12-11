@@ -6,7 +6,6 @@ import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../reducers';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
-import {EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-period-management-container',

@@ -1,6 +1,7 @@
 <app-add-fighter [collapsed]="!addFighterOpen"
                  [categories]="categories$ | async" [header]="false"
-                 (fighterAdded)="dispatchAddFighterAction($event)"></app-add-fighter>
+                 (fighterAdded)="dispatchAddFighterAction($event)"
+                 (closeClicked)="addFighterOpen = false"></app-add-fighter>
 <app-fighters-editor
   [categories]="categories$ | async"
   [pageNumber]="pageNumber$ | async"

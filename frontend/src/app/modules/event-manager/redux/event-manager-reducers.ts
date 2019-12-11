@@ -38,7 +38,7 @@ import {
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_PERIOD_REMOVED, EVENT_MANAGER_REGISTRATION_INFO_UPDATED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
@@ -223,6 +223,13 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED:
     case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
       return fightsEditorChangeHandler(state, action);
+    }
+    case EVENT_MANAGER_REGISTRATION_INFO_UPDATED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId && draft.entities[draft.selectedEventId] && action.registrationInfo) {
+          draft.entities[draft.selectedEventId].registrationInfo = action.registrationInfo;
+        }
+      });
     }
     case COMPETITION_PROPERTIES_UPDATED: {
       const competitionId = action.competitionId;
@@ -885,6 +892,8 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
     return entry && entry.startTime;
   }
 });
+
+export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && regInfo.registrationGroups);
 
 export const eventManagerGetSelectedEventSelectedCategoryFightsEditorState = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedEventFightsEditorState);
 export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorState, cats => cats.selectedChangeId);

@@ -55,7 +55,7 @@ export class AddPeriodModal extends ComponentModalConfig<IAddPeriodContext, IAdd
           <button class="ui green button" (click)="triggerAddPeriod()" autofocus>OK</button>
       </div>
   `,
-  styleUrls: ['./registration-info-editor.component.css'],
+  styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddPeriodFormComponent implements OnInit {

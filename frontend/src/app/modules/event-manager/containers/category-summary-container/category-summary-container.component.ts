@@ -3,17 +3,17 @@ import {Category, CategoryState} from '../../../../commons/model/competition.mod
 import {Observable} from 'rxjs';
 import {
   BreadCrumbItem,
-  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventId, eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
-  eventManagerGetSelectedEventSelectedCategoryState
+  eventManagerGetSelectedEventSelectedCategoryState, HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {displayCategory} from '../../../competition/reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
@@ -25,7 +25,6 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
               [categoryState]="categoryState$ | async"
               [categoryStartTime]="categoryStartTime$ | async"
               [competitionId]="competitionId$ | async"
-              (gobackClicked)="goback()"
               (categoryBracketsSelected)="navigateToCategoryBrackets($event)"
               (categoryFightersSelected)="navigateToCategoryFighters($event)">
       </app-category-summary>`,
@@ -47,7 +46,16 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
           name: displayCategory(cat),
           level: 3,
         }))),
-      menu: []
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.goback()
+        }
+      ],
+      header: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat), take(1), map(cat => <HeaderDescription>{
+        header: 'Category',
+        subheader: displayCategory(cat)
+      }))
     }, menuService);
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
     this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));

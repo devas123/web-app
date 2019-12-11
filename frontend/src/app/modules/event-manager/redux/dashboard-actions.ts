@@ -1,5 +1,14 @@
 // commands
 import {Fight} from '../../../commons/model/competition.model';
+import {createAction, props} from '@ngrx/store';
+
+export interface IDashboardFightScheduleChangedPayload {
+    fightId: string;
+    currentMatId: string;
+    newMatId: string;
+    currentOrderOnMat: number;
+    newOrderOnMat: number;
+}
 
 export const DASHBOARD_LOAD_MAT_COMMAND = 'DASHBOARD_LOAD_MAT_COMMAND';
 export const DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND';
@@ -11,6 +20,7 @@ export const DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND = 'DELETE_DASHBOARD_COMMAN
 
 
 // events
+export const DASHBOARD_FIGHT_SCHEDULE_CHANGED = 'DASHBOARD_FIGHT_MAT_CHANGED';
 export const DASHBOARD_STATE_LOADED = 'DASHBOARD_STATE_LOADED';
 export const DASHBOARD_PERIOD_SELECTED = 'DASHBOARD_PERIOD_SELECTED';
 export const DASHBOARD_PERIOD_UNSELECTED = 'DASHBOARD_PERIOD_UNSELECTED';
@@ -26,77 +36,79 @@ export const DASHBOARD_SOCKET_DISCONNECTED = 'DASHBOARD_SOCKET_DISCONNECTED';
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};
 
+export const dashboardFightScheduleChanged = createAction(DASHBOARD_FIGHT_SCHEDULE_CHANGED, props<IDashboardFightScheduleChangedPayload>());
+
 export const dashboardRemovePeriod = (competitionId, periodId) => ({
-  type: DASHBOARD_DELETE_PERIOD_COMMAND,
-  competitionId,
-  periodId
+    type: DASHBOARD_DELETE_PERIOD_COMMAND,
+    competitionId,
+    periodId
 });
 
 export const dashboardPeriodSelected = (periodId, competitionId) => ({
-  type: DASHBOARD_PERIOD_SELECTED,
-  payload: periodId,
-  competitionId
+    type: DASHBOARD_PERIOD_SELECTED,
+    payload: periodId,
+    competitionId
 });
 
 export const loadDashboardState = (competitionId: string) => (
-  {
-    type: DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
-    competitionId
-  }
+    {
+        type: DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
+        competitionId
+    }
 );
 
 export const dashboardStateLoaded = (state: any, competitionId: string) => ({
-  type: DASHBOARD_STATE_LOADED,
-  competitionId,
-  payload: state
+    type: DASHBOARD_STATE_LOADED,
+    competitionId,
+    payload: state
 });
 
 export const dashboardSelectedPeriodMatsLoaded = (mats: any[], competitionId: string, periodId: string) => ({
-  type: DASHBOARD_MATS_LOADED,
-  competitionId,
-  periodId,
-  payload: mats
+    type: DASHBOARD_MATS_LOADED,
+    competitionId,
+    periodId,
+    payload: mats
 });
 
 export const dashboardSelectedPeriodSelectedMatFightsLoaded = (fights: Fight[], matId: string) => ({
-  type: DASHBOARD_MAT_FIGHTS_LOADED,
-  matId,
-  payload: fights
+    type: DASHBOARD_MAT_FIGHTS_LOADED,
+    matId,
+    payload: fights
 });
 
 export const dashboardUnloadState = {type: DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND};
 
 export const dashboardPeriodUnselected = ({
-  type: DASHBOARD_PERIOD_UNSELECTED,
+    type: DASHBOARD_PERIOD_UNSELECTED,
 });
 
 export const dashboardMatSelected = (competitionId: string, matId: string) => ({
-  type: DASHBOARD_MAT_SELECTED,
-  competitionId,
-  payload: matId
+    type: DASHBOARD_MAT_SELECTED,
+    competitionId,
+    payload: matId
 });
 
 export const dashboardMatUnselected = {
-  type: DASHBOARD_MAT_UNSELECTED,
-  payload: ''
+    type: DASHBOARD_MAT_UNSELECTED,
+    payload: ''
 };
 
 export const dashboardFightSelected = (fightId: string) => ({
-  type: DASHBOARD_FIGHT_SELECTED,
-  payload: fightId
+    type: DASHBOARD_FIGHT_SELECTED,
+    payload: fightId
 });
 
 export const dashboardFightUnselected = {
-  type: DASHBOARD_FIGHT_UNSELECTED,
-  payload: ''
+    type: DASHBOARD_FIGHT_UNSELECTED,
+    payload: ''
 };
 
 export const dashboardInitState = (competitionId: string) => ({
-  type: DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
-  competitionId,
+    type: DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
+    competitionId,
 });
 
 export const dashboardDeleteState = (competitionId: string) => ({
-  type: DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
-  competitionId,
+    type: DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
+    competitionId,
 });

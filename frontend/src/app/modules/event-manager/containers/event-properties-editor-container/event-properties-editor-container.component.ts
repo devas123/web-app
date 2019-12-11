@@ -23,7 +23,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
-          header: 'Properties',
+          header: 'Overview',
           subheader: name
         }))),
       menu: [

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Competitor, Fight, Score} from '../../../../../commons/model/competition.model';
+import {Fight} from '../../../../../commons/model/competition.model';
 
 
 @Component({
@@ -95,17 +95,6 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     return index * 100 / this.fights.length + '%';
   }
 
-  public onItemDrop(e: any, f: Fight) {
-    const fromFight = e.dragData.fight as Fight;
-    const comScore = e.dragData.comp as { competitor: Competitor, score: Score };
-    fromFight.scores.splice(fromFight.scores.indexOf(comScore), 1);
-    if (f.scores.length >= 2) {
-      const removedComp = f.scores.reverse().pop();
-      fromFight.scores.push(removedComp);
-    }
-    f.scores.push(comScore);
-  }
-
   calculateDimensions() {
     this.slotYOffset = this.getSlotYOffset(this.oneFightInPercent);
     this.spaceBetween = [];
@@ -118,8 +107,6 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7} v-${lineBoxHeight * 0.5} h${lineBoxLength * 0.3}`);
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7}`);
   }
-
-//
 
   ngOnInit() {
     if (!this.initialized) {

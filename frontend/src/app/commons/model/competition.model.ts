@@ -53,6 +53,12 @@ export interface Score {
   competitorId: string;
 }
 
+export interface CompScore {
+  id: string;
+  competitor: Competitor;
+  score: Score;
+}
+
 export interface Fight {
   id: string;
   categoryId: string;
@@ -63,7 +69,7 @@ export interface Fight {
   competitionId: string;
   internalId: string;
   duration: number;
-  scores: { competitor: Competitor, score: Score }[];
+  scores: CompScore[];
   round: number;
   stage: string;
   fightResult: FightResult;

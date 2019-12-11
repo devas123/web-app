@@ -64,11 +64,11 @@ export class DashboardEffects {
     mergeMap((command: any) => {
       return this.infoService.getMatFights(command.competitionId, command.payload).pipe(
         catchError(error => observableOf(errorEvent(error))),
-        map((fights: any) => {
-          if (!fights || fights.type === ERROR_OCCURRED) {
-            return fights;
+        map((result: any) => {
+          if (!result || result.type === ERROR_OCCURRED) {
+            return result;
           } else {
-            return dashboardSelectedPeriodSelectedMatFightsLoaded(fights, command.payload);
+            return dashboardSelectedPeriodSelectedMatFightsLoaded(result, command.payload);
           }
         }));
     }));

@@ -21,7 +21,7 @@ import {
   competitorsInitialState
 } from '../modules/competition/reducers';
 import * as competitorsActions from '../modules/competition/actions/competitors';
-import {Category, Fight, Period} from '../commons/model/competition.model';
+import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
 
 export interface AppState {
@@ -76,8 +76,11 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 export interface RegistrationGroup {
   id: string;
   displayName: string;
+  defaultGroup: boolean;
   registrationFee: number;
-  registrationPeriodId: string;
+  registrationPeriodIds: string[];
+  registrationInfoId: string;
+  categories: string[];
 }
 
 export interface RegistrationPeriod {
@@ -86,11 +89,13 @@ export interface RegistrationPeriod {
   start: string;
   end: string;
   competitionId: string;
-  registrationGroups: RegistrationGroup[];
+  registrationInfoId: string;
+  registrationGroupIds: string[];
 }
 
 export interface RegistrationInfo {
   registrationPeriods: RegistrationPeriod[];
+  registrationGroups: RegistrationGroup[];
   registrationOpen: boolean;
 }
 

@@ -1,20 +1,27 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
-import {BreadCrumbItem, eventManagerGetSelectedEvent, eventManagerGetSelectedEventSchedule, eventManagerGetSelectedEventScheduleProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
+import {
+  BreadCrumbItem,
+  eventManagerGetSelectedEvent,
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSchedule,
+  eventManagerGetSelectedEventScheduleProperties,
+  ScheduleProperties
+} from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {dashboardGetPeriods, dashboardGetSelectedPeriod, DashboardPeriod} from '../../redux/dashboard-reducers';
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-periods-management-container',
   templateUrl: './periods-management-container.component.html',
-  styleUrls: ['./periods-management-container.component.css']
+  styleUrls: ['./periods-management-container.component.scss']
 })
 export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
@@ -30,11 +37,28 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Periods',
-        level: 3
-      },
-      menu: []
+      header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
+        header: 'Progress dashboard',
+        subheader: name
+      }))),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.navigateBack()
+        },
+        {
+          name: 'Toggle Schedule',
+          action: () => this.toggleSchedule()
+        },
+        {
+          name: 'Auto-dispatch fights',
+          action: () => this.sendUseScheduleCommand()
+        },
+        {
+          name: 'Reset progress',
+          action: () => this.sendDeleteDashboardStateCommand()
+        }
+      ]
     }, menuService);
     this.periods$ = store.pipe(select(dashboardGetPeriods));
     this.selectedCompetitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));

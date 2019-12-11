@@ -1,0 +1,16 @@
+.fight-display-container {
+  display: grid;
+  grid-template-columns: 7fr 1fr 7fr;
+  grid-column-gap: 1em;
+}
+
+.item.draggable {
+  background-color: #162830;
+  border-radius: 3px;
+  margin-bottom: 1em;
+  padding: 1em !important;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

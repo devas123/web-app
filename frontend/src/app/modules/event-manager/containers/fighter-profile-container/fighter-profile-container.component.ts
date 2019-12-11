@@ -16,10 +16,10 @@ import {
 import {
   BreadCrumbItem,
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventId, eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryId,
-  eventManagerGetSelectedEventSelectedCompetitor
+  eventManagerGetSelectedEventSelectedCompetitor, HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
@@ -40,14 +40,21 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: store.pipe(
-        select(eventManagerGetSelectedEventSelectedCompetitor),
-        filter(f => !!f),
-        map(f => <BreadCrumbItem>{
-          name: f.firstName + ' ' + f.lastName,
-          level: 3
-        })),
-      menu: []
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.navigateBack()
+        },
+        {
+          name: 'User profile',
+          action: () => {},
+          showCondition: () => this.eventFighter$.pipe(map(f => !!f.userId))
+        }
+      ],
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
+        header: 'Fighter Profile',
+        subheader: name
+      })),
     }, menuService);
     const a$ = combineLatest([
       route.params.pipe(map(params => params['fighterId'])),

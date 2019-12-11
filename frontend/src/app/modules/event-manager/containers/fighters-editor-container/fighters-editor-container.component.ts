@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {
@@ -48,7 +48,13 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
         },
         {
           name: 'Add fighter',
+          showCondition: () => of(!this.addFighterOpen),
           action: () => this.addFighterOpen = true
+        },
+        {
+          name: 'Close editor',
+          showCondition: () => of(this.addFighterOpen),
+          action: () => this.addFighterOpen = false
         }
       ]
     }, menuService);

@@ -63,7 +63,7 @@
       </sui-select>
     </div>
 
-    <div class="ui basic button" routerLink="../../../">Return</div>
+    <div class="ui button" (click)="closeClicked.next()">Close</div>
     <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
       Create
     </div>

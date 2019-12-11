@@ -28,7 +28,7 @@ import {MenuItem} from '../../redux/event-manager-reducers';
           background-color: #3c5d6e;
       }`,
       `.ui.left.secondary.vertical.menu a.item:hover {
-          background-color: #121719;
+          background-color: #2b3e40;
       }`,
   ]
 })

@@ -4,7 +4,7 @@ import {CompetitionProperties} from '../../../../reducers';
 @Component({
   selector: 'app-my-events-list',
   templateUrl: './my-events-list.component.html',
-  styleUrls: ['./my-events-list.component.css'],
+  styleUrls: ['./my-events-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyEventsListComponent implements OnInit {

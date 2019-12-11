@@ -1,0 +1,11 @@
+.customline {
+  display: flex;
+  flex-direction: row;
+  .right.floated.content {
+    position: absolute;
+    right: 1em;
+  }
+  .middle.aligned {
+    align-self: center;
+  }
+}

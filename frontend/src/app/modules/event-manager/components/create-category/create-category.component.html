@@ -1,6 +1,4 @@
 <div class="ui container">
-  <h2 class="ui header">Create category</h2>
-  <div class="ui divider"></div>
   <div class="ui steps">
     <a class="step" [ngClass]="{active: step == 0}" (click)="step = 0">
       <i class="user plus icon"></i>
@@ -95,9 +93,6 @@
                  required>
         </div>
       </div>
-    </div>
-    <div class="ui basic button" routerLink="../">
-      Return
     </div>
     <div class="ui button" [ngClass]="{disabled: step <= 0}" (click)="previousStep()">
       Previous

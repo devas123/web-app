@@ -1,38 +1,37 @@
-<div class="ui container">
-  <form class="ui large form" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
-    <div class="ui stacked segment">
-      <div class="field"
-           [ngClass]="{error: competitionName.invalid && (competitionName.touched || competitionName.dirty)}">
-        <div class="ui input">
-          <input type="text" name="competitionName" placeholder="Competition Name" formControlName="competitionName"
-                 required>
-        </div>
-      </div>
-      <!--<div class="field"-->
-           <!--[ngClass]="{error: registrationFee.invalid && (registrationFee.touched || registrationFee.dirty)}">-->
-        <!--<div class="ui input">-->
-          <!--<input type="number" id="registrationFee" placeholder="Registration Fee" formControlName="registrationFee"-->
-                 <!--required>-->
-        <!--</div>-->
-      <!--</div>-->
-      <div class="field">
-        <div class="ui checkbox">
-          <input id="registrationOpen" type="checkbox" formControlName="registrationOpen">
-          <label for="registrationOpen">Registration open?</label>
-        </div>
-      </div>
-      <div class="ui basic button" routerLink="../">Return</div>
-      <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
-        Create
-      </div>
-
-      <div class="ui error message " *ngIf="displayErrorList()">
-        <ul class="list">
-          <li *ngIf="competitionName.invalid && (competitionName.touched || competitionName.dirty)">Enter competition
-            name
-          </li>
-        </ul>
+<form class="ui large form" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
+  <div class="ui basic segment">
+    <div class="field"
+         [ngClass]="{error: competitionName.invalid && (competitionName.touched || competitionName.dirty)}">
+      <div class="ui input">
+        <input type="text" id="competitionName" placeholder="Competition Name" formControlName="competitionName"
+               required>
       </div>
     </div>
-  </form>
-</div>
+    <!--<div class="field"-->
+    <!--[ngClass]="{error: registrationFee.invalid && (registrationFee.touched || registrationFee.dirty)}">-->
+    <!--<div class="ui input">-->
+    <!--<input type="number" id="registrationFee" placeholder="Registration Fee" formControlName="registrationFee"-->
+    <!--required>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="field">
+      <div class="ui checkbox">
+
+        <label for="registrationOpen">
+          <input id="registrationOpen" type="checkbox" formControlName="registrationOpen">
+          Registration open?</label>
+      </div>
+    </div>
+    <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
+      Create
+    </div>
+
+    <div class="ui error message " *ngIf="displayErrorList()">
+      <ul class="list">
+        <li *ngIf="competitionName.invalid && (competitionName.touched || competitionName.dirty)">Enter competition
+          name
+        </li>
+      </ul>
+    </div>
+  </div>
+</form>

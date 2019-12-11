@@ -4,9 +4,8 @@ import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../redux/event-manager-actions';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
-import {Subscription, combineLatest} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 
 @Component({
   selector: 'app-category-container',

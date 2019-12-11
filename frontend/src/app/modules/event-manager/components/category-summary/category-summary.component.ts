@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-category-summary',
   templateUrl: './category-summary.component.html',
-  styleUrls: ['./category-summary.component.css']
+  styleUrls: ['./category-summary.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategorySummaryComponent implements OnInit {
 
@@ -21,9 +22,6 @@ export class CategorySummaryComponent implements OnInit {
   categoryStartTime: Date;
 
   @Output()
-  gobackClicked = new EventEmitter<any>();
-
-  @Output()
   categoryFightersSelected = new EventEmitter<{ categoryId: string, competitionId: string }>();
 
   @Output()
@@ -33,10 +31,6 @@ export class CategorySummaryComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  goback() {
-    this.gobackClicked.next('');
   }
 
   navigateToCategoryFighters(categoryId: string) {

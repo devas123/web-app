@@ -1,4 +1,4 @@
-import {map, take} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
@@ -31,7 +31,12 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
         name: 'Create event',
         level: 1
       },
-      menu: [],
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.goBack()
+        }
+      ],
       header: {
         header: 'Create event'
       }
@@ -70,9 +75,7 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    if (this.createCompetitionSubscription) {
-      this.createCompetitionSubscription.unsubscribe();
-    }
+    this.createCompetitionSubscription.unsubscribe();
   }
 
   submitForm() {
@@ -91,8 +94,12 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
         props.schedulePublished = false;
         props.bracketsPublished = false;
         return createCompetition(props);
-      })).subscribe(this.store));
-    this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
+      }),
+      tap(this.store))
+      .subscribe(() => this.goBack()));
   }
 
+  private goBack() {
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
+  }
 }

@@ -24,6 +24,9 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   categories: Category[];
 
   @Output()
+  closeClicked = new EventEmitter();
+
+  @Output()
   fighterAdded = new EventEmitter<CommonAction>();
   private compIdSubscription;
 

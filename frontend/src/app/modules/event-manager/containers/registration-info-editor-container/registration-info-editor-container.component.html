@@ -2,11 +2,17 @@
                               (deleteGroup)="deleteRegistrationInfoGroup($event)"
                               (deletePeriod)="deleteRegistrationInfoPeriod($event)"
                               (selectGroup)="selectRegistrationGroup($event)"
-                              [colunmsNumber] = "columsNumber$ | async"
+                              (registrationInfoUpdated)="registrationInfoUpdated($event)"
+                              [colunmsNumber]="columsNumber$ | async"
                               [competitionId]="competitionId$ | async"
                               [timeZone]="timeZone$ | async"
                               [registrationInfo]="registrationInfo$ | async"
-                              *ngIf="!(selectedRegistrationGroup$ | async)"></app-registration-info-editor>
+                              [categories]="categories$ | async"
+                              *ngIf="!(selectedRegistrationGroupId$ | async)"></app-registration-info-editor>
 
-<app-registration-group-editor *ngIf="selectedRegistrationGroup$ | async" [group]="selectedRegistrationGroup$ | async"></app-registration-group-editor>
+<app-registration-group-editor *ngIf="selectedRegistrationGroupId$ | async"
+                               [groupId]="selectedRegistrationGroupId$ | async"
+                               [registrationInfo]="registrationInfo$ | async"
+                               [categories]="categories$ | async"
+                               (registrationInfoUpdated)="registrationInfoUpdated($event, true)"></app-registration-group-editor>
 

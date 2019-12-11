@@ -1,5 +1,5 @@
 // commands
-import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationPeriod, Schedule} from '../../../reducers';
+import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers';
 import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
 import {BreadCrumbItem, HeaderDescription, PeriodProperties} from './event-manager-reducers';
 import {createAction, props} from '@ngrx/store';
@@ -37,7 +37,9 @@ export const EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED = 'EVENT_MANAGER_DEFAULT_CA
 export const EVENT_MANAGER_REGISTRATION_PERIOD_ADDED = 'REGISTRATION_PERIOD_ADDED';
 export const EVENT_MANAGER_REGISTRATION_PERIOD_DELETED = 'REGISTRATION_PERIOD_DELETED';
 export const EVENT_MANAGER_REGISTRATION_GROUP_ADDED = 'REGISTRATION_GROUP_ADDED';
+export const EVENT_MANAGER_REGISTRATION_GROUP_UPDATED = 'REGISTRATION_GROUP_ADDED';
 export const EVENT_MANAGER_REGISTRATION_GROUP_DELETED = 'REGISTRATION_GROUP_DELETED';
+export const EVENT_MANAGER_REGISTRATION_INFO_UPDATED = 'EVENT_MANAGER_REGISTRATION_INFO_UPDATED';
 export const EVENT_MANAGER_COMPETITOR_UPDATED = 'COMPETITOR_UPDATED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED = 'CATEGORY_BRACKETS_DROPPED';
 export const EVENT_MANAGER_SCHEDULE_DROPPED = 'SCHEDULE_DROPPED';
@@ -89,6 +91,7 @@ export const EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED = 'EVENT_MANAGER_FIGH
 export const EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED = 'EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED';
 export const EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED = 'EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED';
 
+
 export interface FightsEditorAction extends CommonAction {
   name: string;
 }
@@ -100,6 +103,7 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
+export const eventManagerRegistrationInfoUpdated = createAction(EVENT_MANAGER_REGISTRATION_INFO_UPDATED, props<{registrationInfo: RegistrationInfo}>());
 export const eventManagerFightsEditorChangeAdded = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED, props<{ change: FightsEditorChange }>());
 export const eventManagerFightsEditorChangeRemoved = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED, props<{ id: string }>());
 export const eventManagerFightsEditorChangeUpdated = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED, props<{ change: FightsEditorChange }>());
@@ -137,12 +141,12 @@ export const eventManagerAddRegistrationPeriod = (competitionId: string, period:
   payload: {period}
 });
 
-export const eventManagerAddRegistrationGroup = (competitionId: string, periodId, group: RegistrationGroup) => ({
+export const eventManagerAddRegistrationGroups = (competitionId: string, periodId, groups: RegistrationGroup[]) => ({
   type: EVENT_MANAGER_ADD_REGISTRATION_GROUP_COMMAND,
   competitionId,
   payload: {
     periodId,
-    group
+    groups
   }
 });
 

@@ -8,10 +8,11 @@ import {ReversePipe} from '../pipes/ReversePipe';
 import {EncodeIdPipe} from '../pipes/encode.id.pipe';
 import {GroupCompListPipe} from '../pipes/complist.pipe';
 import {ZonedDatePipe} from '../pipes/zoned-date-pipe';
+import {DisplayCategoryPipe} from '../pipes/display-category.pipe';
 
 @NgModule({
-  declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, GroupCompListPipe, EncodeIdPipe, ReversePipe, ZonedDatePipe],
-  exports: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, GroupCompListPipe, EncodeIdPipe, ReversePipe, ZonedDatePipe]
+  declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, GroupCompListPipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe],
+  exports: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, GroupCompListPipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe]
 })
 export class CommonsModule {
 }

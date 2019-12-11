@@ -12,8 +12,9 @@ import {
 } from '../../redux/dashboard-reducers';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
-import {BreadCrumbItem} from '../../redux/event-manager-reducers';
+import {BreadCrumbItem, HeaderDescription} from '../../redux/event-manager-reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {dashboardFightScheduleChanged, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -25,12 +26,17 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
 
   constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: store.pipe(select(dashboardGetSelectedPeriod), filter(p => !!p),
-        map(per => <BreadCrumbItem>{
-          name: per.name,
-          level: 3
+      header: store.pipe(select(dashboardGetSelectedPeriod), filter(p => !!p),
+        map(per => <HeaderDescription>{
+          header: `Period ${per.name}`,
+          subheader: 'Mats overview'
         })),
-      menu: []
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.navigateBack()
+        }
+      ]
     }, menuService);
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
@@ -45,5 +51,9 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
 
   navigateToMat(matId: string) {
     this.router.navigate([matId], {relativeTo: this.route}).catch(error => console.error(error));
+  }
+
+  sendFightScheduleChanged($event: IDashboardFightScheduleChangedPayload) {
+    this.store.dispatch(dashboardFightScheduleChanged($event));
   }
 }

@@ -1,11 +1,11 @@
-import {map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AppState} from '../../../../reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {BreadCrumbItem, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -24,11 +24,16 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
 
   constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Create Category',
-        level: 2
-      },
-      menu: []
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
+        header: 'Create category',
+        subheader: name
+      })),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.router.navigate(['..'], {relativeTo: this.route})
+        }
+      ]
     }, menuService);
     this.createForm();
   }

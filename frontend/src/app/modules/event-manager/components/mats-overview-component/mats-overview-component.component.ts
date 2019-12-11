@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Mat} from '../../redux/dashboard-reducers';
 import {Competitor} from '../../../../commons/model/competition.model';
+import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 
 @Component({
   selector: 'app-mats-overview-component',
   templateUrl: './mats-overview-component.component.html',
-  styleUrls: ['./mats-overview-component.component.css']
+  styleUrls: ['./mats-overview-component.component.scss']
 })
 export class MatsOverviewComponentComponent implements OnInit {
 
@@ -17,6 +18,9 @@ export class MatsOverviewComponentComponent implements OnInit {
 
   @Output()
   matDetailsClicked = new EventEmitter<string>();
+
+  @Output()
+  fightScheduleChanged = new EventEmitter<IDashboardFightScheduleChangedPayload>();
 
   constructor() { }
 
@@ -33,4 +37,7 @@ export class MatsOverviewComponentComponent implements OnInit {
   ngOnInit() {
   }
 
+  fightMatChanged($event: IDashboardFightScheduleChangedPayload) {
+    this.fightScheduleChanged.next($event);
+  }
 }

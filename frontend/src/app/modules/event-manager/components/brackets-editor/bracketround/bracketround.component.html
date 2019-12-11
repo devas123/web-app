@@ -28,11 +28,11 @@
               height="100%"
               rx="3"
               class="compholder"
-              fill="#7A8288"
             />
             <!--      fighter name      -->
             <svg:text
               *ngIf="ci <=  fight?.scores?.length - 1"
+              fill="white"
               class="fighter"
               x="10"
               y="70%">{{fight?.scores[ci]?.competitor | getname:true}}
