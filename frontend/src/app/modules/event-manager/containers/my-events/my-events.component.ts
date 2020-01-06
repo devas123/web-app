@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {Observable} from 'rxjs';
-import {BreadCrumbItem, eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
+import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';

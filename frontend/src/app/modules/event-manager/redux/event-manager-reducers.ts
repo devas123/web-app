@@ -7,9 +7,6 @@ import {
   COMPETITION_CREATED,
   COMPETITION_PROPERTIES_UPDATED,
   EVENT_MANAGER_ALL_BRACKETS_DROPPED,
-  EVENT_MANAGER_BREADCRUMB_CLEAR,
-  EVENT_MANAGER_BREADCRUMB_POP,
-  EVENT_MANAGER_BREADCRUMB_PUSH,
   EVENT_MANAGER_CATEGORIES_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORY_MOVED,
@@ -28,7 +25,7 @@ import {
   EVENT_MANAGER_FIGHTER_SELECTED,
   EVENT_MANAGER_FIGHTER_UNSELECTED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
-  EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
+  EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED,
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED,
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED,
@@ -38,13 +35,13 @@ import {
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED, EVENT_MANAGER_REGISTRATION_INFO_UPDATED,
+  EVENT_MANAGER_PERIOD_REMOVED, REGISTRATION_INFO_UPDATED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED,
   FIGHTS_START_TIME_UPDATED,
-  SCHEDULE_GENERATED
+  SCHEDULE_GENERATED, EVENT_MANAGER_REGISTRATION_GROUP_CREATED, EVENT_MANAGER_REGISTRATION_GROUP_DELETED
 } from './event-manager-actions';
 import * as uuidv4 from 'uuid/v4';
 import {ActionReducerMap, createSelector} from '@ngrx/store';
@@ -68,12 +65,6 @@ import {Observable} from 'rxjs';
 import produce, {applyPatches, Draft} from 'immer';
 import {Update} from '@ngrx/entity';
 
-export interface BreadCrumbItem {
-  name: string;
-  level: number;
-  last?: boolean;
-}
-
 export interface MenuItem {
   name: string;
   class?: string | { [p: string]: any };
@@ -94,7 +85,6 @@ export interface EventManagerState {
   myEvents: EventPropsEntities;
   dashboardState: DashboardState;
   socketConnected: boolean;
-  breadcrumb: BreadCrumbItem[];
   header: HeaderDescription;
 }
 
@@ -115,12 +105,6 @@ export interface ScheduleProperties {
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
-export const eventManagerGetBreadcrumbRaw = createSelector(getEventManagerState, state => state.breadcrumb);
-export const eventManagerGetBreadcrumb = createSelector(eventManagerGetBreadcrumbRaw, breadcrumb => breadcrumb && breadcrumb.map((b, index, ar) => (<BreadCrumbItem>{
-  ...b,
-  level: ar.length - index - 1,
-  last: index === ar.length - 1
-})));
 export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
 
 export const {
@@ -224,10 +208,47 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
       return fightsEditorChangeHandler(state, action);
     }
-    case EVENT_MANAGER_REGISTRATION_INFO_UPDATED: {
+    case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
       return produce(state, draft => {
-        if (draft.selectedEventId && draft.entities[draft.selectedEventId] && action.registrationInfo) {
-          draft.entities[draft.selectedEventId].registrationInfo = action.registrationInfo;
+        if (draft.selectedEventId === action.competitionId
+          && draft.entities[draft.selectedEventId] && draft.entities[draft.selectedEventId].registrationInfo
+          && action.payload.periodId && action.payload.groupId) {
+          const {periodId, groupId} = action.payload;
+          if (!draft.entities[draft.selectedEventId].registrationInfo.registrationGroups) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups = [];
+          }
+          const per = draft.entities[draft.selectedEventId].registrationInfo.registrationPeriods
+            .find(p => p.id === periodId);
+          per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+          const group =
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.find(gr => gr.id === groupId);
+          group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
+          if (group.registrationPeriodIds.length === 0) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups =
+              draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
+          }
+        }
+      });
+    }
+    case EVENT_MANAGER_REGISTRATION_GROUP_CREATED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId === action.competitionId
+          && draft.entities[draft.selectedEventId] && draft.entities[draft.selectedEventId].registrationInfo
+          && action.payload.periodId && action.payload.group) {
+          if (!draft.entities[draft.selectedEventId].registrationInfo.registrationGroups) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups = [];
+          }
+          draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.push(action.payload.group);
+          draft.entities[draft.selectedEventId].registrationInfo.registrationPeriods
+            .find(per => per.id === action.payload.periodId)
+            .registrationGroupIds.push(action.payload.group.id);
+        }
+      });
+    }
+    case REGISTRATION_INFO_UPDATED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId === action.competitionId && draft.entities[draft.selectedEventId] && action.payload.registrationInfo) {
+          draft.entities[draft.selectedEventId].registrationInfo = action.payload.registrationInfo;
         }
       });
     }
@@ -511,7 +532,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       }
       return state;
     }
-    case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED: {
+    case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
       if (action.competitionId === state.selectedEventId) {
         return {
           ...state,
@@ -789,23 +810,6 @@ export interface State extends AppState {
 }
 
 
-export function breadcrumbReducer(state: BreadCrumbItem[] = [], action: CommonAction): BreadCrumbItem[] {
-  switch (action.type) {
-    case EVENT_MANAGER_BREADCRUMB_PUSH: {
-      const item = action.payload as BreadCrumbItem;
-      return [...state, item].sort((a, b) => a.level - b.level);
-    }
-    case EVENT_MANAGER_BREADCRUMB_POP: {
-      const itemsN = action.payload || 1;
-      return state.slice(0, state.length - itemsN);
-    }
-    case EVENT_MANAGER_BREADCRUMB_CLEAR: {
-      return [];
-    }
-  }
-  return state;
-}
-
 export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {
     case EVENT_MANAGER_HEADER_SET: {
@@ -823,7 +827,6 @@ export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
     myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
     dashboardState: dashboardReducers,
-    breadcrumb: breadcrumbReducer,
     header: headerReducer
   };
 }
@@ -880,6 +883,8 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
     return selectedId && entities[selectedId];
   }
 );
+export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
+  (dict, props) => props.id && dict[props.id]);
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
 export const eventManagerGetSelectedEventSchedule = createSelector(eventManagerGetMyEventsCollection, state => {
   return state && state.selectedEventSchedule;

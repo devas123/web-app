@@ -11,6 +11,12 @@ import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actio
 export class MatsOverviewComponentComponent implements OnInit {
 
   @Input()
+  periodId: string;
+
+  @Input()
+  competitionId: string;
+
+  @Input()
   mats: Mat[];
 
   @Output()
@@ -37,7 +43,7 @@ export class MatsOverviewComponentComponent implements OnInit {
   ngOnInit() {
   }
 
-  fightMatChanged($event: IDashboardFightScheduleChangedPayload) {
-    this.fightScheduleChanged.next($event);
+  fightMatChanged($event: any) {
+    this.fightScheduleChanged.next({...$event, competitionId: this.competitionId, periodId: this.periodId});
   }
 }

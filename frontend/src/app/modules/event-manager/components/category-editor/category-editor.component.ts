@@ -56,7 +56,7 @@ export class CategoryEditorComponent implements OnInit {
     filterParts.forEach((value) => {
       filteredOptions = filteredOptions.filter(cat => {
         return cat.id
-          && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
+          && (hasAny(cat.weight.name, value) || hasAny(cat.ageDivision.name, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
       });
     });
 

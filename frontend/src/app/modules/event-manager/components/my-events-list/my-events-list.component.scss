@@ -1,11 +1,27 @@
+$minwidth: 80px;
 .customline {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  column-gap: 1em;
+  grid-auto-flow: column;
+  grid-template-columns: $minwidth;
+  grid-auto-columns: minmax($minwidth, auto);
+  justify-content: start;
+  margin-top: 0 !important;
   .right.floated.content {
     position: absolute;
+    top: 1em;
     right: 1em;
   }
   .middle.aligned {
     align-self: center;
+  }
+
+  .competition.avatar {
+    > img {
+      border-radius: 3px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }

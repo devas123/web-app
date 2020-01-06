@@ -7,12 +7,16 @@ type dateOrStr = Date | string;
   name: 'zdate'
 })
 export class ZonedDatePipe implements PipeTransform {
-  transform(value?: dateOrStr, showtime?: boolean, zone?: string): string {
+  transform(value?: dateOrStr, showtime?: boolean, zone?: string, showDate: boolean = true): string {
     const z = zone || 'UTC';
     if (value) {
       const keepZone = value instanceof Date ? DateTime.fromMillis(value.getTime()) : DateTime.fromISO(value, {zone: z});
       if (showtime) {
-        return keepZone.toLocaleString(DateTime.DATETIME_SHORT) + (zone ? `, ${zone}` : '');
+        if (showDate) {
+          return keepZone.toLocaleString(DateTime.DATETIME_SHORT) + (zone ? `, ${zone}` : '');
+        } else {
+          return keepZone.toLocaleString(DateTime.TIME_24_SIMPLE) + (zone ? `, ${zone}` : '');
+        }
       } else {
         return keepZone.toLocaleString(DateTime.DATE_SHORT) + (zone ? `, ${zone}` : '');
       }

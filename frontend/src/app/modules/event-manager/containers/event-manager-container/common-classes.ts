@@ -3,7 +3,6 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../reducers';
 import {Observable} from 'rxjs';
 import {
-  BreadCrumbItem,
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
@@ -11,7 +10,7 @@ import {
   HeaderDescription,
   MenuItem
 } from '../../redux/event-manager-reducers';
-import {eventManagerBreadcrumbPop, eventManagerBreadcrumbPush, eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
+import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
 import {filter, take} from 'rxjs/operators';
 import {Category} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -20,10 +19,6 @@ export abstract class EventManagerRouterEntryComponent implements OnDestroy {
 
   protected constructor(protected store: Store<AppState>, protected metadataProvider: ComponentCommonMetadataProvider, protected menuService: MenuService) {
     setTimeout(() => this.init(metadataProvider));
-  }
-
-  static pushBreadcrumbItem(store: Store<AppState>, item: BreadCrumbItem) {
-    store.dispatch(eventManagerBreadcrumbPush(item));
   }
 
   static processSyncOrAsync<A>(item: SyncOrAsync<A>, action: (i: A) => any) {
@@ -39,13 +34,11 @@ export abstract class EventManagerRouterEntryComponent implements OnDestroy {
   }
 
   private init(metadataProvider: ComponentCommonMetadataProvider) {
-    EventManagerRouterEntryComponent.processSyncOrAsync(metadataProvider.breadCrumbItem, i => EventManagerRouterEntryComponent.pushBreadcrumbItem(this.store, i));
     EventManagerRouterEntryComponent.processSyncOrAsync(metadataProvider.menu, i => this.menuService.menu = i);
     EventManagerRouterEntryComponent.processSyncOrAsync(metadataProvider.header, i => this.store.dispatch(eventManagerHeaderSet(i)));
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(eventManagerBreadcrumbPop(1));
     this.menuService.clear();
     this.store.dispatch(eventManagerHeaderClear);
   }
@@ -57,7 +50,6 @@ type SyncOrAsync<A> = A | Observable<A> | Promise<A>;
 
 export interface ComponentCommonMetadataProvider {
   header?: SyncOrAsync<HeaderDescription>;
-  breadCrumbItem?: SyncOrAsync<BreadCrumbItem>;
   menu?: SyncOrAsync<MenuItem[]>;
 }
 
@@ -74,10 +66,4 @@ export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEn
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
   }
-}
-
-export interface MenuManager {
-  handleMenuItemClicked: (item: MenuItem) => any;
-
-  getMenu(): MenuItem[];
 }

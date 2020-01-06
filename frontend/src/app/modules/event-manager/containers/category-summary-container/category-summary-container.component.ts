@@ -2,8 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
-  BreadCrumbItem,
-  eventManagerGetSelectedEventId, eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
   eventManagerGetSelectedEventSelectedCategoryState, HeaderDescription
@@ -41,11 +40,6 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat),
-        map(cat => (<BreadCrumbItem>{
-          name: displayCategory(cat),
-          level: 3,
-        }))),
       menu: [
         {
           name: 'Return',

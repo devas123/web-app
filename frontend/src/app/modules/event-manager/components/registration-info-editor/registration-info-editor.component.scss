@@ -30,3 +30,13 @@ span.italic {
 .inactive {
   opacity: 0.5;
 }
+
+.right.floated.content {
+  position: absolute;
+  right: 1em;
+  z-index: 100;
+
+  .close.icon:hover {
+    color: #90afb1;
+  }
+}

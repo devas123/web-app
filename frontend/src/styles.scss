@@ -71,25 +71,31 @@ $dialog_input_text_color: lemonchiffon;
 
 input {
   background-color: transparent !important;
-  color: $dialog_input_text_color;
+  color: $dialog_input_text_color !important;
 }
 
 .ui.search {
   background-color: transparent;
-  color: $dialog_input_text_color;
+  color: $dialog_input_text_color !important;
 }
 
 .ui.input input {
   background-color: transparent;
-  color: $dialog_input_text_color;
+  color: $dialog_input_text_color !important;
 }
 
 .ui.input input:active,
 .ui.input.down input {
   background-color: transparent;
+  color: $dialog_input_text_color !important;
 }
 
 .ui.input input:focus {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.selection.dropdown {
   background-color: transparent;
 }
 
@@ -99,5 +105,6 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
   -webkit-box-shadow: 0 0 0 30px black inset !important;
   background-color: transparent !important;
+  color: $dialog_input_text_color !important;
 }
 

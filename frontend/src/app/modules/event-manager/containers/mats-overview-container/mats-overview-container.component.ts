@@ -4,17 +4,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {
-  dashboardGetSelectedPeriod,
-  dashboardGetSelectedPeriodMats,
-  DashboardPeriod,
-  Mat
-} from '../../redux/dashboard-reducers';
+import {dashboardGetSelectedPeriod, dashboardGetSelectedPeriodMats, DashboardPeriod, Mat} from '../../redux/dashboard-reducers';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
-import {BreadCrumbItem, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventId, HeaderDescription} from '../../redux/event-manager-reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {dashboardFightScheduleChanged, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
+import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -23,6 +18,7 @@ import {dashboardFightScheduleChanged, IDashboardFightScheduleChangedPayload} fr
 export class MatsOverviewContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
   selectedPeriod$: Observable<DashboardPeriod>;
   selectedPeriodMats$: Observable<Mat[]>;
+  competitionId$: Observable<string>;
 
   constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -38,6 +34,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
         }
       ]
     }, menuService);
+    this.competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
   }
@@ -54,6 +51,6 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   }
 
   sendFightScheduleChanged($event: IDashboardFightScheduleChangedPayload) {
-    this.store.dispatch(dashboardFightScheduleChanged($event));
+    this.store.dispatch(dashboardFightOrderChangeCommand($event));
   }
 }

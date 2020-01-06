@@ -16,6 +16,7 @@ export const urls = {
 
 export const environment = {
   production: true,
+  mocks: false,
   mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,

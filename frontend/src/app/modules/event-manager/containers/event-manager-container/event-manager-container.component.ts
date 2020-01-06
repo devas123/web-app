@@ -3,8 +3,8 @@ import {combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
-import {eventManagerBreadcrumbClear, eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
-import {BreadCrumbItem, eventManagerGetBreadcrumb, eventManagerGetHeaderDescription, eventManagerGetSocketConnected, HeaderDescription, MenuItem} from '../../redux/event-manager-reducers';
+import {eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
+import {eventManagerGetHeaderDescription, eventManagerGetSocketConnected, HeaderDescription, MenuItem} from '../../redux/event-manager-reducers';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {EventManagerService} from '../../event-manager.service';
@@ -42,7 +42,6 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
 
   socketConnected$: Observable<boolean>;
 
-  breadcrumb$: Observable<BreadCrumbItem[]>;
   menu$: Observable<MenuItem[]>;
   header$: Observable<HeaderDescription>;
   shrinkMainContent$: Observable<boolean>;
@@ -53,10 +52,6 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
   constructor(store: Store<AppState>, private location: Location,
               private router: Router, private eventManagerService: EventManagerService, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Event Manager',
-        level: 0
-      },
       menu: []
     }, menuService);
     this.routerSubscription.add(this.store.pipe(
@@ -64,7 +59,6 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
       filter(user => !!user),
       map((user: Account) => loadMyCompetitions(user.userId))).subscribe(store));
     this.socketConnected$ = this.store.pipe(select(eventManagerGetSocketConnected));
-    this.breadcrumb$ = this.store.pipe(select(eventManagerGetBreadcrumb));
     this.menu$ = menuService.menu$;
     this.header$ = this.store.pipe(select(eventManagerGetHeaderDescription));
     this.displayAsSidebar$ = menuService.displaySidebar$;
@@ -86,7 +80,6 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
       this.routerSubscription.unsubscribe();
     }
     this.store.dispatch(eventManagerDisconnectSocket);
-    this.store.dispatch(eventManagerBreadcrumbClear);
   }
 
 }

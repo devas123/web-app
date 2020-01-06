@@ -3,10 +3,11 @@ import {AppState} from '../../../../reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {Fight} from '../../../../commons/model/competition.model';
+import {Category, Fight} from '../../../../commons/model/competition.model';
 import {dashboardGetSelectedPeriodSelectedMatFights, dashboardGetSelectedPeriodSelectedMatSelectedFight} from '../../redux/dashboard-reducers';
-import {map} from 'rxjs/operators';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
 import {dashboardFightSelected, dashboardFightUnselected} from '../../redux/dashboard-actions';
+import {eventManagerGetSelectedEventCategory} from '../../redux/event-manager-reducers';
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
@@ -19,6 +20,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
   matFights$: Observable<Fight[]>;
 
   selectedFight$: Observable<Fight>;
+  fightCategory$: Observable<Category>;
 
   urlProvidedFightId$: Observable<string>;
 
@@ -30,7 +32,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
       map(fightId => {
         if (fightId) {
           return dashboardFightSelected(fightId);
-        }  else {
+        } else {
           return dashboardFightUnselected;
         }
       })
@@ -41,8 +43,15 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
     );
 
     this.selectedFight$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatSelectedFight)
+      select(dashboardGetSelectedPeriodSelectedMatSelectedFight),
     );
+
+    this.fightCategory$ = this.selectedFight$.pipe(
+      filter(f => !!f),
+      mergeMap(fight => this.store.pipe(
+        select(eventManagerGetSelectedEventCategory, {id: fight.categoryId}))
+      ),
+      tap(cat => console.log(cat)));
   }
 
   selectFightForScoreboard(fightId: string) {

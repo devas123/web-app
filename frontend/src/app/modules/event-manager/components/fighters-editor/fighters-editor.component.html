@@ -3,8 +3,8 @@
     <a class="ui header link" (click)="gotoFighterProfile(fighter)">{{fighter?.firstName}} {{fighter?.lastName}}</a>
     <div class="description">Email: {{fighter?.email}}</div>
     <div class="description">Birth date: {{fighter?.birthDate | zdate:false}}</div>
-    <div class="description">Academy: {{fighter?.academy}}</div>
-    <div class="description">Category: {{getCategoryName(fighter?.categoryId)}}</div>
+    <div class="description">Academy: {{fighter?.academy?.name}}</div>
+    <div *ngFor="let cat of fighter?.categories" class="description">Category: {{getCategoryName(cat)}}</div>
     <div class="description">Registration status: {{fighter?.registrationStatus}}</div>
     <div class="action_buttons">
       <div class="ui icon button" (click)="gotoFighterProfile(fighter)">

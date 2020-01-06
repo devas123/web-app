@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  BreadCrumbItem,
   eventManagerGetSelectedEvent,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,

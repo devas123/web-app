@@ -4,6 +4,7 @@ import {MyEventsComponent} from './containers/my-events/my-events.component';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {MyEventsListComponent} from './components/my-events-list/my-events-list.component';
 import {
+  SuiCheckboxModule,
   SuiCollapseModule,
   SuiDatepickerModule,
   SuiDimmerModule,
@@ -62,7 +63,6 @@ import {MatDisplayComponent} from './components/mats-overview-component/mat-disp
 import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
-import {BreadcrumbComponent} from './containers/event-manager-container/breadcrumb.component';
 import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
 import {FlexibleColumnDirective} from './containers/event-manager-container/flexible.column.directive';
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
@@ -91,6 +91,7 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
     SuiPopupModule,
     SuiSidebarModule,
     SuiCollapseModule,
+    SuiCheckboxModule,
     EventManagerRouterModule,
     SuiPaginationModule,
     SuiMessageModule,
@@ -110,7 +111,6 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,
-    BreadcrumbComponent,
     RegistrationGroupEditorComponent,
     RegistrationInfoEditorContainerComponent,
     RegistrationInfoEditorComponent,

@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
 import {Mat} from '../../redux/dashboard-reducers';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-mat-display',
@@ -37,7 +36,7 @@ export class MatDisplayComponent implements OnInit {
   competitorClicked = new EventEmitter<Competitor>();
 
   @Output()
-  fightMatChanged = new EventEmitter<IDashboardFightScheduleChangedPayload>();
+  fightMatChanged = new EventEmitter<any>();
 
   constructor() {
   }
@@ -47,12 +46,13 @@ export class MatDisplayComponent implements OnInit {
 
   drop(event: CdkDragDrop<Fight[], any>, matId: string) {
     const fight = event.item.data as Fight;
+    const newOrderOnMat = event.container.data[event.currentIndex].numberOnMat;
     this.fightMatChanged.next({
       currentMatId: fight.matId,
       currentOrderOnMat: fight.numberOnMat,
       fightId: fight.id,
       newMatId: matId,
-      newOrderOnMat: fight.numberOnMat
+      newOrderOnMat,
     });
   }
 }

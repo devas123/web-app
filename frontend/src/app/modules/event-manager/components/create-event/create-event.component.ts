@@ -8,7 +8,6 @@ import {createCompetition} from '../../../../actions/actions';
 import {AppState, CompetitionProperties, RegistrationInfo, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
-import {BreadCrumbItem} from '../../redux/event-manager-reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
@@ -27,10 +26,6 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
 
   constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Create event',
-        level: 1
-      },
       menu: [
         {
           name: 'Return',

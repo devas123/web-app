@@ -1,11 +1,13 @@
 export interface Weight {
   id: string;
+  name: string;
   maxValue: number;
   minValue: number;
 }
 
 export interface AgeDivision {
   id: string;
+  name: string;
   minimalAge: number;
   maximalAge: number;
 }
@@ -39,8 +41,8 @@ export interface Competitor {
   firstName: string;
   lastName: string;
   birthDate: Date;
-  academy: string;
-  categoryId: string;
+  academy: Academy;
+  categories: string[];
   competitionId: string;
   registrationStatus: string;
   promo: string;
@@ -79,6 +81,7 @@ export interface Fight {
   numberOnMat: number;
   priority: number;
   period: string;
+  startTime: Date;
 }
 
 export interface Academy {

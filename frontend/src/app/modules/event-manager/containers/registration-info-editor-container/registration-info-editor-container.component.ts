@@ -3,7 +3,8 @@ import {AppState, RegistrationInfo} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {
-  BreadCrumbItem, eventManagerGetSelectedEventAvailableRegistrationGroups, eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventAvailableRegistrationGroups,
+  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventRegistrationInfo,
@@ -11,11 +12,11 @@ import {
   HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {
-  eventManagerAddRegistrationGroups,
   eventManagerAddRegistrationPeriod,
+  eventManagerCreateRegistrationGroup,
   eventManagerDeleteRegistrationGroup,
   eventManagerDeleteRegistrationPeriod,
-  eventManagerRegistrationInfoUpdated
+  eventManagerUpdateRegistrationInfo
 } from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
@@ -49,10 +50,6 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
           header: 'Registration Info',
           subheader: name
         }))),
-      breadCrumbItem: <BreadCrumbItem>{
-        name: 'Reg. Info',
-        level: 2
-      },
       menu: [
         {
           name: 'Return',
@@ -63,6 +60,10 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
           action: () => combineLatest([this.competitionId$, this.timeZone$]).pipe(
             filter(([competitionId, timezone]) => !!competitionId && !!timezone),
             take(1)).subscribe(([competitionId, timezone]) => this.openAddPeriodModal(competitionId, timezone))
+        },
+        {
+          name: 'Clear',
+          action: () => this.clearRegistrationInfo()
         }
       ]
     }, menuService);
@@ -108,7 +109,9 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   addRegistrationInfoGroups(data: IAddGroupResult) {
-    this.store.dispatch(eventManagerAddRegistrationGroups(data.competitionId, data.periodId, data.groups));
+    if (data.createNew) {
+      this.store.dispatch(eventManagerCreateRegistrationGroup(data.competitionId, data.periodId, data.groups[0]));
+    }
   }
 
   addRegistrationInfoPeriod(data: IAddPeriodResult) {
@@ -138,9 +141,24 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   registrationInfoUpdated(registrationInfo: RegistrationInfo, goback?: boolean) {
-    this.store.dispatch(eventManagerRegistrationInfoUpdated({registrationInfo}));
+    this.store.dispatch(eventManagerUpdateRegistrationInfo({registrationInfo, competitionId: registrationInfo.id}));
     if (goback) {
       this.goBack();
     }
+  }
+
+  private clearRegistrationInfo() {
+    this.competitionId$.pipe(
+      filter(id => !!id),
+      take(1),
+      map(competitionId => eventManagerUpdateRegistrationInfo({
+        registrationInfo: <RegistrationInfo>{
+          id: competitionId,
+          registrationGroups: [],
+          registrationOpen: false,
+          registrationPeriods: []
+        },
+        competitionId
+      }))).subscribe(this.store);
   }
 }

@@ -28,7 +28,7 @@ export class FightersEditorComponent implements OnInit {
   competitionId: string;
 
   @Input()
-  categoryId: string;
+  category: Category;
 
   @Input()
   fighters: Competitor[];
@@ -89,7 +89,10 @@ export class FightersEditorComponent implements OnInit {
   }
 
   selectPage(pageNumber: number) {
-    this.pageChanged.next({pageNumber, competitionId: this.competitionId, categoryId: this.categoryId});
+    if (this._pageNumber !== pageNumber) {
+      const categoryId = (this.category && this.category.id) || undefined;
+      this.pageChanged.next({pageNumber, competitionId: this.competitionId, categoryId});
+    }
   }
 
   gotoFighterProfile(fighter: Competitor) {

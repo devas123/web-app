@@ -14,12 +14,13 @@ import {
   eventManagerUpdateCompetitorCommand
 } from '../../redux/event-manager-actions';
 import {
-  BreadCrumbItem,
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId, eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryId,
-  eventManagerGetSelectedEventSelectedCompetitor, HeaderDescription
+  eventManagerGetSelectedEventSelectedCompetitor,
+  HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
@@ -81,12 +82,14 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
   ngOnInit() {
   }
 
-  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategory: string }) {
-    this.store.dispatch(eventManagerChangeCompetitorCategoryCommand(payload.fighter, payload.newCategory));
+  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategoryId: string }) {
+    const {fighter, newCategoryId} = payload;
+    this.store.dispatch(eventManagerChangeCompetitorCategoryCommand(fighter, newCategoryId, fighter.categories[0]));
   }
 
   sendChangeCompetitorCommand(payload: { fighter: Competitor }) {
-    this.store.dispatch(eventManagerUpdateCompetitorCommand(payload.fighter));
+    const {fighter} = payload;
+    fighter.categories.forEach(cat => this.store.dispatch(eventManagerUpdateCompetitorCommand(payload.fighter, cat)));
   }
 
   ngOnDestroy() {

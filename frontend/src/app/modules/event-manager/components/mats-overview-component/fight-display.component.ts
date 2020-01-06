@@ -6,9 +6,13 @@ import {Competitor, Fight} from '../../../../commons/model/competition.model';
   template: `
     <div class="fight-display-container" (click)="selectFight(fight?.id)">
       <div>
+        {{fight?.numberOnMat + 1}}
+        <p>{{ fight?.startTime | zdate:true:undefined:false }}</p>
+      </div>
+      <div>
         <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
           {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[0]?.competitor?.academy}}</div>
+          <div class="sub header">{{fight?.scores[0]?.competitor?.academy?.name}}</div>
         </div>
       </div>
       <div>
@@ -17,7 +21,7 @@ import {Competitor, Fight} from '../../../../commons/model/competition.model';
       <div>
         <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
           {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[1]?.competitor?.academy}}</div>
+          <div class="sub header">{{fight?.scores[1]?.competitor?.academy?.name}}</div>
         </div>
       </div>
     </div>`,

@@ -1,7 +1,5 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Academy, Category, CategoryState, Competitor, Fight} from '../../../commons/model/competition.model';
-import {CommonAction} from '../../../reducers';
-import {FightsEditorAction} from '../../event-manager/redux/event-manager-actions';
 
 export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
   selectId: (c: Competitor) => c.id,
@@ -20,7 +18,7 @@ export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Figh
 
 const getAgeDivisionName = (cat: Category) => {
   if (cat.ageDivision) {
-    return cat.ageDivision.id;
+    return cat.ageDivision.name;
   } else {
     return 'ALL AGES';
   }
@@ -28,7 +26,7 @@ const getAgeDivisionName = (cat: Category) => {
 
 const getWeightId = (cat: Category) => {
   if (cat.weight) {
-    return cat.weight.id;
+    return cat.weight.name;
   } else {
     return 'ALL WEIGHTS';
   }

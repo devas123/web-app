@@ -112,13 +112,13 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
       const createCategorySubscription = this.store.pipe(select(eventManagerGetSelectedEventId), map((competitionId: string) => {
         let cat = {
           ageDivision: {
-            id: this.ageDivisionId.value,
+            name: this.ageDivisionId.value,
             maximalAge: this.ageDivisionMaxAge.value,
             minimalAge: this.ageDivisionMinAge.value
           },
           gender: this.gender.value,
           weight: {
-            id: this.weightName.value,
+            name: this.weightName.value,
             minValue: this.weightMinValue.value,
             maxValue: this.weightMaxValue.value,
           },

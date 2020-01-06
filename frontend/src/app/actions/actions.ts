@@ -19,9 +19,9 @@ export const COMPETITION_DELETED = 'COMPETITION_DELETED';
 export const COMPETITION_PUBLISHED = 'COMPETITION_PUBLISHED';
 export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
 
-export const ERROR_OCCURRED = 'ERROR_EVENT';
+export const ERROR_EVENT = 'ERROR_EVENT';
 
-export const errorEvent = (text: string) => ({type: ERROR_OCCURRED, payload: text} as Action);
+export const errorEvent = (text: string) => ({type: ERROR_EVENT, payload: text} as Action);
 export const competitionsLoaded = (payload: CompetitionProperties[]) => ({type: COMPETITION_LIST_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
 export const competitionSelected = (competitionId: string) => ({type: COMPETITION_SELECTED, payload: competitionId});

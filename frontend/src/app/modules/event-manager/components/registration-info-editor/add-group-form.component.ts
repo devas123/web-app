@@ -20,6 +20,7 @@ export interface IAddGroupContext {
 }
 
 export interface IAddGroupResult {
+  createNew: boolean;
   competitionId: string;
   periodId: string;
   groups: RegistrationGroup[];
@@ -62,6 +63,9 @@ export interface IAddGroupResult {
           Registration Fee:
           <input class="ui input" type="number" formControlName="registrationFee">
         </label>
+        <sui-checkbox formControlName="defaultGroup">
+          default?
+        </sui-checkbox>
       </form>
     </div>
     <div class="actions">
@@ -81,14 +85,17 @@ export class AddGroupFormComponent implements OnInit {
   addGroup() {
     const group = this.groupForm.value as RegistrationGroup;
     let groups = [];
+    let createNew = false;
     if (this.groupsToAdd && this.groupsToAdd.length > 0) {
       groups = this.groupsToAdd;
     } else if (group.displayName && group.registrationFee) {
       group.id = '';
+      group.registrationInfoId = this.modal.context.competitionId;
       groups = [group];
+      createNew = true;
     }
     if (groups && groups.length > 0) {
-      this.modal.approve({competitionId: this.modal.context.competitionId, periodId: this.modal.context.periodId, groups});
+      this.modal.approve({competitionId: this.modal.context.competitionId, periodId: this.modal.context.periodId, groups, createNew});
     } else {
       this.modal.deny(undefined);
     }
@@ -102,7 +109,8 @@ export class AddGroupFormComponent implements OnInit {
   ngOnInit() {
     this.groupForm = this.fb.group({
       displayName: [''],
-      registrationFee: ['']
+      registrationFee: [''],
+      defaultGroup: [false]
     });
   }
 

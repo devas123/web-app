@@ -1,5 +1,5 @@
 import {COMPETITION_LIST_LOADED} from '../actions/actions';
-import {Action, ActionReducer, ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
+import {Action, ActionReducer, ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -23,10 +23,13 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
+import * as fromRouter from '@ngrx/router-store';
+
 
 export interface AppState {
   events: EventPropsEntities;
   accountState: AccountState;
+  router: fromRouter.RouterReducerState<any>;
 }
 
 export interface CommonAction extends Action {
@@ -89,7 +92,6 @@ export interface RegistrationPeriod {
   start: string;
   end: string;
   competitionId: string;
-  registrationInfoId: string;
   registrationGroupIds: string[];
 }
 
@@ -97,6 +99,7 @@ export interface RegistrationInfo {
   registrationPeriods: RegistrationPeriod[];
   registrationGroups: RegistrationGroup[];
   registrationOpen: boolean;
+  id: string;
 }
 
 export interface CompetitionProperties {
@@ -168,6 +171,7 @@ export function competitionList(state: EventPropsEntities = competitionPropertie
 export const reducers: ActionReducerMap<AppState> = {
   events: competitionList,
   accountState: accountStateReducer,
+  router: fromRouter.routerReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
@@ -182,6 +186,15 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
+
+
+export const selectRouter = createFeatureSelector<AppState,
+  fromRouter.RouterReducerState<any>>('router');
+
+const {
+  selectUrl          // select the current url
+} = fromRouter.getSelectors(selectRouter);
+export const getCurrentUrl = selectUrl;
 
 export const selectCompetitionListState = (state: AppState) => (state && state.events) || competitionPropertiesEntitiesInitialState;
 export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);

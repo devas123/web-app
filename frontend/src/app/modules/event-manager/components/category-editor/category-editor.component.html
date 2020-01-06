@@ -7,7 +7,7 @@
       <!--<div class="ui button" (click)="deleteEvent(event)">Delete</div>-->
       <!--</div>-->
       <a class="ui header link" routerLink="{{getCategoryId(category)}}">{{category?.gender}}
-        /{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</a>
+        /{{category?.ageDivision?.name}}/{{category?.beltType}}/{{category?.weight?.name}}</a>
       <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
       <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
       <div class="description">Fights: {{category?.fightsNumber || 0}}</div>

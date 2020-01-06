@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {AppState, CommonAction} from '../../../../reducers';
@@ -17,8 +17,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
   @Input()
   collapsed = false;
-  @Input()
-  header = false;
+
   form: FormGroup;
   @Input()
   categories: Category[];
@@ -40,7 +39,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
   static getAgeDivisionName(cat: Category) {
     if (cat.ageDivision) {
-      return cat.ageDivision.id;
+      return cat.ageDivision.name;
     } else {
       return 'ALL AGES';
     }
@@ -48,7 +47,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
   static getWeightId(cat: Category) {
     if (cat.weight) {
-      return cat.weight.id;
+      return cat.weight.name;
     } else {
       return 'ALL WEIGHTS';
     }
@@ -139,23 +138,24 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
 
   submitForm() {
+    const categoryId = this.category.value.id;
     const competitor = {
       id: '',
       email: this.email.value,
       userId: this.userId.value,
       academy: this.academy.value,
       birthDate: this.birthDate.value,
-      categoryId: this.category.value,
+      categories: [categoryId],
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       promo: this.promo.value,
       registrationStatus: this.registrationStatus.value,
       competitionId: this.competitionId.value
-    };
-    this.fighterAdded.next(addCompetitor(this.competitionId.value, competitor));
+    } as Competitor;
+    this.fighterAdded.next(addCompetitor(this.competitionId.value, categoryId, competitor));
     this.form.reset({
       competitionId: competitor.competitionId,
-      category: competitor.categoryId
+      category: categoryId
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();

@@ -13,7 +13,7 @@ import {Category, CategoryState} from '../../../../commons/model/competition.mod
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCategory, eventManagerAddCategory} from '../../redux/event-manager-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
-import {filter, map, mergeAll, mergeMap, take} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
 import {ISelectCategoriesResult, SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
