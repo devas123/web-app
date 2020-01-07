@@ -38,8 +38,6 @@ export class MatsOverviewComponentComponent implements OnInit {
     this.competitorClicked.next(competitor);
   }
 
-  matName = (matId: string) => 'Mat ' + (this.mats.map(mat => mat.matId).indexOf(matId) + 1);
-
   ngOnInit() {
   }
 

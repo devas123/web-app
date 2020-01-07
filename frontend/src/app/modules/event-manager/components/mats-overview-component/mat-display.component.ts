@@ -9,7 +9,7 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
     <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Mat view</button>
     <div class="header">{{title}}</div>
     <div class="ui middle aligned list" cdkDropList [cdkDropListData]="mat?.topFiveFights"
-         (cdkDropListDropped)="drop($event, mat?.matId)">
+         (cdkDropListDropped)="drop($event, mat?.matDescription?.id)">
       <a class="item draggable" *ngFor="let fight of mat?.topFiveFights" cdkDrag [cdkDragData]="fight">
         <div class="content">
           <app-fight-display [fight]="fight"

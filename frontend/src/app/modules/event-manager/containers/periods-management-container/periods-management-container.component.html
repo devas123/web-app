@@ -17,7 +17,7 @@
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
         <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
-        <div class="meta">{{period?.matIds?.length + ' mats'}}</div>
+        <div class="meta">{{period?.mats?.length + ' mats'}}</div>
       </div>
     </div>
   </div>
