@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
+import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getWeightId} from '../../../competition/reducers';
 
 
 @Component({
@@ -51,13 +52,9 @@ export class CategoryEditorComponent implements OnInit {
   searchFilter = (options: Category[], filter: string) => {
     let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
-    const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
     filterParts.forEach((value) => {
-      filteredOptions = filteredOptions.filter(cat => {
-        return cat.id
-          && (hasAny(cat.weight.name, value) || hasAny(cat.ageDivision.name, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
-      });
+      filteredOptions = filteredOptions.filter(categoryFilter(value));
     });
 
     return filteredOptions;

@@ -6,6 +6,7 @@ import {AppState, CommonAction} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {addCompetitor} from '../../redux/event-manager-actions';
+import {displayCategory} from '../../../competition/reducers';
 
 @Component({
   selector: 'app-add-fighter',
@@ -31,27 +32,10 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
 
   static displayCategory(cat: Category) {
-    if (!!cat) {
-      return `${cat.gender}/${AddFighterComponent.getAgeDivisionName(cat)}/${cat.beltType}/${AddFighterComponent.getWeightId(cat)}`;
-    }
-    return '';
+    return displayCategory(cat);
   }
 
-  static getAgeDivisionName(cat: Category) {
-    if (cat.ageDivision) {
-      return cat.ageDivision.name;
-    } else {
-      return 'ALL AGES';
-    }
-  }
 
-  static getWeightId(cat: Category) {
-    if (cat.weight) {
-      return cat.weight.name;
-    } else {
-      return 'ALL WEIGHTS';
-    }
-  }
 
   optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
@@ -132,10 +116,6 @@ export class AddFighterComponent implements OnInit, OnDestroy {
     });
     this.compIdSubscription = this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(competitionId => this.form.patchValue({competitionId}));
   }
-
-  displayErrors() {
-  }
-
 
   submitForm() {
     const categoryId = this.category.value.id;

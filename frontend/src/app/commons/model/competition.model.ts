@@ -1,17 +1,3 @@
-export interface Weight {
-  id: string;
-  name: string;
-  maxValue: number;
-  minValue: number;
-}
-
-export interface AgeDivision {
-  id: string;
-  name: string;
-  minimalAge: number;
-  maximalAge: number;
-}
-
 export interface Period {
   id: string;
   name: string;
@@ -91,12 +77,19 @@ export interface Academy {
   created: number;
 }
 
-export interface Category {
-  ageDivision: AgeDivision;
+export interface CategoryRestriction {
   id: string;
-  gender: string;
-  weight: Weight;
-  beltType: string;
+  name: string;
+  type: string;
+  minValue: string;
+  maxValue: string;
+  unit: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  restrictions: CategoryRestriction[];
   fightDuration: number;
   numberOfCompetitors: number;
   fightsNumber: number;

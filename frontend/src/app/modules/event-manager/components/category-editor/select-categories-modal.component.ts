@@ -4,7 +4,8 @@ import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {Category} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
-import {filter, map, take, tap, toArray} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
+import {categoryFilter} from '../../../competition/reducers';
 
 export interface ISelecetDefaultCategoriesContext {
   defaultCategories: Observable<Category[]>;
@@ -75,7 +76,7 @@ export class SelectCategoriesModalComponent implements OnInit {
       take(1),
       map(c => c.filter(cat => {
         const filterParts = query.split(/\W/);
-        return filterParts.map((value) => cat.id && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value)))
+        return filterParts.map((value) => categoryFilter(value)(cat))
           .reduce((previousValue, currentValue) => previousValue || currentValue);
       }))).toPromise();
   };
