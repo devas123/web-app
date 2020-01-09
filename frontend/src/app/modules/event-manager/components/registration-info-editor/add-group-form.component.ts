@@ -103,7 +103,7 @@ export class AddGroupFormComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private modal: SuiModal<IAddGroupContext, IAddGroupResult, void>) {
+  constructor(private fb: FormBuilder, public modal: SuiModal<IAddGroupContext, IAddGroupResult, void>) {
   }
 
   ngOnInit() {

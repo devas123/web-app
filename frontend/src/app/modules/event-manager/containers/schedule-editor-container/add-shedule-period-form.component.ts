@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {RegistrationPeriod} from '../../../../reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {InfoService} from '../../../../service/info.service';
@@ -107,7 +106,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private modal: SuiModal<IAddSchedulePeriodContext, IAddSchedulePeriodResult, void>) {
+  constructor(private fb: FormBuilder, public modal: SuiModal<IAddSchedulePeriodContext, IAddSchedulePeriodResult, void>) {
   }
 
   ngOnInit() {

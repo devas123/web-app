@@ -74,7 +74,7 @@ export class AddPeriodFormComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private modal: SuiModal<IAddPeriodContext, IAddPeriodResult, void>) {
+  constructor(private fb: FormBuilder, public modal: SuiModal<IAddPeriodContext, IAddPeriodResult, void>) {
   }
 
   ngOnInit() {

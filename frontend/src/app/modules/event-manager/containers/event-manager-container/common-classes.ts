@@ -54,10 +54,10 @@ export interface ComponentCommonMetadataProvider {
 }
 
 export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEntryComponent {
-  protected competitionName$: Observable<string>;
-  protected competitionId$: Observable<string>;
-  protected categories$: Observable<Category[]>;
-  protected timeZone$: Observable<string>;
+  competitionName$: Observable<string>;
+  competitionId$: Observable<string>;
+  categories$: Observable<Category[]>;
+  timeZone$: Observable<string>;
 
   protected constructor(store: Store<AppState>, metadataProvider: ComponentCommonMetadataProvider, menuService: MenuService) {
     super(store, metadataProvider, menuService);

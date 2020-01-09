@@ -64,7 +64,7 @@ export class SelectCategoriesModal extends ComponentModalConfig<ISelecetDefaultC
 })
 export class SelectCategoriesModalComponent implements OnInit {
 
-  private categoriesToAdd: Category[];
+  categoriesToAdd: Category[];
 
   setCategoriesToAdd(categories: Category[]) {
     this.categoriesToAdd = categories;
@@ -91,7 +91,7 @@ export class SelectCategoriesModalComponent implements OnInit {
   }
 
 
-  constructor(private modal: SuiModal<ISelecetDefaultCategoriesContext, ISelectCategoriesResult, void>) {
+  constructor(public modal: SuiModal<ISelecetDefaultCategoriesContext, ISelectCategoriesResult, void>) {
   }
 
   ngOnInit() {

@@ -72,9 +72,9 @@ export class FightsEditorComponent {
 
   _changeFights: Fight[] = [];
 // all the changes the user made in the wizard
-  private changes = <any>[];
+  changes = <any>[];
 // the inverse of all the changes made in the wizard
-  private inverseChanges = <any>[];
+  inverseChanges = <any>[];
 
   private changeId = null;
 

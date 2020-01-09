@@ -11,7 +11,7 @@ import produce from 'immer';
 })
 export class RegistrationInfoEditorComponent implements OnInit {
 
-  private ngStyle = {'grid-template-columns': 'repeat(2, 50%)'};
+  ngStyle = {'grid-template-columns': 'repeat(2, 50%)'};
 
   @Input()
   set colunmsNumber(value: number) {
