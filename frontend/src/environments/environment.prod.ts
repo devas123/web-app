@@ -1,5 +1,6 @@
 export const urls = {
   commandsEndpoint: '/competitions/api/v1/command',
+  commandsSyncEndpoint: '/competitions/api/v1/commandsync',
   competitionQueryEndpoint: '/query/api/v1/competition',
   competitorQueryEndpoint: '/query/api/v1/competitor',
   competitorEdpoint: '/competitions/api/v1/store/competitor',
