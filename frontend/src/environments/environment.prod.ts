@@ -25,3 +25,22 @@ export const environment = {
   webSocketUrl: `/query/api/v1/sockjs/competition`,
   ...urls
 };
+
+const comprops = '/jsserver/competition';
+
+export const mocks = {
+  commandsEndpoint: '/jsserver/command',
+  commandsSyncEndpoint: '/jsserver/commandsync',
+  competitionQueryEndpoint: comprops,
+  competitorQueryEndpoint: '/jsserver/competitor',
+  competitorEdpoint: '/jsserver/competitor',
+  scheduleEndpoint: '/jsserver/schedule',
+  categoriesEndpoint: '/jsserver/categories',
+  competitorsEndpoint: '/jsserver/competitors',
+  defaultCategories: '/jsserver/defaultcategories',
+  compProperties: comprops,
+  categoryState: '/jsserver/categorystate',
+  dashboardState: '/jsserver/dashboardstate',
+  mats: '/jsserver/mats',
+  matFights: '/jsserver/matfights'
+};
