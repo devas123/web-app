@@ -6,9 +6,10 @@ import {EventCardComponent} from '../event-card/event-card.component';
 import {SuiModule} from 'ng2-semantic'
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
 
 describe('EventCalendarComponent', () => {
   let component: EventCalendarComponent;
@@ -19,7 +20,7 @@ describe('EventCalendarComponent', () => {
       declarations: [ EventCalendarComponent, EventListComponent, EventCardComponent ],
       imports: [SuiModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -30,8 +31,10 @@ describe('EventCalendarComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       })]
     })

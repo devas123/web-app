@@ -5,9 +5,10 @@ import {AvatarModule} from 'ngx-avatar';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../reducers';
-import {eventManagerReducers} from '../../modules/event-manager/redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../modules/event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../modules/account/flux/account.state';
 import {periodsInitialState} from '../../modules/event-manager/redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
 
 describe('MainMenuComponent', () => {
   let component: MainMenuComponent;
@@ -18,7 +19,7 @@ describe('MainMenuComponent', () => {
       declarations: [MainMenuComponent],
       imports: [AvatarModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -29,8 +30,10 @@ describe('MainMenuComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       })]
     })

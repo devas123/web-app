@@ -6,9 +6,10 @@ import {CompetitionDivisionsComponent} from '../../components/competition-main-i
 import {CompetitionDescriptionComponent} from '../../components/competition-main-info/competition-description/competition-description.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
 
 describe('CompetitionInfoComponent', () => {
   let component: CompetitionInfoComponent;
@@ -19,7 +20,7 @@ describe('CompetitionInfoComponent', () => {
       declarations: [ CompetitionInfoComponent, CompetitionMainInfoComponent, CompetitionDivisionsComponent, CompetitionDescriptionComponent ],
       imports: [StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -30,8 +31,10 @@ describe('CompetitionInfoComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       })]
     })

@@ -14,7 +14,7 @@ import {eventManagerFightsEditorChangeAdded, eventManagerFightsForChangeUnselect
 @Component({
   selector: `app-fights-editor-container`,
   template: `
-      <app-fights-editor [changeFights]="changeFights$ | async" [change]="change$ | async" [changeIds]="changeIds$ | async" 
+      <app-fights-editor [changeFights]="changeFights$ | async" [change]="change$ | async" [changeIds]="changeIds$ | async"
                          (changeSaved)="dispatchChangeSavedEvent($event)"
       (fightSelectionCleared)="dipatchFightsSelectionClearedEvent()"></app-fights-editor>`,
 })

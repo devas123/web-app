@@ -9,9 +9,10 @@ import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientModule} from '@angular/common/http';
-import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
 
 describe('AuthorizationComponent', () => {
   let component: AuthorizationComponent;
@@ -22,7 +23,7 @@ describe('AuthorizationComponent', () => {
       declarations: [ AuthorizationComponent, SignInComponent, SignUpComponent ],
       imports: [SuiTransitionModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -33,8 +34,10 @@ describe('AuthorizationComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       }), RouterTestingModule, HttpClientModule]
     })
