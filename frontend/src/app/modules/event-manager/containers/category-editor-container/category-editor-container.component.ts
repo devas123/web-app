@@ -1,19 +1,19 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventDefaultCategories,
+  eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategoryState,
   HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {Category, CategoryState} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {deleteCategory, eventManagerAddCategory} from '../../redux/event-manager-actions';
+import {deleteCategory, eventManagerAddCategory, eventManagerSetCategoryRegistrationStatus} from '../../redux/event-manager-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
 import {ISelectCategoriesResult, SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -38,7 +38,8 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
                                (createCustomCategoryClicked)="addCategory()"
                                (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
                                (deleteCategoryEvent)="doDeleteCategory($event)"
-                               (generateRandomFightersEvent)="generateRandomFighters($event)"></app-category-editor>
+                               (generateRandomFightersEvent)="generateRandomFighters($event)"
+          (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>
       </div> `
 })
 export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
@@ -109,7 +110,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   addCategory() {
-    this.router.navigate(['create'], {relativeTo: this.route});
+    this.router.navigate(['create'], {relativeTo: this.route}).catch(console.error);
   }
 
   doDeleteCategory({category, competitionId}) {
@@ -125,5 +126,9 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
 
   generateRandomFighters(event: any) {
     this.store.dispatch(event);
+  }
+
+  toggleRegistrationStatus(event: { categoryId: string; newStatus: boolean }) {
+    of(event).pipe(withLatestFrom(this.store.pipe(select(eventManagerGetSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({...e, competitionId})), take(1)).subscribe(this.store);
   }
 }

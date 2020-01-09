@@ -49,7 +49,7 @@ export interface CompScore {
 
 export interface Fight {
   id: string;
-  categoryId: string;
+  category: Category;
   parentId1: string;
   parentId2: string;
   winFight: string;
@@ -77,10 +77,16 @@ export interface Academy {
   created: number;
 }
 
+export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
+
+export const restrictionTypes: RestrictionType[] = [
+  'AGE', 'SKILL', 'WEIGHT', 'GENDER', 'SPORTS'
+];
+
 export interface CategoryRestriction {
   id: string;
   name: string;
-  type: string;
+  type: RestrictionType;
   minValue: string;
   maxValue: string;
   unit: string;
@@ -93,6 +99,7 @@ export interface Category {
   fightDuration: number;
   numberOfCompetitors: number;
   fightsNumber: number;
+  registrationOpen: boolean;
 }
 
 export interface CategoryState {

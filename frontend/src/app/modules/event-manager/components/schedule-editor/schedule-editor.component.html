@@ -13,7 +13,7 @@
                    [cdkDragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.id)">
                   <i class="circular users icon"></i>
                   <div class="content">
-                    <div class="header">{{categoryName(cat)}}</div>
+                    <div class="header" [innerHTML]="categoryName(cat)"></div>
                   </div>
                 </a>
               </div>

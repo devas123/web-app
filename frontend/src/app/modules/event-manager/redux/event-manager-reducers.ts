@@ -413,20 +413,23 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_CATEGORIES_LOADED: {
       const competitionId = action.competitionId;
       const categoriesRaw = action.payload as any[];
-      const categories = categoriesRaw.map(rwc => ({
-        id: rwc.id,
-        ...rwc.category,
-        fightsNumber: rwc.fightsNumber,
-        numberOfCompetitors: rwc.numberOfCompetitors
-      } as Category));
-      if (competitionId === state.selectedEventId) {
-        return {
-          ...state,
-          selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
-        };
-      } else {
-        return state;
+      if (categoriesRaw) {
+        const categories = categoriesRaw.map(rwc => ({
+          id: rwc.id,
+          ...rwc.category,
+          fightsNumber: rwc.fightsNumber,
+          numberOfCompetitors: rwc.numberOfCompetitors
+        } as Category));
+        if (competitionId === state.selectedEventId) {
+          return {
+            ...state,
+            selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
+          };
+        } else {
+          return state;
+        }
       }
+      return state;
     }
     case EVENT_MANAGER_COMPETITION_SELECTED: {
       const newState = {

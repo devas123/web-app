@@ -6,6 +6,7 @@ $background_color: #2b3035;
 $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
+$item_color: #162830;
 
 /* Animate items as they're being sorted. */
 .cdk-drop-list-dragging .cdk-drag {
@@ -97,6 +98,13 @@ input {
 
 .ui.selection.dropdown {
   background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.cell_item {
+  background-color: $item_color;
+  border-radius: 3px;
+  padding: 1em 0;
 }
 
 input:-webkit-autofill,

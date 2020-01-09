@@ -22,7 +22,7 @@
       <div class="field"
            [ngClass]="{error: name.invalid && (name.touched || name.dirty)}">
         <div class="ui input">
-          <input type="text" name="gender" placeholder="Name" formControlName="name"
+          <input type="text" name="name" placeholder="Name*" formControlName="name"
                  required>
         </div>
       </div>
@@ -34,43 +34,70 @@
                  required>
         </div>
       </div>
+      <div class="field">
+        <sui-checkbox (checkChange)="setRegistrationOpen($event)" formControlName="registrationOpen" tabindex="0">
+          This category is open to registration
+        </sui-checkbox>
+      </div>
     </div>
     <div class="ui stacked segment" formArrayName="restrictions" *ngIf="step === 1">
       <div class="ui teal ribbon label">Restrictions</div>
       <p></p>
       <button class="ui button" (click)="addRestriction()">Add restriction</button>
       <p></p>
-      <div *ngFor="let restriction of restrictions.controls; let i=index" [formGroupName]="i">
-        <!-- The repeated alias template -->
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="type" placeholder="Type*" formControlName="type"
-                   required>
+      <sui-accordion [closeOthers]="true">
+        <sui-accordion-panel [isOpen]="i === restrictions.controls.length - 1"
+                             *ngFor="let restriction of restrictions.controls; let i=index" [formGroupName]="i">
+          <div title>
+            <div class="span_title">
+              <span>{{restrictionType(i)}} Restriction ({{restrictionName(i)}})</span>
+              <div class="right_floated" (click)="removeRestriction(i)">
+                <a>
+                  <i class="close icon"></i>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="name" placeholder="Name*" formControlName="name"
-                   required>
+          <div content>
+            <div class="field">
+              <div class="ui input">
+                <sui-select class="selection" placeholder="Type"
+                            (selectedOptionChange)="setType(i, $event)"
+                            [options]="types"
+                            [isSearchable]="false"
+                            [isDisabled]="false"
+
+                            #select>
+                  <sui-select-option *ngFor="let option of select.filteredOptions"
+                                     [value]="option">
+                  </sui-select-option>
+                </sui-select>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="name" placeholder="Name*" formControlName="name"
+                       required>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="minvalue" placeholder="Minimum value" formControlName="minValue">
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="maxvalue" placeholder="Maximum value" formControlName="maxValue">
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui input">
+                <input type="text" name="unit" placeholder="Units" formControlName="unit">
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="minvalue" placeholder="Minimum value" formControlName="minValue">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="maxvalue" placeholder="Maximum value" formControlName="maxValue">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="unit" placeholder="Units" formControlName="unit">
-          </div>
-        </div>
-        <p></p>
-      </div>
+        </sui-accordion-panel>
+      </sui-accordion>
     </div>
 
     <div class="ui button" [ngClass]="{disabled: step <= 0}" (click)="previousStep()">
@@ -79,7 +106,7 @@
     <div class="ui button" [ngClass]="{disabled: step >= 1}" (click)="nextStep()">
       Next
     </div>
-    <div class="ui submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
+    <div class="ui submit button" [ngClass]="{disabled: form.invalid || !form.touched}" (click)="submitForm()">
       Create
     </div>
   </form>

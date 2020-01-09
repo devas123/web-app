@@ -1,8 +1,7 @@
 <div class="ui container">
-  <div class="ui middle aligned divided list" *ngIf="!(selectedFight$ | async)">
+  <div class="ui middle aligned relaxed list" *ngIf="!(selectedFight$ | async)">
     <a class="item" *ngFor="let fight of matFights$ | async">
-      <i class="circular users icon"></i>
-      <div class="content">
+      <div class="content cell_item">
         <app-fight-display [fight]="fight"
                            (fightClicked)="selectFightForScoreboard($event)"></app-fight-display>
       </div>

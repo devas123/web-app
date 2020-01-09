@@ -15,3 +15,16 @@
 .ui.form .field.field input:-webkit-autofill {
   background: inherit;
 }
+
+.selection {
+  width: 100% !important;
+}
+
+.span_title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  .right_floated {
+    align-self: flex-end;
+  }
+}

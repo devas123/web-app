@@ -6,14 +6,14 @@ import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
 import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, RestrictionType, restrictionTypes} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
-  styleUrls: ['./create-category.component.css'],
+  styleUrls: ['./create-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
@@ -21,6 +21,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
   form: FormGroup;
 
   step = 0;
+  types: RestrictionType[] = restrictionTypes;
 
   constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -50,6 +51,19 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     return this.form.get('name');
   }
 
+  get registrationOpen() {
+    return this.form.get('registrationOpen');
+  }
+
+  restrictionType(i: number) {
+    return this.restrictions.controls[i].get('type').value;
+  }
+
+  restrictionName(i: number) {
+    return this.restrictions.controls[i].get('name').value || 'Unnamed';
+  }
+
+
   addRestriction() {
     this.restrictions.push(this.fb.group({
         name: [],
@@ -65,6 +79,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     this.form = this.fb.group({
       name: [],
       fightDuration: [],
+      registrationOpen: [true],
       restrictions: this.fb.array([
         this.fb.group({
           name: [],
@@ -103,5 +118,19 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
         createCategorySubscription.unsubscribe();
       });
     }
+  }
+
+  removeRestriction(i: number) {
+    this.restrictions.removeAt(i);
+  }
+
+  setType(i: number, $event: RestrictionType) {
+    this.restrictions.at(i).patchValue({
+      type: $event
+    });
+  }
+
+  setRegistrationOpen(event: boolean) {
+    this.registrationOpen.patchValue(event);
   }
 }

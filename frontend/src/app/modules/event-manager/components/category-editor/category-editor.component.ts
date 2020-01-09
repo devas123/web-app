@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryState} from '../../../../commons/model/competition.model';
+import {Category, CategoryState, RestrictionType} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
-import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getWeightId} from '../../../competition/reducers';
+import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../../competition/reducers';
+import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 
 
 @Component({
@@ -12,24 +13,6 @@ import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getWeightId}
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryEditorComponent implements OnInit {
-
-  _allDefaultCategories: Category[];
-  filteredCategories: Category[];
-
-  searchStr: string;
-
-  @Output()
-  createCustomCategoryClicked = new EventEmitter<string>();
-  @Output()
-  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
-  @Output()
-  generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
-
-  @Input()
-  selectedCategoryState: CategoryState;
-
-  @Input()
-  competition: CompetitionProperties;
 
   @Input()
   set searchString(value: string) {
@@ -42,23 +25,6 @@ export class CategoryEditorComponent implements OnInit {
       this.searchStr = null;
     }
   }
-
-  _defaultCategories: Category[];
-
-  _categories: Category[];
-
-  @Output()
-  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
-  searchFilter = (options: Category[], filter: string) => {
-    let filteredOptions = [...options];
-    const filterParts = filter.split(/\W/);
-
-    filterParts.forEach((value) => {
-      filteredOptions = filteredOptions.filter(categoryFilter(value));
-    });
-
-    return filteredOptions;
-  };
 
   constructor() {
   }
@@ -112,6 +78,57 @@ export class CategoryEditorComponent implements OnInit {
     }
   }
 
+  _allDefaultCategories: Category[];
+  filteredCategories: Category[];
+
+  searchStr: string;
+
+  @Output()
+  createCustomCategoryClicked = new EventEmitter<string>();
+  @Output()
+  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
+  @Output()
+  generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
+  selectedCategoryState: CategoryState;
+
+  @Input()
+  competition: CompetitionProperties;
+
+  _defaultCategories: Category[];
+
+  _categories: Category[];
+
+  @Output()
+  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
+
+  @Output()
+  registrationStatusToggled = new EventEmitter<{categoryId: string, newStatus: boolean}>();
+
+  getCategoryGender = getGender;
+  getCategoryWeight = getWeightId;
+  getCategoryBelt = getBeltType;
+  getCategoryAge = getAgeDivisionName;
+  getCategoryRestrictionByType = getRestrictionByType;
+  displayCategory = AddFighterComponent.displayCategory;
+
+  getAgeMaxValue = getMaxValueInt('AGE');
+  getAgeMinValue = getMinValueInt('AGE');
+  getWeightMaxValue = getMaxValueInt('WEIGHT');
+  getWeightMinValue = getMinValueInt('WEIGHT');
+
+  searchFilter = (options: Category[], filter: string) => {
+    let filteredOptions = [...options];
+    const filterParts = filter.split(/\W/);
+
+    filterParts.forEach((value) => {
+      filteredOptions = filteredOptions.filter(categoryFilter(value));
+    });
+
+    return filteredOptions;
+  };
+
   ngOnInit() {
   }
 
@@ -130,7 +147,7 @@ export class CategoryEditorComponent implements OnInit {
     return category.id;
   }
 
-  // navigateBack() {
-  //   this.location.back();
-  // }
+  toggleRegistrationOpen(category: Category) {
+    this.registrationStatusToggled.next({categoryId: category.id, newStatus: !category.registrationOpen});
+  }
 }

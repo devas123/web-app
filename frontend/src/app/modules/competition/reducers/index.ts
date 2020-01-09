@@ -1,5 +1,5 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Academy, Category, CategoryRestriction, CategoryState, Competitor, Fight} from '../../../commons/model/competition.model';
+import {Academy, Category, CategoryRestriction, CategoryState, Competitor, Fight, RestrictionType} from '../../../commons/model/competition.model';
 
 export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
   selectId: (c: Competitor) => c.id,
@@ -27,7 +27,7 @@ const getRestrictionName = (res: CategoryRestriction, def = '') => {
   return def;
 };
 
-export const getRestrictionNameByType = (cat: Category, type: string, def = '') => {
+export const getRestrictionNameByType = (cat: Category, type: RestrictionType, def = '') => {
   if (cat.restrictions) {
     return getRestrictionName(cat.restrictions.find(r => r.type === type, def));
   } else {
@@ -35,24 +35,45 @@ export const getRestrictionNameByType = (cat: Category, type: string, def = '') 
   }
 };
 
-export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
+export const getMinValueInt = (type: RestrictionType) => (category: Category) => {
+  const rest = getRestrictionByType(category, type);
+  return rest && rest.minValue && parseInt(rest.minValue, 10);
+};
 
+export const getMaxValueInt = (type: RestrictionType) => (category: Category) => {
+  const rest = getRestrictionByType(category, type);
+  return rest && rest.maxValue && parseInt(rest.maxValue, 10);
+};
+
+export const getRestrictionByType = (cat: Category, type: RestrictionType) => {
+  if (cat && cat.restrictions) {
+    return cat.restrictions.find(r => r.type === type);
+  }
+};
+
+export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
 export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEIGHT', 'ALL WEIGHTS');
 export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
-export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'BELT', 'ALL BELTS');
+export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
 
-export const displayCategory = (cat: Category) => {
+export const displayCategory = (cat: Category, truncate = true) => {
   if (!cat) {
     return '';
   }
-  return `${getGender(cat)}/${getAgeDivisionName(cat)}/${getBeltType(cat)}/${getWeightId(cat)}`;
+  const name = cat.name;
+  const fullName = `${getGender(cat)}/${getAgeDivisionName(cat)}/${getBeltType(cat)}/${getWeightId(cat)}`;
+  if (!truncate) {
+    return `${name || 'Unnamed'} ` + fullName;
+  }
+  return name || (fullName.length < 20 ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
 };
+
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
 export const categoryFilter = value => cat => {
-  return cat.id
-    && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value));
-}
+  return !value || value.length <= 0 || (cat.id
+    && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
+};
 
 export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
 

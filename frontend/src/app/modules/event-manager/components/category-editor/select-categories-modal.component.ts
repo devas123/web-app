@@ -4,7 +4,7 @@ import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {Category} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
-import {map, take} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {categoryFilter} from '../../../competition/reducers';
 
 export interface ISelecetDefaultCategoriesContext {
@@ -73,12 +73,15 @@ export class SelectCategoriesModalComponent implements OnInit {
   optionsLookup = async (query: string, initial?: Category[]) => {
     const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
     return await this.modal.context.defaultCategories.pipe(
+      tap(console.log),
       take(1),
       map(c => c.filter(cat => {
         const filterParts = query.split(/\W/);
         return filterParts.map((value) => categoryFilter(value)(cat))
           .reduce((previousValue, currentValue) => previousValue || currentValue);
-      }))).toPromise();
+      })),
+      tap(console.log)
+    ).toPromise();
   };
 
   formatter = (option: Category) => AddFighterComponent.displayCategory(option);

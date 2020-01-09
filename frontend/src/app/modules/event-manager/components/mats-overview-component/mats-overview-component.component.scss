@@ -2,6 +2,16 @@
   display: grid;
   grid-template-columns: 2fr 9fr 1fr 9fr;
   grid-column-gap: 1em;
+  place-content: center;
+  place-items: center;
+
+  .category_display {
+    grid-column: 1/5;
+    margin-bottom: 1em;
+  }
+  .centered {
+    text-align: center;
+  }
 }
 
 .item.draggable {

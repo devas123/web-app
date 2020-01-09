@@ -4,6 +4,7 @@ import {MyEventsComponent} from './containers/my-events/my-events.component';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {MyEventsListComponent} from './components/my-events-list/my-events-list.component';
 import {
+  SuiAccordionModule,
   SuiCheckboxModule,
   SuiCollapseModule,
   SuiDatepickerModule,
@@ -50,7 +51,6 @@ import {MatsOverviewComponentComponent} from './components/mats-overview-compone
 import {ScoreboardComponentComponent} from './components/scoreboard-component/scoreboard-component.component';
 import {ScoreboardContainerComponent} from './containers/scoreboard-container/scoreboard-container.component';
 import {DashboardComponentComponent} from './components/dashboard-component/dashboard-component.component';
-import {MatManagementComponent} from './components/mat-management/mat-management.component';
 import {MatManagementContainerComponent} from './containers/mat-management-container/mat-management-container.component';
 import {HotkeyModule} from 'angular2-hotkeys';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
@@ -92,6 +92,7 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
     SuiSidebarModule,
     SuiCollapseModule,
     SuiCheckboxModule,
+    SuiAccordionModule,
     EventManagerRouterModule,
     SuiPaginationModule,
     SuiMessageModule,
@@ -126,7 +127,6 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
     ScoreboardComponentComponent,
     ScoreboardContainerComponent,
     DashboardComponentComponent,
-    MatManagementComponent,
     MatManagementContainerComponent,
     ScheduleEditorContainerComponent,
     ScheduleEditorComponent,

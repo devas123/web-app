@@ -1,11 +1,15 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
+import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 
 @Component({
   selector: 'app-fight-display',
   template: `
     <div class="fight-display-container" (click)="selectFight(fight?.id)">
-      <div>
+      <div class="category_display centered">
+        {{displayCategory(fight?.category)}}
+      </div>
+      <div class="centered">
         {{fight?.numberOnMat + 1}}
         <p>{{ fight?.startTime | zdate:true:undefined:false }}</p>
       </div>
@@ -41,6 +45,8 @@ export class FightDisplayComponent implements OnInit {
 
   constructor() {
   }
+
+  displayCategory = AddFighterComponent.displayCategory;
 
   selectFight(fightId: string) {
     this.fightClicked.next(fightId);
