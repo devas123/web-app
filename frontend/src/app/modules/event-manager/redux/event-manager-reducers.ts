@@ -1,11 +1,4 @@
-import {
-  AppState,
-  CompetitionProperties,
-  competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
-  EventPropsEntities,
-  scheduleInitialState
-} from '../../../reducers';
+import {AppState, CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
 import {
   BRACKETS_GENERATED,
   CATEGORY_ADDED,
@@ -32,17 +25,25 @@ import {
   EVENT_MANAGER_FIGHTER_SELECTED,
   EVENT_MANAGER_FIGHTER_UNSELECTED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
-  EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED,
+  EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED,
+  EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED,
+  EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED, EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
+  EVENT_MANAGER_HEADER_REMOVE,
+  EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_PERIOD_REMOVED, REGISTRATION_INFO_UPDATED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED,
   FIGHTS_START_TIME_UPDATED,
-  SCHEDULE_GENERATED
+  SCHEDULE_GENERATED, EVENT_MANAGER_REGISTRATION_GROUP_CREATED, EVENT_MANAGER_REGISTRATION_GROUP_DELETED
 } from './event-manager-actions';
+import * as uuidv4 from 'uuid/v4';
 import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
 import {
@@ -51,37 +52,60 @@ import {
   competitorEntityAdapter,
   competitorsInitialState,
   fightEntityAdapter,
+  FightsEditorChange,
+  fightsEditorChangeEntityAdapter,
+  fightsEditorInitialState,
   fightsInitialState
 } from '../../competition/reducers';
-import {Category, Competitor} from '../../../commons/model/competition.model';
+import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
 import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
-import {InjectionToken} from '@angular/core';
+import {EmbeddedViewRef, InjectionToken, ViewContainerRef} from '@angular/core';
+import {Observable} from 'rxjs';
+import produce, {applyPatches, Draft} from 'immer';
+import {Update} from '@ngrx/entity';
 
+export interface MenuItem {
+  name: string;
+  class?: string | { [p: string]: any };
+  style?: string;
+  action?: () => any;
+  label?: string;
+  showCondition?: () => Observable<boolean>;
+  itemDisplayAction?: (container: ViewContainerRef) => EmbeddedViewRef<any>;
+}
+
+export interface HeaderDescription {
+  header: string;
+  subheader: string | null;
+  headerHtml: string | null;
+}
 
 export interface EventManagerState {
   myEvents: EventPropsEntities;
   dashboardState: DashboardState;
   socketConnected: boolean;
+  header: HeaderDescription;
 }
 
 export interface PeriodProperties {
   id: string;
   name: string;
-  startTime: Date;
+  startTime: String;
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
-  categories: Array<Category>;
+  categories: Category[];
 }
 
 export interface ScheduleProperties {
   competitionId: string;
-  periodPropertiesList: Array<PeriodProperties>;
+  periodPropertiesList: PeriodProperties[];
 }
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
+export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
 
 export const {
   selectEntities: selectMyCompetitions,
@@ -100,8 +124,134 @@ export function socketStateReducer(state: boolean = false, action): boolean {
   }
 }
 
+const fightsEditorChangeHandler = produce((state: Draft<EventPropsEntities>, action) => {
+  switch (action.type) {
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED: {
+      if (state && state.selectedEventCategories) {
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorInitialState;
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        const change = action.change as FightsEditorChange;
+        const fights = change.selectedFightIds.map(id => state.selectedEventCategories.selectedCategoryFights.entities[id]);
+        const updatedFights = applyPatches(fights, change.changePatches);
+        const updates = updatedFights.map(uf => (<Update<Fight>>{
+          id: uf.id,
+          changes: uf
+        }));
+        state.selectedEventCategories.selectedCategoryFights = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryFights);
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne(<Update<FightsEditorChange>>{id: change.id, changes: change}, {
+          ...state.selectedEventCategories.selectedEventFightsEditorState,
+          selectedChangeId: null
+        });
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.id) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.removeOne(action.id, state.selectedEventCategories.selectedEventFightsEditorState);
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne({
+          id: action.change.id,
+          changes: action.change
+        }, state.selectedEventCategories.selectedEventFightsEditorState);
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState) {
+        if (!state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+          const id = uuidv4().toString();
+          state.selectedEventCategories.selectedEventFightsEditorState =
+            fightsEditorChangeEntityAdapter.addOne(<FightsEditorChange>{changeInversePatches: [], changePatches: [], selectedFightIds: [], id}, {
+              ...state.selectedEventCategories.selectedEventFightsEditorState,
+              selectedChangeId: id
+            });
+        }
+        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+        if (selectedChange.selectedFightIds.indexOf(action.fightId) < 0) {
+          if (selectedChange.selectedFightIds.length < 2) {
+            selectedChange.selectedFightIds.push(action.fightId);
+          } else {
+            selectedChange.selectedFightIds = [...selectedChange.selectedFightIds.slice(1), action.fightId];
+          }
+        }
+      }
+      return;
+    }
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED: {
+      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState
+        && state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+        selectedChange.selectedFightIds = [];
+      }
+    }
+  }
+});
+
 export function myEventsReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
   switch (action.type) {
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED:
+    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
+      return fightsEditorChangeHandler(state, action);
+    }
+    case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId === action.competitionId
+          && draft.entities[draft.selectedEventId] && draft.entities[draft.selectedEventId].registrationInfo
+          && action.payload.periodId && action.payload.groupId) {
+          const {periodId, groupId} = action.payload;
+          if (!draft.entities[draft.selectedEventId].registrationInfo.registrationGroups) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups = [];
+          }
+          const per = draft.entities[draft.selectedEventId].registrationInfo.registrationPeriods
+            .find(p => p.id === periodId);
+          per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+          const group =
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.find(gr => gr.id === groupId);
+          group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
+          if (group.registrationPeriodIds.length === 0) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups =
+              draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
+          }
+        }
+      });
+    }
+    case EVENT_MANAGER_REGISTRATION_GROUP_CREATED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId === action.competitionId
+          && draft.entities[draft.selectedEventId] && draft.entities[draft.selectedEventId].registrationInfo
+          && action.payload.periodId && action.payload.group) {
+          if (!draft.entities[draft.selectedEventId].registrationInfo.registrationGroups) {
+            draft.entities[draft.selectedEventId].registrationInfo.registrationGroups = [];
+          }
+          draft.entities[draft.selectedEventId].registrationInfo.registrationGroups.push(action.payload.group);
+          draft.entities[draft.selectedEventId].registrationInfo.registrationPeriods
+            .find(per => per.id === action.payload.periodId)
+            .registrationGroupIds.push(action.payload.group.id);
+        }
+      });
+    }
+    case REGISTRATION_INFO_UPDATED: {
+      return produce(state, draft => {
+        if (draft.selectedEventId === action.competitionId && draft.entities[draft.selectedEventId] && action.payload.registrationInfo) {
+          draft.entities[draft.selectedEventId].registrationInfo = action.payload.registrationInfo;
+        }
+      });
+    }
     case COMPETITION_PROPERTIES_UPDATED: {
       const competitionId = action.competitionId;
       if (competitionId === state.selectedEventId) {
@@ -263,20 +413,23 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_CATEGORIES_LOADED: {
       const competitionId = action.competitionId;
       const categoriesRaw = action.payload as any[];
-      const categories = categoriesRaw.map(rwc => ({
-        id: rwc.id,
-        ...rwc.category,
-        fightsNumber: rwc.fightsNumber,
-        numberOfCompetitors: rwc.numberOfCompetitors
-      } as Category));
-      if (competitionId === state.selectedEventId) {
-        return {
-          ...state,
-          selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
-        };
-      } else {
-        return state;
+      if (categoriesRaw) {
+        const categories = categoriesRaw.map(rwc => ({
+          id: rwc.id,
+          ...rwc.category,
+          fightsNumber: rwc.fightsNumber,
+          numberOfCompetitors: rwc.numberOfCompetitors
+        } as Category));
+        if (competitionId === state.selectedEventId) {
+          return {
+            ...state,
+            selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
+          };
+        } else {
+          return state;
+        }
       }
+      return state;
     }
     case EVENT_MANAGER_COMPETITION_SELECTED: {
       const newState = {
@@ -366,7 +519,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
     case EVENT_MANAGER_COMPETITOR_ADDED: {
-      if (action.competitionId === state.selectedEventId && action.id) {
+      if (action.competitionId === state.selectedEventId) {
         let newEventCompetitors = state.selectedEventCompetitors;
         if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
           newEventCompetitors = competitorEntityAdapter.addOne(action.payload, state.selectedEventCompetitors);
@@ -382,7 +535,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       }
       return state;
     }
-    case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_CHANGED: {
+    case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
       if (action.competitionId === state.selectedEventId) {
         return {
           ...state,
@@ -480,12 +633,10 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       if (state.selectedEventId === competitionId && payload) {
         const {schedule} = payload;
         if (schedule) {
-          const newState = {
+          return {
             ...state,
             selectedEventSchedule: schedule
           };
-          console.log(newState);
-          return newState;
         } else {
           return state;
         }
@@ -531,28 +682,26 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
     case EVENT_MANAGER_FIGHTER_SELECTED: {
       const {competitionId, payload} = action;
       if (state.selectedEventId === competitionId && payload) {
-        const newState = {
+        return {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: payload
           }
         };
-        return newState;
       }
       return state;
     }
     case EVENT_MANAGER_FIGHTER_UNSELECTED: {
       const {competitionId} = action;
       if (state.selectedEventId === competitionId) {
-        const newState = {
+        return {
           ...state,
           selectedEventCompetitors: {
             ...state.selectedEventCompetitors,
             selectedCompetitorId: null
           }
         };
-        return newState;
       }
       return state;
     }
@@ -664,11 +813,24 @@ export interface State extends AppState {
 }
 
 
+export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
+  switch (action.type) {
+    case EVENT_MANAGER_HEADER_SET: {
+      return action.payload as HeaderDescription;
+    }
+    case EVENT_MANAGER_HEADER_REMOVE: {
+      return null;
+    }
+  }
+  return state;
+}
+
 export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
   return {
     myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
-    dashboardState: dashboardReducers
+    dashboardState: dashboardReducers,
+    header: headerReducer
   };
 }
 
@@ -714,6 +876,7 @@ export const {
 
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategoryAllFights,
+  selectEntities: eventManagerGetSelectedEventSelectedCategoryFightsEntities
 } = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsCollection);
 
 export const eventManagerGetSelectedEventSelectedCategory = createSelector(
@@ -723,6 +886,8 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
     return selectedId && entities[selectedId];
   }
 );
+export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
+  (dict, props) => props.id && dict[props.id]);
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
 export const eventManagerGetSelectedEventSchedule = createSelector(eventManagerGetMyEventsCollection, state => {
   return state && state.selectedEventSchedule;
@@ -736,8 +901,40 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
   }
 });
 
+export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && regInfo.registrationGroups);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorState = createSelector(eventManagerGetSelectedEventsCategoriesCollection, cats => cats.selectedEventFightsEditorState);
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorState, cats => cats.selectedChangeId);
+export const {
+  selectAll: eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAll,
+  selectEntities: eventManagerGetSelectedEventSelectedCategoryFightsEditorStateEntities,
+  selectIds: eventManagerGetSelectedEventSelectedCategoryFightsEditorSelectStateIds,
+} = fightsEditorChangeEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryFightsEditorState);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateIds =
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorSelectStateIds;
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges =
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAll;
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateEntities,
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId, (entities, id) => id && entities[id]);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds =
+  createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange, change => (change && change.selectedFightIds) || []);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights = createSelector(
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange,
+  eventManagerGetSelectedEventSelectedCategoryFightsEntities,
+  (change, fightsEntities) => {
+    return (change && fightsEntities && change.selectedFightIds && change.selectedFightIds.map(id => fightsEntities[id]).filter(f => !!f)) || [];
+  });
+
 export const eventManagerGetSelectedEventScheduleProperties = createSelector(eventManagerGetMyEventsCollection, state => {
   return state && state.selectedEventSchedule && state.selectedEventSchedule.scheduleProperties;
+});
+
+export const eventManagerGetSelectedEventScheduleEmpty = createSelector(eventManagerGetMyEventsCollection, state => {
+  return !(!!state && !!state.selectedEventSchedule && !!state.selectedEventSchedule.periods && state.selectedEventSchedule.periods.length > 0);
 });
 
 export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventManagerGetMyEventsCollection, state => {
@@ -745,6 +942,8 @@ export const eventManagerGetSelectedEventSchedulePeriods = createSelector(eventM
 });
 
 export const eventManagerGetSelectedEventSelectedCategoryFights = eventManagerGetSelectedEventSelectedCategoryAllFights;
+export const eventManagerGetSelectedEventSelectedCategoryFightsAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryId, eventManagerGetSelectedEventSelectedCategoryAllFights,
+  (categoryId, fights) => (categoryId && categoryId.length > 0) && (!fights || fights.length === 0));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(eventManagerGetMyEventsCollection, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

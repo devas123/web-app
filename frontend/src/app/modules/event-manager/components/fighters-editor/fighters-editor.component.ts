@@ -7,7 +7,7 @@ import {SuiPagination} from 'ng2-semantic';
 @Component({
   selector: 'app-fighters-editor',
   templateUrl: './fighters-editor.component.html',
-  styleUrls: ['./fighters-editor.component.css'],
+  styleUrls: ['./fighters-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FightersEditorComponent implements OnInit {
@@ -28,13 +28,16 @@ export class FightersEditorComponent implements OnInit {
   competitionId: string;
 
   @Input()
-  categoryId: string;
+  category: Category;
 
   @Input()
   fighters: Competitor[];
 
   @Input()
   collectionSize: number;
+
+  @Input()
+  total: number;
 
   @Input()
   set pageNumber(value: number) {
@@ -86,7 +89,10 @@ export class FightersEditorComponent implements OnInit {
   }
 
   selectPage(pageNumber: number) {
-    this.pageChanged.next({pageNumber, competitionId: this.competitionId, categoryId: this.categoryId});
+    if (this._pageNumber !== pageNumber) {
+      const categoryId = (this.category && this.category.id) || undefined;
+      this.pageChanged.next({pageNumber, competitionId: this.competitionId, categoryId});
+    }
   }
 
   gotoFighterProfile(fighter: Competitor) {

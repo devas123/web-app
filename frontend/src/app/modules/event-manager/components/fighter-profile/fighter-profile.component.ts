@@ -21,7 +21,7 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 export class FighterProfileComponent implements OnInit, OnChanges {
 
   @Output()
-  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategory: string }>();
+  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategoryId: string }>();
   @Output()
   competitorChanged = new EventEmitter<{ fighter: Competitor }>();
 
@@ -153,8 +153,8 @@ export class FighterProfileComponent implements OnInit, OnChanges {
   changeCategory() {
     const newCategory = this.category.value;
     const fighter = this.fighter;
-    if (newCategory && fighter && fighter.categoryId && fighter.categoryId !== newCategory.id) {
-      this.categoryChanged.next({fighter, newCategory});
+    if (newCategory && fighter && fighter.categories && fighter.categories.indexOf(newCategory.id) < 0) {
+      this.categoryChanged.next({fighter, newCategoryId: newCategory.id});
     }
   }
 
@@ -162,7 +162,6 @@ export class FighterProfileComponent implements OnInit, OnChanges {
     const value = this.form.get(fieldName).value;
     const fighter = {...this.fighter};
     fighter[fieldName] = value;
-
     this.competitorChanged.next({fighter});
   }
 
@@ -175,7 +174,7 @@ export class FighterProfileComponent implements OnInit, OnChanges {
         lastName: this.fighter.lastName,
         birthDate: this.fighter.birthDate,
         academy: this.fighter.academy,
-        category: this.getCategoryName(this.fighter.categoryId),
+        category: '',
         registrationStatus: this.fighter.registrationStatus,
         promo: this.fighter.promo,
       });

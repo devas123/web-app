@@ -1,4 +1,4 @@
-import {map} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
@@ -7,6 +7,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
 import {AppState, CompetitionProperties, RegistrationInfo, selectUser} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-create-event',
@@ -14,16 +16,29 @@ import {Account} from '../../../account/model/Account';
   styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent implements OnInit, OnDestroy {
+export class CreateEventComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   @Output()
   createCompetition: EventEmitter<CompetitionProperties>;
-  private createCompetitionSubscription: Subscription;
+  private createCompetitionSubscription = new Subscription();
 
-  constructor(private fb: FormBuilder, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+
+  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
+    super(store, <ComponentCommonMetadataProvider>{
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.goBack()
+        }
+      ],
+      header: {
+        header: 'Create event'
+      }
+    }, menuService);
     this.createForm();
   }
+
 
   get competitionName() {
     return this.form.get('competitionName');
@@ -54,14 +69,14 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.createCompetitionSubscription) {
-      this.createCompetitionSubscription.unsubscribe();
-    }
+    super.ngOnDestroy();
+    this.createCompetitionSubscription.unsubscribe();
   }
 
   submitForm() {
-    this.createCompetitionSubscription = this.store.pipe(
+    this.createCompetitionSubscription.add(this.store.pipe(
       select(selectUser),
+      take(1),
       map((user: Account) => {
         const props = {} as CompetitionProperties;
         const regInfo = {} as RegistrationInfo;
@@ -74,8 +89,12 @@ export class CreateEventComponent implements OnInit, OnDestroy {
         props.schedulePublished = false;
         props.bracketsPublished = false;
         return createCompetition(props);
-      })).subscribe(this.store);
-    this.router.navigate(['..'], {relativeTo: this.route});
+      }),
+      tap(this.store))
+      .subscribe(() => this.goBack()));
   }
 
+  private goBack() {
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
+  }
 }

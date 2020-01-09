@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
+  mocks: false,
   mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
@@ -12,6 +13,7 @@ export const environment = {
   errorQueue: `/state/errors`,
   webSocketUrl: `/query/sockjs`,
   commandsEndpoint: '/competitions/api/v1/command',
+  commandsSyncEndpoint: '/competitions/api/v1/commandsync',
   competitionQueryEndpoint: '/query/api/v1/competition',
   competitorQueryEndpoint: '/query/api/v1/competitor',
   competitorEdpoint: '/competitions/api/v1/store/competitor',
@@ -30,6 +32,7 @@ const comprops = '/jsserver/competition';
 
 export const mocks = {
   commandsEndpoint: '/jsserver/command',
+  commandsSyncEndpoint: '/jsserver/commandsync',
   competitionQueryEndpoint: comprops,
   competitorQueryEndpoint: '/jsserver/competitor',
   competitorEdpoint: '/jsserver/competitor',

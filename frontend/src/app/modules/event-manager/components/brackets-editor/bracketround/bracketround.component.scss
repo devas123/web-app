@@ -1,0 +1,22 @@
+.compholder {
+  stroke: white;
+  text.fighter {
+    stroke: white;
+    fill: white;
+  }
+}
+
+.selectable {
+  rect.compholder {
+    stroke: #824116;
+    fill: #62ccff;
+  }
+  cursor: pointer;
+}
+
+.hoverable {
+  &:hover {
+    mask: url(#mask-selected);
+  }
+}
+

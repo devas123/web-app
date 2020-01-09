@@ -5,10 +5,11 @@ import {CategorySummaryComponent} from '../../components/category-summary/catego
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {RouterReducerState} from '@ngrx/router-store';
 
 describe('CategorySummaryContainerComponent', () => {
   let component: CategorySummaryContainerComponent;
@@ -19,7 +20,7 @@ describe('CategorySummaryContainerComponent', () => {
       declarations: [CategorySummaryContainerComponent, CategorySummaryComponent, ZonedDatePipe],
       imports: [StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -30,8 +31,10 @@ describe('CategorySummaryContainerComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       }), RouterTestingModule]
     })

@@ -5,9 +5,11 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
+import {SuiAccordionModule, SuiCheckboxModule, SuiSelectModule} from 'ng2-semantic';
 
 describe('CreateCategoryComponent', () => {
   let component: CreateCategoryComponent;
@@ -16,9 +18,9 @@ describe('CreateCategoryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CreateCategoryComponent],
-      imports: [ReactiveFormsModule, StoreModule.forRoot({
+      imports: [ReactiveFormsModule, SuiAccordionModule, SuiCheckboxModule, SuiSelectModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -29,8 +31,10 @@ describe('CreateCategoryComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       }), RouterTestingModule]
     })

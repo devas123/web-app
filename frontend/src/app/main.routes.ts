@@ -5,11 +5,12 @@ import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.comp
 import {HomeComponent} from './components/home/home.component';
 import {AuthGuard} from './modules/account/auth.guard';
 
+// @ts-ignore
 export const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {
     path: 'events',
-    loadChildren: './modules/events/events.module#EventsModule'
+    loadChildren: () => import('./modules/events/events.module').then(mod => mod.EventsModule)
   },
   {
     path: 'login',
@@ -18,7 +19,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'eventmanager',
-    loadChildren: './modules/event-manager/event-manager.module#EventManagerModule',
+    loadChildren: () => import('./modules/event-manager/event-manager.module').then(mod => mod.EventManagerModule),
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
     canActivateChild: [AuthGuard]

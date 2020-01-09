@@ -18,7 +18,7 @@ export class MatManagementContainerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(private router: Router, private store: Store<AppState>, private route: ActivatedRoute) {
-    this.subs.add(combineLatest(this.route.params.pipe(map(p => p['matId']), filter(matId => matId && matId.length > 0)), this.store.pipe(select(eventManagerGetSelectedEventId))).pipe(
+    this.subs.add(combineLatest([this.route.params.pipe(map(p => p['matId']), filter(matId => matId && matId.length > 0)), this.store.pipe(select(eventManagerGetSelectedEventId))]).pipe(
       map(([matId, competitionId]) => dashboardMatSelected(competitionId, matId))).subscribe(this.store));
   }
 

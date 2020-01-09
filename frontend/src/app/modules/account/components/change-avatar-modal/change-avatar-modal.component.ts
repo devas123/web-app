@@ -3,7 +3,7 @@ import {filter} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
-import {selectAccountState} from '../../../../reducers/index';
+import {AppState, selectAccountState} from '../../../../reducers/index';
 import {changeAvatar} from '../../flux/actions';
 import {AccountState} from '../../flux/account.state';
 
@@ -23,7 +23,7 @@ export class ChangeAvatarModalComponent implements OnInit, OnDestroy {
 
   previewHidden = false;
 
-  constructor(public sanitizer: DomSanitizer, private store: Store<AccountState>) {
+  constructor(public sanitizer: DomSanitizer, private store: Store<AppState>) {
   }
 
 

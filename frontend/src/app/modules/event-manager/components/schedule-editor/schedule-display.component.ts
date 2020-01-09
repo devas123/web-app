@@ -7,31 +7,27 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
   selector: 'app-schedule-display',
   template: `
     <div [suiCollapse]="!schedule?.periods  || schedule?.periods?.length === 0">
-      <div class="ui basic segment">
-        <h3 class="ui header">Schedule:</h3>
-        <p></p>
-        <div class="ui two stackable cards">
-          <div class="card" *ngFor="let period of schedule?.periods">
-            <div class="content">
-              <div class="header">{{period?.name}}</div>
-              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
-              <div class="ui middle aligned divided list">
-                <a class="item" *ngFor="let scheduleEntry of period.schedule"
-                   (click)="goToCategoryEditor(scheduleEntry?.categoryId)">
-                  <i class="users icon"></i>
-                  <div class="content">
-                    <div class="header">{{categoryNameForCategoryId(scheduleEntry?.categoryId)}}</div>
-                    <div class="description">{{scheduleEntry?.numberOfFights}} fights</div>
-                    <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
-                  </div>
-                </a>
-              </div>
+      <div class="ui two stackable cards">
+        <div class="card" *ngFor="let period of schedule?.periods">
+          <div class="content">
+            <div class="header">{{period?.name}}</div>
+            <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+            <div class="ui middle aligned divided list">
+              <a class="item" *ngFor="let scheduleEntry of period.schedule"
+                 (click)="goToCategoryEditor(scheduleEntry?.categoryId)">
+                <i class="users icon"></i>
+                <div class="content">
+                  <div class="header">{{categoryNameForCategoryId(scheduleEntry?.categoryId)}}</div>
+                  <div class="description">{{scheduleEntry?.numberOfFights}} fights</div>
+                  <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
+                </div>
+              </a>
             </div>
-            <div class="extra content">
-              Total fights: {{getFightsNumberForPeriod(period)}}
-              <br/>
-              Duration: {{period?.duration || 'N/A'}} <span *ngIf="period?.duration">h</span>
-            </div>
+          </div>
+          <div class="extra content">
+            Total fights: {{getFightsNumberForPeriod(period)}}
+            <br/>
+            Duration: {{period?.duration || 'N/A'}} <span *ngIf="period?.duration">h</span>
           </div>
         </div>
       </div>

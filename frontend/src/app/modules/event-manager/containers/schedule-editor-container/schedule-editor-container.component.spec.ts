@@ -4,14 +4,16 @@ import {ScheduleEditorContainerComponent} from './schedule-editor-container.comp
 import {ScheduleEditorComponent} from '../../components/schedule-editor/schedule-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SuiModule} from 'ng2-semantic';
-import {NgDragDropModule} from '../../../dragdrop/ng-drag-drop.module';
 import {ScheduleDisplayComponent} from '../../components/schedule-editor/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {RouterReducerState} from '@ngrx/router-store';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('ScheduleEditorContainerComponent', () => {
   let component: ScheduleEditorContainerComponent;
@@ -20,9 +22,9 @@ describe('ScheduleEditorContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ScheduleEditorContainerComponent, ScheduleEditorComponent, ScheduleDisplayComponent, ZonedDatePipe],
-      imports: [ReactiveFormsModule, SuiModule, NgDragDropModule, StoreModule.forRoot({
+      imports: [ReactiveFormsModule, SuiModule, DragDropModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -33,10 +35,12 @@ describe('ScheduleEditorContainerComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
-      })]
+      }), RouterTestingModule]
     })
       .compileComponents();
   }));

@@ -1,68 +1,32 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Category, CategoryState} from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Category, CategoryState, RestrictionType} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
-import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
-import {SuiMultiSelect} from 'ng2-semantic';
+import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../../competition/reducers';
+import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 
 
 @Component({
   selector: 'app-category-editor',
   templateUrl: './category-editor.component.html',
-  styleUrls: ['./category-editor.component.css'],
+  styleUrls: ['./category-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryEditorComponent implements OnInit {
 
-  _allDefaultCategories: Category[];
-  filteredCategories: Category[];
-  searchStr;
-  @Output()
-  createCustomCategoryClicked = new EventEmitter<string>();
-  @Output()
-  addDefaultCategories = new EventEmitter<{competitionId: string, category: Category}[]>();
-  @Output()
-  generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
-  @ViewChild('select', {static: false})
-  select: SuiMultiSelect<any, any>;
-
   @Input()
-  selectedCategoryState: CategoryState;
-
-  @Input()
-  competition: CompetitionProperties;
-  @ViewChild('modalTemplate', {static: false})
-  public modalTemplate: ModalTemplate<IContext, string, string>;
-  categoriesToAdd: Category[];
-
-  _defaultCategories: Category[];
-
-  _categories: Category[];
-
-  @Output()
-  deleteCategoryEvent: EventEmitter<{competitionId: string, category: Category}> = new EventEmitter<{competitionId: string, category: Category}>();
-  searchFilter = (options: Category[], filter: string) => {
-    let filteredOptions = [...options];
-    const filterParts = filter.split(/\W/);
-    const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
-
-    filterParts.forEach((value) => {
-      filteredOptions = filteredOptions.filter(cat => {
-        return cat.id
-          && (hasAny(cat.weight.id, value) || hasAny(cat.ageDivision.id, value) || hasAny(cat.beltType, value) || hasAny(cat.gender, value));
-      });
-    });
-
-    return filteredOptions;
+  set searchString(value: string) {
+    if (value) {
+      const searchStr = value;
+      this.filteredCategories = this.searchFilter(this._categories, searchStr);
+      this.searchStr = searchStr;
+    } else {
+      this.filteredCategories = this._categories;
+      this.searchStr = null;
+    }
   }
-  optionsFilter = (options: Category[], filter: string) => this.searchFilter(this._allDefaultCategories, filter).filter(cat => {
-    return this.categories.map(c => c.id).indexOf(cat.id) < 0;
-  }).slice(0, 10)
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
 
-  constructor(public modalService: SuiModalService) {
+  constructor() {
   }
 
 
@@ -114,16 +78,56 @@ export class CategoryEditorComponent implements OnInit {
     }
   }
 
-  searchStringChanged(event: any) {
-    if (event && event.target && event.target.value) {
-      const searchStr = event.target.value;
-      this.filteredCategories = this.searchFilter(this._categories, searchStr);
-      this.searchStr = searchStr;
-    } else {
-      this.filteredCategories = this._categories;
-      this.searchStr = null;
-    }
-  }
+  _allDefaultCategories: Category[];
+  filteredCategories: Category[];
+
+  searchStr: string;
+
+  @Output()
+  createCustomCategoryClicked = new EventEmitter<string>();
+  @Output()
+  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
+  @Output()
+  generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
+  selectedCategoryState: CategoryState;
+
+  @Input()
+  competition: CompetitionProperties;
+
+  _defaultCategories: Category[];
+
+  _categories: Category[];
+
+  @Output()
+  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
+
+  @Output()
+  registrationStatusToggled = new EventEmitter<{categoryId: string, newStatus: boolean}>();
+
+  getCategoryGender = getGender;
+  getCategoryWeight = getWeightId;
+  getCategoryBelt = getBeltType;
+  getCategoryAge = getAgeDivisionName;
+  getCategoryRestrictionByType = getRestrictionByType;
+  displayCategory = AddFighterComponent.displayCategory;
+
+  getAgeMaxValue = getMaxValueInt('AGE');
+  getAgeMinValue = getMinValueInt('AGE');
+  getWeightMaxValue = getMaxValueInt('WEIGHT');
+  getWeightMinValue = getMinValueInt('WEIGHT');
+
+  searchFilter = (options: Category[], filter: string) => {
+    let filteredOptions = [...options];
+    const filterParts = filter.split(/\W/);
+
+    filterParts.forEach((value) => {
+      filteredOptions = filteredOptions.filter(categoryFilter(value));
+    });
+
+    return filteredOptions;
+  };
 
   ngOnInit() {
   }
@@ -132,35 +136,6 @@ export class CategoryEditorComponent implements OnInit {
     if (category) {
       this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 30, 20));
     }
-  }
-
-  addCategory(competitionId: string) {
-    this.createCustomCategoryClicked.next(competitionId);
-  }
-
-  addSelectedCategories() {
-    if (this.categoriesToAdd && this.categoriesToAdd.length > 0) {
-      this.addDefaultCategories.next(this.categoriesToAdd.map(cat => ({competitionId: this.competition.id, category: cat})));
-      if (this.select) {
-        const addedCategories = [...this.categoriesToAdd];
-        addedCategories.forEach(cat => this.select.deselectOption(cat));
-      }
-      this.categoriesToAdd = [];
-    }
-  }
-
-  public openModal(dynamicContent: string = 'Period properties') {
-    const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
-
-
-    config.closeResult = 'closed!';
-    config.context = {data: dynamicContent};
-
-    this.modalService
-      .open(config)
-      .onApprove(() => {
-        this.addSelectedCategories();
-      });
   }
 
 
@@ -172,12 +147,7 @@ export class CategoryEditorComponent implements OnInit {
     return category.id;
   }
 
-  setCategoriesToAdd(categories: Category[]) {
-    this.categoriesToAdd = categories;
+  toggleRegistrationOpen(category: Category) {
+    this.registrationStatusToggled.next({categoryId: category.id, newStatus: !category.registrationOpen});
   }
-
-
-  // navigateBack() {
-  //   this.location.back();
-  // }
 }

@@ -1,7 +1,4 @@
 <div class="ui container" [suiCollapse]="collapsed">
-  <ng-container *ngIf="header"><h1 class="ui header">Add participant</h1>
-    <div class="ui divider"></div>
-  </ng-container>
   <form class="ui large form" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
 
     <div class="field"
@@ -63,7 +60,7 @@
       </sui-select>
     </div>
 
-    <div class="ui basic button" routerLink="../../../">Return</div>
+    <div class="ui button" (click)="closeClicked.next()">Close</div>
     <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
       Create
     </div>

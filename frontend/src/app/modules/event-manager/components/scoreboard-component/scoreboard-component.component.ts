@@ -15,6 +15,15 @@ import * as screenfull from 'screenfull';
 export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   @Input()
+  set selectedFight(f: Fight) {
+    this.fight = f;
+    if (f) {
+      this.currentFightMinutes = f.duration;
+      this.currentFightSeconds = 0;
+      this.stageName = `Round ${f.round + 1}`;
+    }
+  }
+
   fight: Fight;
 
   @Input()
@@ -42,6 +51,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
     this._fullScreen = value;
     this.fullScreenToggled.next(value);
   }
+
   showButtons = false;
   currentFightSeconds = 20;
   currentFightMinutes = 0;

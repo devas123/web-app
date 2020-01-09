@@ -1,50 +1,67 @@
-
-import {map} from 'rxjs/operators';
+import {filter, map, startWith, take, tap} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, Schedule} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventId,
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties, eventManagerGetSelectedEventTimeZone,
+  eventManagerGetSelectedEventScheduleEmpty,
+  eventManagerGetSelectedEventScheduleProperties,
+  eventManagerGetSelectedEventTimeZone,
+  HeaderDescription,
   PeriodProperties,
   ScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Category} from '../../../../commons/model/competition.model';
-import {
-  eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule,
-  eventManagerPeriodAdded,
-  eventManagerPeriodRemoved
-} from '../../redux/event-manager-actions';
+import {eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved} from '../../redux/event-manager-actions';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-schedule-editor-container',
   templateUrl: './schedule-editor-container.component.html',
   styleUrls: ['./schedule-editor-container.component.css']
 })
-export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
+export class ScheduleEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
   schedule$: Observable<Schedule>;
   scheduleProperties$: Observable<ScheduleProperties>;
-  competitionName$: Observable<string>;
-  competitionId$: Observable<string>;
-  timeZone$: Observable<string>;
   categories$: Observable<Category[]>;
-
+  scheduleEmpty$: Observable<boolean>;
+  timeZone$: Observable<string>;
   competitionId: string;
   showEditor = false;
-
   subs = new Subscription();
 
-  constructor(private store: Store<AppState>) {
+  constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
+    super(store, <ComponentCommonMetadataProvider>{
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
+        map(name => (<HeaderDescription>{
+          header: 'Schedule',
+          subheader: name
+        }))),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.goBack()
+        },
+        {
+          name: 'Toggle editor',
+          action: () => this.toggleSchedulePropertiesEditor()
+        }
+      ]
+    }, menuService);
+    this.showEditor = false;
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
-    this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
-    this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
-    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.scheduleEmpty$ =  this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
     this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
+    setTimeout(() => this.subs.add(this.scheduleEmpty$.pipe(take(1), startWith(true), tap(console.log)).subscribe(s => this.showEditor = s)));
+    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
   }
 
   toggleSchedulePropertiesEditor() {
@@ -54,8 +71,13 @@ export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  goBack() {
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(error => console.error(error));
+  }
+
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    super.ngOnDestroy();
   }
 
   addPeriod(period: PeriodProperties) {
@@ -72,7 +94,6 @@ export class ScheduleEditorContainerComponent implements OnInit, OnDestroy {
 
   sendGenerateSchedule(event: ScheduleProperties) {
     this.store.dispatch(eventManagerGenerateSchedule(event.competitionId, event));
-    this.showEditor = false;
   }
 
   sendDropSchedule(competitionId: string) {

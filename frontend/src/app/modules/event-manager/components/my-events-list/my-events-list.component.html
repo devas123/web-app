@@ -1,7 +1,13 @@
-<div class="ui relaxed divided list">
-  <div *ngFor="let event of events" class="item">
+<div class="customcontainer">
+  <div *ngFor="let event of events" class="ui basic segment customline">
+    <div class="competition avatar" (click)="editEvent(event.id)"><img src="https://picsum.photos/80" alt="avatar"></div>
+    <div class="content">
+      <a class="header" (click)="editEvent(event.id)">{{event.competitionName}}</a>
+      <div class="description">STATUS: {{event.status}}</div>
+      <div class="description" *ngIf="event?.registrationInfo?.registrationOpen">Registration Open!</div>
+    </div>
     <div class="right floated content">
-      <div class="ui floating dropdown" suiDropdown autoClose="outsideClick">
+      <div class="ui floating dropdown" suiDropdown autoClose="itemClick">
         <div class="text">Actions</div>
         <i class="dropdown icon"></i>
         <div class="menu" suiDropdownMenu>
@@ -13,12 +19,6 @@
           <div class="item" (click)="deleteEvent(event)">Delete</div>
         </div>
       </div>
-    </div>
-    <i class="large github middle aligned icon"></i>
-    <div class="content">
-      <a class="header" (click)="editEvent(event.id)">{{event.competitionName}}</a>
-      <div class="description">STATUS: {{event.status}}</div>
-      <div class="description" *ngIf="event?.registrationInfo?.registrationOpen">Registration Open!</div>
     </div>
   </div>
 </div>

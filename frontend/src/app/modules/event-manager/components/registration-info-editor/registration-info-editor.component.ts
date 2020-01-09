@@ -1,23 +1,27 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {IContext} from '../schedule-editor/schedule-editor.component';
-import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic';
-import {InfoService} from '../../../../service/info.service';
+import {Category} from '../../../../commons/model/competition.model';
+import produce from 'immer';
 
 @Component({
   selector: 'app-registration-info-editor',
   templateUrl: './registration-info-editor.component.html',
-  styleUrls: ['./registration-info-editor.component.css'],
+  styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrationInfoEditorComponent implements OnInit {
 
-  @ViewChild('modalTemplate', {static: false})
-  public modalTemplate: ModalTemplate<IContext, string, string>;
+  private ngStyle = {'grid-template-columns': 'repeat(2, 50%)'};
 
-  @ViewChild('addPeriodTemplate', {static: false})
-  public addPeriodTemplate: ModalTemplate<IContext, string, string>;
+  @Input()
+  set colunmsNumber(value: number) {
+    if (value) {
+      this.ngStyle = {'grid-template-columns': `repeat(${value}, ${100 / value}%)`};
+    }
+  }
+
+  @Input()
+  categories: Category[];
 
   @Input()
   competitionId: string;
@@ -32,52 +36,42 @@ export class RegistrationInfoEditorComponent implements OnInit {
   addPeriod = new EventEmitter<{ competitionId: string, period: RegistrationPeriod }>();
 
   @Output()
-  addGroup = new EventEmitter<{ competitionId: string, periodId: string, group: RegistrationGroup }>();
+  addGroupModal = new EventEmitter<{ competitionId: string, periodId: string, periodRegistrationGroups: string[] }>();
 
   @Output()
   deletePeriod = new EventEmitter<{ competitionId: string, periodId: string }>();
 
   @Output()
-  deleteGroup = new EventEmitter<{ competitionId: string, periodId: string, groupId: string}>();
+  registrationInfoUpdated = new EventEmitter<RegistrationInfo>();
+
+  @Output()
+  deleteGroup = new EventEmitter<{ competitionId: string, periodId: string, groupId: string }>();
 
   @Output()
   selectGroup = new EventEmitter<string>();
 
-  groupForm: FormGroup;
-
-  periodForm: FormGroup;
-
-  get registrationGroups() {
-    return this.groupForm.get('registrationGroups') as FormArray;
-  }
-
-
-  constructor(private fb: FormBuilder, private modalService: SuiModalService) {
+  constructor() {
   }
 
   ngOnInit() {
-    this.groupForm = this.fb.group({
-      displayName: [''],
-      registrationFee: ['']
-    });
-
-    this.periodForm = this.fb.group({
-      name: [''],
-      start: [''],
-      end: ['']
-    });
   }
 
-  get periodName() {
-    return this.periodForm.get('name');
+  get assignedCategoryIds(): string[] {
+    return (this.registrationInfo && this.registrationInfo.registrationGroups
+      && this.registrationInfo.registrationGroups.reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
-  get periodStart() {
-    return this.periodForm.get('start');
+  get unassignedCategoies(): Category[] {
+    return this.categories && this.categories.filter(cat => !this.assignedCategoryIds || this.assignedCategoryIds.indexOf(cat.id) < 0);
   }
 
-  get periodEnd() {
-    return this.periodForm.get('end');
+
+  getRegistrationGroupsForPeriod(period: RegistrationPeriod, info: RegistrationInfo) {
+    if (period && info) {
+      return period.registrationGroupIds.map(id => info.registrationGroups.find(gr => gr.id === id)).filter(gr => !!gr);
+    } else {
+      return [];
+    }
   }
 
   deleteGroupEvent(groupId: string, periodId: string) {
@@ -88,34 +82,21 @@ export class RegistrationInfoEditorComponent implements OnInit {
     this.deletePeriod.next({competitionId: this.competitionId, periodId});
   }
 
-  public openModal(dynamicContent: string = 'group', periodId?: string) {
-    const template = dynamicContent === 'period' ? this.addPeriodTemplate : this.modalTemplate;
-    const config = new TemplateModalConfig<IContext, string, string>(template);
-    config.closeResult = 'closed!';
-    config.context = {data: dynamicContent};
-
-    this.modalService
-      .open(config)
-      .onApprove(result => {
-        if (dynamicContent === 'period') {
-          const period = {} as RegistrationPeriod;
-          period.end = InfoService.formatDate(this.periodStart.value, this.timeZone);
-          period.start = InfoService.formatDate(this.periodEnd.value, this.timeZone);
-          period.name = this.periodName.value;
-          period.competitionId = this.competitionId;
-          period.id = '';
-          this.addPeriod.next({competitionId: this.competitionId, period});
-          this.periodForm.reset();
-        } else {
-          const group = this.groupForm.value as RegistrationGroup;
-          group.registrationPeriodId = periodId;
-          group.id = '';
-          this.addGroup.next({competitionId: this.competitionId, periodId: periodId, group});
-          this.groupForm.reset();
-        }
-      })
-      .onDeny(result => { /* deny callback */
-      });
+  openGroupModal(periodId: string, registrationGroupIds: string[]) {
+    if (periodId && this.competitionId) {
+      this.addGroupModal.next({competitionId: this.competitionId, periodId, periodRegistrationGroups: (registrationGroupIds || [])});
+    }
   }
 
+  moveUnassignedCategoriesToDefault() {
+    if (this.unassignedCategoies) {
+      const regInfo = produce(this.registrationInfo, draft => {
+        const defaultGroup = draft.registrationGroups.find(gr => gr.defaultGroup);
+        if (defaultGroup) {
+          defaultGroup.categories = this.unassignedCategoies.map(cat => cat.id);
+        }
+      });
+      this.registrationInfoUpdated.next(regInfo);
+    }
+  }
 }

@@ -4,6 +4,8 @@ import {MyEventsComponent} from './containers/my-events/my-events.component';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {MyEventsListComponent} from './components/my-events-list/my-events-list.component';
 import {
+  SuiAccordionModule,
+  SuiCheckboxModule,
   SuiCollapseModule,
   SuiDatepickerModule,
   SuiDimmerModule,
@@ -37,12 +39,9 @@ import {CategorySummaryContainerComponent} from './containers/category-summary-c
 import {CategorySummaryComponent} from './components/category-summary/category-summary.component';
 import {EventManagerRouterModule} from './event-manager.router.module';
 import {CommonsModule} from '../../commons/commons.module';
-import {BracketsEditorComponent} from './components/brackets-editor/brackets-editor.component';
 import {BracketsEditorContainerComponent} from './containers/brackets-editor-container/brackets-editor-container.component';
-import {BracketMatchComponent} from './components/brackets-editor/bracket-match/bracket-match.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {ScheduleEditorComponent} from './components/schedule-editor/schedule-editor.component';
-import {NgDragDropModule} from '../dragdrop/ng-drag-drop.module';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
 import {FighterProfileComponent} from './components/fighter-profile/fighter-profile.component';
 import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
@@ -52,7 +51,6 @@ import {MatsOverviewComponentComponent} from './components/mats-overview-compone
 import {ScoreboardComponentComponent} from './components/scoreboard-component/scoreboard-component.component';
 import {ScoreboardContainerComponent} from './containers/scoreboard-container/scoreboard-container.component';
 import {DashboardComponentComponent} from './components/dashboard-component/dashboard-component.component';
-import {MatManagementComponent} from './components/mat-management/mat-management.component';
 import {MatManagementContainerComponent} from './containers/mat-management-container/mat-management-container.component';
 import {HotkeyModule} from 'angular2-hotkeys';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
@@ -65,6 +63,18 @@ import {MatDisplayComponent} from './components/mats-overview-component/mat-disp
 import {RegistrationInfoEditorComponent} from './components/registration-info-editor/registration-info-editor.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
+import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
+import {FlexibleColumnDirective} from './containers/event-manager-container/flexible.column.directive';
+import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
+import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
+import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
+import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
+import {BracketRoundComponent} from './components/brackets-editor/bracketround/bracketround.component';
+import {BracketComponent} from './components/brackets-editor/bracket/bracket.component';
+import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
+import {FightsEditorComponent} from './components/brackets-editor/fights-editor/fights-editor.component';
 
 @NgModule({
   imports: [
@@ -81,14 +91,27 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     SuiPopupModule,
     SuiSidebarModule,
     SuiCollapseModule,
+    SuiCheckboxModule,
+    SuiAccordionModule,
     EventManagerRouterModule,
     SuiPaginationModule,
     SuiMessageModule,
-    NgDragDropModule,
     CommonsModule,
-    HotkeyModule
+    HotkeyModule,
+    DragDropModule
   ],
   declarations: [
+    FightsEditorComponent,
+    FightsEditorContainerComponent,
+    BracketComponent,
+    BracketRoundComponent,
+    AddSchedulePeriodFormComponent,
+    AddGroupFormComponent,
+    AddPeriodFormComponent,
+    SelectCategoriesModalComponent,
+    DynamicHeaderDirective,
+    FlexibleColumnDirective,
+    EventManagerMenuComponent,
     RegistrationGroupEditorComponent,
     RegistrationInfoEditorContainerComponent,
     RegistrationInfoEditorComponent,
@@ -104,12 +127,10 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     ScoreboardComponentComponent,
     ScoreboardContainerComponent,
     DashboardComponentComponent,
-    MatManagementComponent,
     MatManagementContainerComponent,
     ScheduleEditorContainerComponent,
     ScheduleEditorComponent,
     MyEventsComponent,
-    BracketMatchComponent,
     CreateEventComponent,
     MyEventsListComponent,
     CategoryEditorComponent,
@@ -125,12 +146,17 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
     CategoryContainerComponent,
     CategorySummaryContainerComponent,
     CategorySummaryComponent,
-    BracketsEditorComponent,
     BracketsEditorContainerComponent,
     FighterProfileContainerComponent,
     FighterProfileComponent,
     FightersContainerComponent],
-  providers: [EventManagerService]
+  providers: [EventManagerService],
+  entryComponents: [
+    AddGroupFormComponent,
+    AddPeriodFormComponent,
+    SelectCategoriesModalComponent,
+    AddSchedulePeriodFormComponent
+  ]
 })
 export class EventManagerModule {
 }

@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 import {flyOut} from '../../../../../animations/flyOut';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
-import {selectAccountState} from '../../../../../reducers';
+import {AppState, selectAccountState} from '../../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';
 import {AccountState} from '../../../flux/account.state';
@@ -27,7 +27,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   @Output()
   public notify: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private fb: FormBuilder, private store: Store<AccountState>) {
+  constructor(private fb: FormBuilder, private store: Store<AppState>) {
     this.createForm();
   }
 

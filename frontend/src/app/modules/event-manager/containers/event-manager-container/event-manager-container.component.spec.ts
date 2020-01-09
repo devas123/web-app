@@ -8,11 +8,15 @@ import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {EventManagerService} from '../../event-manager.service';
 import {HttpClientModule} from '@angular/common/http';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {InfoService} from '../../../../service/info.service';
+import {RouterReducerState} from '@ngrx/router-store';
+import {EventManagerMenuComponent} from './event-manager-menu.component';
+import {DynamicHeaderDirective} from './dynamic.header.directive';
+import {FlexibleColumnDirective} from './flexible.column.directive';
 
 describe('EventManagerContainerComponent', () => {
   let component: EventManagerContainerComponent;
@@ -20,10 +24,10 @@ describe('EventManagerContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventManagerContainerComponent, TruncatePipe, ZonedDatePipe],
+      declarations: [EventManagerContainerComponent, TruncatePipe, ZonedDatePipe, EventManagerMenuComponent, DynamicHeaderDirective, FlexibleColumnDirective],
       imports: [SuiModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -34,8 +38,10 @@ describe('EventManagerContainerComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
       }), HttpClientModule],
       providers: [EventManagerService, InfoService]

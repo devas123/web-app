@@ -25,9 +25,10 @@ import {AuthGuard} from './modules/account/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
-import {NgDragDropModule} from './modules/dragdrop/ng-drag-drop.module';
 import {HotkeyModule} from 'angular2-hotkeys';
-import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
+import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
+import {MenuService} from './components/main-menu/menu.service';
+import {RouterState, StoreRouterConnectingModule} from '@ngrx/router-store';
 
 @NgModule({
   declarations: [
@@ -37,13 +38,13 @@ import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
     HomeComponent
   ],
   imports: [
-    NgDragDropModule.forRoot(),
     CommonsModule,
     NgxMdModule.forRoot(),
     BrowserModule,
     BrowserAnimationsModule,
     SuiModule,
     SuiDropdownModule,
+    SuiSidebarModule,
     AccountModule,
     AvatarModule,
     RouterModule.forRoot(
@@ -52,9 +53,9 @@ import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
     HttpClientModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([Effects, AccountEffects]),
-    // StoreRouterConnectingModule.forRoot({
-    //   stateKey: 'router',
-    // }),
+    StoreRouterConnectingModule.forRoot({
+      routerState: RouterState.Minimal
+    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production // Restrict extension to log-only mode
@@ -63,6 +64,7 @@ import {SuiDropdownModule, SuiModule} from 'ng2-semantic';
   ],
   providers: [HttpClient,
     InfoService,
+    MenuService,
     HttpAuthService,
     AccountService,
     SignUpGuard,

@@ -1,5 +1,16 @@
 // commands
 import {Fight} from '../../../commons/model/competition.model';
+import {createAction, props} from '@ngrx/store';
+
+export interface IDashboardFightScheduleChangedPayload {
+  competitionId: string;
+  fightId: string;
+  currentMatId: string;
+  newMatId: string;
+  currentOrderOnMat: number;
+  newOrderOnMat: number;
+  periodId: string;
+}
 
 export const DASHBOARD_LOAD_MAT_COMMAND = 'DASHBOARD_LOAD_MAT_COMMAND';
 export const DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND';
@@ -8,9 +19,11 @@ export const DASHBOARD_INIT_PERIOD_COMMAND = 'INIT_PERIOD_COMMAND';
 export const DASHBOARD_DELETE_PERIOD_COMMAND = 'DELETE_PERIOD_COMMAND';
 export const DASHBOARD_INIT_DASHBOARD_STATE_COMMAND = 'CREATE_DASHBOARD_COMMAND';
 export const DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND = 'DELETE_DASHBOARD_COMMAND';
+export const DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND = 'DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND';
 
 
 // events
+export const DASHBOARD_FIGHT_ORDER_CHANGED = 'DASHBOARD_FIGHT_ORDER_CHANGED';
 export const DASHBOARD_STATE_LOADED = 'DASHBOARD_STATE_LOADED';
 export const DASHBOARD_PERIOD_SELECTED = 'DASHBOARD_PERIOD_SELECTED';
 export const DASHBOARD_PERIOD_UNSELECTED = 'DASHBOARD_PERIOD_UNSELECTED';
@@ -25,6 +38,8 @@ export const DASHBOARD_SOCKET_DISCONNECTED = 'DASHBOARD_SOCKET_DISCONNECTED';
 
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};
+
+export const dashboardFightOrderChangeCommand = createAction(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
 
 export const dashboardRemovePeriod = (competitionId, periodId) => ({
   type: DASHBOARD_DELETE_PERIOD_COMMAND,

@@ -21,7 +21,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
   @Output()
   propertiesUpdated: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
 
-  constructor(private fb: FormBuilder, private location: Location, private router: Router) {
+  constructor(private fb: FormBuilder) {
     this.createForm();
   }
 
@@ -90,11 +90,6 @@ export class EventPropertiesEditorComponent implements OnChanges {
 
   ngOnChanges() {
     this.updateForm();
-  }
-
-  navigateBack() {
-    const path = this.location.path(false);
-    this.router.navigateByUrl(path.slice(0, path.lastIndexOf('/')));
   }
 
   navigateToDashboard() {

@@ -1,14 +1,5 @@
-<div class="ui container">
-  <h2 class="ui header">Mats overview</h2>
-  <div class="ui divider"></div>
-  <button class="ui basic button" (click)="navigateBack()">
-    Return
-  </button>
-  <p></p>
-  <p></p>
-  <div class="ui container">
-    <app-mats-overview-component [mats]="selectedPeriodMats$ | async"
-                                 (matDetailsClicked)="navigateToMat($event)"></app-mats-overview-component>
-  </div>
-
-</div>
+<app-mats-overview-component [mats]="selectedPeriodMats$ | async"
+                             (matDetailsClicked)="navigateToMat($event)"
+                             [periodId]="(selectedPeriod$ | async)?.id"
+                             [competitionId]="competitionId$ | async"
+                             (fightScheduleChanged)="sendFightScheduleChanged($event)"></app-mats-overview-component>

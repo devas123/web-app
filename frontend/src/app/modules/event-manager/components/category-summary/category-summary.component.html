@@ -1,11 +1,4 @@
-<div class="ui container">
-  <h2 class="ui header">Category:
-    {{category?.gender}}/{{category?.ageDivision?.id}}/{{category?.beltType}}/{{category?.weight?.id}}</h2>
-  <div class="ui divider"></div>
-  <div class="content">
-    <div class="ui basic button" (click)="goback()">Return</div>
-  </div>
-  <p></p>
+<div class="ui basic segment">
   <div class="ui three stackable cards">
     <div class="card">
       <div class="content">
@@ -52,7 +45,8 @@
               <div class="label">
                 Starts at
               </div>
-              <div class="value">
+              <p></p>
+              <div class="text value">
                 {{categoryStartTime | zdate:true}}
               </div>
             </ng-container>

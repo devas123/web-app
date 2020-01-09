@@ -3,10 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {select, Store} from '@ngrx/store';
 import 'sockjs-client';
 import * as SockJS from 'sockjs-client';
-import {environment} from '../../../environments/environment';
 import {AppState, selectUserId} from '../../reducers';
-import {socketConnected, socketDisconnected} from './redux/event-manager-actions';
-import {HttpAuthService} from '../account/service/AuthService';
+import {socketConnected} from './redux/event-manager-actions';
 import {InfoService} from '../../service/info.service';
 import {map} from 'rxjs/operators';
 
@@ -30,7 +28,7 @@ export class EventManagerService {
     return this.store
       .pipe(
         select(selectUserId),
-        map(userId => this.infoService.subscribeToCompetition(userId, competitionId)))
+        map(userId => this.infoService.subscribeToCompetition(userId, competitionId)));
   }
 
   private createSocket() {

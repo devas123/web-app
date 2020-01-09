@@ -32,7 +32,7 @@
             ],
             "styles": [
               "src/semantic.slate.css",
-              "src/styles.css",
+              "src/styles.scss",
               "node_modules/semantic-ui-transition/transition.min.css",
               "node_modules/semantic-ui-dimmer/dimmer.min.css",
               "node_modules/croppie/croppie.css"
@@ -98,7 +98,7 @@
             ],
             "styles": [
               "src/semantic.slate.css",
-              "src/styles.css",
+              "src/styles.scss",
               "node_modules/semantic-ui-transition/transition.min.css",
               "node_modules/semantic-ui-dimmer/dimmer.min.css",
               "node_modules/croppie/croppie.css"
@@ -162,7 +162,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css"
+      "styleext": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"

@@ -1,0 +1,118 @@
+/* You can add global styles to this file, and also import other style files */
+@import "calendar.min.css";
+@import "assets/css/dragula.css";
+
+$background_color: #2b3035;
+$header_color: rgba(255, 255, 255, 1);
+$description_color: #7A8288;
+$dialog_input_text_color: lemonchiffon;
+$item_color: #162830;
+
+/* Animate items as they're being sorted. */
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Animate an item that has been dropped. */
+.cdk-drag-animating {
+  transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ui.button {
+  background-image: unset;
+}
+
+.ui.card {
+  background-color: $background_color;
+}
+
+.ui.cards > .card {
+  background-color: $background_color;
+}
+
+.customcontainer {
+  margin-bottom: 1rem;
+  display: grid;
+  grid-gap: 1rem;
+
+  .ui.basic.segment.customline {
+    background-color: $background_color;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 0;
+
+    a {
+      cursor: pointer;
+    }
+
+    .action_buttons {
+      padding-top: 1rem;
+    }
+
+    .header {
+      font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      font-weight: bold;
+      color: $header_color;
+      text-decoration-style: solid;
+    }
+
+    .description {
+      font-size: 14px;
+      font-weight: lighter;
+      color: $description_color;
+      opacity: 50%;
+    }
+
+    .ui.pagination.menu {
+      border: 0;
+    }
+  }
+}
+
+input {
+  background-color: transparent !important;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.search {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.input input {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.input input:active,
+.ui.input.down input {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.input input:focus {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.ui.selection.dropdown {
+  background-color: transparent;
+  color: $dialog_input_text_color !important;
+}
+
+.cell_item {
+  background-color: $item_color;
+  border-radius: 3px;
+  padding: 1em 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+  -webkit-box-shadow: 0 0 0 30px black inset !important;
+  background-color: transparent !important;
+  color: $dialog_input_text_color !important;
+}
+

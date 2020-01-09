@@ -1,80 +1,94 @@
-import {map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AppState} from '../../../../reducers';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
+import {Category, RestrictionType, restrictionTypes} from '../../../../commons/model/competition.model';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
-  styleUrls: ['./create-category.component.css'],
+  styleUrls: ['./create-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateCategoryComponent implements OnInit {
+export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
 
   form: FormGroup;
 
   step = 0;
+  types: RestrictionType[] = restrictionTypes;
 
-  constructor(private fb: FormBuilder, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
+    super(store, <ComponentCommonMetadataProvider>{
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
+        header: 'Create category',
+        subheader: name
+      })),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.router.navigate(['..'], {relativeTo: this.route})
+        }
+      ]
+    }, menuService);
     this.createForm();
-  }
-
-  get gender() {
-    return this.form.get('gender');
-  }
-
-  get beltType() {
-    return this.form.get('beltType');
   }
 
   get fightDuration() {
     return this.form.get('fightDuration');
   }
 
-  get weightName() {
-    return this.form.get(['weight', 'id']);
+  get restrictions() {
+    return this.form.get('restrictions') as FormArray;
   }
 
-  get weightMaxValue() {
-    return this.form.get(['weight', 'maxvalue']);
+  get name() {
+    return this.form.get('name');
   }
 
-  get weightMinValue() {
-    return this.form.get(['weight', 'minvalue']);
+  get registrationOpen() {
+    return this.form.get('registrationOpen');
   }
 
-  get ageDivisionId() {
-    return this.form.get(['ageDivision', 'id']);
+  restrictionType(i: number) {
+    return this.restrictions.controls[i].get('type').value;
   }
 
-  get ageDivisionMaxAge() {
-    return this.form.get(['ageDivision', 'maximalAge']);
+  restrictionName(i: number) {
+    return this.restrictions.controls[i].get('name').value || 'Unnamed';
   }
 
-  get ageDivisionMinAge() {
-    return this.form.get(['ageDivision', 'minimalAge']);
+
+  addRestriction() {
+    this.restrictions.push(this.fb.group({
+        name: [],
+        type: [],
+        minValue: [],
+        maxValue: [],
+        unit: [],
+      })
+    );
   }
 
   createForm() {
     this.form = this.fb.group({
-      gender: ['', [Validators.required]],
-      weight: this.fb.group({
-        id: [''],
-        maxvalue: [],
-        minvalue: []
-      }),
-      beltType: [''],
+      name: [],
       fightDuration: [],
-      ageDivision: this.fb.group({
-        id: [''],
-        minimalAge: [],
-        maximalAge: []
-      })
+      registrationOpen: [true],
+      restrictions: this.fb.array([
+        this.fb.group({
+          name: [],
+          type: [],
+          minValue: [],
+          maxValue: [],
+          unit: [],
+        })
+      ])
     });
   }
 
@@ -96,21 +110,7 @@ export class CreateCategoryComponent implements OnInit {
   submitForm() {
     if (!this.form.invalid) {
       const createCategorySubscription = this.store.pipe(select(eventManagerGetSelectedEventId), map((competitionId: string) => {
-        let cat = {
-          ageDivision: {
-            id: this.ageDivisionId.value,
-            maximalAge: this.ageDivisionMaxAge.value,
-            minimalAge: this.ageDivisionMinAge.value
-          },
-          gender: this.gender.value,
-          weight: {
-            id: this.weightName.value,
-            minValue: this.weightMinValue.value,
-            maxValue: this.weightMaxValue.value,
-          },
-          beltType: this.beltType.value,
-          fightDuration: this.fightDuration.value,
-        } as Category;
+        let cat = this.form.value as Category;
         cat = {...cat} as Category;
         return eventManagerAddCategory(competitionId, cat);
       })).subscribe(this.store);
@@ -118,5 +118,19 @@ export class CreateCategoryComponent implements OnInit {
         createCategorySubscription.unsubscribe();
       });
     }
+  }
+
+  removeRestriction(i: number) {
+    this.restrictions.removeAt(i);
+  }
+
+  setType(i: number, $event: RestrictionType) {
+    this.restrictions.at(i).patchValue({
+      type: $event
+    });
+  }
+
+  setRegistrationOpen(event: boolean) {
+    this.registrationOpen.patchValue(event);
   }
 }

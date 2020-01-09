@@ -9,9 +9,12 @@ import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HotkeyModule} from 'angular2-hotkeys';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 
 describe('ScoreboardContainerComponent', () => {
   let component: ScoreboardContainerComponent;
@@ -19,10 +22,10 @@ describe('ScoreboardContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScoreboardContainerComponent, FightDisplayComponent, ScoreboardComponentComponent, GetNamePipe, TruncatePipe],
+      declarations: [ ScoreboardContainerComponent, FightDisplayComponent, ScoreboardComponentComponent, GetNamePipe, TruncatePipe, ZonedDatePipe],
       imports: [StoreModule.forRoot({
         ...reducers,
-        'eventManagerState': combineReducers(eventManagerReducers())
+        'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -33,10 +36,12 @@ describe('ScoreboardContainerComponent', () => {
             dashboardState: {
               dashboardSocketConnected: false,
               eventPeriods: periodsInitialState
-            }
-          }
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
         }
-      }), RouterTestingModule, HotkeyModule.forRoot()]
+      }), RouterTestingModule, HotkeyModule.forRoot(), DragDropModule]
     })
     .compileComponents();
   }));

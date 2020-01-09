@@ -1,9 +1,9 @@
-import {Account} from "../model/Account";
+import {Account} from '../model/Account';
 
 
 export interface AccountState {
-  user: Account
-  error: string
+  user: Account;
+  error: string;
 }
 
 

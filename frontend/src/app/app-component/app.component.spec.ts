@@ -6,9 +6,11 @@ import {MainMenuComponent} from '../components/main-menu/main-menu.component';
 import {AvatarModule} from 'ngx-avatar';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../reducers';
-import {eventManagerReducers} from '../modules/event-manager/redux/event-manager-reducers';
+import {eventManagerReducers, HeaderDescription} from '../modules/event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../modules/account/flux/account.state';
 import {periodsInitialState} from '../modules/event-manager/redux/dashboard-reducers';
+import {RouterReducerState} from '@ngrx/router-store';
+import {SuiSidebarModule} from 'ng2-semantic';
 
 
 describe('AppComponent', () => {
@@ -20,23 +22,26 @@ describe('AppComponent', () => {
 
       ],
       imports: [ RouterTestingModule, AvatarModule,
+        SuiSidebarModule,
         StoreModule.forRoot({
-          ...reducers,
-          'eventManagerState': combineReducers(eventManagerReducers())
-        }, {
-          initialState: {
-            events: competitionPropertiesEntitiesInitialState,
-            accountState: initialAccountState,
-            eventManagerState: {
-              myEvents: competitionPropertiesEntitiesInitialState,
-              socketConnected: false,
-              dashboardState: {
-                dashboardSocketConnected: false,
-                eventPeriods: periodsInitialState
-              }
-            }
-          }
-        })]
+        ...reducers,
+        'eventManagerState': combineReducers(eventManagerReducers()),
+      }, {
+        initialState: {
+          events: competitionPropertiesEntitiesInitialState,
+          accountState: initialAccountState,
+          eventManagerState: {
+            myEvents: competitionPropertiesEntitiesInitialState,
+            socketConnected: false,
+            dashboardState: {
+              dashboardSocketConnected: false,
+              eventPeriods: periodsInitialState
+            },
+            header: {} as HeaderDescription
+          },
+          router: {} as RouterReducerState<any>
+        }
+      })]
     }).compileComponents();
   }));
   it('should create the app', async(() => {

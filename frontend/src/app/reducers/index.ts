@@ -1,5 +1,5 @@
 import {COMPETITION_LIST_LOADED} from '../actions/actions';
-import {Action, ActionReducer, ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
+import {Action, ActionReducer, ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -7,7 +7,7 @@ import {environment} from '../../environments/environment';
  * ensure that none of the reducers accidentally mutates the state.
  */
 import {storeFreeze} from 'ngrx-store-freeze';
-import {AccountState} from '../modules/account/flux/account.state';
+import {AccountState, initialAccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {
@@ -23,10 +23,13 @@ import {
 import * as competitorsActions from '../modules/competition/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
+import * as fromRouter from '@ngrx/router-store';
+
 
 export interface AppState {
   events: EventPropsEntities;
   accountState: AccountState;
+  router: fromRouter.RouterReducerState<any>;
 }
 
 export interface CommonAction extends Action {
@@ -76,8 +79,11 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 export interface RegistrationGroup {
   id: string;
   displayName: string;
+  defaultGroup: boolean;
   registrationFee: number;
-  registrationPeriodId: string;
+  registrationPeriodIds: string[];
+  registrationInfoId: string;
+  categories: string[];
 }
 
 export interface RegistrationPeriod {
@@ -86,12 +92,14 @@ export interface RegistrationPeriod {
   start: string;
   end: string;
   competitionId: string;
-  registrationGroups: RegistrationGroup[];
+  registrationGroupIds: string[];
 }
 
 export interface RegistrationInfo {
   registrationPeriods: RegistrationPeriod[];
+  registrationGroups: RegistrationGroup[];
   registrationOpen: boolean;
+  id: string;
 }
 
 export interface CompetitionProperties {
@@ -160,10 +168,10 @@ export function competitionList(state: EventPropsEntities = competitionPropertie
   }
 }
 
-
 export const reducers: ActionReducerMap<AppState> = {
   events: competitionList,
   accountState: accountStateReducer,
+  router: fromRouter.routerReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
@@ -179,11 +187,19 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
 
-export const selectCompetitionListState = state => (state && state.events) || competitionPropertiesEntitiesInitialState;
+
+export const selectRouter = createFeatureSelector<AppState,
+  fromRouter.RouterReducerState<any>>('router');
+
+const {
+  selectUrl          // select the current url
+} = fromRouter.getSelectors(selectRouter);
+export const getCurrentUrl = selectUrl;
+
+export const selectCompetitionListState = (state: AppState) => (state && state.events) || competitionPropertiesEntitiesInitialState;
 export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);
 const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state && state.selectedEventCategories);
-export const selectAccountState = state => state && state.accountState;
-
+export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
 export const selectUserId = createSelector(selectUser, state => state && state.userId);
 

@@ -1,7 +1,3 @@
-<button class="ui basic button" *ngIf="fighter?.userId">
-  View User Profile
-</button>
-
 <div class="ui middle aligned large selection divided list" [formGroup]="form">
   <div class="item" itemInput (contentEdited)="changeProperty('firstName')">
 
@@ -150,8 +146,10 @@
     <!--visible content-->
     <div class="row-content">
       <div class="left floated content ">
-        <div class="description">Category</div>
-        <div class="header">{{displayCategory(fighter?.categoryId)}}</div>
+        <div class="description">Categories</div>
+        <ng-container *ngFor="let cat of fighter?.categories">
+          <div class="header">{{displayCategory(cat)}}</div>
+        </ng-container>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -188,7 +186,7 @@
     <div class="row-content">
       <div class="left floated content ">
         <div class="description">Academy</div>
-        <div class="header">{{fighter?.academy}}</div>
+        <div class="header">{{fighter?.academy?.name}}</div>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -197,7 +195,7 @@
     <!---------->
   </div>
 
-  <div class="item"  itemInput (contentEdited)="changeProperty('registrationStatus')">
+  <div class="item" itemInput (contentEdited)="changeProperty('registrationStatus')">
 
     <!--input  hidden field-->
     <div class="input-content">

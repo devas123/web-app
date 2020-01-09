@@ -1,15 +1,3 @@
-export interface Weight {
-  id: string;
-  maxValue: number;
-  minValue: number;
-}
-
-export interface AgeDivision {
-  id: string;
-  minimalAge: number;
-  maximalAge: number;
-}
-
 export interface Period {
   id: string;
   name: string;
@@ -39,8 +27,8 @@ export interface Competitor {
   firstName: string;
   lastName: string;
   birthDate: Date;
-  academy: string;
-  categoryId: string;
+  academy: Academy;
+  categories: string[];
   competitionId: string;
   registrationStatus: string;
   promo: string;
@@ -53,9 +41,15 @@ export interface Score {
   competitorId: string;
 }
 
+export interface CompScore {
+  id: string;
+  competitor: Competitor;
+  score: Score;
+}
+
 export interface Fight {
   id: string;
-  categoryId: string;
+  category: Category;
   parentId1: string;
   parentId2: string;
   winFight: string;
@@ -63,7 +57,7 @@ export interface Fight {
   competitionId: string;
   internalId: string;
   duration: number;
-  scores: { competitor: Competitor, score: Score }[];
+  scores: CompScore[];
   round: number;
   stage: string;
   fightResult: FightResult;
@@ -73,6 +67,7 @@ export interface Fight {
   numberOnMat: number;
   priority: number;
   period: string;
+  startTime: Date;
 }
 
 export interface Academy {
@@ -82,15 +77,29 @@ export interface Academy {
   created: number;
 }
 
-export interface Category {
-  ageDivision: AgeDivision;
+export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
+
+export const restrictionTypes: RestrictionType[] = [
+  'AGE', 'SKILL', 'WEIGHT', 'GENDER', 'SPORTS'
+];
+
+export interface CategoryRestriction {
   id: string;
-  gender: string;
-  weight: Weight;
-  beltType: string;
+  name: string;
+  type: RestrictionType;
+  minValue: string;
+  maxValue: string;
+  unit: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  restrictions: CategoryRestriction[];
   fightDuration: number;
   numberOfCompetitors: number;
   fightsNumber: number;
+  registrationOpen: boolean;
 }
 
 export interface CategoryState {

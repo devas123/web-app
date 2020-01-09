@@ -4,7 +4,7 @@ import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 import {eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../redux/event-manager-actions';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
-import {Subscription, combineLatest} from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 
 @Component({
@@ -18,9 +18,9 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute) {
-    const a$ = combineLatest(
+    const a$ = combineLatest([
       this.route.params.pipe(filter(params => params['id'] && params['id'] != null), map(params => params['id'])),
-      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id != null)));
+      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => id != null))]);
     this.subs.add(a$.pipe(
       map((result: string[]) => {
         this.competitionId = result[1];
@@ -40,3 +40,4 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
   }
 
 }
+

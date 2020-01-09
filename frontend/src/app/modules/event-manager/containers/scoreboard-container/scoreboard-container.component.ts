@@ -2,27 +2,51 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '../../../../reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {Fight} from '../../../../commons/model/competition.model';
-import {dashboardGetSelectedPeriodSelectedMatFights, dashboardGetSelectedPeriodSelectedMatSelectedFight} from '../../redux/dashboard-reducers';
-import {map} from 'rxjs/operators';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {Category, Fight} from '../../../../commons/model/competition.model';
+import {
+  dashboardGetSelectedPeriod,
+  dashboardGetSelectedPeriodId,
+  dashboardGetSelectedPeriodSelectedMat,
+  dashboardGetSelectedPeriodSelectedMatFights,
+  dashboardGetSelectedPeriodSelectedMatSelectedFight
+} from '../../redux/dashboard-reducers';
+import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {dashboardFightSelected, dashboardFightUnselected} from '../../redux/dashboard-actions';
+import {eventManagerGetSelectedEventCategory, eventManagerGetSelectedEventId, HeaderDescription} from '../../redux/event-manager-reducers';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
-  styleUrls: ['./scoreboard-container.component.css']
+  styleUrls: ['./scoreboard-container.component.scss']
 })
-export class ScoreboardContainerComponent implements OnInit, OnDestroy {
+export class ScoreboardContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   subs = new Subscription();
 
   matFights$: Observable<Fight[]>;
 
   selectedFight$: Observable<Fight>;
+  fightCategory$: Observable<Category>;
 
   urlProvidedFightId$: Observable<string>;
 
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
+    super(store, <ComponentCommonMetadataProvider>{
+      header: combineLatest([store.pipe(select(dashboardGetSelectedPeriod)), store.pipe(select(dashboardGetSelectedPeriodSelectedMat))]).pipe(tap(console.log),
+        filter(([p, m]) => !!p && !!m && !!m.matDescription),
+        map(([per, mat]) => <HeaderDescription>{
+          header: 'Mat view',
+          subheader: `${per.name} / ${mat.matDescription.name}`
+        })),
+      menu: [
+        {
+          name: 'Return',
+          action: () => this.navigateBack()
+        }
+      ]
+    }, menuService);
     this.urlProvidedFightId$ = this.route.queryParams.pipe(
       map(params => params['fightId'])
     );
@@ -30,7 +54,7 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
       map(fightId => {
         if (fightId) {
           return dashboardFightSelected(fightId);
-        }  else {
+        } else {
           return dashboardFightUnselected;
         }
       })
@@ -41,9 +65,23 @@ export class ScoreboardContainerComponent implements OnInit, OnDestroy {
     );
 
     this.selectedFight$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatSelectedFight)
+      select(dashboardGetSelectedPeriodSelectedMatSelectedFight),
     );
+
+    this.fightCategory$ = this.selectedFight$.pipe(
+      filter(f => !!f),
+      mergeMap(fight => this.store.pipe(
+        select(eventManagerGetSelectedEventCategory, {id: fight.category.id}))
+      ),
+      tap(cat => console.log(cat)));
   }
+
+  navigateBack() {
+    this.store.pipe(select(eventManagerGetSelectedEventId), withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
+      this.router.navigateByUrl(`/eventmanager/${id}/dashboard/${period}`).catch(console.error);
+    });
+  }
+
 
   selectFightForScoreboard(fightId: string) {
     if (fightId) {

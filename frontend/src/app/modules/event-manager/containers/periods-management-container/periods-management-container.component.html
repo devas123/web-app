@@ -1,27 +1,13 @@
 <div class="ui container">
-  <h2 class="ui header">Periods manager</h2>
-  <div class="ui divider"></div>
-  <div class="ui top basic attached menu">
-    <button class="ui basic button" (click)="navigateBack()">
-      Return
-    </button>
-    <button class="ui basic button" (click)="toggleSchedule()">
-      Toggle schedule
-    </button>
-    <button class="ui basic button" (click)="sendUseScheduleCommand()">
-      Use schedule
-    </button>
-    <button class="ui basic button" (click)="sendDeleteDashboardStateCommand()">
-      Reset
-    </button>
-  </div>
-  <div class="ui basic segment" [suiCollapse]="!showSchedule">
-    <app-schedule-display [categories]="selectedCompetitionCategories$ | async"
+  <ng-container *ngIf="showSchedule">
+    <h3 class="ui header">Schedule</h3>
+    <app-schedule-display [categories]="categories$ | async"
                           [schedule]="selectedCompetitionSchedule$ | async"
-                          [timeZone]="timezone$ | async"
+                          [timeZone]="timeZone$ | async"
                           [competitionId]="(selectedCompetitionProperties$ | async)?.id"
                           (categoryClicked)="navigateToCategory($event)"></app-schedule-display>
-  </div>
+  </ng-container>
+  <h3 class="ui header" *ngIf="showSchedule">Dashboard</h3>
   <div class="ui three stackable cards">
     <div class="ui card" *ngFor="let period of periods$ | async">
       <div class="content">
@@ -30,8 +16,8 @@
         </div>
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
-        <div class="meta">Begins {{period?.startTime | zdate:true:(timezone$ | async)}}</div>
-        <div class="meta">{{period?.matIds?.length + ' mats'}}</div>
+        <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
+        <div class="meta">{{period?.mats?.length + ' mats'}}</div>
       </div>
     </div>
   </div>
