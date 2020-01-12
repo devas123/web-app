@@ -1,9 +1,9 @@
 import {filter, map, take} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {eventManagerGetSelectedEventCompetitorsPageNumber, eventManagerGetSelectedEventCompetitorsPageSize, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventCompetitorsPageNumber, eventManagerGetSelectedEventCompetitorsPageSize} from '../../redux/event-manager-reducers';
 import {eventManagerCategorySelected, eventManagerCategoryUnselected, eventManagerCompetitionFightersPageChanged} from '../../redux/event-manager-actions';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
 
@@ -25,7 +25,7 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
     this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize), filter(size => !!size));
     this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber), filter(number => !!number));
     const eventId$ = this.store.pipe(
-      select(eventManagerGetSelectedEventId),
+      select(getSelectedEventId),
       filter(id => !!id));
     const eventAndCategoryId$ = combineLatest([eventId$, this.route.queryParams.pipe(map(params => params['categoryId']))]);
     this.subs.add(eventAndCategoryId$.pipe(map(([competitionId, routeCategoryId]) => {
@@ -49,7 +49,7 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-    this.store.pipe(select(eventManagerGetSelectedEventId), take(1), map(id => eventManagerCategoryUnselected(id))).subscribe(this.store);
+    this.store.pipe(select(getSelectedEventId), take(1), map(id => eventManagerCategoryUnselected(id))).subscribe(this.store);
   }
 
 }

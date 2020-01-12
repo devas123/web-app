@@ -1,6 +1,6 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
@@ -8,7 +8,6 @@ import {
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventCompetitorsTotal,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory
 } from '../../redux/event-manager-reducers';
@@ -77,7 +76,7 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
         }
       ]
     }, menuService);
-    this.competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
+    this.competitionId$ = this.store.pipe(select(getSelectedEventId));
     this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
     this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
@@ -132,7 +131,7 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
   }
 
   navigateBack() {
-    this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => !!id), take(1)).subscribe(id => {
+    this.store.pipe(select(getSelectedEventId), filter(id => !!id), take(1)).subscribe(id => {
       this.router.navigateByUrl(`/eventmanager/${id}`).catch(console.log);
     });
   }

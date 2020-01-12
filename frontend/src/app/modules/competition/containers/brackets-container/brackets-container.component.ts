@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {AppState, CompetitionProperties} from '../../../../reducers';
+import {AppState, CompetitionState, getSelectedEventId, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
@@ -8,9 +8,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Category, Fight} from '../../../../commons/model/competition.model';
 import {
-  eventManagerGetSelectedEvent,
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryFights,
   eventManagerGetSelectedEventSelectedCategoryFightsAreLoading,
@@ -29,7 +27,7 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   private competitionId: string;
   private subs = new Subscription();
 
-  competition$: Observable<CompetitionProperties>;
+  competition$: Observable<CompetitionState>;
   fights$: Observable<Fight[]>;
   fightsAreLoading$: Observable<boolean>;
   category$: Observable<Category>;
@@ -42,7 +40,7 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   categorySelect: TemplateRef<any>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router, private observer: BreakpointObserver, menuService: MenuService) {
-    const competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
+    const competitionId$ = this.store.pipe(select(getSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
@@ -50,7 +48,7 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
         this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
       }
     }));
-    this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
+    this.competition$ = store.pipe(select(getSelectedEventState));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));

@@ -1,11 +1,10 @@
 import {filter, map, startWith, take, tap} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, Schedule} from '../../../../reducers';
+import {AppState, getSelectedEventId, Schedule} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventScheduleEmpty,
@@ -55,7 +54,7 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.scheduleEmpty$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
-    this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(id => this.competitionId = id));
+    this.subs.add(this.store.pipe(select(getSelectedEventId)).subscribe(id => this.competitionId = id));
     setTimeout(() => this.subs.add(this.scheduleEmpty$.pipe(take(1), startWith(true), tap(console.log)).subscribe(s => this.showEditor = s)));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
@@ -82,11 +81,11 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
   }
 
   removePeriod(periodId: string) {
-    this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId), map(id => eventManagerPeriodRemoved(id, periodId))).subscribe(this.store));
+    this.subs.add(this.store.pipe(select(getSelectedEventId), map(id => eventManagerPeriodRemoved(id, periodId))).subscribe(this.store));
   }
 
   moveCategory(event: { from: string, to: string, category: Category }) {
-    this.subs.add(this.store.pipe(select(eventManagerGetSelectedEventId), map(id => eventManagerCategoryMoved(id, event))).subscribe(this.store));
+    this.subs.add(this.store.pipe(select(getSelectedEventId), map(id => eventManagerCategoryMoved(id, event))).subscribe(this.store));
   }
 
   sendGenerateSchedule(event: ScheduleProperties) {

@@ -5,7 +5,7 @@ import {CategoryEditorComponent} from '../../components/category-editor/category
 import {SuiModule} from 'ng2-semantic';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';

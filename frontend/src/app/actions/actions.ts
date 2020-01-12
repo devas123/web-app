@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {CompetitionProperties} from '../reducers';
+import {CompetitionProperties} from '../reducers/global-reducers';
 
 // Commands
 export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';

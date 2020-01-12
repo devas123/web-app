@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category, categoryFilter, CategoryState, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../../../commons/model/competition.model';
-import {CompetitionProperties} from '../../../../reducers';
+import {CompetitionProperties} from '../../../../reducers/global-reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 

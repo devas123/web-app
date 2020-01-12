@@ -2,7 +2,7 @@ import {DashboardState, MatDescription} from '../../modules/event-manager/redux/
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities} from '../../reducers';
+import {EventPropsEntities} from '../../reducers/global-reducers';
 
 const getRestrictionName = (res: CategoryRestriction, def = '') => {
   if (res) {

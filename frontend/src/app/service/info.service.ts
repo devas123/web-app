@@ -3,7 +3,7 @@ import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs'
 import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {CommonAction} from '../reducers';
+import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
 import {environment, mocks} from '../../environments/environment';

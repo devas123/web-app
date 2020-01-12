@@ -3,7 +3,7 @@ import {filter} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {changeAvatar} from '../../flux/actions';
 import {AccountState} from '../../flux/account.state';
 import {selectAccountState} from '../../../competition/redux/reducers';

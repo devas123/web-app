@@ -1,10 +1,9 @@
 import {OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
@@ -60,7 +59,7 @@ export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEn
   protected constructor(store: Store<AppState>, metadataProvider: ComponentCommonMetadataProvider, menuService: MenuService) {
     super(store, metadataProvider, menuService);
     this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
-    this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
+    this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
   }

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CompetitionProperties} from "../../../../reducers";
-import {Category,} from "../../../../commons/model/competition.model";
+import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import {Category, } from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'competition-main-info',
@@ -11,9 +11,9 @@ import {Category,} from "../../../../commons/model/competition.model";
 export class CompetitionMainInfoComponent implements OnInit {
 
   menu: { name: string, active?: boolean }[] = [{
-    name: "Description",
+    name: 'Description',
     active: true
-  }, {name: "Categories"}, {name: "Prizes"}];
+  }, {name: 'Categories'}, {name: 'Prizes'}];
 
   @Input()
   competitionId: string;
@@ -40,7 +40,7 @@ export class CompetitionMainInfoComponent implements OnInit {
   }
 
   startEvent() {
-    console.log("start event");
-    this.competitionStart.next(this.competitionId)
+    console.log('start event');
+    this.competitionStart.next(this.competitionId);
   }
 }

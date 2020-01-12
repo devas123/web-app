@@ -12,7 +12,7 @@ import {
 } from '@angular/router';
 import {HttpAuthService} from './service/AuthService';
 
-import {AppState} from '../../reducers';
+import {AppState} from '../../reducers/global-reducers';
 import {Store} from '@ngrx/store';
 
 @Injectable()

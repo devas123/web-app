@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {RegistrationGroup} from '../../../../reducers';
+import {RegistrationGroup} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 

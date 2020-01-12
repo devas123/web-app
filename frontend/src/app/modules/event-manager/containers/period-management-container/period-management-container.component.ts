@@ -4,8 +4,7 @@ import {dashboardPeriodSelected, dashboardPeriodUnselected} from '../../redux/da
 import {combineLatest, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers';
-import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 
 @Component({
   selector: 'app-period-management-container',
@@ -18,7 +17,7 @@ export class PeriodManagementContainerComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private store: Store<AppState>) {
     this.subs.add(combineLatest([
-      this.store.pipe(select(eventManagerGetSelectedEventId), filter(id => !!id)),
+      this.store.pipe(select(getSelectedEventId), filter(id => !!id)),
       this.route.params.pipe(map(params => params['periodId']))])
       .pipe(
         filter(response => response && response.length === 2 && response[0] != null),

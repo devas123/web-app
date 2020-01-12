@@ -1,12 +1,8 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {AppState, CompetitionProperties} from '../../../../reducers';
+import {AppState, CompetitionState, getSelectedEventId, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {
-  eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventId,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategoryState} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventName, getSelectedEventSelectedCategoryState} from '../../redux/event-manager-reducers';
 import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCategory, eventManagerAddCategory, eventManagerSetCategoryRegistrationStatus} from '../../redux/event-manager-actions';
@@ -42,7 +38,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 })
 export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
 
-  competition$: Observable<CompetitionProperties>;
+  competition$: Observable<CompetitionState>;
 
   defaultCategories$: Observable<Category[]>;
 
@@ -79,8 +75,8 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
         }
       ]
     }, menuService);
-    this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
-    this.catState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
+    this.competition$ = store.pipe(select(getSelectedEventState));
+    this.catState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
     this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
   }
 
@@ -127,6 +123,6 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   toggleRegistrationStatus(event: { categoryId: string; newStatus: boolean }) {
-    of(event).pipe(withLatestFrom(this.store.pipe(select(eventManagerGetSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({...e, competitionId})), take(1)).subscribe(this.store);
+    of(event).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({...e, competitionId})), take(1)).subscribe(this.store);
   }
 }

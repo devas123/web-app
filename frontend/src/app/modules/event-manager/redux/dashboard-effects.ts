@@ -6,7 +6,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 
 
-import {AppState, CommonAction} from '../../../reducers';
+import {AppState, CommonAction, getSelectedEventId} from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {ERROR_EVENT, errorEvent} from '../../../actions/actions';
 import {
@@ -24,7 +24,6 @@ import {
   dashboardStateLoaded,
   loadDashboardState
 } from './dashboard-actions';
-import {eventManagerGetSelectedEventId} from './event-manager-reducers';
 import {dashboardGetSelectedPeriodId} from './dashboard-reducers';
 
 @Injectable()
@@ -47,7 +46,7 @@ export class DashboardEffects {
   dashboardLoadMats$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_PERIOD_SELECTED),
     withLatestFrom(this.store.pipe(
-      select(eventManagerGetSelectedEventId),
+      select(getSelectedEventId),
       filter(competitionId => competitionId != null))),
     exhaustMap(([command, competitionId]: [CommonAction, string]) => this.infoService.getPeriodMats(competitionId, command.payload).pipe(
       catchError(error => observableOf(errorEvent(error))),

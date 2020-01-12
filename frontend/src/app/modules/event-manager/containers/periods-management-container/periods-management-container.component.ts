@@ -1,8 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, CompetitionProperties, Schedule} from '../../../../reducers';
+import {AppState, CompetitionProperties, getSelectedEventState, Schedule} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEvent,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventScheduleProperties,
@@ -60,7 +59,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
       ]
     }, menuService);
     this.periods$ = store.pipe(select(dashboardGetPeriods));
-    this.selectedCompetitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
+    this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventState));
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));

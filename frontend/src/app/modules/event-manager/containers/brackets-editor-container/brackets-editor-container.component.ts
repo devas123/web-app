@@ -1,15 +1,13 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {AppState, CompetitionProperties} from '../../../../reducers';
+import {AppState, CompetitionProperties, getSelectedEventId, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEvent,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryFights,
-  eventManagerGetSelectedEventSelectedCategoryFightsAreLoading, eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights,
+  eventManagerGetSelectedEventSelectedCategoryFightsAreLoading,
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges,
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds,
 } from '../../redux/event-manager-reducers';
 import {Category, Fight, HeaderDescription} from '../../../../commons/model/competition.model';
@@ -101,7 +99,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
         }
       ]
     }, menuService);
-    const competitionId$ = this.store.pipe(select(eventManagerGetSelectedEventId));
+    const competitionId$ = this.store.pipe(select(getSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
@@ -109,7 +107,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
         this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
       }
     }));
-    this.competition$ = store.pipe(select(eventManagerGetSelectedEvent));
+    this.competition$ = store.pipe(select(getSelectedEventState));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));

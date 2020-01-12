@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CategorySummaryContainerComponent} from './category-summary-container.component';
 import {CategorySummaryComponent} from '../../components/category-summary/category-summary.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';

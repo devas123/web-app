@@ -5,7 +5,7 @@ import {PeriodsManagementContainerComponent} from './periods-management-containe
 import {SuiModule} from 'ng2-semantic';
 import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';

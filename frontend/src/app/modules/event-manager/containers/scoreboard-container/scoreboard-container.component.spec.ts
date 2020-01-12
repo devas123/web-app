@@ -6,7 +6,7 @@ import {ScoreboardComponentComponent} from '../../components/scoreboard-componen
 import {GetNamePipe} from '../../../../pipes/get-name.pipe';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HotkeyModule} from 'angular2-hotkeys';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';

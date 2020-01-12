@@ -5,7 +5,7 @@ import {SuiModule} from 'ng2-semantic'
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {EventManagerService} from '../../event-manager.service';
 import {HttpClientModule} from '@angular/common/http';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';

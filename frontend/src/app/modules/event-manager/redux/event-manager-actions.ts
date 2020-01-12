@@ -1,5 +1,5 @@
 // commands
-import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers';
+import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers/global-reducers';
 import {Category, Competitor, FightsEditorChange, HeaderDescription, PeriodProperties} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 

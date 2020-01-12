@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers';
+import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import produce from 'immer';
 

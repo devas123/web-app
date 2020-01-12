@@ -4,7 +4,7 @@ import {MainMenuComponent} from './main-menu.component';
 import {AvatarModule} from 'ngx-avatar';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../reducers/global-reducers';
 import {eventManagerReducers, HeaderDescription} from '../../modules/event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../modules/account/flux/account.state';
 import {periodsInitialState} from '../../modules/event-manager/redux/dashboard-reducers';

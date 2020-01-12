@@ -6,7 +6,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpAuthService} from '../../../service/AuthService';
 import {HttpClientModule} from '@angular/common/http';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers, HeaderDescription} from '../../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../flux/account.state';

@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../reducers';
+import {AppState} from '../../reducers/global-reducers';
 import {logout} from '../../modules/account/flux/actions';
 import {Account} from '../../modules/account/model/Account';
 import {DomSanitizer} from '@angular/platform-browser';

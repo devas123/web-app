@@ -1,7 +1,6 @@
-import {categoryEntityAdapter, competitorEntityAdapter} from '../../../../commons/model/competition.model';
+import {categoryEntityAdapter} from '../../../../commons/model/competition.model';
 import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
-import * as competitorsActions from '../actions/competitors';
-import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities} from '../../../../reducers';
+import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 
@@ -9,7 +8,7 @@ export const featureKey = 'events';
 
 export const eventsListState = createFeatureSelector<EventPropsEntities>(featureKey);
 export const getSelectedEventId = createSelector(eventsListState, state => state && state.selectedEventId);
-const selectCategoriesEntities = createSelector(eventsListState, state => state && state.selectedEventCategories);
+const selectCategoriesEntities = createSelector(getSelectedEventState, state => state && state.selectedEventCategories);
 export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
 export const selectUserId = createSelector(selectUser, state => state && state.userId);
@@ -42,41 +41,6 @@ export function competitionListReducer(state: EventPropsEntities = competitionPr
       const updates = payload;
       const newState = competitionPropertiesEntitiesAdapter.removeAll(state);
       return competitionPropertiesEntitiesAdapter.upsertMany(updates, newState);
-    case competitorsActions.COMPETITOR_ADDED: {
-      const {competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
-        };
-      } else {
-        return state;
-      }
-    }
-    case competitorsActions.COMPETITOR_UPDATED: {
-      const {competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        const update = {id: competitor.email, changes: competitor};
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors),
-        };
-      } else {
-        return state;
-      }
-    }
-    case competitorsActions.COMPETITOR_REMOVED: {
-      const {fighterId} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
-        };
-      } else {
-        return state;
-      }
-    }
-
     default:
       return state;
   }

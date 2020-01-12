@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, CompetitionProperties} from '../../../../reducers';
+import {AppState, CompetitionProperties, CompetitionState, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {eventManagerGetSelectedEvent, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
@@ -17,7 +17,7 @@ import {HeaderDescription} from '../../../../commons/model/competition.model';
 })
 export class EventPropertiesEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
-  competitionProperties$: Observable<CompetitionProperties>;
+  competitionProperties$: Observable<CompetitionState>;
 
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
@@ -58,7 +58,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
         }
       ]
     }, menuService);
-    this.competitionProperties$ = store.pipe(select(eventManagerGetSelectedEvent));
+    this.competitionProperties$ = store.pipe(select(getSelectedEventState));
   }
 
   ngOnInit() {

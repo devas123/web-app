@@ -6,7 +6,7 @@ import {SignUpComponent} from './sign-up/sign-up.component';
 import {SuiTransitionModule} from 'ng2-semantic'
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {HttpClientModule} from '@angular/common/http';
 import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';

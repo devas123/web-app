@@ -12,7 +12,7 @@ import {accountError, AUTHORIZE_TOKEN, AUTHORIZE_USER, CHANGE_AVATAR, USER_AUTHO
 
 
 
-import {CommonAction} from '../../../reducers';
+import {CommonAction} from '../../../reducers/global-reducers';
 import {AccountService} from '../service/account.service';
 import {Account} from '../model/Account';
 import {ActivatedRoute, Router} from '@angular/router';

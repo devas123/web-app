@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {RegistrationPeriod} from '../../../../reducers';
+import {RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {InfoService} from '../../../../service/info.service';

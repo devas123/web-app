@@ -1,11 +1,11 @@
 import {filter, map, take} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {Category, HeaderDescription, RestrictionType, restrictionTypes} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -109,7 +109,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
 
   submitForm() {
     if (!this.form.invalid) {
-      const createCategorySubscription = this.store.pipe(select(eventManagerGetSelectedEventId), map((competitionId: string) => {
+      const createCategorySubscription = this.store.pipe(select(getSelectedEventId), map((competitionId: string) => {
         let cat = this.form.value as Category;
         cat = {...cat} as Category;
         return eventManagerAddCategory(competitionId, cat);

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
 import {eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
 import {eventManagerGetHeaderDescription, eventManagerGetSocketConnected} from '../../redux/event-manager-reducers';

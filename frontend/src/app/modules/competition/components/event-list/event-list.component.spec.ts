@@ -4,7 +4,7 @@ import {EventListComponent} from './event-list.component';
 import {EventCardComponent} from '../event-card/event-card.component';
 import {SuiTransitionModule} from 'ng2-semantic';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';

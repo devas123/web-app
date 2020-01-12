@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, CompetitionProperties} from '../../../../reducers';
+import {AppState, CompetitionProperties} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';

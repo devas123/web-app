@@ -42,7 +42,7 @@ import {
 } from './event-manager-actions';
 
 
-import {AppState, CommonAction, CompetitionProperties, Schedule} from '../../../reducers';
+import {AppState, CommonAction, CompetitionProperties, Schedule} from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';

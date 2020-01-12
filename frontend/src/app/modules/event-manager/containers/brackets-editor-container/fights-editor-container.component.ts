@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateIds,

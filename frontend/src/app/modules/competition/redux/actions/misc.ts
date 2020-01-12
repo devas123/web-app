@@ -1,5 +1,5 @@
-import {CompetitionProperties} from "../../../../reducers";
-import {CategoryState} from "../../../../commons/model/competition.model";
+import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import {CategoryState} from '../../../../commons/model/competition.model';
 
 export const CONNECTED_EVENT = 'CONNECTED_EVENT';
 export const RESUBSCRIBED_EVENT = 'RESUBSCRIBED_EVENT';

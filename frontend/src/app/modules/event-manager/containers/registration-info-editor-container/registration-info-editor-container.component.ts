@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, RegistrationInfo} from '../../../../reducers';
+import {AppState, getSelectedEventId, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {
   eventManagerGetSelectedEventAvailableRegistrationGroups,
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventRegistrationInfo,
   eventManagerGetSelectedEventTimeZone
@@ -74,7 +73,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       startWith(false)
     );
     this.registrationInfo$ = store.select(eventManagerGetSelectedEventRegistrationInfo);
-    this.competitionId$ = store.select(eventManagerGetSelectedEventId);
+    this.competitionId$ = store.select(getSelectedEventId);
     this.timeZone$ = store.select(eventManagerGetSelectedEventTimeZone);
     this.categories$ = store.select(eventManagerGetSelectedEventCategories);
   }

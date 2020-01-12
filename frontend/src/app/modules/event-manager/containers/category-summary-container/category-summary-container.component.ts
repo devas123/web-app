@@ -2,12 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {Category, CategoryState, displayCategory, HeaderDescription} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
-  eventManagerGetSelectedEventSelectedCategoryState
+  getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
@@ -51,8 +50,8 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
       }))
     }, menuService);
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
-    this.competitionId$ = store.pipe(select(eventManagerGetSelectedEventId));
-    this.categoryState$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryState));
+    this.competitionId$ = store.pipe(select(getSelectedEventId));
+    this.categoryState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
     this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
   }
 

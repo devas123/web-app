@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
@@ -13,7 +13,7 @@ import {
 } from '../../redux/dashboard-reducers';
 import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {dashboardFightSelected, dashboardFightUnselected} from '../../redux/dashboard-actions';
-import {eventManagerGetSelectedEventCategory, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventCategory} from '../../redux/event-manager-reducers';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
@@ -77,7 +77,7 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   }
 
   navigateBack() {
-    this.store.pipe(select(eventManagerGetSelectedEventId), withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
+    this.store.pipe(select(getSelectedEventId), withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
       this.router.navigateByUrl(`/eventmanager/${id}/dashboard/${period}`).catch(console.error);
     });
   }

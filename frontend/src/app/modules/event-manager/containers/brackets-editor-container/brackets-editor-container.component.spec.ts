@@ -4,7 +4,7 @@ import {BracketsEditorContainerComponent} from './brackets-editor-container.comp
 import {SuiDimmerModule, SuiSelectModule} from 'ng2-semantic';
 import {GetNamePipe} from '../../../../pipes/get-name.pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';

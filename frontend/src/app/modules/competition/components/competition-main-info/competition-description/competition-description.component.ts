@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CompetitionProperties} from "../../../../../reducers";
+import {CompetitionProperties} from '../../../../../reducers/global-reducers';
 
 @Component({
   selector: '[competition-description]',

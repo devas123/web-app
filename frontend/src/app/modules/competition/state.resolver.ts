@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
-import {AppState} from '../../reducers';
+import {AppState} from '../../reducers/global-reducers';
 import {Store} from '@ngrx/store';
 import {competitionSelected} from '../../actions/actions';
 

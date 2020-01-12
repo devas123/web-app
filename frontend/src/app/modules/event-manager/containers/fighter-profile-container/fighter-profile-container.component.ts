@@ -2,7 +2,7 @@ import {combineLatest, from, Observable, Subscription} from 'rxjs';
 
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -15,7 +15,6 @@ import {
 } from '../../redux/event-manager-actions';
 import {
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryId,
@@ -58,7 +57,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
     }, menuService);
     const a$ = combineLatest([
       route.params.pipe(map(params => params['fighterId'])),
-      this.store.pipe(select(eventManagerGetSelectedEventId)),
+      this.store.pipe(select(getSelectedEventId)),
       this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))]);
     this.subs.add(a$.pipe(
       filter(value => value[0] && value[1] && value[0] !== null && value[1] !== null),
@@ -93,7 +92,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
 
   ngOnDestroy() {
     this.store.pipe(
-      select(eventManagerGetSelectedEventId),
+      select(getSelectedEventId),
       map(response => eventManagerFighterUnselected(response)),
       take(1))
       .subscribe(this.store);

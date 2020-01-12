@@ -1,9 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {AppState} from '../../../../reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {dashboardUnloadState, loadDashboardState} from '../../redux/dashboard-actions';
 import {filter, map} from 'rxjs/operators';
 
@@ -20,7 +19,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private store: Store<AppState>) {
     this.subs.add(
       this.store.pipe(
-        select(eventManagerGetSelectedEventId),
+        select(getSelectedEventId),
         filter((id: any) => id && id.length > 0),
         map((id: string) => loadDashboardState(id)))
         .subscribe(this.store));

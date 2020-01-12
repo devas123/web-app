@@ -1,5 +1,5 @@
 import {combineReducers, createSelector} from '@ngrx/store';
-import {AppState} from '../../../reducers';
+import {AppState} from '../../../reducers/global-reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Fight, fightEntityAdapter, FightsCollection, fightsInitialState} from '../../../commons/model/competition.model';
 import {

@@ -10,7 +10,7 @@ import * as fightsActions from '../actions/fights';
 
 
 
-import {CompetitionProperties} from '../../../../reducers';
+import {CompetitionProperties} from '../../../../reducers/global-reducers';
 import {InfoService} from '../../../../service/info.service';
 
 

@@ -5,7 +5,7 @@ import {CompetitionMainInfoComponent} from '../../components/competition-main-in
 import {CompetitionDivisionsComponent} from '../../components/competition-main-info/competition-divisions/competition-divisions.component';
 import {CompetitionDescriptionComponent} from '../../components/competition-main-info/competition-description/competition-description.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';

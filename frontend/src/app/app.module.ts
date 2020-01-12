@@ -12,7 +12,7 @@ import {InfoService} from './service/info.service';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
 import {Effects} from './effects/effects';
-import {metaReducers, reducers} from './reducers';
+import {metaReducers, reducers} from './reducers/global-reducers';
 import {HttpAuthService} from './modules/account/service/AuthService';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';

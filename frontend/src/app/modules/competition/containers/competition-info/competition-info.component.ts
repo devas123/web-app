@@ -3,7 +3,7 @@ import {select, Store} from '@ngrx/store';
 import {
   AppState,
   CompetitionProperties
-} from '../../../../reducers';
+} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
 import {startCompetition} from '../../redux/actions/misc';

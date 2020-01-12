@@ -11,10 +11,10 @@ import {regexpValidator} from '../authorization.component';
 
 import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../reducers/index';
 import {authorizeUser} from '../../../flux/actions';
 import {Router} from '@angular/router';
 import {Account} from '../../../model/Account';
+import {AppState} from '../../../../../reducers/global-reducers';
 
 declare var $: any;
 

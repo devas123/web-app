@@ -13,7 +13,7 @@ import {
 
 import {select, Store} from '@ngrx/store';
 import {HttpAuthService} from '../../service/AuthService';
-import {AppState} from '../../../../reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {selectUser} from '../../../competition/redux/reducers';
 
 @Injectable()

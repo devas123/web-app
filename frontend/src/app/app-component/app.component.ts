@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../reducers';
+import {AppState} from '../reducers/global-reducers';
 import {authorizeToken} from '../modules/account/flux/actions';
 import {Observable, Subscription} from 'rxjs';
 import {AccountState} from '../modules/account/flux/account.state';

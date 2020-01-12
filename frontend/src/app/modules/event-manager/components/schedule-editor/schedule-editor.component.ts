@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Schedule} from '../../../../reducers';
+import {Schedule} from '../../../../reducers/global-reducers';
 import {Category, PeriodProperties, ScheduleProperties} from '../../../../commons/model/competition.model';
 import {SuiModalService} from 'ng2-semantic';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';

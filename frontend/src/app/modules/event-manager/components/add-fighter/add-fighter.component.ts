@@ -2,9 +2,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnIn
 import {Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {AppState, CommonAction} from '../../../../reducers';
+import {AppState, CommonAction, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {addCompetitor} from '../../redux/event-manager-actions';
 
 @Component({
@@ -113,7 +112,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
       registrationStatus: ['UNKNOWN'],
       promo: ['']
     });
-    this.compIdSubscription = this.store.pipe(select(eventManagerGetSelectedEventId)).subscribe(competitionId => this.form.patchValue({competitionId}));
+    this.compIdSubscription = this.store.pipe(select(getSelectedEventId)).subscribe(competitionId => this.form.patchValue({competitionId}));
   }
 
   submitForm() {

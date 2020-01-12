@@ -1,4 +1,4 @@
-import {CommonAction} from '../../../reducers';
+import {CommonAction} from '../../../reducers/global-reducers';
 import {AccountState, initialAccountState} from './account.state';
 import {ACCOUNT_ERROR, AUTHORIZE_USER, CHANGE_AVATAR, LOGOUT, USER_AUTHORIZED} from './actions';
 import {b64toBlob} from '../utils';

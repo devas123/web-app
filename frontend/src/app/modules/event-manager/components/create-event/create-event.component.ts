@@ -5,7 +5,7 @@ import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
-import {AppState, CompetitionProperties, RegistrationInfo} from '../../../../reducers';
+import {AppState, CompetitionProperties, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
