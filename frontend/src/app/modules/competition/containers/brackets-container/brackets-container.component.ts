@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AppState, CompetitionState, getSelectedEventId, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {Observable, of, Subscription} from 'rxjs';
+import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
@@ -40,15 +40,7 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   categorySelect: TemplateRef<any>;
 
   constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router, private observer: BreakpointObserver, menuService: MenuService) {
-    const competitionId$ = this.store.pipe(select(getSelectedEventId));
-    const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
-    this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
-    this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
-      if (competitionId && categoryId) {
-        this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
-      }
-    }));
-    this.competition$ = store.pipe(select(getSelectedEventState));
+    this.competition$ = store.pipe(select(getSelectedEventState), filter(st => !!st));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFights));
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));
@@ -62,16 +54,15 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
   setCategoryId(category: Category) {
     if (!this.selectedCategory || this.selectedCategory.id !== category.id) {
-      const queryParams = {categoryId: category.id};
       this.selectedCategory = category;
-      this.router.navigate(['eventmanager', this.competitionId, 'brackets'], {queryParams}).catch(error => console.error(error));
+      of(category.id).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([categoryId, competitionId]) => eventManagerCategorySelected(competitionId, categoryId))).subscribe(this.store);
     }
   }
   ngOnInit() {
   }
   ngOnDestroy() {
     if (this.selectedCategory) {
-      this.store.dispatch(eventManagerCategoryUnselected(this.competitionId));
+      this.store.pipe(select(getSelectedEventId), map(id => eventManagerCategoryUnselected(id)), take(1)).subscribe(this.store);
     }
     this.subs.unsubscribe();
   }

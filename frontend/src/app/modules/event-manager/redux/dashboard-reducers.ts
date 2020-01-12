@@ -16,7 +16,7 @@ import {
   DASHBOARD_STATE_LOADED,
   DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND
 } from './dashboard-actions';
-import {EVENT_MANAGER_COMPETITION_SELECTED, EVENT_MANAGER_COMPETITION_UNSELECTED} from './event-manager-actions';
+import {COMPETITION_SELECTED, EVENT_MANAGER_COMPETITION_UNSELECTED} from './event-manager-actions';
 import {getEventManagerState} from './reducers';
 
 
@@ -218,7 +218,7 @@ export function eventPeriodsReducer(state: PeriodsCollection = periodsInitialSta
         }
       };
     }
-    case EVENT_MANAGER_COMPETITION_SELECTED: {
+    case COMPETITION_SELECTED: {
       return {
         ...state,
         eventId: action.competitionId

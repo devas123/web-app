@@ -36,7 +36,7 @@ import {
     CATEGORY_ADDED,
     CATEGORY_DELETED,
     CATEGORY_STATE_DELETED,
-    COMPETITION_PROPERTIES_UPDATED,
+    COMPETITION_PROPERTIES_UPDATED, COMPETITION_SELECTED,
     EVENT_MANAGER_ALL_BRACKETS_DROPPED,
     EVENT_MANAGER_CATEGORIES_LOADED,
     EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
@@ -44,7 +44,6 @@ import {
     EVENT_MANAGER_CATEGORY_SELECTED,
     EVENT_MANAGER_CATEGORY_STATE_LOADED,
     EVENT_MANAGER_CATEGORY_UNSELECTED,
-    EVENT_MANAGER_COMPETITION_SELECTED,
     EVENT_MANAGER_COMPETITION_UNSELECTED,
     EVENT_MANAGER_COMPETITOR_ADDED,
     EVENT_MANAGER_COMPETITOR_REMOVED,
@@ -74,8 +73,9 @@ import {
     SCHEDULE_GENERATED
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce, {applyPatches, Draft} from 'immer';
-import {COMPETITION_PUBLISHED, COMPETITION_SELECTED, COMPETITION_UNPUBLISHED} from '../actions/actions';
+import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions';
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
+import {COMPETITION_PROPERTIES_LOADED} from '../modules/competition/redux/actions/misc';
 
 export interface AppState {
     accountState: AccountState;
@@ -536,9 +536,12 @@ export function competitionStateReducer(fightsEditorHandler: (st: CompetitionSta
                 }
                 return state;
             }
-            case COMPETITION_SELECTED:
-            case EVENT_MANAGER_COMPETITION_SELECTED: {
+            case COMPETITION_PROPERTIES_LOADED: {
                 return {...state, ...action.payload};
+
+            }
+            case COMPETITION_SELECTED: {
+                return {...state, id: action.competitionId};
             }
             case COMPETITION_PUBLISHED:
             case COMPETITION_UNPUBLISHED: {

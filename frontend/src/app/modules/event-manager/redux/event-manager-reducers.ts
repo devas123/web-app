@@ -1,7 +1,7 @@
 import {CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../reducers/global-reducers';
 import {
     COMPETITION_CREATED,
-    EVENT_MANAGER_COMPETITION_SELECTED,
+    COMPETITION_SELECTED,
     EVENT_MANAGER_COMPETITION_UNSELECTED,
     EVENT_MANAGER_COMPETITIONS_LOADED,
     EVENT_MANAGER_HEADER_REMOVE,
@@ -57,7 +57,7 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
             }
             return state;
         }
-        case EVENT_MANAGER_COMPETITION_SELECTED: {
+        case COMPETITION_SELECTED: {
             const newState = {
                 ...state,
                 selectedEventId: action.payload.id,

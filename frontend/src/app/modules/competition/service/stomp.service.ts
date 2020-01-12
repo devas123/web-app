@@ -4,8 +4,7 @@ import {environment} from '../../../../environments/environment';
 import * as SockJS from 'sockjs-client';
 import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
-import {getSelectedEventId} from '../redux/reducers';
-import {AppState} from '../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../reducers/global-reducers';
 
 const Stomp = require('stompjs/lib/stomp').Stomp;
 

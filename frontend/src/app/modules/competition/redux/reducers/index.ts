@@ -1,13 +1,20 @@
 import {categoryEntityAdapter} from '../../../../commons/model/competition.model';
 import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
-import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  competitionPropertiesEntitiesAdapter,
+  competitionPropertiesEntitiesInitialState,
+  EventPropsEntities,
+  getSelectedEventId,
+  getSelectedEventState
+} from '../../../../reducers/global-reducers';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 
 export const featureKey = 'events';
 
 export const eventsListState = createFeatureSelector<EventPropsEntities>(featureKey);
-export const getSelectedEventId = createSelector(eventsListState, state => state && state.selectedEventId);
 const selectCategoriesEntities = createSelector(getSelectedEventState, state => state && state.selectedEventCategories);
 export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
 export const selectUser = createSelector(selectAccountState, state => state && state.user);

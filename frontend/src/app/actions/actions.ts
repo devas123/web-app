@@ -14,7 +14,6 @@ export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 // Events
 export const CATEGORIES_LOADED = 'CATEGORIES_LOADED';
 export const COMPETITION_LIST_LOADED = 'COMPETITION_LIST_LOADED';
-export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const COMPETITION_DELETED = 'COMPETITION_DELETED';
 export const COMPETITION_PUBLISHED = 'COMPETITION_PUBLISHED';
 export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
@@ -24,7 +23,6 @@ export const ERROR_EVENT = 'ERROR_EVENT';
 export const errorEvent = (text: string) => ({type: ERROR_EVENT, payload: text} as Action);
 export const competitionsLoaded = (payload: CompetitionProperties[]) => ({type: COMPETITION_LIST_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
-export const competitionSelected = (competitionId: string) => ({type: COMPETITION_SELECTED, payload: competitionId});
 export const publishCompetition = (competitionId: string) => ({
   type: PUBLISH_COMPETITION_COMMAND,
   competitionId: competitionId

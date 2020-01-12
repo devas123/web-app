@@ -5,8 +5,7 @@ import {createAction, props} from '@ngrx/store';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
-export const EVENT_MANAGER_LOAD_CATEGORIES_COMMAND = 'EVENT_MANAGER_LOAD_CATEGORIES_COMMAND';
-export const EVENT_MANAGER_SELECT_COMPETITION_COMMAND = 'EVENT_MANAGER_SELECT_COMPETITION_COMMAND';
+export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
 export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND';
 export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
@@ -51,7 +50,7 @@ export const EVENT_MANAGER_CATEGORIES_LOADED = 'EVENT_MANAGER_CATEGORIES_LOADED'
 export const EVENT_MANAGER_SCHEDULE_LOADED = 'EVENT_MANAGER_SCHEDULE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STATE_LOADED = 'EVENT_MANAGER_CATEGORY_STATE_LOADED';
 export const EVENT_MANAGER_COMPETITIONS_LOADED = 'EVENT_MANAGER_COMPETITIONS_LOADED';
-export const EVENT_MANAGER_COMPETITION_SELECTED = 'EVENT_MANAGER_COMPETITION_SELECTED';
+export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const EVENT_MANAGER_FIGHTER_SELECTED = 'EVENT_MANAGER_FIGHTER_SELECTED';
 export const EVENT_MANAGER_FIGHTER_UNSELECTED = 'EVENT_MANAGER_FIGHTER_UNSELECTED';
 export const EVENT_MANAGER_CATEGORY_SELECTED = 'EVENT_MANAGER_CATEGORY_SELECTED';
@@ -171,22 +170,15 @@ export const eventManagerCategoryMoved = (competitionId: string, payload: any) =
   competitionId
 });
 
-export const eventManagerLoadCategories = (competitionId: string) => ({
-  type: EVENT_MANAGER_LOAD_CATEGORIES_COMMAND,
+export const loadCategories = (competitionId: string) => ({
+  type: LOAD_CATEGORIES_COMMAND,
   payload: competitionId
 });
 
-export const eventManagerCompetitionSelected = (competitionProperties: CompetitionProperties) => ({
-  competitionId: competitionProperties.id,
-  type: EVENT_MANAGER_COMPETITION_SELECTED,
-  payload: competitionProperties
+export const competitionSelected = (competitionId: string) => ({
+  competitionId: competitionId,
+  type: COMPETITION_SELECTED,
 });
-export const eventManagerSelectCompetition = (competitionId: string) => ({
-  type: EVENT_MANAGER_SELECT_COMPETITION_COMMAND,
-  payload: competitionId,
-  competitionId
-});
-
 export const eventManagerAddCategory = (competitionId, category: Category) => ({
   type: ADD_CATEGORY_COMMAND,
   competitionId,
