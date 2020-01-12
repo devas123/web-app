@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {FightsEditorChange} from '../../../../competition/reducers';
+import {FightsEditorChange} from '../../../../competition/redux/reducers';
 import {Competitor, Fight, Score} from '../../../../../commons/model/competition.model';
 import produce, {applyPatches} from 'immer';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
@@ -20,13 +20,13 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
                         <div class="content">
                             {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
                         </div>
-                        <div class="sub header">{{fight?.scores[0]?.competitor?.academy}}</div>
+                        <div class="sub header">{{fight?.scores[0]?.competitor?.academy?.name}}</div>
                     </div>
                     <div class="competitor-display" cdkDrag [cdkDragData]="{index: i}">
                         <div class="content">
                             {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
                         </div>
-                        <div class="sub header">{{fight?.scores[1]?.competitor?.academy}}</div>
+                        <div class="sub header">{{fight?.scores[1]?.competitor?.academy?.name}}</div>
                     </div>
                 </div>
             </div>
@@ -91,9 +91,12 @@ export class FightsEditorComponent {
             event.previousIndex,
             event.currentIndex);
           if (draft[containerIndex].scores.length > 2) {
-            let indexFrom = event.currentIndex + 1;
+            let indexFrom = event.currentIndex;
             if (indexFrom > 1) {
               indexFrom = 0;
+            }
+            if (indexFrom <= 1) {
+              indexFrom = 2;
             }
             transferArrayItem(draft[containerIndex].scores,
               draft[index].scores,

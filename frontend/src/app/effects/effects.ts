@@ -6,7 +6,7 @@ import {Observable, of} from 'rxjs';
 import {Action} from '@ngrx/store';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import * as allActions from '../actions/actions';
-import * as competitionMiscActions from '../modules/competition/actions/misc';
+import * as competitionMiscActions from '../modules/competition/redux/actions/misc';
 import {InfoService} from '../service/info.service';
 import {CommonAction, CompetitionProperties} from '../reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';

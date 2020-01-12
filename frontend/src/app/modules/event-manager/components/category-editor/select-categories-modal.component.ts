@@ -5,7 +5,7 @@ import {Category} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
-import {categoryFilter} from '../../../competition/reducers';
+import {categoryFilter} from '../../../competition/redux/reducers';
 
 export interface ISelecetDefaultCategoriesContext {
   defaultCategories: Observable<Category[]>;

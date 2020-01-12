@@ -6,7 +6,7 @@ import {AppState, CommonAction} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {addCompetitor} from '../../redux/event-manager-actions';
-import {displayCategory} from '../../../competition/reducers';
+import {displayCategory} from '../../../competition/redux/reducers';
 
 @Component({
   selector: 'app-add-fighter',

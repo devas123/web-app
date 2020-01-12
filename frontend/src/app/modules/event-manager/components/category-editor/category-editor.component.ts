@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Category, CategoryState, RestrictionType} from '../../../../commons/model/competition.model';
 import {CompetitionProperties} from '../../../../reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../redux/event-manager-actions';
-import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../../competition/reducers';
+import {categoryFilter, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../../competition/redux/reducers';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 
 

@@ -46,8 +46,8 @@
       <button class="ui button" (click)="addRestriction()">Add restriction</button>
       <p></p>
       <sui-accordion [closeOthers]="true">
-        <sui-accordion-panel [isOpen]="i === restrictions.controls.length - 1"
-                             *ngFor="let restriction of restrictions.controls; let i=index" [formGroupName]="i">
+        <sui-accordion-panel [isOpen]="isLast"
+                             *ngFor="let restriction of restrictions.controls; index as i; last as isLast" [formGroupName]="i">
           <div title>
             <div class="span_title">
               <span>{{restrictionType(i)}} Restriction ({{restrictionName(i)}})</span>

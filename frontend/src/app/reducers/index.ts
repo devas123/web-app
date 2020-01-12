@@ -19,8 +19,8 @@ import {
   competitorEntityAdapter,
   CompetitorsCollection,
   competitorsInitialState
-} from '../modules/competition/reducers';
-import * as competitorsActions from '../modules/competition/actions/competitors';
+} from '../modules/competition/redux/reducers';
+import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {Category, Period} from '../commons/model/competition.model';
 import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
 import * as fromRouter from '@ngrx/router-store';

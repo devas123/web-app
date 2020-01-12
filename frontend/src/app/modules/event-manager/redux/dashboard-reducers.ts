@@ -1,6 +1,6 @@
 import {combineReducers, createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers';
-import {fightEntityAdapter, FightsCollection, fightsInitialState} from '../../competition/reducers';
+import {fightEntityAdapter, FightsCollection, fightsInitialState} from '../../competition/redux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Fight} from '../../../commons/model/competition.model';
 import {
@@ -35,7 +35,7 @@ export interface DashboardPeriod {
 }
 
 
-interface MatDescription {
+export interface MatDescription {
   id: string;
   name: string;
 }

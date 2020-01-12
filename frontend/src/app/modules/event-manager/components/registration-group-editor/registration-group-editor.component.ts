@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category} from '../../../../commons/model/competition.model';
 import {RegistrationGroup, RegistrationInfo} from '../../../../reducers';
-import {displayCategory as dc} from '../../../competition/reducers';
+import {displayCategory as dc} from '../../../competition/redux/reducers';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import produce from 'immer';
 

@@ -56,7 +56,7 @@ import {
   fightsEditorChangeEntityAdapter,
   fightsEditorInitialState,
   fightsInitialState
-} from '../../competition/reducers';
+} from '../../competition/redux/reducers';
 import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
 import {dashboardReducers, DashboardState} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';

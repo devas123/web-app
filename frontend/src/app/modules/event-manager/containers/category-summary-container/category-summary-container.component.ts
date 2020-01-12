@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
-import {displayCategory} from '../../../competition/reducers';
+import {displayCategory} from '../../../competition/redux/reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({

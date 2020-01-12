@@ -8,7 +8,7 @@ import {
 } from '../../../../reducers';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
-import {startCompetition} from '../../actions/misc';
+import {startCompetition} from '../../redux/actions/misc';
 
 @Component({
   selector: 'app-competition-info',

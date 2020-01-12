@@ -8,7 +8,7 @@ import {
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights
 } from '../../redux/event-manager-reducers';
 import {Fight} from '../../../../commons/model/competition.model';
-import {FightsEditorChange} from '../../../competition/reducers';
+import {FightsEditorChange} from '../../../competition/redux/reducers';
 import {eventManagerFightsEditorChangeAdded, eventManagerFightsForChangeUnselected} from '../../redux/event-manager-actions';
 
 @Component({

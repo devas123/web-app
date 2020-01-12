@@ -1,9 +1,18 @@
-<svg:svg xmlns:svg="https://www.w3.org/2000/svg"
-         [attr.height]="slotHeightPx * bracketHeightInFights"
-         [attr.width]="rowWidthPx">
-  <mask id="mask-selected">
-    <rect width="100%" height="100%" fill="gray"></rect>
-  </mask>
+<ng-template let-popup let-context="context" #popupTemplate>
+  <div class="content">
+    <p>Mat: {{context?.mat?.name || 'N/A'}}</p>
+    <p>Fight #{{context?.numberOnMat + 1}}</p>
+  </div>
+</ng-template>
+<svg:svg
+  xmlns:svg="http://www.w3.org/2000/svg"
+  version="1.1"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  [attr.height]="slotHeightPx * bracketHeightInFights"
+  [attr.width]="rowWidthPx">
+  <svg:mask id="mask-selected">
+    <svg:rect width="100%" height="100%" fill="gray" />
+  </svg:mask>
   <svg:svg
     [attr.id]="'fight' + i"
     [attr.height]="(100 / fights.length) + '%'"
@@ -11,31 +20,40 @@
     [attr.width]="rowWidthPx * competitorsWidthPercent"
     [ngClass]="{hoverable: true, selectable: canSelectFight(fight)}"
     *ngFor="let fight of fights; trackBy: trackByFights; let i = index"
-  (click)="selectFightForEdit(fight)">
+    (click)="selectFightForEdit(fight)">
     <svg:svg
       [attr.id]="'fightslot' + i"
       [attr.height]="slotHeightPx * 0.8"
-      [attr.y]="slotYOffset">
+      [attr.y]="slotYOffset"
+    >
+      <svg:g>
+        <svg:rect x="0" y="0" width="100%" height="100%" rx="10" class="compholder" suiPopup [popupTemplate]="popupTemplate"
+                  [popupTemplateContext]="fight" popupTrigger="hover" [popupDelay]="600"/>
+        <svg:line x1="1" y1="50%" x2="100%" y2="50%" stroke="gray" stroke-width="1"/>
+      </svg:g>
 
       <ng-container *ngFor="let _ of [2, 2]; let ci = index">
         <svg:svg
           height="49%"
           [attr.id]="'fight_' + i + '_competitor_' + ci"
-          [attr.y]="ci * 50 + '%'">
+          [attr.y]="ci * 50 + '%'"
+        >
           <svg:g>
-            <svg:rect
-              width="100%"
-              height="100%"
-              rx="3"
-              class="compholder"
-            />
             <!--      fighter name      -->
             <svg:text
               *ngIf="ci <=  fight?.scores?.length - 1"
               fill="white"
               class="fighter"
               x="10"
-              y="70%">{{fight?.scores[ci]?.competitor | getname:true}}
+              y="45%">{{fight?.scores[ci]?.competitor | getname:true}}
+            </svg:text>
+            <!--      fighter name      -->
+            <svg:text
+              *ngIf="ci <=  fight?.scores?.length - 1"
+              fill="navajowhite"
+              class="academy"
+              x="10"
+              y="80%">{{fight?.scores[ci]?.competitor?.academy | getacademy:15}}
             </svg:text>
             <!--      score      -->
             <svg:svg *ngIf="fight?.stage === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
@@ -95,10 +113,10 @@
       [attr.width]="rowWidthPx * pathWidthPercent">
       <svg:g>
         <svg:path *ngIf="fights.length > 1" [attr.d]="paths[k % 2]"
-                  style="stroke: gold; fill: none"/>
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
         <svg:path *ngIf="fights.length == 1" [attr.d]="paths[2]"
-                  style="stroke: gold; fill: none"/>
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
       </svg:g>
     </svg:svg>
   </ng-container>
-</svg:svg>
+  </svg:svg>

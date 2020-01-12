@@ -1,6 +1,6 @@
 <div class="all-buckets-page">
   <div *ngFor="let bucket of rounds" class="bracket-page">
-    <div *ngFor="let round of bucket; let i = index">
+    <div *ngFor="let round of bucket; index as i; last as isLast">
       <h5 class="ui header">{{getRoundName(round)}}</h5>
       <app-bracketround [changeFightIds]="changeFightsIds"
                         [rowWidthPx]="rowWidthPx"
@@ -9,7 +9,8 @@
                         [round]="round"
                         [oneFightInPercent]="getOneFightInPercent(round)"
                         [elementsSelectable]="editMode && (changeFightsIds?.length < 2)"
-                        [drawConnections]="!isLastRoundInBucket(round, bucket)"
+                        [drawConnections]="!isLast"
+                        [slotHeightPx]="120"
                         (fightSelected)="addFightToCurrentChange($event)"></app-bracketround>
     </div>
   </div>

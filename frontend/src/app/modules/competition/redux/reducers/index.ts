@@ -1,5 +1,5 @@
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Academy, Category, CategoryRestriction, CategoryState, Competitor, Fight, RestrictionType} from '../../../commons/model/competition.model';
+import {Academy, Category, CategoryRestriction, CategoryState, Competitor, Fight, RestrictionType} from '../../../../commons/model/competition.model';
 
 export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
   selectId: (c: Competitor) => c.id,

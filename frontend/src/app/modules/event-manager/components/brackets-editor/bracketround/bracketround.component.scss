@@ -1,11 +1,3 @@
-.compholder {
-  stroke: white;
-  text.fighter {
-    stroke: white;
-    fill: white;
-  }
-}
-
 .selectable {
   rect.compholder {
     stroke: #824116;
@@ -14,9 +6,24 @@
   cursor: pointer;
 }
 
+.compholder {
+  fill: black;
+  stroke: gold;
+}
+
 .hoverable {
   &:hover {
     mask: url(#mask-selected);
   }
+}
+
+.fighter {
+  font-size: 14px;
+  font-weight: lighter;
+}
+
+.academy {
+  font-size: 10px;
+  font-weight: lighter;
 }
 

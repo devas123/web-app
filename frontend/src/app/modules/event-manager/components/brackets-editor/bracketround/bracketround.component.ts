@@ -9,7 +9,6 @@ import {Fight} from '../../../../../commons/model/competition.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BracketRoundComponent implements OnInit, OnChanges {
-
   constructor() {
   }
 
@@ -38,7 +37,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   public rowWidthPx = 300;
 
   @Input()
-  public slotHeightPx = 80;
+  public slotHeightPx = 160;
 
   @Input()
   public drawConnections = true;

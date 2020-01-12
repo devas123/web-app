@@ -70,6 +70,10 @@ $item_color: #162830;
   }
 }
 
+sui-select-option.item {
+  border-radius: 0 !important;
+}
+
 input {
   background-color: transparent !important;
   color: $dialog_input_text_color !important;

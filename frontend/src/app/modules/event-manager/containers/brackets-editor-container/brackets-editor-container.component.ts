@@ -115,7 +115,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), tap(category => this.selectedCategory = category));
     this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
-      map(b => b.matches ? 2 : 3)
+      map(b => b.matches ? 2 : 4)
     );
     this.changeFightsIds$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds));
   }

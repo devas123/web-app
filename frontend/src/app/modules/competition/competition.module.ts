@@ -1,22 +1,23 @@
 import {NgModule} from '@angular/core';
 import {EffectsModule} from '@ngrx/effects';
 import {RegistrationService} from './service/registration.service';
-import {CompetitorsEffects, FightsEffects} from './effects';
+import {CompetitorsEffects, FightsEffects} from './redux/effects';
 import {RouterModule} from '@angular/router';
 import {compRoutes} from './competition.routes';
 import {SuiSidebarModule} from 'ng2-semantic';
 import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';
-import {TemplateEffects} from './effects/template';
+import {TemplateEffects} from './redux/effects/template';
 import {NgxMdModule} from 'ngx-md';
-import {MiscEffects} from './effects/misc';
+import {MiscEffects} from './redux/effects/misc';
 import {CompetitionInfoComponent} from './containers/competition-info/competition-info.component';
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 import {CompetitionDivisionsComponent} from './components/competition-main-info/competition-divisions/competition-divisions.component';
 import {CommonsModule} from '../../commons/commons.module';
 import {CommonModule} from '@angular/common';
+import {InfoService} from '../../service/info.service';
 
 @NgModule({
   imports: [

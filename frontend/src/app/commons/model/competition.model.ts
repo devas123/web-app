@@ -1,3 +1,5 @@
+import {MatDescription} from '../../modules/event-manager/redux/dashboard-reducers';
+
 export interface Period {
   id: string;
   name: string;
@@ -63,7 +65,7 @@ export interface Fight {
   fightResult: FightResult;
   timeToStart: boolean;
   numberInRound: number;
-  matId: string;
+  mat: MatDescription;
   numberOnMat: number;
   priority: number;
   period: string;

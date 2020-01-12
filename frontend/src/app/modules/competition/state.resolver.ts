@@ -9,8 +9,8 @@ import {competitionSelected} from '../../actions/actions';
 export class StateResolver implements Resolve<any> {
   constructor(private store: Store<AppState>) {}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
-    let competitionId = route.paramMap.get('id');
+    const competitionId = route.paramMap.get('id');
     this.store.dispatch(competitionSelected(competitionId));
-    return Promise.resolve()
+    return Promise.resolve();
   }
 }

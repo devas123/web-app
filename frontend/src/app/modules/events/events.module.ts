@@ -12,7 +12,7 @@ export const routes: Routes =
     {path: '', component: EventCalendarComponent},
     {
       path: ':id',
-      loadChildren: '../competition/competition.module#CompetitionModule',
+      loadChildren: () => import('../competition/competition.module').then(mod => mod.CompetitionModule),
       data: {preload: false}
     }
   ];

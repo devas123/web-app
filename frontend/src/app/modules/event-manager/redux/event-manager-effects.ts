@@ -5,6 +5,7 @@ import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {
+  CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
   EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_COMPETITION_SELECTED,
@@ -59,7 +60,8 @@ export class EventManagerEffects {
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
       EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
-      EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND),
+      EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+      CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
     mergeMap(command => this.infoService.sendCommandSync(command)),
     catchError(error => {
       console.error(error);

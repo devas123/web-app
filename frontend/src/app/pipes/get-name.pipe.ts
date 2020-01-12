@@ -54,10 +54,11 @@ export class GetNamePipe implements PipeTransform {
     return uc;
   }
 
-  public static fullOrShortLastName(name: String) {
+  public static fullOrShort(name: string, maxLength = 10) {
+    const ml = Math.max(3, maxLength);
     if (name) {
-      if (name.length > 10) {
-        return name.slice(0, 7) + '...';
+      if (name.length > ml) {
+        return name.slice(0, ml - 3) + '...';
       }  else {
         return name;
       }
@@ -66,7 +67,7 @@ export class GetNamePipe implements PipeTransform {
     }
   }
 
-  public static fullOrShortFirstName(name: String, truncate) {
+  public static fullOrFirstLetter(name: string, truncate) {
     if (!truncate) {
       return name;
     }
@@ -77,8 +78,8 @@ export class GetNamePipe implements PipeTransform {
 
   transform(comp: Competitor, trunkate?: boolean): string {
     if (comp) {
-      const str = GetNamePipe.fullOrShortFirstName(GetNamePipe.transliterateStr(comp.firstName), trunkate);
-      return str + ' ' + GetNamePipe.fullOrShortLastName(GetNamePipe.transliterateStr(comp.lastName));
+      const str = GetNamePipe.fullOrFirstLetter(GetNamePipe.transliterateStr(comp.firstName), trunkate);
+      return str + ' ' + GetNamePipe.fullOrShort(GetNamePipe.transliterateStr(comp.lastName));
     } else {
       return '';
     }

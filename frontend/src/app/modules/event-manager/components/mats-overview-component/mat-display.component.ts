@@ -48,7 +48,7 @@ export class MatDisplayComponent implements OnInit {
     const fight = event.item.data as Fight;
     const newOrderOnMat = event.container.data[event.currentIndex].numberOnMat;
     this.fightMatChanged.next({
-      currentMatId: fight.matId,
+      currentMatId: fight.mat.id,
       currentOrderOnMat: fight.numberOnMat,
       fightId: fight.id,
       newMatId: matId,
