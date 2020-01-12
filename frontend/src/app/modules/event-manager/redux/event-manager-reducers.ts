@@ -24,6 +24,7 @@ import {
 import {dashboardReducers} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
+import {COMPETITION_PROPERTIES_LOADED} from '../../../actions/misc';
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
@@ -58,11 +59,15 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
             return state;
         }
         case COMPETITION_SELECTED: {
+            return {
+                ...state,
+                selectedEventId: action.competitionId,
+            };
+        }
+        case COMPETITION_PROPERTIES_LOADED: {
             const newState = {
                 ...state,
-                selectedEventId: action.payload.id,
-                selectedEventCategories: categoriesInitialState,
-                selectedEventCompetitors: competitorsInitialState,
+                selectedEventId: action.competitionId,
             };
             return competitionPropertiesEntitiesAdapter.updateOne({
                 id: action.payload.id,

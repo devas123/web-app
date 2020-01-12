@@ -13,12 +13,12 @@ export class ZonedDatePipe implements PipeTransform {
       const keepZone = value instanceof Date ? DateTime.fromMillis(value.getTime()) : DateTime.fromISO(value, {zone: z});
       if (showtime) {
         if (showDate) {
-          return keepZone.toLocaleString(DateTime.DATETIME_SHORT) + (zone ? `, ${zone}` : '');
+          return keepZone.toLocaleString(DateTime.DATETIME_MED) + (zone ? `, ${zone}` : '');
         } else {
           return keepZone.toLocaleString(DateTime.TIME_24_SIMPLE) + (zone ? `, ${zone}` : '');
         }
       } else {
-        return keepZone.toLocaleString(DateTime.DATE_SHORT) + (zone ? `, ${zone}` : '');
+        return keepZone.toLocaleString(DateTime.DATE_MED) + (zone ? `, ${zone}` : '');
       }
     }
     return '';

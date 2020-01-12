@@ -13,16 +13,20 @@ import {BracketComponent} from '../components/brackets-editor/bracket/bracket.co
 import {BracketRoundComponent} from '../components/brackets-editor/bracketround/bracketround.component';
 import {ScheduleDisplayComponent} from '../components/schedule-display/schedule-display.component';
 import {CommonModule} from '@angular/common';
-import {SuiCollapseModule, SuiPopupModule} from 'ng2-semantic';
+import {SuiAccordionModule, SuiCollapseModule, SuiPopupModule} from 'ng2-semantic';
+import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
-    ScheduleDisplayComponent],
+    ScheduleDisplayComponent,
+  CategoryEditorComponent],
   exports: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
-    ScheduleDisplayComponent],
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule]
+    ScheduleDisplayComponent,
+    CategoryEditorComponent],
+  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, RouterModule]
 })
 export class CommonsModule {
 }

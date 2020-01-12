@@ -75,7 +75,7 @@ import {
 import produce, {applyPatches, Draft} from 'immer';
 import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions';
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
-import {COMPETITION_PROPERTIES_LOADED} from '../modules/competition/redux/actions/misc';
+import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 
 export interface AppState {
     accountState: AccountState;

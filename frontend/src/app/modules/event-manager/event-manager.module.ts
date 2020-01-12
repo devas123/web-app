@@ -24,7 +24,6 @@ import {EventManagerEffects} from './redux/event-manager-effects';
 import {EVENT_MANAGER_REDUCERS} from './redux/event-manager-reducers';
 import {EventManagerService} from './event-manager.service';
 import {ReactiveFormsModule} from '@angular/forms';
-import {CategoryEditorComponent} from './components/category-editor/category-editor.component';
 import {CategoryEditorContainerComponent} from './containers/category-editor-container/category-editor-container.component';
 import {EventManagerContainerComponent} from './containers/event-manager-container/event-manager-container.component';
 import {CreateCategoryComponent} from './components/create-category/create-category.component';
@@ -67,7 +66,7 @@ import {FlexibleColumnDirective} from './containers/event-manager-container/flex
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
 import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
-import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
+import {SelectCategoriesModalComponent} from '../../components/category-editor/select-categories-modal.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
 import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
@@ -127,7 +126,6 @@ import {FightsEditorComponent} from './components/fights-editor/fights-editor.co
     MyEventsComponent,
     CreateEventComponent,
     MyEventsListComponent,
-    CategoryEditorComponent,
     CategoryEditorContainerComponent,
     EventManagerContainerComponent,
     CreateCategoryComponent,

@@ -34,6 +34,7 @@ $item_color: #162830;
   margin-bottom: 1rem;
   display: grid;
   grid-gap: 1rem;
+  width: 100%;
 
   .ui.basic.segment.customline {
     background-color: $background_color;
@@ -63,11 +64,11 @@ $item_color: #162830;
       color: $description_color;
       opacity: 50%;
     }
-
-    .ui.pagination.menu {
-      border: 0;
-    }
   }
+}
+
+.ui.pagination.menu {
+  border: 0;
 }
 
 sui-select-option.item {

@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import {CompetitionProperties} from '../../reducers/global-reducers';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
-import {Category, categoryFilter} from '../../../../commons/model/competition.model';
-import {AddFighterComponent} from '../add-fighter/add-fighter.component';
+import {Category, categoryFilter} from '../../commons/model/competition.model';
+import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
 

@@ -13,7 +13,7 @@ export class CompetitionMainInfoComponent implements OnInit {
   menu: { name: string, active?: boolean }[] = [{
     name: 'Description',
     active: true
-  }, {name: 'Categories'}, {name: 'Prizes'}];
+  }, {name: 'Categories'}];
 
   @Input()
   competitionId: string;

@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {
   AppState,
-  CompetitionProperties, getSelectedEventId
+  CompetitionProperties, getSelectedEventId, getSelectedEventState
 } from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
-import {startCompetition} from '../../redux/actions/misc';
-import {getSelectedCompetitionCategories, getSelectedEventProperties} from '../../redux/reducers';
+import {getSelectedCompetitionCategories} from '../../redux/reducers';
+import {startCompetition} from '../../../../actions/misc';
 
 @Component({
   selector: 'app-competition-info',
@@ -29,7 +29,7 @@ export class CompetitionInfoComponent implements OnInit {
 
   constructor(private store: Store<AppState>) {
     this.competitionId$ = store.pipe(select(getSelectedEventId));
-    this.competitionProperties$ = store.pipe(select(getSelectedEventProperties));
+    this.competitionProperties$ = store.pipe(select(getSelectedEventState));
     this.categories$ = store.pipe(select(getSelectedCompetitionCategories));
   }
 

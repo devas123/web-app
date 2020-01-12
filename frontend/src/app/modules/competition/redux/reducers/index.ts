@@ -1,14 +1,6 @@
 import {categoryEntityAdapter} from '../../../../commons/model/competition.model';
 import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
-import {
-  AppState,
-  CompetitionProperties,
-  competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
-  EventPropsEntities,
-  getSelectedEventId,
-  getSelectedEventState
-} from '../../../../reducers/global-reducers';
+import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 
@@ -25,14 +17,6 @@ export const {
 } = competitionPropertiesEntitiesAdapter.getSelectors(eventsListState);
 
 export const selectAllCompetitions = getAllCompetitions;
-
-export const getSelectedEventProperties = createSelector(
-  getAllCompetitions,
-  getSelectedEventId,
-  (entities, selectedId) => {
-    return selectedId && entities[selectedId];
-  }
-);
 
 export const {
   // select the array of users

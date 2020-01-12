@@ -9,32 +9,32 @@ import {deleteCategory, eventManagerAddCategory, eventManagerSetCategoryRegistra
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
-import {ISelectCategoriesResult, SelectCategoriesModal} from '../../components/category-editor/select-categories-modal.component';
+import {ISelectCategoriesResult, SelectCategoriesModal} from '../../../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-category-editor-container',
   template: `
-      <ng-template #search>
-          <div class="item">
-              <div class="ui icon search input">
-                  <i class="search icon"></i>
-                  <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
-              </div>
-          </div>
-      </ng-template>
-      <div class="ui container">
-          <app-category-editor [categories]="categories$ | async"
-                               [searchString]="searchString$ | async"
-                               [defaultCategories]="defaultCategories$ | async"
-                               [competition]="competition$ | async"
-                               [selectedCategoryState]="catState$ | async"
-                               (createCustomCategoryClicked)="addCategory()"
-                               (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
-                               (deleteCategoryEvent)="doDeleteCategory($event)"
-                               (generateRandomFightersEvent)="generateRandomFighters($event)"
-          (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>
-      </div> `
+    <ng-template #search>
+      <div class="item">
+        <div class="ui icon search input">
+          <i class="search icon"></i>
+          <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
+        </div>
+      </div>
+    </ng-template>
+    <div class="ui container">
+      <app-category-editor [categories]="categories$ | async"
+                           [searchString]="searchString$ | async"
+                           [defaultCategories]="defaultCategories$ | async"
+                           [competition]="competition$ | async"
+                           (categoryEditorClicked)="navigateToCategoryEditor($event)"
+                           (createCustomCategoryClicked)="addCategory()"
+                           (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
+                           (deleteCategoryEvent)="doDeleteCategory($event)"
+                           (generateRandomFightersEvent)="generateRandomFighters($event)"
+                           (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>
+    </div> `
 })
 export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
 
@@ -124,5 +124,9 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
 
   toggleRegistrationStatus(event: { categoryId: string; newStatus: boolean }) {
     of(event).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({...e, competitionId})), take(1)).subscribe(this.store);
+  }
+
+  navigateToCategoryEditor(categoryId: string) {
+    this.router.navigate([categoryId], {relativeTo: this.route}).catch(console.log);
   }
 }
