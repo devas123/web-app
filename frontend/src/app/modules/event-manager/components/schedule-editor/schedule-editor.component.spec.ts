@@ -2,8 +2,8 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ScheduleEditorComponent} from './schedule-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from 'ng2-semantic'
-import {ScheduleDisplayComponent} from './schedule-display.component';
+import {SuiModule} from 'ng2-semantic';
+import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';

@@ -1,155 +1,84 @@
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Academy, Category, CategoryRestriction, CategoryState, Competitor, Fight, RestrictionType} from '../../../../commons/model/competition.model';
+import {categoryEntityAdapter, competitorEntityAdapter} from '../../../../commons/model/competition.model';
+import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
+import * as competitorsActions from '../actions/competitors';
+import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities} from '../../../../reducers';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {initialAccountState} from '../../../account/flux/account.state';
 
-export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAdapter<Competitor>({
-  selectId: (c: Competitor) => c.id,
-  sortComparer: false
-});
+export const featureKey = 'events';
 
-export const academyEntityAdapter: EntityAdapter<Academy> = createEntityAdapter<Academy>({
-  selectId: (c: Academy) => c.id,
-  sortComparer: false
-});
+export const eventsListState = createFeatureSelector<EventPropsEntities>(featureKey);
+export const getSelectedEventId = createSelector(eventsListState, state => state && state.selectedEventId);
+const selectCategoriesEntities = createSelector(eventsListState, state => state && state.selectedEventCategories);
+export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
+export const selectUser = createSelector(selectAccountState, state => state && state.user);
+export const selectUserId = createSelector(selectUser, state => state && state.userId);
 
-export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Fight>({
-  selectId: (fight: Fight) => fight.id,
-  sortComparer: false
-});
+export const {
+  selectAll: getAllCompetitions,
+} = competitionPropertiesEntitiesAdapter.getSelectors(eventsListState);
 
-const getRestrictionName = (res: CategoryRestriction, def = '') => {
-  if (res) {
-    if (res.name) {
-      return res.name;
-    } else {
-      return `${res.type}:${res.minValue}-${res.maxValue} (${res.unit || ''})`;
-    }
+export const selectAllCompetitions = getAllCompetitions;
+
+export const getSelectedEventProperties = createSelector(
+  getAllCompetitions,
+  getSelectedEventId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
   }
-  return def;
-};
-
-export const getRestrictionNameByType = (cat: Category, type: RestrictionType, def = '') => {
-  if (cat.restrictions) {
-    return getRestrictionName(cat.restrictions.find(r => r.type === type, def));
-  } else {
-    return def;
-  }
-};
-
-export const getMinValueInt = (type: RestrictionType) => (category: Category) => {
-  const rest = getRestrictionByType(category, type);
-  return rest && rest.minValue && parseInt(rest.minValue, 10);
-};
-
-export const getMaxValueInt = (type: RestrictionType) => (category: Category) => {
-  const rest = getRestrictionByType(category, type);
-  return rest && rest.maxValue && parseInt(rest.maxValue, 10);
-};
-
-export const getRestrictionByType = (cat: Category, type: RestrictionType) => {
-  if (cat && cat.restrictions) {
-    return cat.restrictions.find(r => r.type === type);
-  }
-};
-
-export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
-export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEIGHT', 'ALL WEIGHTS');
-export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
-export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
-
-export const displayCategory = (cat: Category, truncate = true) => {
-  if (!cat) {
-    return '';
-  }
-  const name = cat.name;
-  const fullName = `${getGender(cat)}/${getAgeDivisionName(cat)}/${getBeltType(cat)}/${getWeightId(cat)}`;
-  if (!truncate) {
-    return `${name || 'Unnamed'} ` + fullName;
-  }
-  return name || (fullName.length < 20 ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
-};
-
-const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
-
-export const categoryFilter = value => cat => {
-  return !value || value.length <= 0 || (cat.id
-    && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
-};
-
-export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
-
-export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapter<Category>({
-  selectId: (category: Category) => category.id,
-  sortComparer: categoriesComparer
-});
-
-export interface FightsEditorChange {
-  id: string;
-  selectedFightIds: string[];
-  changePatches: any[];
-  changeInversePatches: any[];
-}
-
-export interface FightsEditorState extends EntityState<FightsEditorChange> {
-  selectedChangeId: string | null;
-}
-
-export const fightsEditorChangeEntityAdapter: EntityAdapter<FightsEditorChange> = createEntityAdapter(
-  {selectId: (change: FightsEditorChange) => change.id, sortComparer: false}
 );
 
+export const {
+  // select the array of users
+  selectAll: getAllCategories,
+} = categoryEntityAdapter.getSelectors(selectCategoriesEntities);
 
-export interface CategoriesCollection extends EntityState<Category> {
-  selectedCategoryId: string | null;
-  selectedCategoryState: CategoryState;
-  selectedCategoryFights: FightsCollection;
-  selectedEventFightsEditorState: FightsEditorState;
+export const getSelectedCompetitionCategories = getAllCategories;
+
+export function competitionListReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
+  switch (action.type) {
+    case COMPETITION_LIST_LOADED:
+      const payload = action.payload as CompetitionProperties[];
+      const updates = payload;
+      const newState = competitionPropertiesEntitiesAdapter.removeAll(state);
+      return competitionPropertiesEntitiesAdapter.upsertMany(updates, newState);
+    case competitorsActions.COMPETITOR_ADDED: {
+      const {competitor} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
+        return {
+          ...state,
+          selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
+        };
+      } else {
+        return state;
+      }
+    }
+    case competitorsActions.COMPETITOR_UPDATED: {
+      const {competitor} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
+        const update = {id: competitor.email, changes: competitor};
+        return {
+          ...state,
+          selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors),
+        };
+      } else {
+        return state;
+      }
+    }
+    case competitorsActions.COMPETITOR_REMOVED: {
+      const {fighterId} = action.payload;
+      if (state.selectedEventId === action.competitionId) {
+        return {
+          ...state,
+          selectedEventCompetitors: competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
+        };
+      } else {
+        return state;
+      }
+    }
+
+    default:
+      return state;
+  }
 }
 
-export interface FightsCollection extends EntityState<Fight> {
-  selectedFightId: string | null;
-  bracketsType: string | null;
-}
-
-export interface CompetitorsCollection extends EntityState<Competitor> {
-  selectedCompetitorId: string | null;
-  total: number;
-  pageSize: number;
-  pageNumber: number;
-}
-
-export interface AcademiesCollection extends EntityState<Academy> {
-  selectedAcademyId: string | null;
-  total: number;
-  pageSize: number;
-  pageNumber: number;
-}
-
-export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getInitialState({
-  selectedChangeId: null
-});
-
-export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
-  selectedFightId: null,
-  bracketsType: null
-});
-
-export const academiesInitialState: AcademiesCollection = academyEntityAdapter.getInitialState({
-  selectedAcademyId: null,
-  total: 0,
-  pageSize: 15,
-  pageNumber: 1
-});
-
-export const competitorsInitialState: CompetitorsCollection = competitorEntityAdapter.getInitialState({
-  selectedCompetitorId: null,
-  total: 0,
-  pageSize: 15,
-  pageNumber: 1
-});
-
-export const categoriesInitialState: CategoriesCollection = categoryEntityAdapter.getInitialState({
-  selectedCategoryId: null,
-  selectedCategoryState: null,
-  selectedCategoryFights: fightsInitialState,
-  selectedEventFightsEditorState: fightsEditorInitialState
-});

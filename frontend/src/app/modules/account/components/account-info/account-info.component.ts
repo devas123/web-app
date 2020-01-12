@@ -4,8 +4,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
 import {select, Store} from '@ngrx/store';
-import {AppState, selectAccountState} from '../../../../reducers';
+import {AppState} from '../../../../reducers';
 import {Account} from '../../model/Account';
+import {selectAccountState} from '../../../competition/redux/reducers';
 
 declare var $: any;
 

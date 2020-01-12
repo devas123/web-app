@@ -3,10 +3,11 @@ import {HttpClient} from '@angular/common/http';
 import {select, Store} from '@ngrx/store';
 import 'sockjs-client';
 import * as SockJS from 'sockjs-client';
-import {AppState, selectUserId} from '../../reducers';
+import {AppState} from '../../reducers';
 import {socketConnected} from './redux/event-manager-actions';
 import {InfoService} from '../../service/info.service';
 import {map} from 'rxjs/operators';
+import {selectUserId} from '../competition/redux/reducers';
 
 @Injectable()
 export class EventManagerService {

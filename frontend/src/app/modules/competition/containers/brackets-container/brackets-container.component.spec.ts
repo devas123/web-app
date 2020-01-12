@@ -1,26 +1,30 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PeriodsManagementContainerComponent} from './periods-management-container.component';
-
-import {SuiModule} from 'ng2-semantic';
-import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
+import {BracketsContainerComponent} from './brackets-editor-container.component';
+import {SuiDimmerModule, SuiSelectModule} from 'ng2-semantic';
+import {GetNamePipe} from '../../../../pipes/get-name.pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {RouterTestingModule} from '@angular/router/testing';
+import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {RouterReducerState} from '@ngrx/router-store';
+import {BracketComponent} from '../../../../components/brackets-editor/bracket/bracket.component';
+import {FightsEditorContainerComponent} from './fights-editor-container.component';
+import {BracketRoundComponent} from '../../../../components/brackets-editor/bracketround/bracketround.component';
+import {FightsEditorComponent} from '../../components/fights-editor/fights-editor.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
-describe('PeriodsManagementContainerComponent', () => {
-  let component: PeriodsManagementContainerComponent;
-  let fixture: ComponentFixture<PeriodsManagementContainerComponent>;
+describe('BracketsEditorContainerComponent', () => {
+  let component: BracketsContainerComponent;
+  let fixture: ComponentFixture<BracketsContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PeriodsManagementContainerComponent, ScheduleDisplayComponent, ZonedDatePipe],
-      imports: [SuiModule, StoreModule.forRoot({
+      declarations: [BracketsContainerComponent, GetNamePipe, TruncatePipe, BracketComponent, FightsEditorContainerComponent, BracketRoundComponent, FightsEditorComponent],
+      imports: [SuiSelectModule, SuiDimmerModule, DragDropModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
       }, {
@@ -38,13 +42,13 @@ describe('PeriodsManagementContainerComponent', () => {
           },
           router: {} as RouterReducerState<any>
         }
-      }), RouterTestingModule]
+      })]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PeriodsManagementContainerComponent);
+    fixture = TestBed.createComponent(BracketsContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

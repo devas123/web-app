@@ -20,10 +20,9 @@ import {
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryId,
   eventManagerGetSelectedEventSelectedCompetitor,
-  HeaderDescription
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
+import {Category, Competitor, HeaderDescription} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 

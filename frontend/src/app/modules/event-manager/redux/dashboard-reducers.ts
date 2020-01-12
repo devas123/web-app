@@ -1,8 +1,7 @@
 import {combineReducers, createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers';
-import {fightEntityAdapter, FightsCollection, fightsInitialState} from '../../competition/redux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Fight} from '../../../commons/model/competition.model';
+import {Fight, fightEntityAdapter, FightsCollection, fightsInitialState} from '../../../commons/model/competition.model';
 import {
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_FIGHT_UNSELECTED,

@@ -11,9 +11,8 @@ import {
   eventManagerGetSelectedEventSelectedCategoryFightsAreLoading, eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges,
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights,
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds,
-  HeaderDescription
 } from '../../redux/event-manager-reducers';
-import {Category, Fight} from '../../../../commons/model/competition.model';
+import {Category, Fight, HeaderDescription} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
   eventManagerCategorySelected,

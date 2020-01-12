@@ -2,9 +2,10 @@
 import {map} from 'rxjs/operators';
 import {AfterContentInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, CompetitionProperties, selectAllCompetitions, selectCompetitionListState} from '../../../../reducers';
+import {AppState, CompetitionProperties} from '../../../../reducers';
 import {Observable} from 'rxjs';
 import * as allActions from '../../../../actions/actions';
+import {selectAllCompetitions} from '../../redux/reducers';
 
 
 

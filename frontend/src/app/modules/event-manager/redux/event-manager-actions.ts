@@ -1,9 +1,7 @@
 // commands
 import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers';
-import {Category, Competitor} from '../../../commons/model/competition.model';
-import {HeaderDescription, PeriodProperties} from './event-manager-reducers';
+import {Category, Competitor, FightsEditorChange, HeaderDescription, PeriodProperties} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
-import {FightsEditorChange} from '../../competition/redux/reducers';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';

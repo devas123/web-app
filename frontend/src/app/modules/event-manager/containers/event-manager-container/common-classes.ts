@@ -6,13 +6,11 @@ import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventTimeZone,
-  HeaderDescription,
-  MenuItem
+  eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
 import {filter, take} from 'rxjs/operators';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 export abstract class EventManagerRouterEntryComponent implements OnDestroy {

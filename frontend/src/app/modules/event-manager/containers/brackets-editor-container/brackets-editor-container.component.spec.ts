@@ -11,10 +11,10 @@ import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {RouterReducerState} from '@ngrx/router-store';
-import {BracketComponent} from '../../components/brackets-editor/bracket/bracket.component';
+import {BracketComponent} from '../../../../components/brackets-editor/bracket/bracket.component';
 import {FightsEditorContainerComponent} from './fights-editor-container.component';
-import {BracketRoundComponent} from '../../components/brackets-editor/bracketround/bracketround.component';
-import {FightsEditorComponent} from '../../components/brackets-editor/fights-editor/fights-editor.component';
+import {BracketRoundComponent} from '../../../../components/brackets-editor/bracketround/bracketround.component';
+import {FightsEditorComponent} from '../../components/fights-editor/fights-editor.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 describe('BracketsEditorContainerComponent', () => {

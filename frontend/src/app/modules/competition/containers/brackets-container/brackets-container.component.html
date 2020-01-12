@@ -1,0 +1,24 @@
+<ng-template #categorySelect>
+  <sui-select class="selection"
+              [placeholder]="(category$ | async) && (formatter(category$ | async).substring(0, 18) + '...') || 'Select Category'"
+              (selectedOptionChange)="setCategoryId($event)"
+              [options]="categories$ | async"
+              [isSearchable]="true"
+              [isDisabled]="false"
+              [optionsFilter]="optionsFilter"
+              [optionFormatter]="formatter"
+              #select>
+    <sui-select-option *ngFor="let option of select.filteredOptions"
+                       [value]="option">
+    </sui-select-option>
+  </sui-select>
+</ng-template>
+<div class="ui basic segment" *ngIf="category$ | async">
+  <h4 class="ui header">{{formatter(category$ | async)}}</h4>
+</div>
+<div class="ui container" *ngIf="fightsAreLoading$ | async">
+  <sui-dimmer class="ui dimmer rounded transparent" [isDimmed]="fightsAreLoading$ | async" [isClickable]="false">
+    <div class="ui text loader">Loading</div>
+  </sui-dimmer>
+</div>
+<app-bracket *ngIf="(category$ | async) && (fights$ | async) && !(fightsAreLoading$ | async)" [fights]="fights$ | async" [bucketsize]="bucketsize$ | async" [editMode]="false"></app-bracket>

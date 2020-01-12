@@ -10,7 +10,7 @@ export const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {
     path: 'events',
-    loadChildren: () => import('./modules/events/events.module').then(mod => mod.EventsModule)
+    loadChildren: () => import('./modules/competition/competition.module').then(mod => mod.CompetitionModule)
   },
   {
     path: 'login',

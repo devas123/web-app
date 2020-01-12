@@ -56,7 +56,6 @@ import {HotkeyModule} from 'angular2-hotkeys';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
 import {PeriodsManagementComponent} from './components/periods-management/periods-management.component';
-import {ScheduleDisplayComponent} from './components/schedule-editor/schedule-display.component';
 import {DashboardEffects} from './redux/dashboard-effects';
 import {FightDisplayComponent} from './components/mats-overview-component/fight-display.component';
 import {MatDisplayComponent} from './components/mats-overview-component/mat-display.component';
@@ -71,10 +70,8 @@ import {AddGroupFormComponent} from './components/registration-info-editor/add-g
 import {SelectCategoriesModalComponent} from './components/category-editor/select-categories-modal.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
-import {BracketRoundComponent} from './components/brackets-editor/bracketround/bracketround.component';
-import {BracketComponent} from './components/brackets-editor/bracket/bracket.component';
 import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
-import {FightsEditorComponent} from './components/brackets-editor/fights-editor/fights-editor.component';
+import {FightsEditorComponent} from './components/fights-editor/fights-editor.component';
 
 @NgModule({
   imports: [
@@ -103,8 +100,6 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
   declarations: [
     FightsEditorComponent,
     FightsEditorContainerComponent,
-    BracketComponent,
-    BracketRoundComponent,
     AddSchedulePeriodFormComponent,
     AddGroupFormComponent,
     AddPeriodFormComponent,
@@ -117,7 +112,6 @@ import {FightsEditorComponent} from './components/brackets-editor/fights-editor/
     RegistrationInfoEditorComponent,
     MatDisplayComponent,
     FightDisplayComponent,
-    ScheduleDisplayComponent,
     PeriodManagementContainerComponent,
     PeriodsManagementContainerComponent,
     PeriodsManagementComponent,

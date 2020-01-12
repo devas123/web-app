@@ -2,10 +2,11 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 import {flyOut} from '../../../../../animations/flyOut';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
-import {AppState, selectAccountState} from '../../../../../reducers';
+import {AppState} from '../../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';
 import {AccountState} from '../../../flux/account.state';
+import {selectAccountState} from '../../../../competition/redux/reducers';
 
 declare var $: any;
 

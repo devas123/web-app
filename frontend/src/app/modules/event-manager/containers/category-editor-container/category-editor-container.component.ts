@@ -6,10 +6,8 @@ import {
   eventManagerGetSelectedEvent,
   eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategoryState,
-  HeaderDescription
-} from '../../redux/event-manager-reducers';
-import {Category, CategoryState} from '../../../../commons/model/competition.model';
+  eventManagerGetSelectedEventSelectedCategoryState} from '../../redux/event-manager-reducers';
+import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCategory, eventManagerAddCategory, eventManagerSetCategoryRegistrationStatus} from '../../redux/event-manager-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';

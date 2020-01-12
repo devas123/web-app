@@ -3,7 +3,7 @@ import {AppState} from '../../../../reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {Category, Fight} from '../../../../commons/model/competition.model';
+import {Category, Fight, HeaderDescription} from '../../../../commons/model/competition.model';
 import {
   dashboardGetSelectedPeriod,
   dashboardGetSelectedPeriodId,
@@ -13,7 +13,7 @@ import {
 } from '../../redux/dashboard-reducers';
 import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {dashboardFightSelected, dashboardFightUnselected} from '../../redux/dashboard-actions';
-import {eventManagerGetSelectedEventCategory, eventManagerGetSelectedEventId, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventCategory, eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 

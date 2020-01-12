@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {Category, CategoryState} from '../../../../commons/model/competition.model';
+import {Category, CategoryState, displayCategory, HeaderDescription} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryStartTime,
-  eventManagerGetSelectedEventSelectedCategoryState, HeaderDescription
+  eventManagerGetSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
 import {AppState} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
@@ -13,7 +13,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
-import {displayCategory} from '../../../competition/redux/reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({

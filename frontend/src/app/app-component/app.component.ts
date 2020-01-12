@@ -1,13 +1,14 @@
 import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, selectAccountState} from '../reducers';
+import {AppState} from '../reducers';
 import {authorizeToken} from '../modules/account/flux/actions';
 import {Observable, Subscription} from 'rxjs';
-import {MenuItem} from '../modules/event-manager/redux/event-manager-reducers';
 import {AccountState} from '../modules/account/flux/account.state';
 import {Account} from '../modules/account/model/Account';
 import {map, tap} from 'rxjs/operators';
 import {MenuService} from '../components/main-menu/menu.service';
+import {MenuItem} from '../commons/model/competition.model';
+import {selectAccountState} from '../modules/competition/redux/reducers';
 
 @Component({
   selector: 'app-root',

@@ -5,8 +5,8 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
-import {Category, RestrictionType, restrictionTypes} from '../../../../commons/model/competition.model';
+import {eventManagerGetSelectedEventId, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {Category, HeaderDescription, RestrictionType, restrictionTypes} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 

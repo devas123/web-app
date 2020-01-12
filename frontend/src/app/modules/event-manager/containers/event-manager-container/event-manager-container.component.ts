@@ -1,16 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {AppState, selectUser} from '../../../../reducers';
+import {AppState} from '../../../../reducers';
 import {Account} from '../../../account/model/Account';
 import {eventManagerConnectSocket, eventManagerDisconnectSocket, loadMyCompetitions} from '../../redux/event-manager-actions';
-import {eventManagerGetHeaderDescription, eventManagerGetSocketConnected, HeaderDescription, MenuItem} from '../../redux/event-manager-reducers';
+import {eventManagerGetHeaderDescription, eventManagerGetSocketConnected} from '../../redux/event-manager-reducers';
 import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {EventManagerService} from '../../event-manager.service';
 import {filter, map} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from './common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
+import {selectUser} from '../../../competition/redux/reducers';
 
 @Component({
   selector: 'app-event-manager-container',

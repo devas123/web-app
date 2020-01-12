@@ -2,13 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {
   AppState,
-  CompetitionProperties, getSelectedCompetitionCategories,
-  getSelectedEventId,
-  getSelectedEventProperties
+  CompetitionProperties
 } from '../../../../reducers';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
 import {startCompetition} from '../../redux/actions/misc';
+import {getSelectedCompetitionCategories, getSelectedEventId, getSelectedEventProperties} from '../../redux/reducers';
 
 @Component({
   selector: 'app-competition-info',

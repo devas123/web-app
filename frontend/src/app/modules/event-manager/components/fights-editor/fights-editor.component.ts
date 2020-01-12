@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {FightsEditorChange} from '../../../../competition/redux/reducers';
-import {Competitor, Fight, Score} from '../../../../../commons/model/competition.model';
+import {Competitor, Fight, FightsEditorChange, Score} from '../../../../commons/model/competition.model';
 import produce, {applyPatches} from 'immer';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 

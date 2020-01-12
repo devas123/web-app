@@ -1,5 +1,5 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
-import {MenuItem} from '../../redux/event-manager-reducers';
+import {Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
+import {MenuItem} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-eventmanager-menu',

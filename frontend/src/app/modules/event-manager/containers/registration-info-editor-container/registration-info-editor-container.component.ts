@@ -8,8 +8,7 @@ import {
   eventManagerGetSelectedEventId,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventRegistrationInfo,
-  eventManagerGetSelectedEventTimeZone,
-  HeaderDescription
+  eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
 import {
   eventManagerAddRegistrationPeriod,
@@ -26,7 +25,7 @@ import {AddGroupModal, IAddGroupResult} from '../../components/registration-info
 import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-info-editor/add-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-registration-info-editor-container',

@@ -1,11 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CompetitionProperties} from '../../../../reducers';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, categoryFilter} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
-import {categoryFilter} from '../../../competition/redux/reducers';
 
 export interface ISelecetDefaultCategoriesContext {
   defaultCategories: Observable<Category[]>;
@@ -71,7 +70,6 @@ export class SelectCategoriesModalComponent implements OnInit {
   }
 
   optionsLookup = async (query: string, initial?: Category[]) => {
-    const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
     return await this.modal.context.defaultCategories.pipe(
       tap(console.log),
       take(1),

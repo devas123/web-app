@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Schedule} from '../../../../reducers';
-import {PeriodProperties, ScheduleProperties} from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, PeriodProperties, ScheduleProperties} from '../../../../commons/model/competition.model';
 import {SuiModalService} from 'ng2-semantic';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {ActivatedRoute, Router} from '@angular/router';

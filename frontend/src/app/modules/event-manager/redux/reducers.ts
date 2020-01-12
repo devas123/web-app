@@ -1,6 +1,5 @@
 import {createFeatureSelector} from '@ngrx/store';
-import {EventManagerState} from './event-manager-reducers';
-import {Competitor, Fight} from '../../../commons/model/competition.model';
+import {Competitor, EventManagerState, Fight} from '../../../commons/model/competition.model';
 
 export const getEventManagerState = createFeatureSelector<EventManagerState>('eventManagerState');
 

@@ -3,7 +3,7 @@
   <div class="ui huge header">Events</div>
   <div class="ui divider"></div>
   <p></p>
-  <div class="ui four column centered stackable grid" >
+  <div class="ui four column stackable grid" >
     <ng-container *ngFor="let e of eventsList$ | async as events; let i = index">
       <ng-container *ngIf="i % 4 === 0">
         <div class="row" >

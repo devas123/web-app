@@ -3,13 +3,15 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {EventCalendarComponent} from './event-calendar.component';
 import {EventListComponent} from '../event-list/event-list.component';
 import {EventCardComponent} from '../event-card/event-card.component';
-import {SuiModule} from 'ng2-semantic'
+import {SuiModule} from 'ng2-semantic';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers';
-import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
 import {RouterReducerState} from '@ngrx/router-store';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
+import {competitionListReducer} from '../../redux/reducers';
 
 describe('EventCalendarComponent', () => {
   let component: EventCalendarComponent;
@@ -21,6 +23,7 @@ describe('EventCalendarComponent', () => {
       imports: [SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        'events': competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,

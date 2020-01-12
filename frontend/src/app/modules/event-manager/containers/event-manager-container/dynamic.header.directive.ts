@@ -1,5 +1,5 @@
 import {Directive, ElementRef, Input, OnChanges, Renderer2, SimpleChanges} from '@angular/core';
-import {HeaderDescription} from '../../redux/event-manager-reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 @Directive({
   selector: '[app-dynamic-header]',

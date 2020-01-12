@@ -2,8 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 import {InfoService} from '../../../../service/info.service';
-import {PeriodProperties} from '../../redux/event-manager-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {Category, PeriodProperties} from '../../../../commons/model/competition.model';
 
 export interface IAddSchedulePeriodContext {
   competitionId: string;

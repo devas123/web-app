@@ -1,4 +1,4 @@
-import {AppState, CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
+import {CommonAction, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, scheduleInitialState} from '../../../reducers';
 import {
   BRACKETS_GENERATED,
   CATEGORY_ADDED,
@@ -30,78 +30,48 @@ import {
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED,
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED,
   EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED,
-  EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED, EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED,
+  EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED,
+  EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED, REGISTRATION_INFO_UPDATED,
+  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_REGISTRATION_GROUP_CREATED,
+  EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED,
   FIGHTS_START_TIME_UPDATED,
-  SCHEDULE_GENERATED, EVENT_MANAGER_REGISTRATION_GROUP_CREATED, EVENT_MANAGER_REGISTRATION_GROUP_DELETED
+  REGISTRATION_INFO_UPDATED,
+  SCHEDULE_GENERATED
 } from './event-manager-actions';
 import * as uuidv4 from 'uuid/v4';
 import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
 import {
   categoriesInitialState,
+  Category,
   categoryEntityAdapter,
+  Competitor,
   competitorEntityAdapter,
-  competitorsInitialState,
+  competitorsInitialState, EventManagerState,
+  Fight,
   fightEntityAdapter,
   FightsEditorChange,
   fightsEditorChangeEntityAdapter,
   fightsEditorInitialState,
-  fightsInitialState
-} from '../../competition/redux/reducers';
-import {Category, Competitor, Fight} from '../../../commons/model/competition.model';
-import {dashboardReducers, DashboardState} from './dashboard-reducers';
+  fightsInitialState,
+  HeaderDescription,
+  PeriodProperties
+} from '../../../commons/model/competition.model';
+import {dashboardReducers} from './dashboard-reducers';
 import {getEventManagerState} from './reducers';
-import {EmbeddedViewRef, InjectionToken, ViewContainerRef} from '@angular/core';
-import {Observable} from 'rxjs';
+import {InjectionToken} from '@angular/core';
 import produce, {applyPatches, Draft} from 'immer';
 import {Update} from '@ngrx/entity';
 
-export interface MenuItem {
-  name: string;
-  class?: string | { [p: string]: any };
-  style?: string;
-  action?: () => any;
-  label?: string;
-  showCondition?: () => Observable<boolean>;
-  itemDisplayAction?: (container: ViewContainerRef) => EmbeddedViewRef<any>;
-}
-
-export interface HeaderDescription {
-  header: string;
-  subheader: string | null;
-  headerHtml: string | null;
-}
-
-export interface EventManagerState {
-  myEvents: EventPropsEntities;
-  dashboardState: DashboardState;
-  socketConnected: boolean;
-  header: HeaderDescription;
-}
-
-export interface PeriodProperties {
-  id: string;
-  name: string;
-  startTime: String;
-  numberOfMats: number;
-  timeBetweenFights: number;
-  riskPercent: number;
-  categories: Category[];
-}
-
-export interface ScheduleProperties {
-  competitionId: string;
-  periodPropertiesList: PeriodProperties[];
-}
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
@@ -807,11 +777,6 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
   }
 }
-
-export interface State extends AppState {
-  eventManagerState: EventManagerState;
-}
-
 
 export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {

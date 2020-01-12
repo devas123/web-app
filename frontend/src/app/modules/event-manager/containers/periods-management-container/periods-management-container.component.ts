@@ -6,7 +6,6 @@ import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventScheduleProperties,
-  ScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
@@ -16,6 +15,7 @@ import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '.
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {ScheduleProperties} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-periods-management-container',

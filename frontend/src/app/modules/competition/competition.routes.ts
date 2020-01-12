@@ -1,11 +1,13 @@
 import {Routes} from '@angular/router';
 import {StateResolver} from './state.resolver';
 import {CompetitionInfoComponent} from './containers/competition-info/competition-info.component';
+import {EventCalendarComponent} from './components/event-calendar/event-calendar.component';
 
 
 export const compRoutes: Routes = [
+  {path: '', component: EventCalendarComponent},
   {
-    path: '',
+    path: ':id',
     component: CompetitionInfoComponent,
     resolve: {
       stateLoaded: StateResolver

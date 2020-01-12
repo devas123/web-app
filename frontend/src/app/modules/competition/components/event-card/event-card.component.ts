@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {CompetitionProperties} from "../../../../reducers";
-import {Transition, TransitionController, TransitionDirection} from "ng2-semantic";
-import {Router} from "@angular/router";
+import {CompetitionProperties} from '../../../../reducers';
+import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'event-card',
@@ -21,10 +21,10 @@ export class EventCardComponent implements OnInit {
 
   ngOnInit() {
     this.transitionController = new TransitionController();
-    this.animate("scale");
+    this.animate('scale');
   }
 
-  public animate(transitionName: string = "scale", transitionDirection = TransitionDirection.In) {
+  public animate(transitionName: string = 'scale', transitionDirection = TransitionDirection.In) {
     this.transitionController.animate(
       new Transition(transitionName, 500, transitionDirection));
   }

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Schedule} from '../../../../reducers';
-import {Category, Period} from '../../../../commons/model/competition.model';
-import {AddFighterComponent} from '../add-fighter/add-fighter.component';
+import {Schedule} from '../../reducers';
+import {Category, Period} from '../../commons/model/competition.model';
+import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 
 @Component({
   selector: 'app-schedule-display',
@@ -37,7 +37,7 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 export class ScheduleDisplayComponent implements OnInit {
 
   @Input()
-  timeZone: string = 'UTC';
+  timeZone = 'UTC';
 
   @Input()
   competitionId: string;
@@ -51,11 +51,11 @@ export class ScheduleDisplayComponent implements OnInit {
   @Output()
   categoryClicked = new EventEmitter<string>();
   getFightsNumberForPeriod = (period: Period) => {
-    if (!period || period == null || !period.schedule || period.schedule.length === 0) {
+    if (!period || !period.schedule || period.schedule.length === 0) {
       return 0;
     }
     return period.schedule.map(e => e.numberOfFights).reduce((previousValue, currentValue) => previousValue + currentValue);
-  }
+  };
   categoryName = (cat: Category) => AddFighterComponent.displayCategory(cat);
 
   constructor() {

@@ -4,7 +4,8 @@ import {environment} from '../../../../environments/environment';
 import * as SockJS from 'sockjs-client';
 import {select, Store} from '@ngrx/store';
 import {map} from 'rxjs/operators';
-import {AppState, getSelectedEventId} from "../../../reducers";
+import {AppState} from '../../../reducers/index';
+import {getSelectedEventId} from '../redux/reducers';
 
 const Stomp = require('stompjs/lib/stomp').Stomp;
 
@@ -18,8 +19,8 @@ export class HttpStompService {
   }
 
   connect(competitionId: string) {
-    let that = this;
-    let socket = new SockJS(environment.webSocketUrl + `?competitionId=${competitionId}`);
+    const that = this;
+    const socket = new SockJS(environment.webSocketUrl + `?competitionId=${competitionId}`);
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, () => {
       // that.store.dispatch(miscActions.connectedEvent);
@@ -32,7 +33,7 @@ export class HttpStompService {
       });
 
       that.stompClient.subscribe(environment.errorQueue, function (data) {
-        console.error(data)
+        console.error(data);
       });
     }, (err) => {
       console.log('Connection error:', err);
@@ -46,7 +47,7 @@ export class HttpStompService {
       map((competitionId: string) => {
         this.stompClient.disconnect(() => {
           console.log(`STOMP Disconnected, reconnecting for competitionId ${competitionId}`);
-          this.connect(competitionId)
+          this.connect(competitionId);
         });
       })
     );

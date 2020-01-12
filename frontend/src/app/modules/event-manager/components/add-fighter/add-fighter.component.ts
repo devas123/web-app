@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
+import {Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {AppState, CommonAction} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {addCompetitor} from '../../redux/event-manager-actions';
-import {displayCategory} from '../../../competition/redux/reducers';
 
 @Component({
   selector: 'app-add-fighter',

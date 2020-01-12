@@ -2,13 +2,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties} from '../../../../reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {eventManagerGetSelectedEvent, eventManagerGetSelectedEventName, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEvent, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-event-properties-editor-container',

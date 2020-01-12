@@ -1,8 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
-import {AppState, selectAccountState} from '../../reducers';
-import {AccountState} from '../../modules/account/flux/account.state';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../reducers';
 import {logout} from '../../modules/account/flux/actions';
 import {Account} from '../../modules/account/model/Account';
 import {DomSanitizer} from '@angular/platform-browser';

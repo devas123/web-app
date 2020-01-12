@@ -1,9 +1,9 @@
 import {EmbeddedViewRef, Injectable, TemplateRef, ViewContainerRef} from '@angular/core';
 import {IImplicitContext, SuiSidebar} from 'ng2-semantic/index';
-import {MenuItem} from '../../modules/event-manager/redux/event-manager-reducers';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {MenuItem} from '../../commons/model/competition.model';
 
 @Injectable({
   providedIn: 'root'

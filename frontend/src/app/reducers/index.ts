@@ -1,5 +1,4 @@
-import {COMPETITION_LIST_LOADED} from '../actions/actions';
-import {Action, ActionReducer, ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
+import {Action, ActionReducer, ActionReducerMap, createFeatureSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -7,27 +6,13 @@ import {environment} from '../../environments/environment';
  * ensure that none of the reducers accidentally mutates the state.
  */
 import {storeFreeze} from 'ngrx-store-freeze';
-import {AccountState, initialAccountState} from '../modules/account/flux/account.state';
+import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {
-  AcademiesCollection,
-  academiesInitialState,
-  CategoriesCollection,
-  categoriesInitialState,
-  categoryEntityAdapter,
-  competitorEntityAdapter,
-  CompetitorsCollection,
-  competitorsInitialState
-} from '../modules/competition/redux/reducers';
-import * as competitorsActions from '../modules/competition/redux/actions/competitors';
-import {Category, Period} from '../commons/model/competition.model';
-import {ScheduleProperties} from '../modules/event-manager/redux/event-manager-reducers';
+import {CategoriesCollection, categoriesInitialState, Category, CompetitorsCollection, competitorsInitialState, Period, ScheduleProperties} from '../commons/model/competition.model';
 import * as fromRouter from '@ngrx/router-store';
 
-
 export interface AppState {
-  events: EventPropsEntities;
   accountState: AccountState;
   router: fromRouter.RouterReducerState<any>;
 }
@@ -47,7 +32,6 @@ export interface EventPropsEntities extends EntityState<CompetitionProperties> {
   selectedEventId: string | null;
   selectedEventCategories: CategoriesCollection;
   selectedEventCompetitors: CompetitorsCollection;
-  selectedEventAcademies: AcademiesCollection;
   selectedEventSchedule: Schedule;
   selectedEventDefaultCategories: Category[];
 }
@@ -71,7 +55,6 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
   selectedEventId: null,
   selectedEventCategories: categoriesInitialState,
   selectedEventCompetitors: competitorsInitialState,
-  selectedEventAcademies: academiesInitialState,
   selectedEventSchedule: scheduleInitialState,
   selectedEventDefaultCategories: []
 });
@@ -121,55 +104,7 @@ export interface Error {
   description: string;
 }
 
-export function competitionList(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
-  switch (action.type) {
-    case COMPETITION_LIST_LOADED:
-      const payload = action.payload as CompetitionProperties[];
-      const updates = payload;
-      const newState = competitionPropertiesEntitiesAdapter.removeAll(state);
-      return competitionPropertiesEntitiesAdapter.upsertMany(updates, newState);
-    case competitorsActions.COMPETITOR_ADDED: {
-      const {competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
-        };
-      } else {
-        return state;
-      }
-    }
-    case competitorsActions.COMPETITOR_UPDATED: {
-      const {competitor} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        const update = {id: competitor.email, changes: competitor};
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors),
-        };
-      } else {
-        return state;
-      }
-    }
-    case competitorsActions.COMPETITOR_REMOVED: {
-      const {fighterId} = action.payload;
-      if (state.selectedEventId === action.competitionId) {
-        return {
-          ...state,
-          selectedEventCompetitors: competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
-        };
-      } else {
-        return state;
-      }
-    }
-
-    default:
-      return state;
-  }
-}
-
 export const reducers: ActionReducerMap<AppState> = {
-  events: competitionList,
   accountState: accountStateReducer,
   router: fromRouter.routerReducer
 };
@@ -186,40 +121,5 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
-
-
-export const selectRouter = createFeatureSelector<AppState,
-  fromRouter.RouterReducerState<any>>('router');
-
-const {
-  selectUrl          // select the current url
-} = fromRouter.getSelectors(selectRouter);
-export const getCurrentUrl = selectUrl;
-
-export const selectCompetitionListState = (state: AppState) => (state && state.events) || competitionPropertiesEntitiesInitialState;
-export const getSelectedEventId = createSelector(selectCompetitionListState, state => state && state.selectedEventId);
-const selectCategoriesEntities = createSelector(selectCompetitionListState, state => state && state.selectedEventCategories);
-export const selectAccountState = (state: AppState) => (state && state.accountState) || initialAccountState;
-export const selectUser = createSelector(selectAccountState, state => state && state.user);
-export const selectUserId = createSelector(selectUser, state => state && state.userId);
-
-export const {
-  selectAll: getAllCompetitions,
-} = competitionPropertiesEntitiesAdapter.getSelectors(selectCompetitionListState);
-
-export const selectAllCompetitions = getAllCompetitions;
-
-export const getSelectedEventProperties = createSelector(
-  getAllCompetitions,
-  getSelectedEventId,
-  (entities, selectedId) => {
-    return selectedId && entities[selectedId];
-  }
-);
-
-export const {
-  // select the array of users
-  selectAll: getAllCategories,
-} = categoryEntityAdapter.getSelectors(selectCategoriesEntities);
-
-export const getSelectedCompetitionCategories = getAllCategories;
+createFeatureSelector<AppState,
+    fromRouter.RouterReducerState<any>>('router');

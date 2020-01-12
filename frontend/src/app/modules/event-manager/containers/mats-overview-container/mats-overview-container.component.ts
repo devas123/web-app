@@ -7,9 +7,10 @@ import {Observable} from 'rxjs';
 import {dashboardGetSelectedPeriod, dashboardGetSelectedPeriodMats, DashboardPeriod, Mat} from '../../redux/dashboard-reducers';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map} from 'rxjs/operators';
-import {eventManagerGetSelectedEventId, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventId} from '../../redux/event-manager-reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',

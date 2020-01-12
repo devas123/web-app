@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Fight} from '../../../../../commons/model/competition.model';
+import {Fight} from '../../../commons/model/competition.model';
 
 
 @Component({
