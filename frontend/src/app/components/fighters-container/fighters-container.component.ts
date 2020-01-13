@@ -1,11 +1,11 @@
 import {filter, map, take} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {eventManagerGetSelectedEventCompetitorsPageNumber, eventManagerGetSelectedEventCompetitorsPageSize} from '../../redux/event-manager-reducers';
-import {eventManagerCategorySelected, eventManagerCategoryUnselected, eventManagerCompetitionFightersPageChanged} from '../../redux/event-manager-actions';
-import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
+import {AppState, getSelectedEventId} from '../../reducers/global-reducers';
+import {eventManagerGetSelectedEventCompetitorsPageNumber, eventManagerGetSelectedEventCompetitorsPageSize} from '../../modules/event-manager/redux/event-manager-reducers';
+import {eventManagerCategorySelected, eventManagerCategoryUnselected, eventManagerCompetitionFightersPageChanged} from '../../modules/event-manager/redux/event-manager-actions';
 
 @Component({
   selector: 'app-fighters-container',

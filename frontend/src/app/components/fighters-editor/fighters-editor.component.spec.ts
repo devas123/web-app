@@ -1,8 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FightersEditorComponent} from './fighters-editor.component';
-import {SuiModule} from 'ng2-semantic'
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {SuiModule} from 'ng2-semantic';
+import {ZonedDatePipe} from '../../pipes/zoned-date-pipe';
 
 
 describe('FightersEditorComponent', () => {

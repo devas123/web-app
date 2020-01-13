@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Category} from '../../../../commons/model/competition.model';
-import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import {Competitor} from '../../../../commons/model/competition.model';
+import {Category} from '../../commons/model/competition.model';
+import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
+import {Competitor} from '../../commons/model/competition.model';
 import {SuiPagination} from 'ng2-semantic';
 
 @Component({
@@ -59,6 +59,16 @@ export class FightersEditorComponent implements OnInit {
 
   @Output()
   fighterDeleted = new EventEmitter<Competitor>();
+
+  @Input()
+  editMode = true;
+
+  @Input()
+  showPersonalData = true;
+
+  @Input()
+  showRegistrationStatus = true;
+
 
   @ViewChild('pagination', {static: false})
   set pagination(value: SuiPagination) {

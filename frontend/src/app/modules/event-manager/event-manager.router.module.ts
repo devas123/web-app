@@ -13,7 +13,6 @@ import {CategorySummaryContainerComponent} from './containers/category-summary-c
 import {BracketsEditorContainerComponent} from './containers/brackets-editor-container/brackets-editor-container.component';
 import {ScheduleEditorContainerComponent} from './containers/schedule-editor-container/schedule-editor-container.component';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
-import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
 import {AuthGuard} from '../account/auth.guard';
 import {DashboardContainerComponent} from './containers/dashboard-container/dashboard-container.component';
 import {MatsOverviewContainerComponent} from './containers/mats-overview-container/mats-overview-container.component';
@@ -22,6 +21,7 @@ import {ScoreboardContainerComponent} from './containers/scoreboard-container/sc
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
+import {FightersContainerComponent} from '../../components/fighters-container/fighters-container.component';
 
 export const eventManagerRoutes: Routes = [
   {

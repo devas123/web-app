@@ -1,61 +1,58 @@
 <div class="ui segments">
-  <div [suiCollapse]="!showEditor">
-    <div class="ui basic segment">
-      <button class="ui button" *ngIf="scheduleEmpty" (click)="openModal()">Add period</button>
-      <div class="ui basic segment" *ngIf="scheduleEmpty">
-        <div class="ui stackable cards" cdkDropListGroup>
-          <div class="card">
-            <div class="content">
-              <div class="meta">Categories</div>
-              <div class="inner-list list-container" [ngClass]="{'empty-container': !filteredCategories || filteredCategories.length === 0}" cdkDropList [cdkDropListData]="filteredCategories"
-                   (cdkDropListDropped)="onItemDropBack($event)">
-                <a class="item" *ngFor="let cat of filteredCategories" cdkDrag
-                   [cdkDragData]="{id: null, cat: cat}" (click)="goToCategoryEditor(cat?.id)">
-                  <i class="circular users icon"></i>
-                  <div class="content">
-                    <div class="header" [innerHTML]="categoryName(cat)"></div>
-                  </div>
-                </a>
-              </div>
+    <div [suiCollapse]="!showEditor">
+        <div class="ui basic segment">
+            <button class="ui button" *ngIf="scheduleEmpty" (click)="openModal()">Add period</button>
+            <div class="ui basic segment" *ngIf="scheduleEmpty">
+                <div class="ui stackable cards" cdkDropListGroup>
+                    <div class="card">
+                        <div class="content">
+                            <div class="meta">Categories</div>
+                            <div class="inner-list list-container"
+                                 [ngClass]="{'empty-container': !filteredCategories || filteredCategories.length === 0}"
+                                 cdkDropList [cdkDropListData]="filteredCategories"
+                                 (cdkDropListDropped)="onItemDropBack($event)">
+                                <a class="item" *ngFor="let cat of filteredCategories" cdkDrag
+                                   [cdkDragData]="{id: null, cat: cat}">
+                                    <i class="circular users icon"></i>
+                                    <div class="content">
+                                        <div class="header" [innerHTML]="categoryName(cat)"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" *ngFor="let period of scheduleProperties?.periodPropertiesList">
+                        <div class="content">
+                            <div class="right floated meta">
+                                <i class="close link icon" (click)="removePeriod(period)"></i>
+                            </div>
+                            <div class="header">Period {{period?.name}}</div>
+                            <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+                            <div class="inner-list list-container"
+                                 [ngClass]="{'empty-container': !period?.categories || period?.categories.length === 0}"
+                                 cdkDropList [cdkDropListData]="period?.categories"
+                                 (cdkDropListDropped)="onItemDrop($event, period.name)">
+                                <a class="item" *ngFor="let cat of period?.categories" cdkDrag
+                                   [cdkDragData]="{id: period.name, cat: cat}">
+                                    <i class="circular users icon"></i>
+                                    <div class="content">
+                                        <div class="header">{{categoryName(cat)}}</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="extra content" *ngIf="period?.categories && period?.categories?.length >= 0">
+                            Categories: {{period?.categories?.length}}
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="card" *ngFor="let period of scheduleProperties?.periodPropertiesList">
-            <div class="content">
-              <div class="right floated meta">
-                <i class="close link icon" (click)="removePeriod(period)"></i>
-              </div>
-              <div class="header">Period {{period?.name}}</div>
-              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
-              <div class="inner-list list-container" [ngClass]="{'empty-container': !period?.categories || period?.categories.length === 0}" cdkDropList [cdkDropListData]="period?.categories"
-                   (cdkDropListDropped)="onItemDrop($event, period.name)">
-                <a class="item" *ngFor="let cat of period?.categories" cdkDrag
-                   [cdkDragData]="{id: period.name, cat: cat}">
-                  <i class="circular users icon"></i>
-                  <div class="content">
-                    <div class="header">{{categoryName(cat)}}</div>
-                  </div>
-                </a>
-              </div>
+            <div>
+                <button class="ui button" *ngIf="scheduleEmpty" [disabled]="filteredCategories.length > 0"
+                        (click)="sendGenerateSchedule()">Create schedule
+                </button>
+                <button class="ui button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
             </div>
-            <div class="extra content" *ngIf="period?.categories && period?.categories?.length >= 0">
-              Categories: {{period?.categories?.length}}
-            </div>
-          </div>
         </div>
-      </div>
-      <div>
-        <button class="ui button" *ngIf="scheduleEmpty" [disabled]="filteredCategories.length > 0"
-                (click)="sendGenerateSchedule()">Create schedule
-        </button>
-        <button class="ui button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
-      </div>
     </div>
-  </div>
-  <app-schedule-display
-    [timeZone]="timeZone"
-    [competitionId]="competitionId"
-    [schedule]="schedule"
-    [categories]="categories"
-    (categoryClicked)="goToCategoryEditor($event)">
-  </app-schedule-display>
 </div>

@@ -1,4 +1,4 @@
-<div class="brackets_container">
+<div class="margins_container">
   <div class="ui basic segment">
     <sui-select class="selection"
                 [placeholder]="(category$ | async) && (formatter(category$ | async).substring(0, 18) + '...') || 'Select Category'"
@@ -14,13 +14,18 @@
       </sui-select-option>
     </sui-select>
   </div>
-  <div class="ui basic segment" *ngIf="category$ | async">
-    <h4 class="ui header">{{formatter(category$ | async)}}</h4>
-  </div>
-  <div class="ui container" *ngIf="fightsAreLoading$ | async">
-    <sui-dimmer class="ui dimmer rounded transparent" [isDimmed]="fightsAreLoading$ | async" [isClickable]="false">
+  <div class="ui basic segment" *ngIf="fightsAreLoading$ | async">
+    <sui-dimmer class="ui dimmer transparent"  [isClickable]="false" [isDimmed]="fightsAreLoading$ | async">
       <div class="ui text loader">Loading</div>
     </sui-dimmer>
+  </div>
+  <div class="ui container" *ngIf="!(category$ | async) && !(fightsAreLoading$ | async)">
+    <h4 class="ui header">Select category</h4>
+  </div>
+  <div class="ui container" *ngIf="!(fights$ | async) && !(fightsAreLoading$ | async)">
+    <h4 class="ui header">No brackets for this category.</h4>
+  </div>
+  <div class="ui container" *ngIf="!((category$ | async) && (fights$ | async)) && !(fightsAreLoading$ | async)">
   </div>
   <app-bracket *ngIf="(category$ | async) && (fights$ | async) && !(fightsAreLoading$ | async)" [fights]="fights$ | async" [bucketsize]="bucketsize$ | async" [editMode]="false"></app-bracket>
 </div>

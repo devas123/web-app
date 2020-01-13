@@ -137,7 +137,6 @@ export class CategoryEditorComponent implements OnInit {
     };
 
     ngOnInit() {
-        console.log('aaaaaaaa');
     }
 
     generateRandomFighters(category: Category) {

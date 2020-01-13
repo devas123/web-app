@@ -13,20 +13,26 @@ import {BracketComponent} from '../components/brackets-editor/bracket/bracket.co
 import {BracketRoundComponent} from '../components/brackets-editor/bracketround/bracketround.component';
 import {ScheduleDisplayComponent} from '../components/schedule-display/schedule-display.component';
 import {CommonModule} from '@angular/common';
-import {SuiAccordionModule, SuiCollapseModule, SuiPopupModule} from 'ng2-semantic';
+import {SuiAccordionModule, SuiCollapseModule, SuiPaginationModule, SuiPopupModule} from 'ng2-semantic';
 import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
 import {RouterModule} from '@angular/router';
+import {FightersEditorComponent} from '../components/fighters-editor/fighters-editor.component';
+import {FightersContainerComponent} from '../components/fighters-container/fighters-container.component';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
-  CategoryEditorComponent],
+  CategoryEditorComponent,
+  FightersEditorComponent,
+    FightersContainerComponent],
   exports: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
-    CategoryEditorComponent],
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, RouterModule]
+    CategoryEditorComponent,
+    FightersEditorComponent,
+    FightersContainerComponent],
+  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule]
 })
 export class CommonsModule {
 }

@@ -1,46 +1,56 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
-import {Category, } from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {AppState, CompetitionProperties, getSelectedEventState, RegistrationPeriod} from '../../../../reducers/global-reducers';
+import {Category} from '../../../../commons/model/competition.model';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventRegistrationPeriods, eventManagerGetSelectedEventTimeZone} from '../../../event-manager/redux/event-manager-reducers';
+import {ActivatedRoute, ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
+import {filter, map, startWith} from 'rxjs/operators';
 
 @Component({
-  selector: 'competition-main-info',
-  templateUrl: './competition-main-info.component.html',
-  styleUrls: ['./competition-main-info.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'competition-main-info',
+    templateUrl: './competition-main-info.component.html',
+    styleUrls: ['./competition-main-info.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompetitionMainInfoComponent implements OnInit {
 
-  menu: { name: string, active?: boolean }[] = [{
-    name: 'Description',
-    active: true
-  }, {name: 'Categories'}];
+    menu: { name: string, link: string }[] = [
+        {
+            name: 'Description',
+            link: 'info',
+        },
+        {name: 'Categories', link: 'categories'},
+        {name: 'Participants', link: 'participants'},
+        {name: 'Brackets', link: 'brackets'},
+        {name: 'Schedule', link: 'schedule'}];
 
-  @Input()
-  competitionId: string;
+    properties$: Observable<CompetitionProperties>;
+    registrationPeriod$: Observable<RegistrationPeriod[]>;
+    timezone$: Observable<string>;
+    categories$: Observable<Category[]>;
+    url$: Observable<string>;
 
-  @Input()
-  properties: CompetitionProperties;
+    constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+        this.properties$ = store.pipe(select(getSelectedEventState));
+        this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+        this.timezone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
+        this.registrationPeriod$ = store.pipe(select(eventManagerGetSelectedEventRegistrationPeriods));
+        this.url$ = this.router.events.pipe(filter(e => e instanceof NavigationEnd || e instanceof ChildActivationEnd), map((e: NavigationEnd | ChildActivationEnd) => {
+            if (e instanceof NavigationEnd) {
+                return e.urlAfterRedirects;
+            } else {
+                const ev = e as any;
+                return (ev && ev.snapshot && ev.snapshot._routerState && ev.snapshot._routerState.url) || '';
+            }
+        }), startWith(this.router.routerState.snapshot.url));
+    }
 
-  @Input()
-  categories: Category[];
-
-  @Output()
-  competitionStart = new EventEmitter<string>();
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
 
-  public changeActiveMenuItem(menuItem) {
-    this.menu.find(item => item.active).active = false;
-    menuItem.active = true;
-  }
-
-  startEvent() {
-    console.log('start event');
-    this.competitionStart.next(this.competitionId);
-  }
+    public changeActiveMenuItem(menuItem) {
+        this.router.navigate([menuItem.link], {relativeTo: this.route}).catch(console.log);
+    }
 }

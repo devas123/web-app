@@ -1,4 +1,4 @@
-import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 
 
 import {Injectable} from '@angular/core';
@@ -109,7 +109,7 @@ export class Effects {
 
   eventManagerLoadFightersForCompetition$ = createEffect(() => this.actions$.pipe(
       ofType(EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION),
-      switchMap((action: CommonAction) => {
+      concatMap((action: CommonAction) => {
         const {pageSize, pageNumber, searchString} = action.payload;
         const {competitionId, categoryId} = action;
         return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString);

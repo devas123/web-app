@@ -1,41 +1,38 @@
 import {Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {Action, select, Store} from '@ngrx/store';
+import {Action} from '@ngrx/store';
 import {
-  CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
-  COMPETITION_SELECTED,
-  EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
-  EVENT_MANAGER_CONNECT_SOCKET,
-  EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
-  EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
-  EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
-  EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-  EVENT_MANAGER_DISCONNECT_SOCKET,
-  EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-  EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
-  EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
-  EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
-  EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
-  EVENT_MANAGER_MOVE_COMPETITOR,
-  EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
-  EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
-  eventManagerDefaultCategoriesLoaded,
-  eventManagerDisconnectSocket,
-  eventManagerFightsEditorChangesSubmitted,
-  eventManagerLoadFightersForCompetition,
-  myCompetitionsLoaded
+    CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
+    COMPETITION_SELECTED,
+    EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
+    EVENT_MANAGER_CONNECT_SOCKET,
+    EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
+    EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
+    EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+    EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
+    EVENT_MANAGER_DISCONNECT_SOCKET,
+    EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
+    EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
+    EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
+    EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
+    EVENT_MANAGER_MOVE_COMPETITOR,
+    EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
+    EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
+    eventManagerDefaultCategoriesLoaded,
+    eventManagerDisconnectSocket,
+    eventManagerFightsEditorChangesSubmitted,
+    myCompetitionsLoaded
 } from './event-manager-actions';
 
 
-import {AppState, CommonAction, CompetitionProperties} from '../../../reducers/global-reducers';
+import {CommonAction, CompetitionProperties} from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {eventManagerGetSelectedEventCompetitorsPageSize} from './event-manager-reducers';
 
 @Injectable()
 export class EventManagerEffects {
@@ -88,17 +85,9 @@ export class EventManagerEffects {
         })));
 
 
-  disconnectEventManagerSocket$ = createEffect(() => this.actions$.pipe(
+    disconnectEventManagerSocket$ = createEffect(() => this.actions$.pipe(
         ofType(LOGOUT),
         map(() => eventManagerDisconnectSocket)));
-
-    changePage$ = createEffect(() => this.actions$.pipe(
-        ofType(EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED),
-        withLatestFrom(this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize))),
-        map(([action, pageSize]) => {
-            const {competitionId, categoryId, payload} = action;
-            return eventManagerLoadFightersForCompetition(competitionId, categoryId, payload, pageSize);
-        })));
 
     eventManagerForwardCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
         ofType(
@@ -124,8 +113,7 @@ export class EventManagerEffects {
 
     constructor(private actions$: Actions,
                 private infoService: InfoService,
-                private eventManagerService: EventManagerService,
-                private store: Store<AppState>) {
+                private eventManagerService: EventManagerService) {
     }
 
 }

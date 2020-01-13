@@ -64,6 +64,13 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
     this.showEditor = !this.showEditor;
   }
 
+  goToCategoryEditor(categoryId: string) {
+    this.router.navigate(['..', 'categories', categoryId], {
+      relativeTo: this.route
+    }).catch(error => console.error('Navigation failed', error));
+  }
+
+
   ngOnInit() {
   }
 

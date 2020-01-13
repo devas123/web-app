@@ -1,28 +1,28 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FightersEditorContainerComponent} from './fighters-editor-container.component';
-import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {FightersEditorComponent} from '../../../../components/fighters-editor/fighters-editor.component';
 import {SuiModule} from 'ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
-import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {RouterReducerState} from '@ngrx/router-store';
-import {competitionListReducer} from '../../../competition/redux/reducers';
+import {FightersDisplayContainerComponent} from './fighters-display-container.component';
+import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
+import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
+import {competitionListReducer} from '../../redux/reducers';
+import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 
-describe('FightersEditorContainerComponent', () => {
-  let component: FightersEditorContainerComponent;
-  let fixture: ComponentFixture<FightersEditorContainerComponent>;
+describe('FightersDisplayContainerComponent', () => {
+  let component: FightersDisplayContainerComponent;
+  let fixture: ComponentFixture<FightersDisplayContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FightersEditorContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
+      declarations: [FightersDisplayContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
       imports: [SuiModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
@@ -48,7 +48,7 @@ describe('FightersEditorContainerComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FightersEditorContainerComponent);
+    fixture = TestBed.createComponent(FightersDisplayContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

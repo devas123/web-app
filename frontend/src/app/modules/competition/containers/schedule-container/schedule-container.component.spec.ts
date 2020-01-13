@@ -1,29 +1,29 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {FightersEditorContainerComponent} from './fighters-editor-container.component';
-import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
-import {FightersEditorComponent} from '../../../../components/fighters-editor/fighters-editor.component';
-import {SuiModule} from 'ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
+import {SuiModule} from 'ng2-semantic';
+import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
-import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {RouterReducerState} from '@ngrx/router-store';
-import {competitionListReducer} from '../../../competition/redux/reducers';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {RouterTestingModule} from '@angular/router/testing';
+import {competitionListReducer} from '../../redux/reducers';
+import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
+import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
+import {ScheduleContainerComponent} from './schedule-container.component';
 
-describe('FightersEditorContainerComponent', () => {
-  let component: FightersEditorContainerComponent;
-  let fixture: ComponentFixture<FightersEditorContainerComponent>;
+describe('ScheduleContainerComponent', () => {
+  let component: ScheduleContainerComponent;
+  let fixture: ComponentFixture<ScheduleContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FightersEditorContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
-      imports: [SuiModule, ReactiveFormsModule, StoreModule.forRoot({
+      declarations: [ScheduleContainerComponent, ScheduleDisplayComponent, ZonedDatePipe],
+      imports: [ReactiveFormsModule, SuiModule, DragDropModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
         events: competitionListReducer
@@ -48,7 +48,7 @@ describe('FightersEditorContainerComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FightersEditorContainerComponent);
+    fixture = TestBed.createComponent(ScheduleContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

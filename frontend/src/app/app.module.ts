@@ -28,7 +28,6 @@ import {CommonsModule} from './commons/commons.module';
 import {HotkeyModule} from 'angular2-hotkeys';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
-import {RouterState, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {MiscEffects} from './effects/misc';
 
 @NgModule({
@@ -54,9 +53,6 @@ import {MiscEffects} from './effects/misc';
     HttpClientModule,
     StoreModule.forRoot(reducers, {metaReducers}),
     EffectsModule.forRoot([Effects, AccountEffects, MiscEffects]),
-    StoreRouterConnectingModule.forRoot({
-      routerState: RouterState.Minimal
-    }),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production // Restrict extension to log-only mode

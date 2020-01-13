@@ -29,7 +29,6 @@ import {EventManagerContainerComponent} from './containers/event-manager-contain
 import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
 import {EventPropertiesEditorComponent} from './components/event-properties-editor/event-properties-editor.component';
-import {FightersEditorComponent} from './components/fighters-editor/fighters-editor.component';
 import {AddFighterComponent} from './components/add-fighter/add-fighter.component';
 import {EventContainerComponent} from './containers/event-container/event-container.component';
 import {FightersEditorContainerComponent} from './containers/fighters-editor-container/fighters-editor-container.component';
@@ -43,7 +42,6 @@ import {ScheduleEditorContainerComponent} from './containers/schedule-editor-con
 import {ScheduleEditorComponent} from './components/schedule-editor/schedule-editor.component';
 import {FighterProfileContainerComponent} from './containers/fighter-profile-container/fighter-profile-container.component';
 import {FighterProfileComponent} from './components/fighter-profile/fighter-profile.component';
-import {FightersContainerComponent} from './containers/fighters-container/fighters-container.component';
 import {DashboardContainerComponent} from './containers/dashboard-container/dashboard-container.component';
 import {MatsOverviewContainerComponent} from './containers/mats-overview-container/mats-overview-container.component';
 import {MatsOverviewComponentComponent} from './components/mats-overview-component/mats-overview-component.component';
@@ -131,7 +129,6 @@ import {FightsEditorComponent} from './components/fights-editor/fights-editor.co
     CreateCategoryComponent,
     EventPropertiesEditorContainerComponent,
     EventPropertiesEditorComponent,
-    FightersEditorComponent,
     AddFighterComponent,
     EventContainerComponent,
     FightersEditorContainerComponent,
@@ -140,8 +137,7 @@ import {FightsEditorComponent} from './components/fights-editor/fights-editor.co
     CategorySummaryComponent,
     BracketsEditorContainerComponent,
     FighterProfileContainerComponent,
-    FighterProfileComponent,
-    FightersContainerComponent],
+    FighterProfileComponent],
   providers: [EventManagerService],
   entryComponents: [
     AddGroupFormComponent,

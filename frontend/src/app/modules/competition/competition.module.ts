@@ -9,10 +9,9 @@ import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';
 import {NgxMdModule} from 'ngx-md';
-import {CompetitionInfoComponent} from './containers/competition-info/competition-info.component';
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
-import {CompetitionDivisionsComponent} from './components/competition-main-info/competition-divisions/competition-divisions.component';
+
 import {CommonsModule} from '../../commons/commons.module';
 import {CommonModule} from '@angular/common';
 import {BracketsContainerComponent} from './containers/brackets-container/brackets-container.component';
@@ -21,6 +20,9 @@ import {competitionListReducer, featureKey} from './redux/reducers';
 import {EventCardComponent} from './components/event-card/event-card.component';
 import {EventListComponent} from './components/event-list/event-list.component';
 import {EventCalendarComponent} from './components/event-calendar/event-calendar.component';
+import {FightersDisplayContainerComponent} from './containers/fighters-display-container/fighters-display-container.component';
+import {ScheduleContainerComponent} from './containers/schedule-container/schedule-container.component';
+import { CategoryInfoContainerComponent } from './containers/category-info-container/category-info-container.component';
 @NgModule({
     imports: [
         CommonsModule,
@@ -35,12 +37,14 @@ import {EventCalendarComponent} from './components/event-calendar/event-calendar
         SuiSelectModule,
         SuiDimmerModule
     ],
-    declarations: [CompetitionInfoComponent,
+    declarations: [
         CompetitionMainInfoComponent,
         CompetitionDescriptionComponent,
-        CompetitionDivisionsComponent,
         BracketsContainerComponent,
-        EventCardComponent, EventListComponent, EventCalendarComponent],
+        EventCardComponent, EventListComponent, EventCalendarComponent,
+        FightersDisplayContainerComponent,
+        ScheduleContainerComponent,
+        CategoryInfoContainerComponent],
     providers: [RegistrationService, CompetitionStateService, StateResolver]
 })
 export class CompetitionModule {

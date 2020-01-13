@@ -10,3 +10,10 @@
                      (categoryMoved)="moveCategory($event)"
                      (generateSchedule)="sendGenerateSchedule($event)"
                      (scheduleDropped)="sendDropSchedule($event)"></app-schedule-editor>
+<app-schedule-display
+        [timeZone]="timeZone$ | async"
+        [competitionId]="competitionId"
+        [schedule]="schedule$ | async"
+        [categories]="categories$ | async"
+        (categoryClicked)="goToCategoryEditor($event)">
+</app-schedule-display>

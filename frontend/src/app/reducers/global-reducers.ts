@@ -36,7 +36,8 @@ import {
     CATEGORY_ADDED,
     CATEGORY_DELETED,
     CATEGORY_STATE_DELETED,
-    COMPETITION_PROPERTIES_UPDATED, COMPETITION_SELECTED,
+    COMPETITION_PROPERTIES_UPDATED,
+    COMPETITION_SELECTED,
     EVENT_MANAGER_ALL_BRACKETS_DROPPED,
     EVENT_MANAGER_CATEGORIES_LOADED,
     EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
@@ -79,7 +80,6 @@ import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 
 export interface AppState {
     accountState: AccountState;
-    router: fromRouter.RouterReducerState<any>;
     selectedEventState: CompetitionState;
 }
 
@@ -180,83 +180,82 @@ export interface Error {
 }
 
 const fightsEditorChangeHandler = produce((state: Draft<CompetitionState>, action) => {
-  switch (action.type) {
-    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED: {
-      if (state && state.selectedEventCategories) {
-        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorInitialState;
-      }
-      return;
-    }
-    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED: {
-      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
-        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
-        const change = action.change as FightsEditorChange;
-        const fights = change.selectedFightIds.map(id => state.selectedEventCategories.selectedCategoryFights.entities[id]);
-        const updatedFights = applyPatches(fights, change.changePatches);
-        const updates = updatedFights.map(uf => (<Update<Fight>>{
-          id: uf.id,
-          changes: uf
-        }));
-        state.selectedEventCategories.selectedCategoryFights = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryFights);
-        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne(<Update<FightsEditorChange>>{id: change.id, changes: change}, {
-          ...state.selectedEventCategories.selectedEventFightsEditorState,
-          selectedChangeId: null
-        });
-      }
-      return;
-    }
-    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED: {
-      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.id) {
-        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
-        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.removeOne(action.id, state.selectedEventCategories.selectedEventFightsEditorState);
-      }
-      return;
-    }
-    case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED: {
-      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
-        state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
-        state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne({
-          id: action.change.id,
-          changes: action.change
-        }, state.selectedEventCategories.selectedEventFightsEditorState);
-      }
-      return;
-    }
-    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
-      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState) {
-        if (!state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
-          const id = uuidv4().toString();
-          state.selectedEventCategories.selectedEventFightsEditorState =
-              fightsEditorChangeEntityAdapter.addOne(<FightsEditorChange>{changeInversePatches: [], changePatches: [], selectedFightIds: [], id}, {
-                ...state.selectedEventCategories.selectedEventFightsEditorState,
-                selectedChangeId: id
-              });
+    switch (action.type) {
+        case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED: {
+            if (state && state.selectedEventCategories) {
+                state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorInitialState;
+            }
+            return;
         }
-        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
-        if (selectedChange.selectedFightIds.indexOf(action.fightId) < 0) {
-          if (selectedChange.selectedFightIds.length < 2) {
-            selectedChange.selectedFightIds.push(action.fightId);
-          } else {
-            selectedChange.selectedFightIds = [...selectedChange.selectedFightIds.slice(1), action.fightId];
-          }
+        case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED: {
+            if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+                state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+                const change = action.change as FightsEditorChange;
+                const fights = change.selectedFightIds.map(id => state.selectedEventCategories.selectedCategoryFights.entities[id]);
+                const updatedFights = applyPatches(fights, change.changePatches);
+                const updates = updatedFights.map(uf => (<Update<Fight>>{
+                    id: uf.id,
+                    changes: uf
+                }));
+                state.selectedEventCategories.selectedCategoryFights = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryFights);
+                state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne(<Update<FightsEditorChange>>{id: change.id, changes: change}, {
+                    ...state.selectedEventCategories.selectedEventFightsEditorState,
+                    selectedChangeId: null
+                });
+            }
+            return;
         }
-      }
-      return;
+        case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED: {
+            if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.id) {
+                state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+                state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.removeOne(action.id, state.selectedEventCategories.selectedEventFightsEditorState);
+            }
+            return;
+        }
+        case EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED: {
+            if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState && action.change) {
+                state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId = null;
+                state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorChangeEntityAdapter.updateOne({
+                    id: action.change.id,
+                    changes: action.change
+                }, state.selectedEventCategories.selectedEventFightsEditorState);
+            }
+            return;
+        }
+        case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
+            if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState) {
+                if (!state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+                    const id = uuidv4().toString();
+                    state.selectedEventCategories.selectedEventFightsEditorState =
+                        fightsEditorChangeEntityAdapter.addOne(<FightsEditorChange>{changeInversePatches: [], changePatches: [], selectedFightIds: [], id}, {
+                            ...state.selectedEventCategories.selectedEventFightsEditorState,
+                            selectedChangeId: id
+                        });
+                }
+                const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+                if (selectedChange.selectedFightIds.indexOf(action.fightId) < 0) {
+                    if (selectedChange.selectedFightIds.length < 2) {
+                        selectedChange.selectedFightIds.push(action.fightId);
+                    } else {
+                        selectedChange.selectedFightIds = [...selectedChange.selectedFightIds.slice(1), action.fightId];
+                    }
+                }
+            }
+            return;
+        }
+        case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED: {
+            if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState
+                && state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
+                const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
+                selectedChange.selectedFightIds = [];
+            }
+        }
     }
-    case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED: {
-      if (state && state.selectedEventCategories && state.selectedEventCategories.selectedEventFightsEditorState
-          && state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId) {
-        const selectedChange = state.selectedEventCategories.selectedEventFightsEditorState.entities[state.selectedEventCategories.selectedEventFightsEditorState.selectedChangeId];
-        selectedChange.selectedFightIds = [];
-      }
-    }
-  }
 });
 
 
 export const reducers: ActionReducerMap<AppState> = {
     accountState: accountStateReducer,
-    router: fromRouter.routerReducer,
     selectedEventState: competitionStateReducer(fightsEditorChangeHandler)
 };
 
@@ -272,8 +271,6 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
     ? [logger, storeFreeze]
     : [];
-createFeatureSelector<AppState,
-    fromRouter.RouterReducerState<any>>('router');
 
 export function competitionStateReducer(fightsEditorHandler: (st: CompetitionState, a: any) => CompetitionState) {
     return produce((state: CompetitionState = initialCompetitionState, action) => {
