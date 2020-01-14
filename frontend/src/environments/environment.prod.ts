@@ -9,6 +9,7 @@ export const urls = {
   competitorsEndpoint: '/competitions/api/v1/store/competitors',
   defaultCategories: '/competitions/api/v1/store/defaultcategories',
   compProperties: '/competitions/api/v1/store/comprops',
+  compInfoTemplate: '/competitions/api/v1/store/infotemplate',
   categoryState: '/competitions/api/v1/store/categorystate',
   dashboardState: '/competitions/api/v1/store/dashboardstate',
   mats: '/competitions/api/v1/store/mats',

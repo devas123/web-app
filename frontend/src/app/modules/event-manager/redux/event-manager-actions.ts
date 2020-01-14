@@ -1,6 +1,19 @@
 // commands
-import {CommonAction, CompetitionProperties, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers/global-reducers';
-import {Category, Competitor, FightsEditorChange, HeaderDescription, PeriodProperties} from '../../../commons/model/competition.model';
+import {
+  CommonAction,
+  CompetitionProperties,
+  RegistrationGroup,
+  RegistrationInfo,
+  RegistrationPeriod,
+  Schedule
+} from '../../../reducers/global-reducers';
+import {
+  Category,
+  Competitor,
+  FightsEditorChange,
+  HeaderDescription,
+  PeriodProperties
+} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
@@ -11,7 +24,7 @@ export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGI
 export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
 export const EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND = 'DELETE_REGISTRATION_PERIOD_COMMAND';
 export const EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND = 'DELETE_REGISTRATION_GROUP_COMMAND';
-export const EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND = 'CREATE_REGISTRATION_GROUP_COMMAND';
+export const EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION_GROUP_COMMAND';
 export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND = 'EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
@@ -35,7 +48,7 @@ export const EVENT_MANAGER_UPDATE_REGISTRATION_INFO = 'UPDATE_REGISTRATION_INFO_
 export const EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED = 'EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED';
 export const EVENT_MANAGER_REGISTRATION_PERIOD_ADDED = 'REGISTRATION_PERIOD_ADDED';
 export const EVENT_MANAGER_REGISTRATION_PERIOD_DELETED = 'REGISTRATION_PERIOD_DELETED';
-export const EVENT_MANAGER_REGISTRATION_GROUP_CREATED = 'REGISTRATION_GROUP_CREATED';
+export const EVENT_MANAGER_REGISTRATION_GROUP_CREATED = 'REGISTRATION_GROUP_ADDED';
 export const EVENT_MANAGER_REGISTRATION_GROUP_UPDATED = 'REGISTRATION_GROUP_ADDED';
 export const EVENT_MANAGER_REGISTRATION_GROUP_DELETED = 'REGISTRATION_GROUP_DELETED';
 export const REGISTRATION_INFO_UPDATED = 'REGISTRATION_INFO_UPDATED';
@@ -94,8 +107,8 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
-export const eventManagerUpdateRegistrationInfo = createAction(EVENT_MANAGER_UPDATE_REGISTRATION_INFO, props<{registrationInfo: RegistrationInfo, competitionId: string}>());
-export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND, props<{competitionId: string, categoryId: string; newStatus: boolean }>());
+export const eventManagerUpdateRegistrationInfo = createAction(EVENT_MANAGER_UPDATE_REGISTRATION_INFO, props<{ registrationInfo: RegistrationInfo, competitionId: string }>());
+export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND, props<{ competitionId: string, categoryId: string; newStatus: boolean }>());
 export const eventManagerFightsEditorChangeAdded = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED, props<{ change: FightsEditorChange }>());
 export const eventManagerFightsEditorChangeRemoved = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_REMOVED, props<{ id: string }>());
 export const eventManagerFightsEditorChangeUpdated = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_UPDATED, props<{ change: FightsEditorChange }>());
@@ -122,12 +135,12 @@ export const eventManagerAddRegistrationPeriod = (competitionId: string, period:
   payload: {period}
 });
 
-export const eventManagerCreateRegistrationGroup = (competitionId: string, periodId, group: RegistrationGroup) => ({
+export const eventManagerAddRegistrationGroup = (competitionId: string, periodId, groups: RegistrationGroup[]) => ({
   type: EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
   competitionId,
   payload: {
     periodId,
-    group
+    groups
   }
 });
 

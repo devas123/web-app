@@ -69,6 +69,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
 import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
 import {FightsEditorComponent} from './components/fights-editor/fights-editor.component';
+import {CompetitionInfoEditorContainerComponent} from './containers/competition-info-editor-container/competition-info-editor-container.component';
+import {CompetitionInfoTemplateEditorComponent} from './components/competition-info-template-editor/competition-info-template-editor.component';
+import {CompetitionInfoContactsEditorComponent} from './components/competition-info-contacts-editor/competition-info-contacts-editor.component';
 
 @NgModule({
   imports: [
@@ -137,6 +140,9 @@ import {FightsEditorComponent} from './components/fights-editor/fights-editor.co
     CategorySummaryComponent,
     BracketsEditorContainerComponent,
     FighterProfileContainerComponent,
+    CompetitionInfoEditorContainerComponent,
+    CompetitionInfoTemplateEditorComponent,
+    CompetitionInfoContactsEditorComponent,
     FighterProfileComponent],
   providers: [EventManagerService],
   entryComponents: [

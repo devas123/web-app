@@ -53,8 +53,12 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
           action: () => this.navigate('dashboard/')
         },
         {
-          name: 'Registration Info',
+          name: 'Registration info',
           action: () => this.navigate('reg_info/')
+        },
+        {
+          name: 'Competition info',
+          action: () => this.navigate('about')
         }
       ]
     }, menuService);

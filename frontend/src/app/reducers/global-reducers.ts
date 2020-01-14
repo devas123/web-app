@@ -1,4 +1,4 @@
-import {Action, ActionReducer, ActionReducerMap, createFeatureSelector, createSelector, MetaReducer} from '@ngrx/store';
+import {Action, ActionReducer, ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -30,7 +30,6 @@ import {
     PeriodProperties,
     ScheduleProperties
 } from '../commons/model/competition.model';
-import * as fromRouter from '@ngrx/router-store';
 import {
     BRACKETS_GENERATED,
     CATEGORY_ADDED,
@@ -131,7 +130,6 @@ export const initialCompetitionState: CompetitionState = {
 
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
     selectedEventId: null,
-    selectedEventState: initialCompetitionState
 });
 
 export interface RegistrationGroup {
@@ -319,60 +317,61 @@ export function competitionStateReducer(fightsEditorHandler: (st: CompetitionSta
                 return fightsEditorHandler(state, action);
             }
             case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
-                return produce(state, draft => {
-                    if (draft.id === action.competitionId
-                        && draft.registrationInfo
-                        && action.payload.periodId && action.payload.groupId) {
-                        const {periodId, groupId} = action.payload;
-                        if (!draft.registrationInfo.registrationGroups) {
-                            draft.registrationInfo.registrationGroups = [];
-                        }
-                        const per = draft.registrationInfo.registrationPeriods
-                            .find(p => p.id === periodId);
-                        per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
-                        const group =
-                            draft.registrationInfo.registrationGroups.find(gr => gr.id === groupId);
-                        group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
-                        if (group.registrationPeriodIds.length === 0) {
-                            draft.registrationInfo.registrationGroups =
-                                draft.registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
-                        }
+                if (state.id === action.competitionId
+                    && state.registrationInfo
+                    && action.payload.periodId && action.payload.groupId) {
+                    const {periodId, groupId} = action.payload;
+                    if (!state.registrationInfo.registrationGroups) {
+                        state.registrationInfo.registrationGroups = [];
                     }
-                });
+                    const per = state.registrationInfo.registrationPeriods
+                        .find(p => p.id === periodId);
+                    per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+                    const group =
+                        state.registrationInfo.registrationGroups.find(gr => gr.id === groupId);
+                    if (!group.registrationPeriodIds) {
+                        group.registrationPeriodIds = [];
+                    }
+                    group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
+                    if (group.registrationPeriodIds.length === 0) {
+                        state.registrationInfo.registrationGroups =
+                            state.registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
+                    }
+                }
+                break;
             }
             case EVENT_MANAGER_REGISTRATION_GROUP_CREATED: {
-                return produce(state, draft => {
-                    if (draft.id === action.competitionId
-                        && draft && draft.registrationInfo
-                        && action.payload.periodId && action.payload.group) {
-                        if (!draft.registrationInfo.registrationGroups) {
-                            draft.registrationInfo.registrationGroups = [];
-                        }
-                        draft.registrationInfo.registrationGroups.push(action.payload.group);
-                        draft.registrationInfo.registrationPeriods
-                            .find(per => per.id === action.payload.periodId)
-                            .registrationGroupIds.push(action.payload.group.id);
+                if (state.id === action.competitionId
+                    && state && state.registrationInfo
+                    && action.payload.periodId && action.payload.groups) {
+                    if (!state.registrationInfo.registrationGroups) {
+                        state.registrationInfo.registrationGroups = [];
                     }
-                });
+                    action.payload.groups.forEach(group => {
+                        state.registrationInfo.registrationGroups.push(group);
+                        state.registrationInfo.registrationPeriods
+                            .find(per => per.id === action.payload.periodId)
+                            .registrationGroupIds.push(group.id);
+                    });
+                }
+                break;
             }
             case REGISTRATION_INFO_UPDATED: {
-                return produce(state, draft => {
-                    if (draft === action.competitionId && draft && action.payload.registrationInfo) {
-                        draft.registrationInfo = action.payload.registrationInfo;
-                    }
-                });
+                if (state === action.competitionId && state && action.payload.registrationInfo) {
+                    state.registrationInfo = action.payload.registrationInfo;
+                }
+                break;
             }
             case COMPETITION_PROPERTIES_UPDATED: {
                 const competitionId = action.competitionId;
                 if (competitionId === state.id) {
-                    return produce(state, draft => (
-                        {
-                            ...draft,
-                            ...action.payload.properties,
-                            startDate: action.payload.properties.startDate && new Date(action.payload.properties.startDate),
-                            endDate: action.payload.properties.endDate && new Date(action.payload.properties.endDate)
-                        }
-                    ));
+                    return  {
+                        ...state,
+                        ...action.payload.properties,
+                        startDate: action.payload.properties.startDate && new Date(action.payload.properties.startDate),
+                        endDate: action.payload.properties.endDate && new Date(action.payload.properties.endDate)
+                    };
+
                 }
                 return state;
             }

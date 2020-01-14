@@ -22,6 +22,7 @@ export interface IAddGroupContext {
 export interface IAddGroupResult {
   createNew: boolean;
   competitionId: string;
+  registrationInfoId: string;
   periodId: string;
   groups: RegistrationGroup[];
 }
@@ -95,7 +96,13 @@ export class AddGroupFormComponent implements OnInit {
       createNew = true;
     }
     if (groups && groups.length > 0) {
-      this.modal.approve({competitionId: this.modal.context.competitionId, periodId: this.modal.context.periodId, groups, createNew});
+      this.modal.approve({
+        competitionId: this.modal.context.competitionId,
+        registrationInfoId: this.modal.context.competitionId,
+        periodId: this.modal.context.periodId,
+        groups,
+        createNew
+      });
     } else {
       this.modal.deny(undefined);
     }

@@ -2,11 +2,11 @@ import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs'
 
 import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import {DateTime} from 'luxon';
-import {environment, mocks} from '../../environments/environment';
+import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
@@ -27,7 +27,7 @@ const {
   dashboardState,
   mats,
   matFights
-} = environment.mocks ? mocks : environment;
+} = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
                           maxRetryAttempts = 3,
@@ -103,7 +103,7 @@ export class InfoService {
         console.log(error);
         return observableOf(error);
       }),
-      mergeMap(value => value ? of(value) : throwError(`Call to ${url} returned null.`)),
+      mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`)),
     );
   }
 

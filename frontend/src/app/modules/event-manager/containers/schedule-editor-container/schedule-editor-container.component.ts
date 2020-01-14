@@ -75,7 +75,7 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
   }
 
   goBack() {
-    this.router.navigate(['..'], {relativeTo: this.route}).catch(error => console.error(error));
+    this.router.navigate(['..'], {relativeTo: this.route}).catch(console.error);
   }
 
   ngOnDestroy(): void {

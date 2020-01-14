@@ -41,11 +41,12 @@
     "intl": "^1.2.5",
     "jquery": ">=3.4.0",
     "luxon": "^1.11.3",
+    "marked": "^0.8.0",
     "ng2-semantic": "^1.0.5",
     "ng2-stomp-service": "^1.2.2",
     "ngx-avatar": "^3.7.0",
     "ngx-img-cropper": "^8.0.1",
-    "ngx-md": "^8.0.0",
+    "ngx-md": "^8.1.6",
     "rxjs": "^6.4.0",
     "screenfull": "^3.3.3",
     "semantic-ui-dimmer": "^2.4.0",
@@ -57,7 +58,7 @@
     "zone.js": "^0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.2",
+    "@angular-devkit/build-angular": "^0.803.22",
     "@angular/cli": "^8.3.2",
     "@angular/compiler-cli": "^8.2.4",
     "@angular/language-service": "^8.2.4",

@@ -11,7 +11,7 @@ import {
 } from '../../redux/event-manager-reducers';
 import {
   eventManagerAddRegistrationPeriod,
-  eventManagerCreateRegistrationGroup,
+  eventManagerAddRegistrationGroup,
   eventManagerDeleteRegistrationGroup,
   eventManagerDeleteRegistrationPeriod,
   eventManagerUpdateRegistrationInfo
@@ -107,8 +107,8 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   addRegistrationInfoGroups(data: IAddGroupResult) {
-    if (data.createNew) {
-      this.store.dispatch(eventManagerCreateRegistrationGroup(data.competitionId, data.periodId, data.groups[0]));
+    if (data && data.groups && data.registrationInfoId) {
+      this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.groups.map(gr => ({...gr, registrationInfoId: data.registrationInfoId}))));
     }
   }
 
