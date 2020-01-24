@@ -25,7 +25,7 @@
 <app-fights-editor-container *ngIf="editMode"></app-fights-editor-container>
 <app-generate-brackets-form
   [competitorsSize]="bracketsInfo?.numberOfCompetitor$ | async"
-  *ngIf="(bracketsInfo?.category$ | async) && !(bracketsInfo?.stages$ | async)?.length > 0 && !(bracketsInfo?.fightsAreLoading$ | async)"
+  *ngIf="(bracketsInfo?.category$ | async) && (bracketsInfo?.stages$ | async)?.length <= 0 && !(bracketsInfo?.fightsAreLoading$ | async)"
   (generateStages)="generateBrackets($event)"></app-generate-brackets-form>
 <app-stage-display [fights]="bracketsInfo.fights$ | async"
                    [editMode]="editMode"

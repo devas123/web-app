@@ -23,7 +23,7 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
 
   private subs = new Subscription();
 
-  private bracketsInfo: CommonBracketsContainer;
+  bracketsInfo: CommonBracketsContainer;
 
 
   @ViewChild('categorySelect', {static: true})

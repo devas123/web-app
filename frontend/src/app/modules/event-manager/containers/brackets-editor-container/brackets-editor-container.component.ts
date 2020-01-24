@@ -38,7 +38,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   private competitionId: string;
   private subs = new Subscription();
 
-  private bracketsInfo: CommonBracketsContainer;
+  bracketsInfo: CommonBracketsContainer;
   changeFightsIds$: Observable<string[]>;
   editMode = false;
 
