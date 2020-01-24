@@ -10,6 +10,7 @@ import {
 import {
   Category,
   Competitor,
+  Fight,
   FightsEditorChange,
   HeaderDescription,
   PeriodProperties
@@ -67,6 +68,8 @@ export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const EVENT_MANAGER_FIGHTER_SELECTED = 'EVENT_MANAGER_FIGHTER_SELECTED';
 export const EVENT_MANAGER_FIGHTER_UNSELECTED = 'EVENT_MANAGER_FIGHTER_UNSELECTED';
 export const EVENT_MANAGER_CATEGORY_SELECTED = 'EVENT_MANAGER_CATEGORY_SELECTED';
+export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED';
+export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED';
 export const EVENT_MANAGER_CATEGORY_UNSELECTED = 'EVENT_MANAGER_CATEGORY_UNSELECTED';
 export const EVENT_MANAGER_COMPETITION_UNSELECTED = 'EVENT_MANAGER_COMPETITION_UNSELECTED';
 
@@ -83,7 +86,6 @@ export const SCHEDULE_GENERATED = 'SCHEDULE_GENERATED';
 export const FIGHTS_START_TIME_UPDATED = 'FIGHTS_START_TIME_UPDATED';
 export const EVENT_MANAGER_COMPETITOR_ADDED = 'COMPETITOR_ADDED';
 export const EVENT_MANAGER_COMPETITOR_REMOVED = 'COMPETITOR_REMOVED';
-export const EVENT_MANAGER_COMPETITORS_MOVED = 'COMPETITORS_MOVED';
 export const COMPETITION_PROPERTIES_UPDATED = 'COMPETITION_PROPERTIES_UPDATED';
 export const EVENT_MANAGER_PERIOD_ADDED = 'EVENT_MANAGER_PERIOD_ADDED';
 export const EVENT_MANAGER_PERIOD_REMOVED = 'EVENT_MANAGER_PERIOD_REMOVED';
@@ -116,6 +118,8 @@ export const eventManagerFightForChangeSelected = createAction(EVENT_MANAGER_FIG
 export const eventManagerFightsForChangeUnselected = createAction(EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED);
 export const eventManagerFightsEditorSubmitChanges = createAction(EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND, props<{ changes: FightsEditorChange[], competitionId: string, categoryId: string }>());
 export const eventManagerFightsEditorChangesSubmitted = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED);
+export const eventManagerCategoryBracketsStageSelected = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, props<{ competitionId: string, selectedStageId: string }>());
+export const eventManagerCategoryBracketsStageFightsLoaded = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, props<{ fights: Fight[] }>());
 
 export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
   type: EVENT_MANAGER_HEADER_SET,
@@ -250,10 +254,13 @@ export const socketConnected = {type: EVENT_MANAGER_SOCKET_CONNECTED};
 export const socketDisconnected = {type: EVENT_MANAGER_SOCKET_DISCONNECTED};
 export const eventManagerConnectSocket = {type: EVENT_MANAGER_CONNECT_SOCKET};
 export const eventManagerDisconnectSocket = {type: EVENT_MANAGER_DISCONNECT_SOCKET};
-export const eventManagerGenerateBrackets = (competitionId, categoryId) => ({
+export const eventManagerGenerateBrackets = (competitionId, categoryId, stageDescriptors) => ({
   type: EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   competitionId,
-  categoryId
+  categoryId,
+  payload: {
+    stageDescriptors
+  }
 });
 
 export const eventManagerGenerateSchedule = (competitionId, scheduleProperties) => ({
@@ -265,9 +272,6 @@ export const eventManagerCategorySelected = (competitionId: string, categoryId: 
   type: EVENT_MANAGER_CATEGORY_SELECTED,
   competitionId,
   categoryId,
-  payload: {
-    bracketType: 'SINGLE_ELIMINATION'
-  }
 });
 export const eventManagerCategoryStateLoaded = (categoryState) => ({
   type: EVENT_MANAGER_CATEGORY_STATE_LOADED,

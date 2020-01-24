@@ -4,11 +4,12 @@ import {ChangeAvatarModalComponent} from './change-avatar-modal.component';
 import {AvatarModule} from 'ngx-avatar';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
 import {HttpClientModule} from '@angular/common/http';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 
 describe('ChangeAvatarModalComponent', () => {
@@ -21,6 +22,7 @@ describe('ChangeAvatarModalComponent', () => {
       imports: [HttpClientModule, AvatarModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -33,10 +35,9 @@ describe('ChangeAvatarModalComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
-      })],
+      })]
     })
       .compileComponents();
   }));

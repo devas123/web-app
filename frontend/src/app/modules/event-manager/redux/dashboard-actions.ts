@@ -1,6 +1,7 @@
 // commands
 import {Fight} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
+import {IScoreboardFightResultSet} from './dashboard-reducers';
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
@@ -20,6 +21,7 @@ export const DASHBOARD_DELETE_PERIOD_COMMAND = 'DELETE_PERIOD_COMMAND';
 export const DASHBOARD_INIT_DASHBOARD_STATE_COMMAND = 'CREATE_DASHBOARD_COMMAND';
 export const DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND = 'DELETE_DASHBOARD_COMMAND';
 export const DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND = 'DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND';
+export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_COMMAND';
 
 
 // events
@@ -40,6 +42,7 @@ export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};
 
 export const dashboardFightOrderChangeCommand = createAction(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
+export const dashboardSetFightResultCommand = createAction(DASHBOARD_SET_FIGHT_RESULT_COMMAND, props<IScoreboardFightResultSet>());
 
 export const dashboardRemovePeriod = (competitionId, periodId) => ({
   type: DASHBOARD_DELETE_PERIOD_COMMAND,

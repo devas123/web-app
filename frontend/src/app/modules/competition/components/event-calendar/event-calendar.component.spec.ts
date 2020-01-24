@@ -9,7 +9,6 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../r
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {competitionListReducer} from '../../redux/reducers';
 
@@ -19,7 +18,7 @@ describe('EventCalendarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EventCalendarComponent, EventListComponent, EventCardComponent ],
+      declarations: [EventCalendarComponent, EventListComponent, EventCardComponent],
       imports: [SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
@@ -36,12 +35,11 @@ describe('EventCalendarComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

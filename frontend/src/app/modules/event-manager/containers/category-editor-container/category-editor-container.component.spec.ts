@@ -6,10 +6,11 @@ import {SuiModule} from 'ng2-semantic';
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 
 describe('CategoryEditorContainerComponent', () => {
@@ -22,6 +23,7 @@ describe('CategoryEditorContainerComponent', () => {
       imports: [RouterTestingModule, SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -34,8 +36,7 @@ describe('CategoryEditorContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })]
     })

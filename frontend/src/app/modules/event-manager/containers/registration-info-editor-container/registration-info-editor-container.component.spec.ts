@@ -9,13 +9,14 @@ import {SuiDatepickerModule, SuiModalModule} from 'ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {RouterReducerState} from '@ngrx/router-store';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {DisplayCategoryPipe} from '../../../../pipes/display-category.pipe';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('RegistrationInfoEditorContainerComponent', () => {
   let component: RegistrationInfoEditorContainerComponent;
@@ -24,9 +25,10 @@ describe('RegistrationInfoEditorContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [RegistrationInfoEditorContainerComponent, RegistrationInfoEditorComponent, RegistrationGroupEditorComponent, TruncatePipe, ZonedDatePipe, DisplayCategoryPipe],
-      imports: [StoreModule.forRoot({
+      imports: [        StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -39,8 +41,7 @@ describe('RegistrationInfoEditorContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), SuiDatepickerModule, ReactiveFormsModule, RouterTestingModule, SuiModalModule, DragDropModule]
     })

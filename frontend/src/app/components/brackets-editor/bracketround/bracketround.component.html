@@ -7,7 +7,6 @@
 <svg:svg
   xmlns:svg="http://www.w3.org/2000/svg"
   version="1.1"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
   [attr.height]="slotHeightPx * bracketHeightInFights"
   [attr.width]="rowWidthPx">
   <svg:mask id="mask-selected">
@@ -103,7 +102,7 @@
       </ng-container>
     </svg:svg>
   </svg:svg>
-  <ng-container *ngIf="drawConnections">
+  <ng-container *ngIf="connectionsType !== 'NONE'">
     <svg:svg
       *ngFor="let fight of fights; trackBy: trackByFights; let k = index"
       [attr.id]="'path' + k"
@@ -111,10 +110,14 @@
       [attr.y]="k * slotHeightPx * bracketHeightInFights / fights.length - 0.1 * slotHeightPx"
       [attr.x]="rowWidthPx * competitorsWidthPercent"
       [attr.width]="rowWidthPx * pathWidthPercent">
-      <svg:g>
+      <svg:g *ngIf="connectionsType === 'DEFAULT'">
         <svg:path *ngIf="fights.length > 1" [attr.d]="paths[k % 2]"
                   style="stroke: gold; fill: none; stroke-width: 2"/>
         <svg:path *ngIf="fights.length == 1" [attr.d]="paths[2]"
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
+      </svg:g>
+      <svg:g *ngIf="connectionsType === 'STRAIGHT'">
+        <svg:path [attr.d]="paths[3]"
                   style="stroke: gold; fill: none; stroke-width: 2"/>
       </svg:g>
     </svg:svg>

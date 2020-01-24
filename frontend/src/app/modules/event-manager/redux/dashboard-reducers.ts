@@ -1,7 +1,14 @@
 import {combineReducers, createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers/global-reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {Fight, fightEntityAdapter, FightsCollection, fightsInitialState} from '../../../commons/model/competition.model';
+import {
+  CompScore,
+  Fight,
+  fightEntityAdapter,
+  FightResult,
+  FightsCollection,
+  fightsInitialState
+} from '../../../commons/model/competition.model';
 import {
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_FIGHT_UNSELECTED,
@@ -258,3 +265,12 @@ export const dashboardReducers = combineReducers({
   dashboardSocketConnected: socketStateReducer,
   eventPeriods: eventPeriodsReducer
 });
+
+export interface IScoreboardFightResultSet {
+  competitionId: string;
+  categoryId: string;
+  matId: string;
+  fightId: string;
+  fightResult: FightResult;
+  scores: CompScore[];
+}

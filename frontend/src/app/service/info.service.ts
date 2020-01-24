@@ -10,6 +10,7 @@ import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
+import {Fight} from '../commons/model/competition.model';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -26,14 +27,15 @@ const {
   categoryState,
   dashboardState,
   mats,
-  matFights
+  matFights,
+  stageFights
 } = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
-                          maxRetryAttempts = 3,
-                          scalingDuration = 500,
-                          excludedStatusCodes = []
-                        }: {
+                                       maxRetryAttempts = 3,
+                                       scalingDuration = 500,
+                                       excludedStatusCodes = []
+                                     }: {
   maxRetryAttempts?: number,
   scalingDuration?: number,
   excludedStatusCodes?: number[]
@@ -77,7 +79,7 @@ export class InfoService {
     'matId',
     'metadata',
     'executed',
-    'id',
+    'id'
   ];
 
   static parseDate(dateStr: string): Date {
@@ -103,7 +105,7 @@ export class InfoService {
         console.log(error);
         return observableOf(error);
       }),
-      mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`)),
+      mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`))
     );
   }
 
@@ -113,7 +115,7 @@ export class InfoService {
       competitionId
     };
     return this.httpGet(competitionQueryEndpoint + '/select', {
-      params: params,
+      params: params
     });
   }
 
@@ -126,7 +128,7 @@ export class InfoService {
       params = {...params, creatorId};
     }
     return this.httpGet(competitionQueryEndpoint, {
-      params: params,
+      params: params
     });
   }
 
@@ -134,7 +136,7 @@ export class InfoService {
   getCompetitor(competitionId: string, fighterId: string) {
     const params = {competitionId, fighterId};
     return this.httpGet(competitorEdpoint, {
-      params: params,
+      params: params
     });
   }
 
@@ -170,7 +172,7 @@ export class InfoService {
       params = {...params, searchString};
     }
     return this.httpGet(competitorsEndpoint, {
-      params: params,
+      params: params
     });
   }
 
@@ -178,7 +180,7 @@ export class InfoService {
   getDefaultCategories(competitionId: string) {
     const params = {sportsId: 'bjj', competitionId, includeKids: 'false'};
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + HttpAuthService.getToken(),
+      'Authorization': 'Bearer ' + HttpAuthService.getToken()
     });
     return this.httpGet(defaultCategories, {
       params: params,
@@ -203,11 +205,6 @@ export class InfoService {
       headers: this.headers
     });
   }
-
-  getAcademiesForCompetition(competitionId) {
-
-  }
-
   sendCreateCompetitionCommand(command: any): Observable<any> {
     const body = JSON.stringify(command);
     return this.http.post(`${commandsEndpoint}`, body, {
@@ -248,16 +245,8 @@ export class InfoService {
       catchError(error => {
         console.log(error);
         return observableOf(error);
-      }),
+      })
     );
-  }
-
-  sendGlobalDashboardCommand(command: any, competitionId: string): Observable<any> {
-    return this.sendCommand(command, competitionId);
-  }
-
-  sendGlobalDashboardCommandSync(command: CommonAction): Observable<any> {
-    return this.sendCommandSync(command);
   }
 
 
@@ -308,5 +297,14 @@ export class InfoService {
         console.error(error);
         return of(errorEvent(JSON.stringify(error)));
       }));
+  }
+
+  getCategoryStageFights(competitionId: string, stageId: string): Observable<Fight[]> {
+    const params = {competitionId, stageId};
+    return this.httpGet(stageFights, {
+      params: params,
+      headers: this.headers
+    });
+
   }
 }

@@ -9,9 +9,9 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../reducers/g
 import {eventManagerReducers} from '../modules/event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../modules/account/flux/account.state';
 import {periodsInitialState} from '../modules/event-manager/redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
 import {SuiSidebarModule} from 'ng2-semantic';
 import {HeaderDescription} from '../commons/model/competition.model';
+import {competitionListReducer} from '../modules/competition/redux/reducers';
 
 
 describe('AppComponent', () => {
@@ -27,6 +27,7 @@ describe('AppComponent', () => {
         StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+          events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -39,8 +40,7 @@ describe('AppComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })]
     }).compileComponents();

@@ -10,5 +10,6 @@
   <app-scoreboard-component
     (goMatViewClicked)="selectFightForScoreboard(null)"
     [selectedFight]="selectedFight$ | async"
-    [category]="fightCategory$ | async"></app-scoreboard-component>
+    [category]="fightCategory$ | async"
+  (fightResultUpdated)="sendFightResult($event)"></app-scoreboard-component>
 </div>

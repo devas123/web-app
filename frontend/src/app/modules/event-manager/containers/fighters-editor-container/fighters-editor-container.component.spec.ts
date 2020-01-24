@@ -12,7 +12,6 @@ import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {RouterReducerState} from '@ngrx/router-store';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 
@@ -39,8 +38,7 @@ describe('FightersEditorContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), RouterTestingModule]
     })

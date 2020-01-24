@@ -60,7 +60,7 @@ const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
 export const categoryFilter = value => cat => {
   return !value || value.length <= 0 || (cat.id
-      && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
+    && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
 };
 
 export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
@@ -82,8 +82,10 @@ export interface ScheduleEntry {
   fightDuration: number;
 }
 
+export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
+
 export interface FightResult {
-  draw: boolean;
+  resultType: CompetitorResultType;
   winnerId: string;
   reason: string;
 }
@@ -115,7 +117,10 @@ export interface CompScore {
   score: Score;
 }
 
+export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS';
+
 export interface Fight {
+  fightName: string;
   id: string;
   category: Category;
   parentId1: string;
@@ -127,6 +132,7 @@ export interface Fight {
   duration: number;
   scores: CompScore[];
   round: number;
+  roundType: RoundType;
   stage: string;
   fightResult: FightResult;
   timeToStart: boolean;
@@ -144,6 +150,9 @@ export interface Academy {
   coaches: string[];
   created: number;
 }
+
+export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION';
+export type StageType = 'PRELIMINARY' | 'FINAL';
 
 export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
 
@@ -172,7 +181,6 @@ export interface Category {
 
 export interface CategoryState {
   id: string;
-  brackets: any;
   category: Category;
   status: string;
   numberOfCompetitors: number;
@@ -181,13 +189,69 @@ export interface CategoryState {
 export interface CategoriesCollection extends EntityState<Category> {
   selectedCategoryId: string | null;
   selectedCategoryState: CategoryState;
-  selectedCategoryFights: FightsCollection;
+  selectedCategoryStages: CategoryBracketsStageCollection;
   selectedEventFightsEditorState: FightsEditorState;
+  categoryStateLoading: boolean;
+}
+
+export interface CategoryBracketsStage {
+  id: string;
+  bracketType: BracketsType | null;
+  stageType: StageType;
+  stageStatus: string;
+  waitForPrevious: boolean;
+  hasThirdPlaceFight: boolean;
+  stageOrder: number;
+  pointsAssignments: PointsAssignment[];
+  resultDescriptor: StageResult;
+  inputDescriptor: StageInputDescriptor;
+}
+
+export interface PointsAssignment {
+  id: string;
+  classifier: string;
+  points: string;
+  additionalPoints: string;
+}
+
+interface CompetitorResult {
+  id: string;
+  competitorId: string;
+  points: number;
+  round: number;
+  place: number;
+  groupId: string;
+}
+
+interface StageResult {
+  id: string;
+  name: string;
+  competitorResults: CompetitorResult[];
+}
+
+interface CompetitorSelector {
+  id: string;
+  applyToStageId: string;
+  logicalOperator: string;
+  classifier: string;
+  operator: string;
+  selectorValue: string[];
+}
+
+export interface StageInputDescriptor {
+  selectors: CompetitorSelector[];
+  distributionType: string;
+  numberOfCompetitors: number;
+  id: string;
+}
+
+export interface CategoryBracketsStageCollection extends EntityState<CategoryBracketsStage> {
+  selectedStageId: string | null;
+  selectedStageFights: FightsCollection;
 }
 
 export interface FightsCollection extends EntityState<Fight> {
   selectedFightId: string | null;
-  bracketsType: string | null;
 }
 
 export interface CompetitorsCollection extends EntityState<Competitor> {
@@ -258,6 +322,10 @@ export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Figh
   sortComparer: false
 });
 
+export const stagesEntityAdapter: EntityAdapter<CategoryBracketsStage> = createEntityAdapter<CategoryBracketsStage>({
+  selectId: (stage: CategoryBracketsStage) => stage.id,
+  sortComparer: (st1, st2) => st1.stageOrder - st2.stageOrder
+});
 
 
 export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapter<Category>({
@@ -270,14 +338,17 @@ export const fightsEditorChangeEntityAdapter: EntityAdapter<FightsEditorChange> 
 );
 
 
-
 export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getInitialState({
   selectedChangeId: null
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
   selectedFightId: null,
-  bracketsType: null
+});
+
+export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({
+  selectedStageId: null,
+  selectedStageFights: fightsInitialState
 });
 
 export const academiesInitialState: AcademiesCollection = academyEntityAdapter.getInitialState({
@@ -297,13 +368,15 @@ export const competitorsInitialState: CompetitorsCollection = competitorEntityAd
 export const categoriesInitialState: CategoriesCollection = categoryEntityAdapter.getInitialState({
   selectedCategoryId: null,
   selectedCategoryState: null,
-  selectedCategoryFights: fightsInitialState,
-  selectedEventFightsEditorState: fightsEditorInitialState
+  selectedCategoryStages: stagesInitialState,
+  selectedEventFightsEditorState: fightsEditorInitialState,
+  categoryStateLoading: false
 });
 
 
 export interface FightsEditorChange {
   id: string;
+  stageId: string;
   selectedFightIds: string[];
   changePatches: any[];
   changeInversePatches: any[];

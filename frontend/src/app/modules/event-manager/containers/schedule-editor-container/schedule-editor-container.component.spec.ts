@@ -7,13 +7,14 @@ import {SuiModule} from 'ng2-semantic';
 import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {RouterReducerState} from '@ngrx/router-store';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {RouterTestingModule} from '@angular/router/testing';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('ScheduleEditorContainerComponent', () => {
   let component: ScheduleEditorContainerComponent;
@@ -25,6 +26,7 @@ describe('ScheduleEditorContainerComponent', () => {
       imports: [ReactiveFormsModule, SuiModule, DragDropModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -37,8 +39,7 @@ describe('ScheduleEditorContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), RouterTestingModule]
     })

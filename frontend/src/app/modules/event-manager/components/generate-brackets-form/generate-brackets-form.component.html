@@ -1,0 +1,60 @@
+<div class="ui basic segment" [formGroup]="form">
+  <div class="ui buttons">
+    <button class="ui button" (click)="doGenerateStages()">Generate</button>
+    <button class="ui button" (click)="addStageDescription()">Add stage</button>
+    <button class="ui button" (click)="removeAllStages()">Clear</button>
+  </div>
+  <div class="ui two stackable cards" formArrayName="stageDescriptions">
+    <div class="ui card" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
+      <div class="content">
+        <div class="right floated">
+          <a>
+            <i class="close icon" (click)="removeStageDescription(i)"></i>
+          </a>
+        </div>
+        <div class="header">
+          Stage #{{i + 1}}
+        </div>
+      </div>
+      <div class="content">
+        <div class="ui form" [formGroupName]="i">
+          <div class="ui field">
+            <sui-select class="selection"
+                        (selectedOptionChange)="setBracketsType(i, $event)"
+                        [placeholder]="'Select brackets type'"
+                        [options]="bracketTypes"
+                        [isSearchable]="true"
+                        [isDisabled]="false"
+                        #bracketType>
+              <sui-select-option *ngFor="let option of bracketType.filteredOptions"
+                                 [value]="option">
+              </sui-select-option>
+            </sui-select>
+          </div>
+          <div class="ui field">
+            <input class="ui input" type="text" placeholder="Input stage name." formControlName="name"/>
+          </div>
+          <div class="ui fields" formGroupName="inputDescriptor">
+            <div class="ui field">
+              <input class="ui input" type="number"
+                     [placeholder]="i === 0 ? (_competitorsSize + ' Competitors') : 'Number of competitors'"
+                     formControlName="numberOfCompetitors"/>
+            </div>
+          </div>
+          <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
+            <sui-checkbox [name]="'hasThirdPlaceFight'"
+                          (checkChange)="setHasThirdPlaceFight(i, $event)"
+            >Has fight for 3d place
+            </sui-checkbox>
+          </div>
+          <div class="ui field" *ngIf="i > 0">
+            <sui-checkbox [name]="'waitForPrevious'"
+                          (checkChange)="setWaitForPrevious(i, $event)">Wait for previous stage to finish
+            </sui-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

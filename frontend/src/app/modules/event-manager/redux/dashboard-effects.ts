@@ -18,13 +18,19 @@ import {
   DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_PERIOD_SELECTED,
+  DASHBOARD_SET_FIGHT_RESULT_COMMAND,
+  dashboardMatSelected,
   dashboardPeriodSelected,
   dashboardSelectedPeriodMatsLoaded,
   dashboardSelectedPeriodSelectedMatFightsLoaded,
   dashboardStateLoaded,
   loadDashboardState
 } from './dashboard-actions';
-import {dashboardGetSelectedPeriodId} from './dashboard-reducers';
+import {
+  dashboardGetSelectedPeriodId,
+  dashboardGetSelectedPeriodSelectedMatId,
+  dashboardGetSelectedPeriodSelectedMatSelectedFightId
+} from './dashboard-reducers';
 
 @Injectable()
 export class DashboardEffects {
@@ -79,16 +85,17 @@ export class DashboardEffects {
       DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
       DASHBOARD_DELETE_PERIOD_COMMAND),
     tap((command: CommonAction) => {
-      return this.infoService.sendGlobalDashboardCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
+      return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error)))).subscribe();
     })), {dispatch: false});
 
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND),
+    ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, DASHBOARD_SET_FIGHT_RESULT_COMMAND),
     concatMap(action => of(action).pipe(
-      withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId)))
+      withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId)),
+        this.store.pipe(select(dashboardGetSelectedPeriodSelectedMatId)))
     )),
-    exhaustMap(([command, periodId]: [CommonAction, string]) => this.infoService.sendCommandSync(command)
-      .pipe(exhaustMap(() => from([loadDashboardState(command.competitionId), dashboardPeriodSelected(periodId, command.competitionId)])))))
+    exhaustMap(([command, periodId, matId]: [CommonAction, string, string]) => this.infoService.sendCommandSync(command)
+      .pipe(exhaustMap(() => from([loadDashboardState(command.competitionId), dashboardPeriodSelected(periodId, command.competitionId), dashboardMatSelected(command.competitionId, matId)])))))
   );
 
   constructor(private actions$: Actions,

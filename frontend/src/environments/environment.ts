@@ -26,7 +26,8 @@ export const environment = {
   categoryState: '/competitions/api/v1/store/categorystate',
   dashboardState: '/competitions/api/v1/store/dashboardstate',
   mats: '/competitions/api/v1/store/mats',
-  matFights: '/competitions/api/v1/store/matfights'
+  matFights: '/competitions/api/v1/store/matfights',
+  stageFights: '/competitions/api/v1/store/stagefights',
 };
 
 const comprops = '/jsserver/competition';
@@ -46,7 +47,8 @@ export const mocks = {
   categoryState: '/jsserver/categorystate',
   dashboardState: '/jsserver/dashboardstate',
   mats: '/jsserver/mats',
-  matFights: '/jsserver/matfights'
+  matFights: '/jsserver/matfights',
+  stageFights: '/jsserver/stagefights',
 };
 
 

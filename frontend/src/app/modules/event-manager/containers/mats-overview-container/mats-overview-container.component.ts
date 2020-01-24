@@ -49,7 +49,6 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   navigateToMat(matId: string) {
     this.router.navigate([matId], {relativeTo: this.route}).catch(error => console.error(error));
   }
-
   sendFightScheduleChanged($event: IDashboardFightScheduleChangedPayload) {
     this.store.dispatch(dashboardFightOrderChangeCommand($event));
   }

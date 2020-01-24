@@ -8,7 +8,6 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../r
 import {RouterTestingModule} from '@angular/router/testing';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {RouterReducerState} from '@ngrx/router-store';
 import {FightersDisplayContainerComponent} from './fighters-display-container.component';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
@@ -39,8 +38,7 @@ describe('FightersDisplayContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), RouterTestingModule]
     })

@@ -56,10 +56,10 @@ body,
   align-items: center;
   place-content: stretch;
   padding-left: $padding_big;
+  position: relative;
 }
 
-.participant__data-box {
-}
+.participant__data-box {}
 
 .participant__name {
   text-transform: uppercase;
@@ -82,7 +82,50 @@ body,
   line-height: 1;
   color: #99b5ec;
   padding-top: 10px;
+  position: relative;
 }
+
+.number_controls {
+  display: flex;
+  flex-direction: row;
+  line-height: 5px;
+}
+
+.ui.small.icon.button {
+  font-size: 0.7rem;
+}
+
+.grid_controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+}
+
+.participant__score_controls {
+  position: absolute;
+  top: 0;
+}
+
+.timer_start_stop_controls {
+  position: absolute;
+  bottom: 0;
+}
+
+.winner_control_button {
+  position: absolute;
+  opacity: 0.5 !important;
+  top: 1px;
+  right: 2em;
+}
+
+.transparent {
+  opacity: 0.5;
+
+  .ui.icon {
+    opacity: 1;
+  }
+}
+
 
 .participant__extra-points {
   font-size: 9vh;
@@ -96,6 +139,8 @@ body,
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    position: relative;
 
     &.points-item {
       color: black;
@@ -118,6 +163,7 @@ body,
   font-size: 24vh;
   line-height: 1;
   padding: 20px 30px;
+  position: relative;
 
   &.red {
     background-color: #1a8629;
@@ -131,7 +177,7 @@ body,
 
 .info {
   display: grid;
-  grid-auto-flow: column;
+  grid-template-columns: 55% 45%;
   align-items: center;
   background: -webkit-linear-gradient(45deg, #182d67 0%, #000 100%);
   background: linear-gradient(45deg, #182d67 0%, #000 100%);
@@ -151,6 +197,10 @@ body,
   }
 }
 
+.gold {
+  color: gold;
+}
+
 .info__time {
   display: flex;
   justify-content: center;
@@ -158,6 +208,7 @@ body,
   color: #99b5ec;
   font-size: 20vh;
   line-height: 1;
+  position: relative;
 }
 
 .info__round {

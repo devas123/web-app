@@ -1,17 +1,24 @@
-<div class="all-buckets-page">
-  <div *ngFor="let bucket of rounds" class="bracket-page">
-    <div *ngFor="let round of bucket; index as i; last as isLast">
-      <h5 class="ui header">{{getRoundName(round)}}</h5>
-      <app-bracketround [changeFightIds]="changeFightsIds"
-                        [rowWidthPx]="rowWidthPx"
-                        [bracketHeightInFights]="getFightsNumberForBucket(bucket)"
-                        [fights]="getFightsForRound(round)"
-                        [round]="round"
-                        [oneFightInPercent]="getOneFightInPercent(round)"
-                        [elementsSelectable]="editMode && (changeFightsIds?.length < 2)"
-                        [drawConnections]="!isLast"
-                        [slotHeightPx]="120"
-                        (fightSelected)="addFightToCurrentChange($event)"></app-bracketround>
-    </div>
+<ng-container *ngIf="bracketsType==='SINGLE_ELIMINATION'">
+  <app-bracket-part [editMode]="editMode" [isLoserBracket]="false" [bucketsize]="bucketsize"
+                    [changeFightsIds]="changeFightsIds" [fights]="_fights"
+                    [rowWidthPx]="rowWidthPx"
+                    (fightSelected)="fightSelected.next($event)"></app-bracket-part>
+</ng-container>
+<ng-container *ngIf="bracketsType==='DOUBLE_ELIMINATION'">
+  <div class="ui basic segment">
+    <sui-checkbox class="toggle" name="brackets_selector"
+                  (checkChange)="showUpperBrackets = !showUpperBrackets">
+      {{showUpperBrackets ? 'Upper brackets' : 'Lower brackets'}}</sui-checkbox>
   </div>
-</div>
+  <app-bracket-part *ngIf="showUpperBrackets" [editMode]="editMode" [isLoserBracket]="false" [bucketsize]="bucketsize"
+                    [changeFightsIds]="changeFightsIds" [fights]="_fights"
+                    [rowWidthPx]="rowWidthPx"
+                    [stageType]="stageType"
+                    (fightSelected)="addFightToCurrentChange($event)"></app-bracket-part>
+  <app-bracket-part *ngIf="!showUpperBrackets" [editMode]="editMode" [isLoserBracket]="true" [bucketsize]="bucketsize"
+                    [changeFightsIds]="changeFightsIds" [fights]="_loserFights" [losersFirstRoundSizeInFights]="getWInnerFightsLength()"
+                    [rowWidthPx]="rowWidthPx"
+                    [stageType]="stageType"
+                    (fightSelected)="addFightToCurrentChange($event)"></app-bracket-part>
+</ng-container>
+

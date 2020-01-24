@@ -6,10 +6,11 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {HttpAuthService} from '../../../service/AuthService';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers} from '../../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../flux/account.state';
 import {periodsInitialState} from '../../../../event-manager/redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../../commons/model/competition.model';
 
 
 describe('SignInComponent', () => {
@@ -18,10 +19,11 @@ describe('SignInComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignInComponent ],
+      declarations: [SignInComponent],
       imports: [SuiTransitionModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -34,13 +36,12 @@ describe('SignInComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })],
       providers: [HttpAuthService]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

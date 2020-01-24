@@ -1,4 +1,4 @@
-import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, tap} from 'rxjs/operators';
 
 
 import {Injectable} from '@angular/core';
@@ -6,22 +6,27 @@ import {Observable, of as observableOf, of} from 'rxjs';
 import {Action} from '@ngrx/store';
 import {Actions, createEffect, Effect, ofType} from '@ngrx/effects';
 import * as allActions from '../actions/actions';
+import {errorEvent} from '../actions/actions';
 import * as competitionMiscActions from '../actions/misc';
 import {InfoService} from '../service/info.service';
 import {CommonAction, CompetitionProperties, Schedule} from '../reducers/global-reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';
-import {COMPETITION_SELECTED, loadCategories} from '../modules/event-manager/redux/event-manager-actions';
-import {LOAD_CATEGORIES_COMMAND} from '../modules/event-manager/redux/event-manager-actions';
-import {eventManagerCategoriesLoaded} from '../modules/event-manager/redux/event-manager-actions';
-import {errorEvent} from '../actions/actions';
-import {eventManagerScheduleLoaded} from '../modules/event-manager/redux/event-manager-actions';
-import {EVENT_MANAGER_CATEGORY_SELECTED} from '../modules/event-manager/redux/event-manager-actions';
-import {eventManagerCategoryStateLoaded} from '../modules/event-manager/redux/event-manager-actions';
-import {EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION} from '../modules/event-manager/redux/event-manager-actions';
-import {eventManagerFightersForCompetitionLoaded} from '../modules/event-manager/redux/event-manager-actions';
-import {EVENT_MANAGER_LOAD_FIGHTER_COMMAND} from '../modules/event-manager/redux/event-manager-actions';
-import {eventManagerFighterLoaded} from '../modules/event-manager/redux/event-manager-actions';
-import {Competitor} from '../commons/model/competition.model';
+import {
+  COMPETITION_SELECTED,
+  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
+  EVENT_MANAGER_CATEGORY_SELECTED,
+  EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
+  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
+  eventManagerCategoriesLoaded,
+  eventManagerCategoryBracketsStageFightsLoaded,
+  eventManagerCategoryStateLoaded,
+  eventManagerFighterLoaded,
+  eventManagerFightersForCompetitionLoaded,
+  eventManagerScheduleLoaded,
+  LOAD_CATEGORIES_COMMAND,
+  loadCategories
+} from '../modules/event-manager/redux/event-manager-actions';
+import {Competitor, Fight} from '../commons/model/competition.model';
 
 @Injectable()
 export class Effects {
@@ -105,6 +110,13 @@ export class Effects {
           return errorEvent('Error occured while loading categoryId state: ' + JSON.stringify(state));
         }
       })));
+
+  loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED),
+    mergeMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
+    map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]}))
+  ));
+
 
 
   eventManagerLoadFightersForCompetition$ = createEffect(() => this.actions$.pipe(

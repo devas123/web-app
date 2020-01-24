@@ -1,50 +1,52 @@
 <ng-container *ngIf="!!fight">
   <button class="ui button" (click)="goFullScreen()">Go fullscreen</button>
   <button class="ui button" (click)="goMatView()">Mat view</button>
+  <button class="ui button" (click)="showControls = !showControls">Toggle controls</button>
   <div class="ui divider"></div>
   <div class="wrapper" id="fullscr">
-    <div class="participant participant_red">
+    <div class="participant" [ngClass]="{participant_red: isFirst, participant_blue: isLast}"
+         *ngFor="let score of fight.scores; last as isLast; first as isFirst; index as i">
       <div class="participant__data ">
+        <div class="ui buttons winner_control_button" *ngIf="showControls">
+          <button class="ui button"
+                  (click)="setWinner(score?.competitor, 'WIN_SUBMISSION')">Win by sub
+          </button>
+          <button class="ui button"
+                  (click)="setWinner(score?.competitor, 'OPPONENT_DQ')">Opponent DQ
+          </button>
+          <button class="ui button"
+                  (click)="setWinner(score?.competitor, 'WIN_POINTS')">Win by points
+          </button>
+          <button class="ui button"
+                  (click)="setWinner(score?.competitor, 'WIN_DECISION')">Win by decision
+          </button>
+        </div>
         <div class="participant__data-box">
           <div class="participant__name">
-            {{fight.scores[0]?.competitor | getname}}
+            {{score?.competitor | getname}}
           </div>
-          <div class="participant__team">{{fight.scores[0]?.competitor?.academy?.name | truncate:30}}</div>
-          <button class="ui button" *ngIf="showButtons"
-                  (click)="setWinner(fight.scores[0]?.competitor, getScore(fight.scores[0]))">Winner
-          </button>
+          <div class="participant__team">{{score?.competitor?.academy?.name | truncate:30}}</div>
         </div>
       </div>
       <div class="participant__extra-points">
-        <div class="participant__extra points-item">{{getScore(fight.scores[0]).advantages}}</div>
+        <div class="participant__extra points-item">
+          <app-number-controls class="participant__score_controls"
+                               (valueChanged)="updateAdvantage($event, i)"
+                                *ngIf="showControls"></app-number-controls>
+          {{getScore(score).advantages}}
+        </div>
         <div class="participant__extra penalties-item">
-          {{getScore(fight.scores[0]).penalties}}
+          <app-number-controls class="participant__score_controls"
+                               (valueChanged)="updatePenalties($event, i)"
+                               *ngIf="showControls"></app-number-controls>
+          {{getScore(score).penalties}}
         </div>
       </div>
-      <div class="participant__point red">
-        {{getScore(fight.scores[0])?.points}}
-      </div>
-    </div>
-    <div class="participant participant_blue">
-      <div class="participant__data">
-        <div class="participant__data-box">
-          <div class="participant__name">
-            {{fight.scores[1].competitor | getname}}
-          </div>
-          <div class="participant__team">{{fight.scores[1]?.competitor.academy?.name | truncate:30}}</div>
-          <button class="ui button" *ngIf="showButtons"
-                  (click)="setWinner(fight.scores[1]?.competitor, getScore(fight.scores[1]))">Winner
-          </button>
-        </div>
-      </div>
-      <div class="participant__extra-points">
-        <div class="participant__extra points-item">{{getScore(fight.scores[1]).advantages}}</div>
-        <div class="participant__extra penalties-item">
-          {{getScore(fight.scores[1]).penalties}}
-        </div>
-      </div>
-      <div class="participant__point blue">
-        {{getScore(fight.scores[1]).points}}
+      <div class="participant__point" [ngClass]="{red: isFirst, last: isLast}">
+        <app-number-controls class="participant__score_controls"
+                             (valueChanged)="updatePoint($event, i)"
+                             *ngIf="showControls"></app-number-controls>
+        {{getScore(score)?.points}}
       </div>
     </div>
     <div class="info">
@@ -54,11 +56,7 @@
           <div class="info__round-name" *ngIf="stageName">{{stageName}}</div>
         </div>
       </div>
-      <div class="info__time"
-           [ngClass]="{'red': currentFightMinutes == 0 && (currentFightSeconds < 10 && currentFightSeconds != 0)}">
-        {{(currentFightMinutes < 10 &&
-      currentFightMinutes != 0 ? "0" : "") + currentFightMinutes + ":" + (currentFightSeconds < 10 ? "0" : "") + currentFightSeconds}}
-      </div>
+      <app-timer-component [minutes]="currentFightMinutes" [seconds]="currentFightSeconds" [showControls]="showControls"></app-timer-component>
     </div>
   </div>
 </ng-container>

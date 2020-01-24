@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Fight} from '../../../commons/model/competition.model';
 
+export type ConnectionType = 'DEFAULT' | 'NONE' | 'STRAIGHT';
 
 @Component({
   selector: 'app-bracketround',
@@ -40,20 +41,20 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   public slotHeightPx = 160;
 
   @Input()
-  public drawConnections = true;
+  public connectionsType: ConnectionType = 'DEFAULT';
 
   @Input()
   public oneFightInPercent: number;
 
   @Input()
-  changeFightIds: string[];
+  changeFightIds: string[] = [];
 
   @Output()
   public fightSelected = new EventEmitter<string>();
 
   canSelectFight(fight: Fight) {
     const fightId = fight && fight.id;
-    return (fightId && this.elementsSelectable && ((this.changeFightIds.indexOf(fightId) < 0) || !this.changeFightIds) && fight.scores && fight.scores.length > 0);
+    return (fightId && this.elementsSelectable && ((!this.changeFightIds || this.changeFightIds.indexOf(fightId) < 0)) && fight.scores && fight.scores.length > 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -105,6 +106,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7} v${lineBoxHeight * 0.5} h${lineBoxLength * 0.3}`);
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7} v-${lineBoxHeight * 0.5} h${lineBoxLength * 0.3}`);
     this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength * 0.7}`);
+    this.paths.push(`M0 ${lineBoxHeight * 0.5} h${lineBoxLength}`);
   }
 
   ngOnInit() {

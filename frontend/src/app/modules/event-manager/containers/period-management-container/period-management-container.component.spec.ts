@@ -4,11 +4,12 @@ import {PeriodManagementContainerComponent} from './period-management-container.
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {SuiModule} from 'ng2-semantic'
-import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
+import {SuiModule} from 'ng2-semantic';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('PeriodManagementContainerComponent', () => {
   let component: PeriodManagementContainerComponent;
@@ -17,9 +18,10 @@ describe('PeriodManagementContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PeriodManagementContainerComponent],
-      imports: [SuiModule, RouterTestingModule, StoreModule.forRoot({
+      imports: [SuiModule, RouterTestingModule,         StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+          events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -32,8 +34,7 @@ describe('PeriodManagementContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })]
     })
@@ -46,9 +47,9 @@ describe('PeriodManagementContainerComponent', () => {
       component = fixture.componentInstance;
       fixture.detectChanges();
     } catch (e) {
-      console.log(JSON.stringify(e))
-      console.log(e)
-      throw e
+      console.log(JSON.stringify(e));
+      console.log(e);
+      throw e;
     }
   });
 
@@ -56,9 +57,9 @@ describe('PeriodManagementContainerComponent', () => {
     try {
       expect(component).toBeTruthy();
     } catch (e) {
-      console.log(JSON.stringify(e))
-      console.log(e)
-      throw e
+      console.log(JSON.stringify(e));
+      console.log(e);
+      throw e;
     }
   });
 });

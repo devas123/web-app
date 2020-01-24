@@ -7,11 +7,12 @@ import {ScheduleDisplayComponent} from '../../../../components/schedule-display/
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers, HeaderDescription} from '../../redux/event-manager-reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('PeriodsManagementContainerComponent', () => {
   let component: PeriodsManagementContainerComponent;
@@ -20,9 +21,10 @@ describe('PeriodsManagementContainerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PeriodsManagementContainerComponent, ScheduleDisplayComponent, ZonedDatePipe],
-      imports: [SuiModule, StoreModule.forRoot({
+      imports: [SuiModule,         StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+          events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -35,8 +37,7 @@ describe('PeriodsManagementContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), RouterTestingModule]
     })

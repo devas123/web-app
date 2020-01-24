@@ -5,10 +5,11 @@ import {EventCardComponent} from '../event-card/event-card.component';
 import {SuiTransitionModule} from 'ng2-semantic';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {eventManagerReducers, HeaderDescription} from '../../../event-manager/redux/event-manager-reducers';
+import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../../event-manager/redux/dashboard-reducers';
-import {RouterReducerState} from '@ngrx/router-store';
+import {competitionListReducer} from '../../redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('EventListComponent', () => {
   let component: EventListComponent;
@@ -16,10 +17,11 @@ describe('EventListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EventListComponent, EventCardComponent ],
+      declarations: [EventListComponent, EventCardComponent],
       imports: [SuiTransitionModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -32,12 +34,11 @@ describe('EventListComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       })]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

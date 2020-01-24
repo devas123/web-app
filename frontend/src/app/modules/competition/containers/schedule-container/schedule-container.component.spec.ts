@@ -7,7 +7,6 @@ import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {RouterReducerState} from '@ngrx/router-store';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {RouterTestingModule} from '@angular/router/testing';
 import {competitionListReducer} from '../../redux/reducers';
@@ -39,8 +38,7 @@ describe('ScheduleContainerComponent', () => {
               eventPeriods: periodsInitialState
             },
             header: {} as HeaderDescription
-          },
-          router: {} as RouterReducerState<any>
+          }
         }
       }), RouterTestingModule]
     })

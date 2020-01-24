@@ -53,7 +53,6 @@ export class EventManagerEffects {
     })
   ));
 
-
   loadMyCompetitions$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND),
     mergeMap((action: CommonAction) => {

@@ -1,0 +1,15 @@
+<div *ngIf="category && _stages?.length > 0 && !fightsAreLoading">
+  <div class="ui pointing secondary menu">
+    <a class="item" [ngClass]="{active:  selectedStage?.id === stage?.id}"
+       *ngFor="let stage of _stages; index as i"
+       (click)="selectStage(stage.id)">Stage {{stage?.stageOrder + 1}}</a>
+  </div>
+  <app-bracket
+    [stageType]="selectedStage?.stageType"
+    [fights]="fights"
+    [bracketsType]="selectedStage?.bracketType"
+    [bucketsize]="bucketSize"
+    [editMode]="editMode"
+    (fightSelected)="selectFight($event)"
+    [changeFightsIds]="changeFightIds"></app-bracket>
+</div>

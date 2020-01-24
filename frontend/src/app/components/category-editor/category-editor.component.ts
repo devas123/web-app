@@ -141,7 +141,7 @@ export class CategoryEditorComponent implements OnInit {
 
     generateRandomFighters(category: Category) {
         if (category) {
-            this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 30, 20));
+            this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 10, 20));
         }
     }
 

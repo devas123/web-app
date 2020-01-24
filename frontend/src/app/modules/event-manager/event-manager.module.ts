@@ -72,6 +72,10 @@ import {FightsEditorComponent} from './components/fights-editor/fights-editor.co
 import {CompetitionInfoEditorContainerComponent} from './containers/competition-info-editor-container/competition-info-editor-container.component';
 import {CompetitionInfoTemplateEditorComponent} from './components/competition-info-template-editor/competition-info-template-editor.component';
 import {CompetitionInfoContactsEditorComponent} from './components/competition-info-contacts-editor/competition-info-contacts-editor.component';
+import {GenerateBracketsFormComponent} from './components/generate-brackets-form/generate-brackets-form.component';
+import {NumberControlsComponent} from './components/scoreboard-component/number-controls.component';
+import {TimerComponent} from './components/scoreboard-component/timer-component';
+import {TimerControlsComponent} from './components/scoreboard-component/timer-controls.component';
 
 @NgModule({
   imports: [
@@ -143,6 +147,10 @@ import {CompetitionInfoContactsEditorComponent} from './components/competition-i
     CompetitionInfoEditorContainerComponent,
     CompetitionInfoTemplateEditorComponent,
     CompetitionInfoContactsEditorComponent,
+    GenerateBracketsFormComponent,
+    NumberControlsComponent,
+    TimerComponent,
+    TimerControlsComponent,
     FighterProfileComponent],
   providers: [EventManagerService],
   entryComponents: [

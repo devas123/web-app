@@ -35,8 +35,7 @@ import {MiscEffects} from './effects/misc';
     AppComponent,
     MainMenuComponent,
     PagenotfoundComponent,
-    HomeComponent
-  ],
+    HomeComponent],
   imports: [
     CommonsModule,
     NgxMdModule.forRoot(),
