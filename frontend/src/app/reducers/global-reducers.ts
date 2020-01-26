@@ -74,7 +74,7 @@ import {
   REGISTRATION_INFO_UPDATED,
   SCHEDULE_GENERATED
 } from '../modules/event-manager/redux/event-manager-actions';
-import produce, {applyPatches, Draft} from 'immer';
+import produce, {applyPatches} from 'immer';
 import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions';
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
@@ -179,7 +179,7 @@ export interface Error {
   description: string;
 }
 
-const fightsEditorChangeHandler = produce((state: Draft<CompetitionState>, action) => {
+export const fightsEditorChangeHandler = (state: CompetitionState, action) => {
   switch (action.type) {
     case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED: {
       if (state && state.selectedEventCategories) {
@@ -260,12 +260,12 @@ const fightsEditorChangeHandler = produce((state: Draft<CompetitionState>, actio
       }
     }
   }
-});
+};
 
 
 export const reducers: ActionReducerMap<AppState> = {
   accountState: accountStateReducer,
-  selectedEventState: competitionStateReducer(fightsEditorChangeHandler)
+  selectedEventState: competitionStateReducer
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
@@ -281,9 +281,12 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
 
-export function competitionStateReducer(fightsEditorHandler: (st: CompetitionState, a: any) => CompetitionState) {
-  return produce((state: CompetitionState = initialCompetitionState, action) => {
+export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
+  return produce( st, state => {
     switch (action.type) {
+      case EVENT_MANAGER_COMPETITION_UNSELECTED: {
+        return initialCompetitionState;
+      }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
         break;
@@ -329,7 +332,8 @@ export function competitionStateReducer(fightsEditorHandler: (st: CompetitionSta
       case EVENT_MANAGER_FIGHTS_EDITOR_CHANGES_SUBMITTED:
       case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTION_CLEARED:
       case EVENT_MANAGER_FIGHTS_EDITOR_FIGHT_SELECTED: {
-        return fightsEditorHandler(state, action);
+        fightsEditorChangeHandler(state, action);
+        break;
       }
       case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
         if (state.id === action.competitionId
@@ -524,11 +528,11 @@ export function competitionStateReducer(fightsEditorHandler: (st: CompetitionSta
         return state;
       }
       case COMPETITION_PROPERTIES_LOADED: {
-        return {...state, ...action.payload};
-
+        return action.payload;
       }
       case COMPETITION_SELECTED: {
-        return {...state, id: action.competitionId};
+        state.id = action.competitionId;
+        break;
       }
       case COMPETITION_PUBLISHED:
       case COMPETITION_UNPUBLISHED: {
@@ -557,16 +561,6 @@ export function competitionStateReducer(fightsEditorHandler: (st: CompetitionSta
           state.selectedEventCategories.categoryStateLoading = true;
         }
         break;
-      }
-      case EVENT_MANAGER_COMPETITION_UNSELECTED: {
-        return {
-          ...state,
-          id: null,
-          selectedEventCategories: categoriesInitialState,
-          selectedEventSchedule: scheduleInitialState,
-          selectedEventCompetitors: competitorsInitialState,
-          selectedEventDefaultCategories: [] as Category[]
-        };
       }
       case EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED: {
         if (action.competitionId === state.id && action.payload) {
