@@ -283,6 +283,7 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
 
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce( st, state => {
+    console.log(action);
     switch (action.type) {
       case EVENT_MANAGER_COMPETITION_UNSELECTED: {
         return initialCompetitionState;
