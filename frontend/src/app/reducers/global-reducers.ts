@@ -535,6 +535,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             selectedEventDefaultCategories: state.selectedEventDefaultCategories
           };
         }
+        break;
       }
       case COMPETITION_SELECTED: {
         state.id = action.competitionId;
