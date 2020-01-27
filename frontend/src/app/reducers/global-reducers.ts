@@ -529,7 +529,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case COMPETITION_PROPERTIES_LOADED: {
-        return action.payload;
+        return {...state, ...action.payload};
       }
       case COMPETITION_SELECTED: {
         state.id = action.competitionId;
@@ -564,13 +564,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED: {
-        if (action.competitionId === state.id && action.payload) {
-          return {
-            ...state,
-            selectedEventDefaultCategories: action.payload
-          };
+        if ((action.competitionId === state.id) && action.payload) {
+          state.selectedEventDefaultCategories = action.payload;
         }
-        return state;
+        break;
       }
       case EVENT_MANAGER_CATEGORY_UNSELECTED: {
         if (action.competitionId === state.id) {
