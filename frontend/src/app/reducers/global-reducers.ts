@@ -282,7 +282,7 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   : [];
 
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
-  return produce( st, state => {
+  return produce(st, state => {
     console.log(action);
     switch (action.type) {
       case EVENT_MANAGER_COMPETITION_UNSELECTED: {
@@ -529,7 +529,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case COMPETITION_PROPERTIES_LOADED: {
-        return {...state, ...action.payload};
+        if (action.competitionId === state.id) {
+          return {
+            ...initialCompetitionState, ...action.payload,
+            selectedEventDefaultCategories: state.selectedEventDefaultCategories
+          };
+        }
       }
       case COMPETITION_SELECTED: {
         state.id = action.competitionId;
