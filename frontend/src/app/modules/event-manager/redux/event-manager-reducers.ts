@@ -3,7 +3,7 @@ import {
   CompetitionProperties,
   competitionPropertiesEntitiesAdapter,
   competitionPropertiesEntitiesInitialState,
-  EventPropsEntities,
+  EventPropsEntities, getSelectedEventProperties,
   getSelectedEventState
 } from '../../../reducers/global-reducers';
 import {
@@ -135,11 +135,11 @@ export const EVENT_MANAGER_REDUCERS: InjectionToken<ActionReducerMap<EventManage
 export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
 export const eventManagerGetSelectedEventDefaultCategories = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories);
 
-export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventState, event => event && event.registrationInfo);
+export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventProperties, event => event && event.registrationInfo);
 export const eventManagerGetSelectedEventRegistrationPeriods = createSelector(eventManagerGetSelectedEventRegistrationInfo, registrationInfo => registrationInfo && registrationInfo.registrationPeriods || []);
-export const eventManagerGetSelectedEventTimeZone = createSelector(getSelectedEventState, event => event && event.timeZone);
+export const eventManagerGetSelectedEventTimeZone = createSelector(getSelectedEventProperties, event => event && event.timeZone);
 
-export const eventManagerGetSelectedEventName = createSelector(getSelectedEventState, event => event && event.competitionName);
+export const eventManagerGetSelectedEventName = createSelector(getSelectedEventProperties, event => event && event.competitionName);
 
 export const getSelectedEventCategoriesCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventCategories) || categoriesInitialState;
@@ -196,9 +196,7 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
 export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
   (dict, props) => props.id && dict[props.id]);
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
-export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => {
-  return state && state.selectedEventSchedule;
-});
+export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => state && state.selectedEventSchedule);
 
 export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelector(eventManagerGetSelectedEventSchedule, eventManagerGetSelectedEventSelectedCategoryId, (schedule, categoryId) => {
   if (schedule && categoryId && schedule.periods) {

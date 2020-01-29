@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {AppState, CompetitionProperties, getSelectedEventState} from '../../reducers/global-reducers';
+import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../reducers/global-reducers';
 import {Category, CategoryBracketsStage, Fight} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
@@ -28,7 +28,7 @@ export class CommonBracketsContainer {
   changeFightsIds$: Observable<string[]>;
 
   constructor(private store: Store<AppState>, private observer: BreakpointObserver, bigscrenColumns: number = 4, smallScreenColumns: number = 2) {
-    this.competition$ = store.pipe(select(getSelectedEventState));
+    this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights));

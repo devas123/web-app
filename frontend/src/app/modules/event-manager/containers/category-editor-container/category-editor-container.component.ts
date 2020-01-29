@@ -1,15 +1,34 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
-import {AppState, CompetitionState, getSelectedEventId, getSelectedEventState} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  getSelectedEventId,
+  getSelectedEventProperties
+} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventDefaultCategories, eventManagerGetSelectedEventName, getSelectedEventSelectedCategoryState} from '../../redux/event-manager-reducers';
+import {
+  eventManagerGetSelectedEventDefaultCategories,
+  eventManagerGetSelectedEventName,
+  getSelectedEventSelectedCategoryState
+} from '../../redux/event-manager-reducers';
 import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {deleteCategory, eventManagerAddCategory, eventManagerSetCategoryRegistrationStatus} from '../../redux/event-manager-actions';
-import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {
+  deleteCategory,
+  eventManagerAddCategory,
+  eventManagerSetCategoryRegistrationStatus
+} from '../../redux/event-manager-actions';
+import {
+  BasicCompetitionInfoContainer,
+  ComponentCommonMetadataProvider
+} from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {SuiModalService} from 'ng2-semantic';
-import {ISelectCategoriesResult, SelectCategoriesModal} from '../../../../components/category-editor/select-categories-modal.component';
+import {
+  ISelectCategoriesResult,
+  SelectCategoriesModal
+} from '../../../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
@@ -38,7 +57,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 })
 export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
 
-  competition$: Observable<CompetitionState>;
+  competition$: Observable<CompetitionProperties>;
 
   defaultCategories$: Observable<Category[]>;
 
@@ -75,7 +94,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
         }
       ]
     }, menuService);
-    this.competition$ = store.pipe(select(getSelectedEventState));
+    this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.catState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
     this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
   }
