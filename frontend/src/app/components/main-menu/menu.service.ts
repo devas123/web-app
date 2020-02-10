@@ -59,7 +59,7 @@ export class MenuService {
   }
 
   public clear() {
-    this._menu = [];
+    this.menu = [];
     if (this.embeddedViews) {
       this.embeddedViews.forEach(it => {
         if (it) {

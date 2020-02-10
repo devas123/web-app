@@ -1,9 +1,18 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AppState, CompetitionProperties, getSelectedEventState, RegistrationPeriod} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  getSelectedEventProperties,
+  RegistrationPeriod
+} from '../../../../reducers/global-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventRegistrationPeriods, eventManagerGetSelectedEventTimeZone} from '../../../event-manager/redux/event-manager-reducers';
+import {
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventRegistrationPeriods,
+  eventManagerGetSelectedEventTimeZone
+} from '../../../event-manager/redux/event-manager-reducers';
 import {ActivatedRoute, ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
 
@@ -32,7 +41,7 @@ export class CompetitionMainInfoComponent implements OnInit {
     url$: Observable<string>;
 
     constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
-        this.properties$ = store.pipe(select(getSelectedEventState));
+        this.properties$ = store.pipe(select(getSelectedEventProperties));
         this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
         this.timezone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
         this.registrationPeriod$ = store.pipe(select(eventManagerGetSelectedEventRegistrationPeriods));
