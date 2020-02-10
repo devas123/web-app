@@ -27,4 +27,5 @@ export const appRoutes: Routes = [
   {
     path: '**',
     component: PagenotfoundComponent
-  }];
+  }
+];

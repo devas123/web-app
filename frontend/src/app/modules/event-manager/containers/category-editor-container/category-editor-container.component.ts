@@ -103,8 +103,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
     combineLatest([this.categories$, this.competition$]).pipe(filter(([cats, competition]) => !!cats && !!competition),
       take(1),
       map(([categories, competition]) =>
-        this.modalService
-          .open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
+        this.modalService.open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
             return !categories.find(value => cat.id === value.id);
           }))), competition))
           .onApprove((result: ISelectCategoriesResult) => {
