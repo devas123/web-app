@@ -2,9 +2,9 @@ import {
   CommonAction,
   CompetitionProperties,
   competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
+  competitionPropertiesEntitiesInitialState, CompetitionState,
   EventPropsEntities, getSelectedEventProperties,
-  getSelectedEventState,RegistrationInfo
+  getSelectedEventState, RegistrationInfo
 } from '../../../reducers/global-reducers';
 import {
   COMPETITION_CREATED,
@@ -141,42 +141,19 @@ export declare interface SelectorTree {
 type SelectorContainer = SelectorTree & { selector?: Selector<any, any> | SelectorWithProps<any, any, any> };
 
 
-/*export const eventManager = {
-  selectedEvent: {
-    eventName: createSelector(getSelectedEventState, event => event && event.competitionName),
-    eventTimeZone: createSelector(getSelectedEventState, event => event && event.timeZone),
-    defaultCategories: createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories),
-    registrationInfo: createSelector(getSelectedEventState, event => event && event.registrationInfo),
-    registrationPeriods: createSelector(this.registrationInfo, registrationInfo => registrationInfo && registrationInfo['registrationPeriods'] || []),
-    categoriesCollection: createSelector(getSelectedEventState, state => (state && state.selectedEventCategories) || categoriesInitialState),
-    selectedCategory: {
-      categoryState: createSelector(eventManager.selectedEvent.categoriesCollection, cats => cats.selectedCategoryState);
-}
-}
-}*/
-
-
-type CustomType = () => any & any;
-
-
-
-
-export const t = {
-
-};
 
 
 
 
 export let selectedEvent = {
-  eventName: () => createSelector(getSelectedEventState, event => event && event.competitionName),
-  eventTimeZone: () => createSelector(getSelectedEventState, event => event && event.timeZone),
+  /*eventName: () => createSelector(getSelectedEventState, (event: CompetitionState) => event && event.competitionName),
+  eventTimeZone: () => createSelector(getSelectedEventState, event => event && event.timeZone),*/
   defaultCategories: () => createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories),
   registrationInfo:  {
-    selector: () => createSelector(getSelectedEventState, event => event && event.registrationInfo),
-    registrationPeriods: {
+ /*   selector: () => createSelector(getSelectedEventState, event => event && event.registrationInfo),*/
+    /*registrationPeriods: {
       selector: () => createSelector(selectedEvent.registrationInfo.selector(), (registrationInfo: RegistrationInfo) => registrationInfo && registrationInfo.registrationPeriods || [])
-    },
+    },*/
   },
   categoriesCollection: {
     selector: () => createSelector(getSelectedEventState, state => (state && state.selectedEventCategories) || categoriesInitialState),
