@@ -1,17 +1,25 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, CompetitionProperties, getSelectedEventState, Schedule} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  getSelectedEventProperties,
+  Schedule
+} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties,
+  eventManagerGetSelectedEventScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {dashboardGetPeriods, dashboardGetSelectedPeriod, DashboardPeriod} from '../../redux/dashboard-reducers';
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
-import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {
+  BasicCompetitionInfoContainer,
+  ComponentCommonMetadataProvider
+} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ScheduleProperties} from '../../../../commons/model/competition.model';
@@ -59,7 +67,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
       ]
     }, menuService);
     this.periods$ = store.pipe(select(dashboardGetPeriods));
-    this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventState));
+    this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventProperties));
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));

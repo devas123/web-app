@@ -84,7 +84,11 @@ export class RegistrationInfoEditorComponent implements OnInit {
 
   openGroupModal(periodId: string, registrationGroupIds: string[]) {
     if (periodId && this.competitionId) {
-      this.addGroupModal.next({competitionId: this.competitionId, periodId, periodRegistrationGroups: (registrationGroupIds || [])});
+      this.addGroupModal.next({
+        competitionId: this.competitionId,
+        periodId,
+        periodRegistrationGroups: (registrationGroupIds || [])
+      });
     }
   }
 
@@ -93,7 +97,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
       const regInfo = produce(this.registrationInfo, draft => {
         const defaultGroup = draft.registrationGroups.find(gr => gr.defaultGroup);
         if (defaultGroup) {
-          defaultGroup.categories = this.unassignedCategoies.map(cat => cat.id);
+          defaultGroup.categories.push(...this.unassignedCategoies.map(cat => cat.id).filter(id => !defaultGroup.categories.includes(id)));
         }
       });
       this.registrationInfoUpdated.next(regInfo);
