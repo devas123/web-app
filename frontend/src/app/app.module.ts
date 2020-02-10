@@ -29,6 +29,7 @@ import {HotkeyModule} from 'angular2-hotkeys';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
 import {MiscEffects} from './effects/misc';
+import {CreateCategoryComponent} from './commons/components/create-category/create-category.component';
 
 @NgModule({
   declarations: [

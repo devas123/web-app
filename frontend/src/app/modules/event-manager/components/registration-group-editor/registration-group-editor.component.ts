@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, displayCategory as dc} from '../../../../commons/model/competition.model';
+import {Category} from '../../../../commons/model/competition.model';
 import {RegistrationGroup, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import produce from 'immer';
@@ -39,7 +39,7 @@ export class RegistrationGroupEditorComponent implements OnInit {
 
   }
 
-  static displayCategory = dc;
+ // static displayCategory = dc;
   @Input()
   groupId: string | boolean;
 

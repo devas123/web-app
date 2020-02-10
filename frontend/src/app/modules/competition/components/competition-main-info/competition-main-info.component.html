@@ -1,5 +1,5 @@
 <div class="ui container margins_container">
-    <div class="hat_grid">
+  <div class="hat_grid">
         <div class="reg_info_grid">
           <div class="ui  basic segment margins_container">
             <a class="ui green big left ribbon label"> Starts </a>
@@ -20,6 +20,7 @@
               </section>
             </ng-container>
           </div>
+
         </div>
         <div class="ui basic segment">
             <img class="ui bordered  image " src="/assets/images/doc.jpg">
@@ -27,7 +28,13 @@
         <div class="ui secondary center stackable menu full_line">
             <a class="item" *ngFor="let menuItem of menu" [routerLink]="menuItem.link"
                [ngClass]="{active: (url$ | async)?.endsWith(menuItem.link)}">{{menuItem.name}}</a>
+          <div>
+          <!--  <a class="item" [routerLink]="'cmpreg'">bla</a>-->
+              <button class="ui blue button right floated" [routerLink]="'cmpreg'">Register</button>
+          </div>
         </div>
+
+
         <div class="ui clearing divider full_line"></div>
     </div>
     <div class="ui container margins_container no_side_margins">

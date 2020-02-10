@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  mocks: false,
+  mocks: true,
   mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,

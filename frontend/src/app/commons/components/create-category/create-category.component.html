@@ -1,0 +1,147 @@
+<div class="ui container">
+  <form class="ui  form" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
+    <div class="ui stacked segment">
+      <div class="two fields">
+        <div class="field"
+             [ngClass]="{error: name.invalid && (name.touched || name.dirty)}" [hidden]="useRestrictionValues">
+          <div class="ui input">
+            <input type="text" name="name" placeholder="Name*" formControlName="name"
+                   required>
+          </div>
+        </div>
+        <div class="field" [hidden]="!useRestrictionValues">
+          <div class="ui breadcrumb">
+            <a class="section">Home</a>
+            <div class="divider"> /</div>
+            <a class="section">Store</a>
+            <div class="divider"> /</div>
+            <div class="active section">T-Shirt</div>
+          </div>
+        </div>
+
+
+        <div class="field"
+             [ngClass]="{error: fightDuration.invalid && (fightDuration.touched || fightDuration.dirty)}">
+          <div class="ui input">
+            <input type="number" name="fightDuration" placeholder="Fight duration (minutes)*"
+                   formControlName="fightDuration"
+                   required>
+          </div>
+        </div>
+      </div>
+      <div class="inline fields">
+        <div class="field">
+          <sui-checkbox (checkChange)="setRegistrationOpen($event)" formControlName="registrationOpen" tabindex="0">
+            This category is open to registration
+          </sui-checkbox>
+        </div>
+        <div class="field">
+          <sui-checkbox (checkChange)="useRestrictionValues=!useRestrictionValues" class="toggle">Use restrictions
+            values
+            for name
+          </sui-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <div formArrayName="restrictions">
+      <h4 class="ui horizontal inverted divider">
+        Resctrictions
+      </h4>
+
+      <div class="ui three column grid" >
+        <div class="column" *ngFor="let restriction of restrictions.controls; index as i; last as isLast"
+             [formGroupName]="i">
+          <div class="ui fluid card">
+            <div class="content">
+              <div class="header">
+                {{restrictionName(i)}}
+                <button class="circular right floated ui icon button" title="Edit"
+                        (click)="restriction.patchValue({editMode: !restriction.get('editMode').value })">
+                  <i class="icon edit"></i>
+                </button>
+              </div>
+              <p></p>
+              <div class="meta">{{restriction.get('alias')?.value || ''}}</div>
+              <div class="description">
+                <div class="ui small label">
+                  {{restrictionType(i)}}
+                </div>
+                <span>&nbsp;&nbsp;</span> {{restrictionValue(restriction)}}
+              </div>
+              <div class="extra content" *ngIf="restriction.get('editMode').value">
+                <div class="ui segment">
+                  <div class="inline fields">
+                    <div class="field">
+                      <sui-radio-button name="example" value="Value"
+                                        (currentValueChange)="changeRestrictionType(i,$event)" formControlName="type">
+                        Value
+                      </sui-radio-button>
+                    </div>
+                    <div class="field">
+                      <sui-radio-button name="example" value="Range"
+                                        (currentValueChange)="changeRestrictionType(i,$event)" formControlName="type">
+                        Range
+                      </sui-radio-button>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Name</label>
+                    <div class="ui input">
+                      <input type="text" name="name" placeholder="Name*" formControlName="name" required>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="restrictionType(i)=='Range'">
+                    <div class="two fields">
+                      <div class="field">
+                        <label>Min</label>
+                        <div class="ui input">
+                          <input type="text" name="minvalue" placeholder="Minimum value" formControlName="minValue">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label>Max</label>
+                        <div class="ui input">
+                          <input type="text" name="maxvalue" placeholder="Maximum value" formControlName="maxValue">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Unit</label>
+                      <div class="ui input">
+                        <input type="text" name="unit" placeholder="Units" formControlName="unit">
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label>Alias</label>
+                      <div class="ui input">
+                        <input type="text" name="alias" placeholder="Alias" formControlName="alias">
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="restrictionType(i)=='Value'">
+                    <div class="field">
+                      <label>Value</label>
+                      <div class="ui input">
+                        <input type="text" name="minvalue" placeholder="Value" formControlName="value">
+                      </div>
+                    </div>
+                  </ng-container>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+        <div class="ui submit  floated positive button" (click)="submitForm()">
+          Submit
+        </div>
+
+    <!--    <div class="ui  button" (click)="test()">
+          Test
+        </div>-->
+
+  </form>
+</div>

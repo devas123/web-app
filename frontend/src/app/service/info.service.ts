@@ -1,6 +1,6 @@
 import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs';
 
-import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
+import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -155,7 +155,7 @@ export class InfoService {
     return this.httpGet(categoriesEndpoint, {
       params: params,
       headers: this.headers
-    });
+    }).pipe(tap(x => console.log(x)));
   }
 
 
@@ -227,7 +227,7 @@ export class InfoService {
         }
       });
     });
-  };
+  }
 
   sendCommand(command: any, competitionId: string): Observable<any> {
     const normalizedCommand = this.normalizeCommand(command);

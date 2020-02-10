@@ -5,10 +5,10 @@ import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventTimeZone
+  eventManagerGetSelectedEventTimeZone, selectedEvent
 } from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
-import {filter, take} from 'rxjs/operators';
+import {filter, take, tap} from 'rxjs/operators';
 import {Category, HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
@@ -61,6 +61,6 @@ export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEn
     this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = store.pipe(select(selectedEvent.categoriesCollection.allCategories())).pipe(tap(x => console.log(x)));
   }
 }
