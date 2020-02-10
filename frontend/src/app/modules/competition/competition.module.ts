@@ -24,7 +24,7 @@ import {FightersDisplayContainerComponent} from './containers/fighters-display-c
 import {ScheduleContainerComponent} from './containers/schedule-container/schedule-container.component';
 import {CategoryInfoContainerComponent} from './containers/category-info-container/category-info-container.component';
 import { CmpRegistrationComponent } from './components/cmp-registration/cmp-registration.component';
-import {CreateCategoryComponent} from '../../commons/components/create-category/create-category.component';
+import {CreateCategoryComponent} from '../event-manager/components/create-category/create-category.component';
 import {EventManagerModule} from '../event-manager/event-manager.module';
 
 @NgModule({
