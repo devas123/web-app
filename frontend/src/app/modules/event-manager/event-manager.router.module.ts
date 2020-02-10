@@ -4,7 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {CreateEventComponent} from './components/create-event/create-event.component';
 import {CategoryEditorContainerComponent} from './containers/category-editor-container/category-editor-container.component';
 import {EventManagerContainerComponent} from './containers/event-manager-container/event-manager-container.component';
-import {CreateCategoryComponent} from '../../commons/components/create-category/create-category.component';
+import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
 import {EventContainerComponent} from './containers/event-container/event-container.component';
 import {FightersEditorContainerComponent} from './containers/fighters-editor-container/fighters-editor-container.component';

@@ -3,14 +3,14 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CreateCategoryComponent} from './create-category.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
-import {competitionPropertiesEntitiesInitialState, reducers} from '../../../reducers/global-reducers';
+import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
-import {eventManagerReducers} from '../../../modules/event-manager/redux/event-manager-reducers';
-import {initialAccountState} from '../../../modules/account/flux/account.state';
-import {periodsInitialState} from '../../../modules/event-manager/redux/dashboard-reducers';
+import {eventManagerReducers} from '../../redux/event-manager-reducers';
+import {initialAccountState} from '../../../account/flux/account.state';
+import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {SuiAccordionModule, SuiCheckboxModule, SuiSelectModule} from 'ng2-semantic';
-import {competitionListReducer} from '../../../modules/competition/redux/reducers';
-import {HeaderDescription} from '../../model/competition.model';
+import {competitionListReducer} from '../../../competition/redux/reducers';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('CreateCategoryComponent', () => {
   let component: CreateCategoryComponent;

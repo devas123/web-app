@@ -1,22 +1,22 @@
 import {filter, map, take} from 'rxjs/operators';
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {AppState, getSelectedEventId} from '../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
-import {eventManagerAddCategory} from '../../../modules/event-manager/redux/event-manager-actions';
-import {eventManagerGetSelectedEventName} from '../../../modules/event-manager/redux/event-manager-reducers';
+import {eventManagerAddCategory} from '../../redux/event-manager-actions';
+import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {
   Category, CategoryRestriction,
   HeaderDescription, RangeRestriction,
   RestrictionType,
   restrictionTypes
-} from '../../model/competition.model';
+} from '../../../../commons/model/competition.model';
 import {
   ComponentCommonMetadataProvider,
   EventManagerRouterEntryComponent
-} from '../../../modules/event-manager/containers/event-manager-container/common-classes';
-import {MenuService} from '../../../components/main-menu/menu.service';
+} from '../../containers/event-manager-container/common-classes';
+import {MenuService} from '../../../../components/main-menu/menu.service';
 import {defaultRestrictions} from './default-restrictions';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
