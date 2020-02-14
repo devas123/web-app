@@ -26,7 +26,6 @@ import {EventManagerService} from './event-manager.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CategoryEditorContainerComponent} from './containers/category-editor-container/category-editor-container.component';
 import {EventManagerContainerComponent} from './containers/event-manager-container/event-manager-container.component';
-import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
 import {EventPropertiesEditorComponent} from './components/event-properties-editor/event-properties-editor.component';
 import {AddFighterComponent} from './components/add-fighter/add-fighter.component';
@@ -133,7 +132,6 @@ import {TimerControlsComponent} from './components/scoreboard-component/timer-co
     MyEventsListComponent,
     CategoryEditorContainerComponent,
     EventManagerContainerComponent,
-    CreateCategoryComponent,
     EventPropertiesEditorContainerComponent,
     EventPropertiesEditorComponent,
     AddFighterComponent,

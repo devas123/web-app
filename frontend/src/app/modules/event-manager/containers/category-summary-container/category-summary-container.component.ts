@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Category, CategoryState, displayCategory, HeaderDescription} from '../../../../commons/model/competition.model';
+import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventSelectedCategory,
@@ -46,7 +46,7 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
       ],
       header: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat), take(1), map(cat => <HeaderDescription>{
         header: 'Category',
-        subheader: displayCategory(cat)
+        subheader: 'temp'
       }))
     }, menuService);
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));

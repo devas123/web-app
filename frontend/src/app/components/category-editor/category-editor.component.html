@@ -1,38 +1,74 @@
-<div class="customcontainer">
-  <sui-accordion [closeOthers]="false">
-    <sui-accordion-panel *ngFor="let category of filteredCategories">
-      <div title>
-        <a class="ui small header link" (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{displayCategory(category)}}</a>
+<div class="ui container">
+  <div class="ui grid">
+    <div class="nine wide column">
+      <div class="ui fluid icon circular input">
+        <input type="text" placeholder="Search cateroies...">
+        <i class="search icon"></i>
       </div>
-      <div class="ui basic segment customline" content>
-        <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
-        <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
-        <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
-        <div class="description">Age: {{getAgeMinValue(category) > 0 ?
-                getAgeMinValue(category) : 0}}{{getAgeMaxValue(category) < 100 ?
-                ' - ' + getAgeMaxValue(category) : '+'}}
-        </div>
-        <div class="description">Weight (kg): {{getWeightMinValue(category) > 0 ?
-                getWeightMinValue(category) : 0}}{{getWeightMaxValue(category) < 100 ?
-                ' - ' + getWeightMaxValue(category) : '+'}}
-        </div>
-        <div class="description">Registration: {{category?.registrationOpen ? 'open' : 'closed'}}</div>
-        <div class="action_buttons" *ngIf="editMode">
-          <div class="ui icon button" (click)="handleCategoryEditorClicked(getCategoryId(category))">
-            <i class="edit icon"></i>
-          </div>
-          <div class="ui icon button" (click)="deleteCategory(category)">
-            <i class="trash icon"></i>
-          </div>
-          <div class="ui icon button" (click)="toggleRegistrationOpen(category)">
-            <i *ngIf="category?.registrationOpen" class="lock icon"></i>
-            <i *ngIf="!category?.registrationOpen" class="fas fa-lock-open"></i>
-          </div>
-          <div class="ui icon button" (click)="generateRandomFighters(category)">
-            <i class="fas fa-user-plus"></i>
-          </div>
-        </div>
+    </div>
+    <div class="three wide column">
+      <button class="ui positive  button">Add category</button>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+
+  <div class="ui large middle aligned  celled divided selection animated list"
+       *ngFor="let category of _categories">
+    <div class="item" (click)="category.selected=!category.selected">
+      <div class="right floated content">
+        <div class="ui circle icon button"><i class="trash icon"></i></div>
       </div>
-    </sui-accordion-panel>
-  </sui-accordion>
+      <i class="info icon"></i>
+      <div class="content">
+        {{category.name}}
+      </div>
+    </div>
+    <div class="ui divider" *ngIf="!category.selected"></div>
+    <div [suiCollapse]="!category.selected">
+      <div class="ui segment">
+        <app-create-category [category]="category"></app-create-category>
+      </div>
+    </div>
+
+  </div>
+  <!--  <sui-accordion [closeOthers]="false">
+      <sui-accordion-panel *ngFor="let category of _categories">
+
+        <div title>
+          <a class="ui small header link" (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{category.name}}</a>
+        </div>
+        <div class="ui basic segment customline" content>
+          <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
+     &lt;!&ndash;     <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
+          <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
+          <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
+          <div class="description">Age: {{getAgeMinValue(category) > 0 ?
+                  getAgeMinValue(category) : 0}}{{getAgeMaxValue(category) < 100 ?
+                  ' - ' + getAgeMaxValue(category) : '+'}}
+          </div>
+          <div class="description">Weight (kg): {{getWeightMinValue(category) > 0 ?
+                  getWeightMinValue(category) : 0}}{{getWeightMaxValue(category) < 100 ?
+                  ' - ' + getWeightMaxValue(category) : '+'}}
+          </div>
+          <div class="description">Registration: {{category?.registrationOpen ? 'open' : 'closed'}}</div>
+          <div class="action_buttons" *ngIf="editMode">
+            <div class="ui icon button" (click)="handleCategoryEditorClicked(getCategoryId(category))">
+              <i class="edit icon"></i>
+            </div>
+            <div class="ui icon button" (click)="deleteCategory(category)">
+              <i class="trash icon"></i>
+            </div>
+            <div class="ui icon button" (click)="toggleRegistrationOpen(category)">
+              <i *ngIf="category?.registrationOpen" class="lock icon"></i>
+              <i *ngIf="!category?.registrationOpen" class="fas fa-lock-open"></i>
+            </div>
+            <div class="ui icon button" (click)="generateRandomFighters(category)">
+              <i class="fas fa-user-plus"></i>
+            </div>
+          </div>&ndash;&gt;
+        </div>
+      </sui-accordion-panel>
+    </sui-accordion>-->
+
 </div>

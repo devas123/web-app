@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
 import {EventPropsEntities} from '../../reducers/global-reducers';
 
-const getRestrictionName = (res: CategoryRestriction, def = '') => {
+/*const getRestrictionName = (res: CategoryRestriction, def = '') => {
   if (res) {
     if (res.name) {
       return res.name;
@@ -37,14 +37,14 @@ export const getRestrictionByType = (cat: Category, type: RestrictionType) => {
   if (cat && cat.restrictions) {
     return cat.restrictions.find(r => r.type === type);
   }
-};
+};*/
 
-export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
+/*export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
 export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEIGHT', 'ALL WEIGHTS');
 export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
-export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
+export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');*/
 
-export const displayCategory = (cat: Category, truncate = true) => {
+/*export const displayCategory = (cat: Category, truncate = true) => {
   if (!cat) {
     return '';
   }
@@ -54,16 +54,16 @@ export const displayCategory = (cat: Category, truncate = true) => {
     return `${name || 'Unnamed'} ` + fullName;
   }
   return name || (fullName.length < 20 ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
-};
+};*/
 
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
-export const categoryFilter = value => cat => {
+/*export const categoryFilter = value => cat => {
   return !value || value.length <= 0 || (cat.id
     && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
-};
+};*/
 
-export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
+export const categoriesComparer = (a: Category, b: Category) => a.name.localeCompare(b.name);
 
 
 export interface Period {
@@ -82,7 +82,14 @@ export interface ScheduleEntry {
   fightDuration: number;
 }
 
-export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
+export type CompetitorResultType =
+  'WIN_POINTS'
+  | 'WIN_SUBMISSION'
+  | 'WIN_DECISION'
+  | 'DRAW'
+  | 'OPPONENT_DQ'
+  | 'BOTH_DQ'
+  | 'WALKOVER';
 
 export interface FightResult {
   resultType: CompetitorResultType;
@@ -154,20 +161,35 @@ export interface Academy {
 export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION';
 export type StageType = 'PRELIMINARY' | 'FINAL';
 
-export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
+
+export type RestrictionType = 'Range' | 'Value';
 
 export const restrictionTypes: RestrictionType[] = [
-  'AGE', 'SKILL', 'WEIGHT', 'GENDER', 'SPORTS'
+  'Range', 'Value'
 ];
 
-export interface CategoryRestriction {
+
+export type CategoryRestriction = ValueRestriction | RangeRestriction;
+
+
+export interface ValueRestriction {
   id: string;
   name: string;
-  type: RestrictionType;
-  minValue: string;
-  maxValue: string;
-  unit: string;
+  value?: string;
+  type: 'Value';
 }
+
+
+export interface RangeRestriction {
+  id: string;
+  name: string;
+  minValue?: string;
+  maxValue?: string;
+  unit?: string;
+  alias: string;
+  type: 'Range';
+}
+
 
 export interface Category {
   id: string;

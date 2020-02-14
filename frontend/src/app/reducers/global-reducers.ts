@@ -519,9 +519,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (competitionId && categoriesRaw && competitionId === state.competitionProperties.id) {
           const categories = categoriesRaw.map(rwc => ({
             id: rwc.id,
-            ...rwc.category,
+            name: rwc.name,
             fightsNumber: rwc.fightsNumber,
-            numberOfCompetitors: rwc.numberOfCompetitors
+            numberOfCompetitors: rwc.numberOfCompetitors,
+            fightDuration: rwc.fightDuration,
+            restrictions: rwc.restrictions
           } as Category));
           if (competitionId === state.competitionProperties.id) {
             return {
