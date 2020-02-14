@@ -146,7 +146,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
           id: `${i}`,
           round: round,
           scores: [],
-          stage: 'BYE'
+          status: 'BYE'
         } as Fight;
         extraFights.push(f);
       }

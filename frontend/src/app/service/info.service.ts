@@ -10,7 +10,7 @@ import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
-import {Fight} from '../commons/model/competition.model';
+import {CategoryBracketsStage, Fight} from '../commons/model/competition.model';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -28,7 +28,8 @@ const {
   dashboardState,
   mats,
   matFights,
-  stageFights
+  stageFights,
+  categoryStages
 } = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
@@ -305,6 +306,13 @@ export class InfoService {
       params: params,
       headers: this.headers
     });
+  }
 
+  getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
+    const params = {competitionId, categoryId};
+    return this.httpGet(categoryStages, {
+      params: params,
+      headers: this.headers
+    });
   }
 }

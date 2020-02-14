@@ -44,7 +44,7 @@ import {
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
-  EVENT_MANAGER_CATEGORY_SELECTED,
+  EVENT_MANAGER_CATEGORY_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_CATEGORY_UNSELECTED,
   EVENT_MANAGER_COMPETITION_UNSELECTED,
@@ -423,7 +423,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
                 const updatedPeriodIndex = newState.selectedEventSchedule.scheduleProperties.periodPropertiesList.findIndex(value => value.name === updatedPeriod.name);
                 updatedPeriod = {
                   ...updatedPeriod,
-                  categories: updatedPeriod.categories.filter(cat => cat.id !== category.id)
+                  categories: updatedPeriod.categories.filter(cat => cat !== category.id)
                 };
                 newState = {
                   ...newState,
@@ -494,12 +494,18 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_STATE_LOADED: {
         const {competitionId, categoryId, payload} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
-          const {brackets} = payload;
-          const newStages = brackets && brackets.stages && stagesEntityAdapter.upsertMany(brackets.stages, stagesInitialState);
           state.selectedEventCategories.selectedCategoryState = payload;
           state.selectedEventCategories.categoryStateLoading = false;
+        }
+        break;
+      }
+
+      case EVENT_MANAGER_CATEGORY_STAGES_LOADED: {
+        const {competitionId, categoryId, categoryStages} = action;
+        if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && categoryStages) {
+          const newStages = stagesEntityAdapter.upsertMany(categoryStages, stagesInitialState);
           state.selectedEventCategories.selectedCategoryStages = newStages || stagesInitialState;
-          const selectedStage = brackets.stages.find(s => s.id === state.selectedEventCategories.selectedCategoryStages.selectedStageId);
+          const selectedStage = categoryStages.find(s => s.id === state.selectedEventCategories.selectedCategoryStages.selectedStageId);
           if (selectedStage) {
             state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.addAll(selectedStage.fights, fightsInitialState);
           }

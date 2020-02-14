@@ -142,7 +142,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   ngAfterContentInit(): void {
     if (this.fight) {
-      this.stageName = this.fight.stage;
+      this.stageName = this.fight.status;
       this.currentFightMinutes = this.fight.duration;
       this.currentFightSeconds = 0;
     }

@@ -55,7 +55,7 @@
               y="80%">{{fight?.scores[ci]?.competitor?.academy | getacademy:15}}
             </svg:text>
             <!--      score      -->
-            <svg:svg *ngIf="fight?.stage === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
+            <svg:svg *ngIf="fight?.status === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
               <svg:g>
                 <svg:rect
                   x="33%"
