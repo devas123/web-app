@@ -14,7 +14,8 @@ export const urls = {
   dashboardState: '/competitions/api/v1/store/dashboardstate',
   mats: '/competitions/api/v1/store/mats',
   matFights: '/competitions/api/v1/store/matfights',
-  stageFights: '/competitions/api/v1/store/stagefights'
+  stageFights: '/competitions/api/v1/store/stagefights',
+  categoryStages: '/competitions/api/v1/store/stages'
 };
 
 export const environment = {
@@ -46,5 +47,6 @@ export const mocks = {
   dashboardState: '/jsserver/dashboardstate',
   mats: '/jsserver/mats',
   matFights: '/jsserver/matfights',
-  stageFights: '/jsserver/stagefights'
+  stageFights: '/jsserver/stagefights',
+  categoryStages: '/competitions/api/v1/store/stages'
 };

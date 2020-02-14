@@ -97,7 +97,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
         numberOfMats: this.numberOfMats.value,
         timeBetweenFights: this.timeBetweenFights.value,
         riskPercent: this.riskPercent.value,
-        categories: [] as Category[]
+        categories: [] as string[]
       } as PeriodProperties;
       this.periodForm.reset();
       this.modal.approve({properties});

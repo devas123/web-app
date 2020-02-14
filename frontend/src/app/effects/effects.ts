@@ -1,4 +1,4 @@
-import {catchError, concatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 
 
 import {Injectable} from '@angular/core';
@@ -18,7 +18,7 @@ import {
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
   EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
   eventManagerCategoriesLoaded,
-  eventManagerCategoryBracketsStageFightsLoaded,
+  eventManagerCategoryBracketsStageFightsLoaded, eventManagerCategoryStagesLoaded,
   eventManagerCategoryStateLoaded,
   eventManagerFighterLoaded,
   eventManagerFightersForCompetitionLoaded,
@@ -27,6 +27,7 @@ import {
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Competitor, Fight} from '../commons/model/competition.model';
+import {EVENT_MANAGER_CATEGORY_STATE_LOADED} from '../modules/event-manager/redux/event-manager-actions';
 
 @Injectable()
 export class Effects {
@@ -110,6 +111,14 @@ export class Effects {
           return errorEvent('Error occured while loading categoryId state: ' + JSON.stringify(state));
         }
       })));
+
+  loadCategoryStages$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_CATEGORY_STATE_LOADED),
+    switchMap((a: any) => this.infoService.getCategoryStages(a.competitionId, a.categoryId)
+      .pipe(
+        map(categoryStages => eventManagerCategoryStagesLoaded({competitionId: a.competitionId, categoryId: a.categoryId, categoryStages}))
+      ))
+  ));
 
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED),

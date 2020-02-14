@@ -140,7 +140,7 @@ export interface Fight {
   scores: CompScore[];
   round: number;
   roundType: RoundType;
-  stage: string;
+  status: string;
   fightResult: FightResult;
   timeToStart: boolean;
   numberInRound: number;
@@ -320,7 +320,7 @@ export interface PeriodProperties {
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
-  categories: Category[];
+  categories: string[];
 }
 
 export interface ScheduleProperties {

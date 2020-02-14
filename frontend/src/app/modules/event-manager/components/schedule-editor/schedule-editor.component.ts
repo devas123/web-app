@@ -57,8 +57,8 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
 
 
-    categoryName(cat: Category) {
-        return AddFighterComponent.displayCategory(cat);
+    categoryName(cat: string) {
+        return AddFighterComponent.displayCategory(this.categories.find(c => c.id === cat));
     }
 
     sendGenerateSchedule() {
@@ -102,12 +102,12 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
         });
     }
 
-    onItemDrop(e: CdkDragDrop<Category[]>, to: string) {
+    onItemDrop(e: CdkDragDrop<String[]>, to: string) {
         // Get the dropped data here
         const {id, cat} = e.item.data;
         const index = e.currentIndex;
         this.categoryMoved.next({
-            category: cat,
+            category: this.categories.find(c => c.id === cat),
             from: id,
             to,
             index
@@ -130,8 +130,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
         if (this.categories && this.scheduleProperties) {
             const distributedCategories = this.scheduleProperties.periodPropertiesList.map(p => p.categories)
                 .reduce((previousValue, currentValue) => previousValue.concat(currentValue), [])
-                .filter(c => !!c && c.id != null)
-                .map(c => c.id);
+                .filter(c => !!c);
             this.filteredCategories = this.categories.filter(cat => distributedCategories.indexOf(cat.id) < 0);
         } else {
             this.filteredCategories = this.categories || [];

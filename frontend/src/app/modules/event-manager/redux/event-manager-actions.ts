@@ -8,7 +8,7 @@ import {
   Schedule
 } from '../../../reducers/global-reducers';
 import {
-  Category,
+  Category, CategoryBracketsStage,
   Competitor,
   Fight,
   FightsEditorChange,
@@ -63,6 +63,7 @@ export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED = 'EVENT_MANAGE
 export const EVENT_MANAGER_CATEGORIES_LOADED = 'EVENT_MANAGER_CATEGORIES_LOADED';
 export const EVENT_MANAGER_SCHEDULE_LOADED = 'EVENT_MANAGER_SCHEDULE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STATE_LOADED = 'EVENT_MANAGER_CATEGORY_STATE_LOADED';
+export const EVENT_MANAGER_CATEGORY_STAGES_LOADED = 'EVENT_MANAGER_CATEGORY_STAGES_LOADED';
 export const EVENT_MANAGER_COMPETITIONS_LOADED = 'EVENT_MANAGER_COMPETITIONS_LOADED';
 export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const EVENT_MANAGER_FIGHTER_SELECTED = 'EVENT_MANAGER_FIGHTER_SELECTED';
@@ -279,6 +280,8 @@ export const eventManagerCategoryStateLoaded = (categoryState) => ({
   categoryId: categoryState.category.id,
   payload: categoryState
 });
+
+export const eventManagerCategoryStagesLoaded = createAction(EVENT_MANAGER_CATEGORY_STAGES_LOADED, props<{competitionId: string, categoryId: string, categoryStages: CategoryBracketsStage[]}>());
 
 export const eventManagerCategoryUnselected = (competitionId: string) => ({
   type: EVENT_MANAGER_CATEGORY_UNSELECTED,
