@@ -3,9 +3,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventTimeZone, selectedEvent
+ selectedEvent
 } from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
 import {filter, take, tap} from 'rxjs/operators';
@@ -20,7 +18,7 @@ export abstract class EventManagerRouterEntryComponent implements OnDestroy {
 
   static processSyncOrAsync<A>(item: SyncOrAsync<A>, action: (i: A) => any) {
     if (item) {
-      if (item instanceof Observable) {
+      if (item instanceof Observable) {4
         item.pipe(filter(i => !!i), take(1)).subscribe(next => action(next), error => console.log(error));
       } else if (item instanceof Promise) {
         item.then(next => action(next)).catch(error => console.log(error));
@@ -58,9 +56,9 @@ export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEn
 
   protected constructor(store: Store<AppState>, metadataProvider: ComponentCommonMetadataProvider, menuService: MenuService) {
     super(store, metadataProvider, menuService);
-    this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
+    this.competitionName$ = store.pipe(select(selectedEvent.name()));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
-    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
+    this.timeZone$ = store.pipe(select(selectedEvent.timeZone()));
     this.categories$ = store.pipe(select(selectedEvent.categoriesCollection.allCategories())).pipe(tap(x => console.log(x)));
   }
 }

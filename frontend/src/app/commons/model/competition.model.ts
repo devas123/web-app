@@ -172,22 +172,22 @@ export const restrictionTypes: RestrictionType[] = [
 export type CategoryRestriction = ValueRestriction | RangeRestriction;
 
 
-export interface ValueRestriction {
+export class ValueRestriction {
   id: string;
   name: string;
   value?: string;
-  type: 'Value';
+  type: 'Value' = 'Value';
 }
 
 
-export interface RangeRestriction {
+export class RangeRestriction {
   id: string;
   name: string;
   minValue?: string;
   maxValue?: string;
   unit?: string;
   alias: string;
-  type: 'Range';
+  type: 'Range' = 'Range';
 }
 
 

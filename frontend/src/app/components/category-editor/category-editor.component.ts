@@ -1,8 +1,28 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category} from '../../commons/model/competition.model';
+import {
+  AfterContentChecked,
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
+import {Category, RangeRestriction, ValueRestriction} from '../../commons/model/competition.model';
 import {CompetitionProperties} from '../../reducers/global-reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
+import {ModalSize, ModalTemplate, SuiModalService, TemplateModalConfig} from "ng2-semantic";
+import {CreateCategoryModal} from "./add-category-modal.component";
+import {FormControl, FormGroup} from "@angular/forms";
+import {from, Observable, of} from "rxjs";
+import {
+  delay,
+  map,
+} from "rxjs/operators";
 
 
 @Component({
@@ -11,85 +31,13 @@ import {AddFighterComponent} from '../../modules/event-manager/components/add-fi
   styleUrls: ['./category-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryEditorComponent implements OnInit {
+export class CategoryEditorComponent implements OnInit, AfterViewInit, AfterViewChecked, AfterContentChecked {
 
   @Input()
   editMode = true;
 
   @Input()
   detailedView = true;
-
-  @Input()
-  set searchString(value: string) {
-    if (value) {
-      const searchStr = value;
-      this.filteredCategories = this.searchFilter(this._categories, searchStr);
-      this.searchStr = searchStr;
-    } else {
-      this.filteredCategories = this._categories;
-      this.searchStr = null;
-    }
-  }
-
-  constructor() {
-  }
-
-
-  get defaultCategories() {
-    if (!this._defaultCategories) {
-      this._defaultCategories = [];
-    }
-    return this._defaultCategories;
-  }
-
-  @Input()
-  set defaultCategories(value: Category[]) {
-    if (value && value.length > 0) {
-      if (this._categories && this._categories.length > 0) {
-        const ids = this._categories.map(c => c.id);
-        this._allDefaultCategories = value.filter(cat => {
-          return ids.indexOf(cat.id) < 0;
-        });
-      } else {
-        this._allDefaultCategories = value;
-      }
-    } else {
-      this._allDefaultCategories = [];
-    }
-    this._defaultCategories = this._allDefaultCategories.slice(0, 50);
-  }
-
-  get categories() {
-    return this._categories;
-  }
-
-  @Input()
-  set categories(value: Category[]) {
-    if (value && value.length > 0) {
-      this._categories = value.map(cat => {
-        return {...cat};
-      });
-      this.filteredCategories = value;
-      /*   if (this._defaultCategories && this._defaultCategories.length > 0) {
-             const ids = this._categories.map(c => c.id);
-             this._defaultCategories = this._defaultCategories.filter(cat => {
-                 return ids.indexOf(cat.id) < 0;
-             });
-         }*/
-    }/* else {
-            this._categories = [];
-        }
-        if (this.searchStr && this.searchStr.length > 0) {
-            this.filteredCategories = this.searchFilter(this._categories, this.searchStr);
-        } else {
-            this.filteredCategories = this._categories;
-        }*/
-  }
-
-  _allDefaultCategories: Category[];
-  filteredCategories: Category[];
-
-  searchStr: string;
 
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
@@ -101,9 +49,9 @@ export class CategoryEditorComponent implements OnInit {
   @Input()
   competition: CompetitionProperties;
 
-  _defaultCategories: Category[];
+  categories$: Observable<(Category & { selected?: boolean })[]>;
 
-  _categories: (Category & { selected?: boolean })[];
+  searchStr$: EventEmitter<string>;
 
   @Output()
   deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
@@ -116,26 +64,62 @@ export class CategoryEditorComponent implements OnInit {
   @Output()
   categoryHeaderClicked = new EventEmitter<string>();
 
+  editorControlForm: FormGroup;
+
+  constructor(public modalService: SuiModalService, private ref: ChangeDetectorRef) {
+  }
+
+
+  openAddModal() {
+    let category = <Category>{
+      restrictions: [{...new ValueRestriction(),name: "Gender", value: "Male"}, {...new ValueRestriction(),
+        name: "Belt",
+        value: "White"
+      },
+        {...new RangeRestriction(),name: 'Age', minValue: "18", maxValue: "60", unit: 'age'},
+        {...new RangeRestriction(),name: 'Weight', minValue: '50', maxValue: '100', unit: 'kg'}]
+    };
+    this.modalService.open(new CreateCategoryModal(category))
+  }
+
+
+  @Input()
+  set categories(value: Observable<Category[]>) {
+    this.categories$ = value.pipe(
+      map(x =>
+        x.map(val => {
+          return {...val, selected: false}
+        })),
+    );
+  }
+
+  ngAfterViewChecked() {
+    this.ref.detectChanges();
+
+  }
+
+  ngAfterViewInit(): void {
+    this.ref.detectChanges();
+  }
+
+  ngAfterContentChecked(): void {
+    this.ref.detectChanges();
+  }
+
+  searchStr: string;
 
   displayCategory = AddFighterComponent.displayCategory;
 
-  changeSelection(category: any) {
-    console.log(category);
-  }
-
   searchFilter = (options: Category[], filter: string) => {
-    // let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
-
     filterParts.forEach((value) => {
-      //  filteredOptions = filteredOptions.filter(categoryFilter(value));
     });
-
     return null;
   }
 
   ngOnInit() {
-    console.log(this._categories);
+    this.searchStr$ = new EventEmitter<string>();
+    this.categories$ = this.categories$.pipe(delay(0));
   }
 
   generateRandomFighters(category: Category) {
@@ -164,4 +148,6 @@ export class CategoryEditorComponent implements OnInit {
   handleCategoryHeaderClicked(categoryId: string) {
     this.categoryHeaderClicked.next(categoryId);
   }
+
+
 }

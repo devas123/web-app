@@ -3,8 +3,8 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
-import {eventManagerGetSelectedEventCategories} from '../../../event-manager/redux/event-manager-reducers';
 import {tap} from 'rxjs/operators';
+import {selectedEvent} from "../../../event-manager/redux/event-manager-reducers";
 
 @Component({
   selector: 'app-cmp-registration',
@@ -20,7 +20,7 @@ export class CmpRegistrationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.filteredCategories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories), tap(x => console.log(x)));
+    this.filteredCategories$ = this.store.pipe(select(selectedEvent.categoriesCollection.allCategories()), tap(x => console.log(x)));
   }
 
 }
