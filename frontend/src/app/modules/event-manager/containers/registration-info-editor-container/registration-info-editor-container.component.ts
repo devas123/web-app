@@ -3,13 +3,6 @@ import {AppState, getSelectedEventId, RegistrationInfo} from '../../../../reduce
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {
-  eventManagerGetSelectedEventAvailableRegistrationGroups,
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventRegistrationInfo,
-  eventManagerGetSelectedEventTimeZone
-} from '../../redux/event-manager-reducers';
-import {
   eventManagerAddRegistrationPeriod,
   eventManagerAddRegistrationGroup,
   eventManagerDeleteRegistrationGroup,
@@ -25,6 +18,7 @@ import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-in
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
+import {selectedEvent} from "../../redux/event-manager-reducers";
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -43,7 +37,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
               private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
+      header: store.pipe(select(selectedEvent.name()), filter(name => !!name),
         map(name => (<HeaderDescription>{
           header: 'Registration Info',
           subheader: name
@@ -72,10 +66,10 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       switchMap(params => of(params['group'])),
       startWith(false)
     );
-    this.registrationInfo$ = store.select(eventManagerGetSelectedEventRegistrationInfo);
+    this.registrationInfo$ = store.select(selectedEvent.registrationInfo());
     this.competitionId$ = store.select(getSelectedEventId);
-    this.timeZone$ = store.select(eventManagerGetSelectedEventTimeZone);
-    this.categories$ = store.select(eventManagerGetSelectedEventCategories);
+    this.timeZone$ = store.select(selectedEvent.timeZone());
+    this.categories$ = store.select(selectedEvent.categoriesCollection.allCategories());
   }
 
   public goBack() {
@@ -90,7 +84,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
 
   public openGroupModal({competitionId, periodId, periodRegistrationGroups}) {
     if (periodId) {
-      this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
+      this.store.pipe(select(selectedEvent.registrationInfo.availableRegistrationGroups()), take(1), map(groups => {
         this.modalService.open(new AddGroupModal(periodId, competitionId, groups.filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
           .onApprove((result: IAddGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {

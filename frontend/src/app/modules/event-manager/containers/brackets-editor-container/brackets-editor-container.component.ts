@@ -3,8 +3,7 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges, selectedEvent
 } from '../../redux/event-manager-reducers';
 import {Category, CategoryBracketsStage, HeaderDescription} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
@@ -48,7 +47,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private observer: BreakpointObserver, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(
-        select(eventManagerGetSelectedEventName),
+        select(selectedEvent.name()),
         filter(name => !!name),
         map(name => <HeaderDescription>{
           header: 'Brackets',

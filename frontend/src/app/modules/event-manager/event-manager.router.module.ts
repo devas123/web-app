@@ -23,6 +23,7 @@ import {PeriodManagementContainerComponent} from './containers/period-management
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {FightersContainerComponent} from '../../components/fighters-container/fighters-container.component';
 import {CompetitionInfoEditorContainerComponent} from "./containers/competition-info-editor-container/competition-info-editor-container.component";
+import {CategoriesConstructorComponent} from "../../components/categories-constructor/categories-constructor.component";
 
 export const eventManagerRoutes: Routes = [
   {
@@ -80,8 +81,8 @@ export const eventManagerRoutes: Routes = [
             component: CategoryEditorContainerComponent
           },
           {
-            path: 'categories/create',
-            component: CreateCategoryComponent
+            path: 'categories/constructor',
+            component: CategoriesConstructorComponent
           },
           {
             path: 'categories/:id',

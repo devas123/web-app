@@ -96,20 +96,20 @@
                       <div class="field">
                         <label>Min</label>
                         <div class="ui input">
-                          <input type="text" name="minvalue" placeholder="Minimum value" formControlName="minValue">
+                          <input type="text" name="minvalue" placeholder="Minimum value" formControlName="minValue" required>
                         </div>
                       </div>
                       <div class="field">
                         <label>Max</label>
                         <div class="ui input">
-                          <input type="text" name="maxvalue" placeholder="Maximum value" formControlName="maxValue">
+                          <input type="text" name="maxvalue" placeholder="Maximum value" formControlName="maxValue" required>
                         </div>
                       </div>
                     </div>
                     <div class="field">
                       <label>Unit</label>
                       <div class="ui input">
-                        <input type="text" name="unit" placeholder="Units" formControlName="unit">
+                        <input type="text" name="unit" placeholder="Units" formControlName="unit" required>
                       </div>
                     </div>
                     <div class="field">
@@ -123,7 +123,7 @@
                     <div class="field">
                       <label>Value</label>
                       <div class="ui input">
-                        <input type="text" name="minvalue" placeholder="Value" formControlName="value">
+                        <input type="text" name="minvalue" placeholder="Value" formControlName="value" required>
                       </div>
                     </div>
                   </ng-container>
@@ -135,9 +135,12 @@
         </div>
       </div>
     </div>
-        <div class="ui submit  floated positive button" (click)="submitForm()">
-          Submit
-        </div>
+    <div class="ui basic right aligned segment">
+      <button class="ui submit  floated positive button" *ngIf="!createMode" (click)="submitForm()" [disabled]=" (form.touched || form.dirty) && form.invalid">
+        Update
+      </button>
+    </div>
+
 
     <!--    <div class="ui  button" (click)="test()">
           Test

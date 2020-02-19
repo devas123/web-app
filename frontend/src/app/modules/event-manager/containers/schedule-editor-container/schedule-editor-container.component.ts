@@ -4,12 +4,8 @@ import {AppState, getSelectedEventId, Schedule} from '../../../../reducers/globa
 import {select, Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventScheduleEmpty,
-  eventManagerGetSelectedEventScheduleProperties,
-  eventManagerGetSelectedEventTimeZone,
+  eventManagerGetSelectedEventScheduleProperties, selectedEvent,
 } from '../../redux/event-manager-reducers';
 import {Category, HeaderDescription, PeriodProperties, ScheduleProperties} from '../../../../commons/model/competition.model';
 import {eventManagerCategoryMoved, eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved} from '../../redux/event-manager-actions';
@@ -34,7 +30,7 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
+      header: store.pipe(select(selectedEvent.name()), filter(name => !!name),
         map(name => (<HeaderDescription>{
           header: 'Schedule',
           subheader: name
@@ -51,13 +47,13 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
       ]
     }, menuService);
     this.showEditor = false;
-    this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
+    this.schedule$ = store.pipe(select(selectedEvent.schedule()));
     this.scheduleProperties$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.scheduleEmpty$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
     this.subs.add(this.store.pipe(select(getSelectedEventId)).subscribe(id => this.competitionId = id));
     setTimeout(() => this.subs.add(this.scheduleEmpty$.pipe(take(1), startWith(true), tap(console.log)).subscribe(s => this.showEditor = s)));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
-    this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
+    this.categories$ = store.pipe(select(selectedEvent.categoriesCollection.allCategories()));
+    this.timeZone$ = store.pipe(select(selectedEvent.timeZone()));
   }
 
   toggleSchedulePropertiesEditor() {

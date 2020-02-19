@@ -9,9 +9,7 @@ import {Category} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventRegistrationPeriods,
-  eventManagerGetSelectedEventTimeZone
+ selectedEvent
 } from '../../../event-manager/redux/event-manager-reducers';
 import {ActivatedRoute, ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
@@ -42,9 +40,9 @@ export class CompetitionMainInfoComponent implements OnInit {
 
     constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
         this.properties$ = store.pipe(select(getSelectedEventProperties));
-        this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
-        this.timezone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
-        this.registrationPeriod$ = store.pipe(select(eventManagerGetSelectedEventRegistrationPeriods));
+        this.categories$ = store.pipe(select(selectedEvent.categoriesCollection.allCategories()));//eventManagerGetSelectedEventCategories));
+        this.timezone$ = store.pipe(select(selectedEvent.timeZone()));
+        this.registrationPeriod$ = store.pipe(select(selectedEvent.registrationInfo.registrationPeriods()));
         this.url$ = this.router.events.pipe(filter(e => e instanceof NavigationEnd || e instanceof ChildActivationEnd), map((e: NavigationEnd | ChildActivationEnd) => {
             if (e instanceof NavigationEnd) {
                 return e.urlAfterRedirects;

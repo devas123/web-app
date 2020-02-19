@@ -3,7 +3,7 @@ import {AppState, getSelectedEventId, Schedule} from '../../../../reducers/globa
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Category} from '../../../../commons/model/competition.model';
-import {eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventSchedule, eventManagerGetSelectedEventTimeZone} from '../../../event-manager/redux/event-manager-reducers';
+import {selectedEvent} from "../../../event-manager/redux/event-manager-reducers";
 
 @Component({
     selector: 'app-schedule-editor-container',
@@ -26,9 +26,9 @@ export class ScheduleContainerComponent implements OnInit {
     competitionId$: Observable<string>;
 
     constructor(private store: Store<AppState>) {
-        this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
-        this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
-        this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
+        this.schedule$ = store.pipe(select(selectedEvent.schedule()));
+        this.categories$ = store.pipe(select(selectedEvent.categoriesCollection.allCategories()));
+        this.timeZone$ = store.pipe(select(selectedEvent.timeZone()));
         this.competitionId$ = this.store.pipe(select(getSelectedEventId));
     }
 

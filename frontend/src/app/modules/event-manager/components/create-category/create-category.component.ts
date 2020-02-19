@@ -1,23 +1,16 @@
 import {filter, map, take} from 'rxjs/operators';
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {eventManagerAddCategory} from '../../redux/event-manager-actions';
-import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {
   Category, CategoryRestriction,
   HeaderDescription, RangeRestriction,
   RestrictionType,
   restrictionTypes
 } from '../../../../commons/model/competition.model';
-import {
-  ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../../containers/event-manager-container/common-classes';
-import {MenuService} from '../../../../components/main-menu/menu.service';
-import {defaultRestrictions} from './default-restrictions';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -26,7 +19,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
   styleUrls: ['./create-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
+export class CreateCategoryComponent implements OnInit {
 
   form: FormGroup;
 
@@ -35,29 +28,26 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     Value: {name: [], type: ['Value'], value: [], editMode: [false]}
   };
 
-  step = 0;
   types: RestrictionType[] = restrictionTypes;
   useRestrictionValues = false;
 
+  @Input()
+  createMode: boolean;
 
 
   _category: Category;
 
 
-  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
-    super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
-        header: 'Create category',
-        subheader: name
-      })),
-      menu: [
-        {
-          name: 'Return',
-          action: () => this.router.navigate(['..'], {relativeTo: this.route})
-        }
-      ]
-    }, menuService);
-   // this.createForm();
+  constructor(private fb: FormBuilder, private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+    this._category = <Category>{restrictions: []};
+    this.createForm();
+  }
+
+  ngOnInit() {
+  }
+
+  get _form(){
+    return this.form;
   }
 
   get fightDuration() {
@@ -90,8 +80,12 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
 
   @Input()
   set category(value: Category) {
-    this._category = value;
-    this.createForm();
+    if (value) {
+      this._category = value;
+      if (this._category) {
+        this.createForm();
+      }
+    }
   }
 
   get category(): Category {
@@ -125,12 +119,12 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
 
 
   createForm() {
-    console.log(this._category);
+    console.log(this.category);
     this.form = this.fb.group({
       name: [this.category.name],
       fightDuration: [this.category.fightDuration],
       registrationOpen: [this.category.registrationOpen],
-      restrictions: this.fb.array(this.category.restrictions.map(x => this.fb.group(x.type === 'Value' ?
+      restrictions: this.fb.array(this.category.restrictions.map(x => this.fb.group(x.type === "Value" ?
         {...this.controlGroupAlias.Value, name: [x.name], value: [x.value]} :
         {
           ...this.controlGroupAlias.Range,
@@ -142,28 +136,9 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     });
   }
 
-/*  createForm() {
-    this.form = this.fb.group({
-      name: [],
-      fightDuration: [],
-      registrationOpen: [true],
-      restrictions: this.fb.array(defaultRestrictions.map(x => this.fb.group(x.type === 'Value' ?
-        {...this.controlGroupAlias.Value, name: [x.name], value: [x.value]} :
-        {
-          ...this.controlGroupAlias.Range,
-          name: [x.name],
-          minValue: [x.minValue],
-          maxValue: [x.maxValue],
-          unit: [x.unit]
-        })))
-    });
-  }*/
 
-  ngOnInit() {
-  }
-
-
-  test() {
+ public test() {
+    console.log("bla");
     let cat = this.form.value as Category;
     cat = {...cat} as Category;
     console.log(cat);
@@ -174,11 +149,13 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
       const createCategorySubscription = this.store.pipe(select(getSelectedEventId), map((competitionId: string) => {
         let cat = this.form.value as Category;
         cat = {...cat} as Category;
+        console.log(cat);
         return eventManagerAddCategory(competitionId, cat);
       })).subscribe(this.store);
-      this.router.navigate(['..'], {relativeTo: this.route}).then(() => {
-        createCategorySubscription.unsubscribe();
-      });
+      createCategorySubscription.unsubscribe();
+      /*   this.router.navigate(['..'], {relativeTo: this.route}).then(() => {
+           createCategorySubscription.unsubscribe();
+         });*/
     }
   }
 

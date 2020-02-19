@@ -40,7 +40,7 @@ import {EventManagerModule} from '../event-manager/event-manager.module';
     NgxMdModule,
     SuiSelectModule,
     SuiDimmerModule,
-    SuiTabsModule, EventManagerModule
+    SuiTabsModule
   ],
   declarations: [
     CompetitionMainInfoComponent,

@@ -1,11 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
-import {
-  eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategoryStartTime,
-  getSelectedEventSelectedCategoryState
-} from '../../redux/event-manager-reducers';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,6 +8,7 @@ import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {selectedEvent} from "../../redux/event-manager-reducers";
 
 @Component({
   selector: 'app-category-summary-container',
@@ -44,15 +40,15 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
           action: () => this.goback()
         }
       ],
-      header: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat), take(1), map(cat => <HeaderDescription>{
+      header: store.pipe(select(selectedEvent.selectedCategory()), filter(cat => !!cat), take(1), map(cat => <HeaderDescription>{
         header: 'Category',
         subheader: 'temp'
       }))
     }, menuService);
-    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
+    this.category$ = store.pipe(select(selectedEvent.selectedCategory()), filter(cat => !!cat));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
-    this.categoryState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
-    this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
+    this.categoryState$ = store.pipe(select(selectedEvent.selectedCategory.state()));
+    this.categoryStartTime$ = store.pipe(select(selectedEvent.selectedCategory.startTime()));
   }
 
 

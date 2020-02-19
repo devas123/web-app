@@ -75,6 +75,9 @@ import {GenerateBracketsFormComponent} from './components/generate-brackets-form
 import {NumberControlsComponent} from './components/scoreboard-component/number-controls.component';
 import {TimerComponent} from './components/scoreboard-component/timer-component';
 import {TimerControlsComponent} from './components/scoreboard-component/timer-controls.component';
+import {AddCategoryModalComponent} from "../../components/category-editor/add-category-modal.component";
+import {CategoriesConstructorComponent} from "../../components/categories-constructor/categories-constructor.component";
+import {AddRestrictionGroupModalComponent} from "../../components/categories-constructor/add-restriction-group-modal.component";
 
 @NgModule({
   imports: [
@@ -107,6 +110,8 @@ import {TimerControlsComponent} from './components/scoreboard-component/timer-co
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
+    AddCategoryModalComponent,
+    AddRestrictionGroupModalComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,
@@ -149,12 +154,13 @@ import {TimerControlsComponent} from './components/scoreboard-component/timer-co
     NumberControlsComponent,
     TimerComponent,
     TimerControlsComponent,
-    FighterProfileComponent],
+    FighterProfileComponent,CategoriesConstructorComponent],
   providers: [EventManagerService],
   entryComponents: [
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
+    AddCategoryModalComponent,
     AddSchedulePeriodFormComponent
   ]
 })
