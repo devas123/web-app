@@ -14,7 +14,11 @@ import {
   eventManagerUpdateCompetitorCommand
 } from '../../redux/event-manager-actions';
 import {
-  eventManagerGetSelectedEventSelectedCompetitor, selectedEvent,
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSelectedCategory,
+  eventManagerGetSelectedEventSelectedCategoryId,
+  eventManagerGetSelectedEventSelectedCompetitor,
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
 import {Category, Competitor, HeaderDescription} from '../../../../commons/model/competition.model';
@@ -46,7 +50,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
           showCondition: () => this.eventFighter$.pipe(map(f => !!f.userId))
         }
       ],
-      header: store.pipe(select(selectedEvent.name()), filter(name => !!name), take(1), map(name => <HeaderDescription>{
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
         header: 'Fighter Profile',
         subheader: name
       })),
@@ -54,7 +58,7 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
     const a$ = combineLatest([
       route.params.pipe(map(params => params['fighterId'])),
       this.store.pipe(select(getSelectedEventId)),
-      this.store.pipe(select(selectedEvent.categoriesCollection.selectedCategoryId()))]);
+      this.store.pipe(select(eventManagerGetSelectedEventSelectedCategoryId))]);
     this.subs.add(a$.pipe(
       filter(value => value[0] && value[1] && value[0] !== null && value[1] !== null),
       mergeMap(response => {
@@ -65,8 +69,8 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
       select(eventManagerGetSelectedEventSelectedCompetitor),
       filter(f => !!f)
     );
-    this.category$ = this.store.pipe(select(selectedEvent.selectedCategory()));
-    this.categories$ = this.store.pipe(select(selectedEvent.categoriesCollection.allCategories()));
+    this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
   }
 
   navigateBack() {

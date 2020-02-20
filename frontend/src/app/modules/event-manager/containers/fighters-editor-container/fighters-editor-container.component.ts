@@ -3,10 +3,13 @@ import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
+  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
-  eventManagerGetSelectedEventCompetitorsTotal, selectedEvent,
+  eventManagerGetSelectedEventCompetitorsTotal,
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSelectedCategory
 } from '../../redux/event-manager-reducers';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {eventManagerCompetitionFightersPageChanged, eventManagerRemoveCompetitor} from '../../redux/event-manager-actions';
@@ -44,7 +47,7 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(selectedEvent.name())).pipe(filter(name => !!name), take(1), map(name => ({
+      header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
         header: 'Fighters',
         subheader: name
       }))),
@@ -74,9 +77,9 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
       ]
     }, menuService);
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
-    this.category$ = this.store.pipe(select(selectedEvent.selectedCategory()));
-    this.categories$ = this.store.pipe(select(selectedEvent.categoriesCollection.allCategories()));
-    this.competitionName$ = this.store.pipe(select(selectedEvent.name()));
+    this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
     this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));
     this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize));
     this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber));

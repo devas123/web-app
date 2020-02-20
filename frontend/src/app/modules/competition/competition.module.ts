@@ -23,9 +23,6 @@ import {EventCalendarComponent} from './components/event-calendar/event-calendar
 import {FightersDisplayContainerComponent} from './containers/fighters-display-container/fighters-display-container.component';
 import {ScheduleContainerComponent} from './containers/schedule-container/schedule-container.component';
 import {CategoryInfoContainerComponent} from './containers/category-info-container/category-info-container.component';
-import { CmpRegistrationComponent } from './components/cmp-registration/cmp-registration.component';
-import {CreateCategoryComponent} from '../event-manager/components/create-category/create-category.component';
-import {EventManagerModule} from '../event-manager/event-manager.module';
 
 @NgModule({
   imports: [
@@ -49,8 +46,7 @@ import {EventManagerModule} from '../event-manager/event-manager.module';
     EventCardComponent, EventListComponent, EventCalendarComponent,
     FightersDisplayContainerComponent,
     ScheduleContainerComponent,
-    CategoryInfoContainerComponent,
-    CmpRegistrationComponent],
+    CategoryInfoContainerComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]
 })
 export class CompetitionModule {

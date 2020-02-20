@@ -7,7 +7,9 @@ import {
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventScheduleProperties, selectedEvent
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSchedule,
+  eventManagerGetSelectedEventScheduleProperties
 } from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
@@ -41,7 +43,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(selectedEvent.name())).pipe(filter(name => !!name), take(1), map(name => ({
+      header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
         header: 'Progress dashboard',
         subheader: name
       }))),
@@ -66,7 +68,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
     }, menuService);
     this.periods$ = store.pipe(select(dashboardGetPeriods));
     this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventProperties));
-    this.selectedCompetitionSchedule$ = store.pipe(select(selectedEvent.schedule()));
+    this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
     this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
     this.subs.add(this.selectedCompetitionProperties$.subscribe(props => this.competitionProperties = props));

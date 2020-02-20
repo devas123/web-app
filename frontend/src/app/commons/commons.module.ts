@@ -26,9 +26,6 @@ import {FightersEditorComponent} from '../components/fighters-editor/fighters-ed
 import {FightersContainerComponent} from '../components/fighters-container/fighters-container.component';
 import {BracketPartComponent} from '../components/brackets-editor/bracket/bracket-part.component';
 import {StageDisplayComponent} from '../components/stage-display/stage-display.component';
-import {CreateCategoryComponent} from '../modules/event-manager/components/create-category/create-category.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SearchCatPipe} from "../components/category-editor/search-cat.pipe";
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -36,17 +33,15 @@ import {SearchCatPipe} from "../components/category-editor/search-cat.pipe";
     ScheduleDisplayComponent,
     CategoryEditorComponent,
     FightersEditorComponent,
-    FightersContainerComponent, BracketPartComponent, StageDisplayComponent, CreateCategoryComponent,SearchCatPipe],
+    FightersContainerComponent, BracketPartComponent, StageDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
-    SearchCatPipe,
     CategoryEditorComponent,
-    CreateCategoryComponent,
     FightersEditorComponent,
     FightersContainerComponent,
     StageDisplayComponent],
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })
 export class CommonsModule {
 }

@@ -26,6 +26,7 @@ import {EventManagerService} from './event-manager.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CategoryEditorContainerComponent} from './containers/category-editor-container/category-editor-container.component';
 import {EventManagerContainerComponent} from './containers/event-manager-container/event-manager-container.component';
+import {CreateCategoryComponent} from './components/create-category/create-category.component';
 import {EventPropertiesEditorContainerComponent} from './containers/event-properties-editor-container/event-properties-editor-container.component';
 import {EventPropertiesEditorComponent} from './components/event-properties-editor/event-properties-editor.component';
 import {AddFighterComponent} from './components/add-fighter/add-fighter.component';
@@ -75,9 +76,6 @@ import {GenerateBracketsFormComponent} from './components/generate-brackets-form
 import {NumberControlsComponent} from './components/scoreboard-component/number-controls.component';
 import {TimerComponent} from './components/scoreboard-component/timer-component';
 import {TimerControlsComponent} from './components/scoreboard-component/timer-controls.component';
-import {AddCategoryModalComponent} from "../../components/category-editor/add-category-modal.component";
-import {CategoriesConstructorComponent} from "../../components/categories-constructor/categories-constructor.component";
-import {AddRestrictionGroupModalComponent} from "../../components/categories-constructor/add-restriction-group-modal.component";
 
 @NgModule({
   imports: [
@@ -110,8 +108,6 @@ import {AddRestrictionGroupModalComponent} from "../../components/categories-con
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
-    AddCategoryModalComponent,
-    AddRestrictionGroupModalComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,
@@ -137,6 +133,7 @@ import {AddRestrictionGroupModalComponent} from "../../components/categories-con
     MyEventsListComponent,
     CategoryEditorContainerComponent,
     EventManagerContainerComponent,
+    CreateCategoryComponent,
     EventPropertiesEditorContainerComponent,
     EventPropertiesEditorComponent,
     AddFighterComponent,
@@ -154,13 +151,12 @@ import {AddRestrictionGroupModalComponent} from "../../components/categories-con
     NumberControlsComponent,
     TimerComponent,
     TimerControlsComponent,
-    FighterProfileComponent,CategoriesConstructorComponent],
+    FighterProfileComponent],
   providers: [EventManagerService],
   entryComponents: [
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
-    AddCategoryModalComponent,
     AddSchedulePeriodFormComponent
   ]
 })

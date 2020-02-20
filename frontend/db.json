@@ -1,100 +1,121 @@
 {
   "defaultcategories": [
     {
+      "ageDivision": {
+        "id": "ADULT",
+        "minimalAge": 10,
+        "maximalAge": 150
+      },
       "id": "category2",
-      "name": "category11",
-      "fightsNumber": 10,
-      "numberOfCompetitors": 10,
+      "gender": "MALE",
+      "weight": {
+        "id": "Light",
+        "maxValue": 10,
+        "minValue": 150
+      },
+      "beltType": "BROWN",
       "fightDuration": 10,
-      "restrictions": [
-        {
-          "name": "Gender", "type": "Value", "value": "Male"
-        },
-        {
-          "name": "Belt", "type": "Value", "value": "White"
-        },
-        {
-          "name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"
-        },
-        {
-          "name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"
-        }
-      ]
+      "numberOfCompetitors": 10,
+      "fightsNumber": 10
     },
     {
+      "ageDivision": {
+        "id": "ADULT",
+        "minimalAge": 10,
+        "maximalAge": 150
+      },
       "id": "category3",
-      "fightsNumber": 10,
-      "numberOfCompetitors": 10,
+      "gender": "MALE",
+      "weight": {
+        "id": "Light",
+        "maxValue": 10,
+        "minValue": 150
+      },
+      "beltType": "BLACK",
       "fightDuration": 10,
-      "restrictions": [
-        {"name": "Gender", "type": "Value", "value": "Male"},
-        {"name": "Belt", "type": "Value", "value": "White"},
-        {"name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"},
-        {"name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"}
-      ]
+      "numberOfCompetitors": 10,
+      "fightsNumber": 10
+    },
+    {
+      "ageDivision": {
+        "id": "ADULT",
+        "minimalAge": 10,
+        "maximalAge": 150
+      },
+      "id": "category4",
+      "gender": "MALE",
+      "weight": {
+        "id": "Light",
+        "maxValue": 10,
+        "minValue": 150
+      },
+      "beltType": "PURPLE",
+      "fightDuration": 10,
+      "numberOfCompetitors": 10,
+      "fightsNumber": 10
+    },
+    {
+      "ageDivision": {
+        "id": "ADULT",
+        "minimalAge": 10,
+        "maximalAge": 150
+      },
+      "id": "category5",
+      "gender": "MALE",
+      "weight": {
+        "id": "Light",
+        "maxValue": 10,
+        "minValue": 150
+      },
+      "beltType": "WHITE",
+      "fightDuration": 10,
+      "numberOfCompetitors": 10,
+      "fightsNumber": 10
     }
   ],
   "schedule": [],
   "categories": [
     {
-      "id": "category2",
-      "name": "category11",
+      "id": "category1",
       "fightsNumber": 10,
       "numberOfCompetitors": 10,
-      "fightDuration": 10,
-      "restrictions": [
-        {
-          "name": "Gender", "type": "Value", "value": "Male"
+      "category": {
+        "ageDivision": {
+          "id": "ADULT",
+          "minimalAge": 10,
+          "maximalAge": 150
         },
-        {
-          "name": "Belt", "type": "Value", "value": "White"
+        "id": "category1",
+        "gender": "MALE",
+        "weight": {
+          "id": "Light",
+          "maxValue": 150,
+          "minValue": 10
         },
-        {
-          "name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"
-        },
-        {
-          "name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"
-        }
-      ]
+        "beltType": "BLACK",
+        "fightDuration": 10
+      }
     },
     {
-      "id": "category3",
-      "name": "category12",
+      "id": "category10",
       "fightsNumber": 10,
       "numberOfCompetitors": 10,
-      "fightDuration": 10,
-      "restrictions": [
-        {"name": "Gender", "type": "Value", "value": "Male"},
-        {"name": "Belt", "type": "Value", "value": "White"},
-        {"name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"},
-        {"name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"}
-      ]
-    },
-    {
-      "id": "category4",
-      "name": "category14",
-      "fightsNumber": 10,
-      "numberOfCompetitors": 10,
-      "fightDuration": 10,
-      "restrictions": [
-        {"name": "Gender", "type": "Value", "value": "Male"},
-        {"name": "Belt", "type": "Value", "value": "White"},
-        {"name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"},
-        {"name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"}
-      ]
-    },
-    {
-      "id": "category5",
-      "name": "category15",
-      "fightsNumber": 10,
-      "numberOfCompetitors": 10,
-      "fightDuration": 10,
-      "restrictions": [
-        {"name": "Gender", "type": "Value", "value": "Male"},
-        {"name": "Belt", "type": "Value", "value": "White"},
-        {"name": "Age", "type": "Range", "minValue": 18, "maxValue": 60, "unit": "years", "alias": "Adult"},
-        {"name": "Weight", "type": "Range", "minValue": 50, "maxValue": 100, "unit": "kg", "alias": "Absolute"}
-      ]
+      "category": {
+        "ageDivision": {
+          "id": "ADULT",
+          "minimalAge": 10,
+          "maximalAge": 150
+        },
+        "id": "category10",
+        "gender": "FEMALE",
+        "weight": {
+          "id": "Light",
+          "maxValue": 150,
+          "minValue": 10
+        },
+        "beltType": "BLACK",
+        "fightDuration": 10
+      }
     }
   ],
   "competitors": {

@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {
   ComponentCommonMetadataProvider,
@@ -12,7 +13,6 @@ import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
-import {selectedEvent} from "../../redux/event-manager-reducers";
 
 @Component({
   selector: 'app-event-properties-editor-container',
@@ -25,7 +25,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(selectedEvent.name()), filter(name => !!name),
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name),
         map(name => (<HeaderDescription>{
           header: 'Overview',
           subheader: name

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Category} from '../commons/model/competition.model';
+import {Category, displayCategory} from '../commons/model/competition.model';
 
 @Pipe({
   name: 'displayCategory'
@@ -7,7 +7,7 @@ import {Category} from '../commons/model/competition.model';
 export class DisplayCategoryPipe implements PipeTransform {
   transform(value?: Category): string {
     if (value) {
-      return 'temp';
+      return displayCategory(value);
     } else {
       return '';
     }
