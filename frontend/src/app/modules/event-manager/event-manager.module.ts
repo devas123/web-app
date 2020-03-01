@@ -76,6 +76,8 @@ import {GenerateBracketsFormComponent} from './components/generate-brackets-form
 import {NumberControlsComponent} from './components/scoreboard-component/number-controls.component';
 import {TimerComponent} from './components/scoreboard-component/timer-component';
 import {TimerControlsComponent} from './components/scoreboard-component/timer-controls.component';
+import {AddFightResultOptionFormComponent} from './components/generate-brackets-form/add-fight-result-option-form.component';
+import {AddInputSelectorFormComponent} from './components/generate-brackets-form/add-input-selector-form.component';
 
 @NgModule({
   imports: [
@@ -105,6 +107,7 @@ import {TimerControlsComponent} from './components/scoreboard-component/timer-co
     FightsEditorComponent,
     FightsEditorContainerComponent,
     AddSchedulePeriodFormComponent,
+    AddFightResultOptionFormComponent,
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,
@@ -151,9 +154,12 @@ import {TimerControlsComponent} from './components/scoreboard-component/timer-co
     NumberControlsComponent,
     TimerComponent,
     TimerControlsComponent,
-    FighterProfileComponent],
+    FighterProfileComponent,
+    AddInputSelectorFormComponent],
   providers: [EventManagerService],
   entryComponents: [
+    AddInputSelectorFormComponent,
+    AddFightResultOptionFormComponent,
     AddGroupFormComponent,
     AddPeriodFormComponent,
     SelectCategoriesModalComponent,

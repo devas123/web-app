@@ -3,7 +3,7 @@ import {RegistrationGroup} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
 
-export class AddGroupModal extends ComponentModalConfig<IAddGroupContext, IAddGroupResult, void> {
+export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
   constructor(periodId: string, competitionId: string, existingGroups: RegistrationGroup[], size = ModalSize.Small) {
     super(AddGroupFormComponent, {periodId, competitionId, existingGroups});
 
@@ -13,13 +13,13 @@ export class AddGroupModal extends ComponentModalConfig<IAddGroupContext, IAddGr
   }
 }
 
-export interface IAddGroupContext {
+export interface IAddRegistrationGroupContext {
   competitionId: string;
   periodId: string;
   existingGroups: RegistrationGroup[];
 }
 
-export interface IAddGroupResult {
+export interface IAddRegistrationGroupResult {
   createNew: boolean;
   competitionId: string;
   registrationInfoId: string;
@@ -110,7 +110,7 @@ export class AddGroupFormComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, public modal: SuiModal<IAddGroupContext, IAddGroupResult, void>) {
+  constructor(private fb: FormBuilder, public modal: SuiModal<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void>) {
   }
 
   ngOnInit() {

@@ -20,7 +20,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {SuiModalService} from 'ng2-semantic';
-import {AddGroupModal, IAddGroupResult} from '../../components/registration-info-editor/add-group-form.component';
+import {AddGroupModal, IAddRegistrationGroupResult} from '../../components/registration-info-editor/add-group-form.component';
 import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-info-editor/add-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -92,7 +92,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
     if (periodId) {
       this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
         this.modalService.open(new AddGroupModal(periodId, competitionId, groups.filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
-          .onApprove((result: IAddGroupResult) => this.addRegistrationInfoGroups(result))
+          .onApprove((result: IAddRegistrationGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {
           });
       })).subscribe();
@@ -106,7 +106,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       });
   }
 
-  addRegistrationInfoGroups(data: IAddGroupResult) {
+  addRegistrationInfoGroups(data: IAddRegistrationGroupResult) {
     if (data && data.groups && data.registrationInfoId) {
       this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.groups.map(gr => ({...gr, registrationInfoId: data.registrationInfoId}))));
     }

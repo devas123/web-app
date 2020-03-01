@@ -30,6 +30,7 @@ $item_color: #162830;
   background-color: $background_color;
 }
 
+
 .customcontainer {
   margin-bottom: 1rem;
   display: grid;
@@ -75,35 +76,66 @@ sui-select-option.item {
   border-radius: 0 !important;
 }
 
-input {
-  background-color: transparent !important;
-  color: $dialog_input_text_color !important;
-}
 
-.ui.search {
-  background-color: transparent;
-  color: $dialog_input_text_color !important;
-}
-
-.ui.input input {
-  background-color: transparent;
-  color: $dialog_input_text_color !important;
-}
-
+textarea, textarea:focus,
+input,
+.ui.input input:focus,
+.ui.search,
+.ui.selection.dropdown,
 .ui.input input:active,
-.ui.input.down input {
-  background-color: transparent;
+.ui.input.down input,
+.ui.input input {
+  background-color: $background_color;
   color: $dialog_input_text_color !important;
 }
 
-.ui.input input:focus {
-  background-color: transparent;
+.ui.form input:not([type]),
+.ui.form input[type="date"],
+.ui.form input[type="datetime-local"],
+.ui.form input[type="email"],
+.ui.form input[type="number"],
+.ui.form input[type="password"],
+.ui.form input[type="search"],
+.ui.form input[type="tel"],
+.ui.form input[type="time"],
+.ui.form input[type="text"],
+.ui.form input[type="file"],
+.ui.form input[type="url"] {
+  &.disabled {
+    background-color: transparent !important;
+  }
+
+
+  &:focus {
+    background-color: $background_color;
+    color: $dialog_input_text_color !important;
+  }
+  background-color: $background_color;
   color: $dialog_input_text_color !important;
 }
 
-.ui.selection.dropdown {
-  background-color: transparent;
-  color: $dialog_input_text_color !important;
+.ui.form .field.error input[type="text"] {
+  background-color: transparent !important;
+}
+
+.ui.form {
+    textarea, textarea:focus,
+  input,
+  .ui.input input:focus,
+  .ui.search,
+  .ui.selection.dropdown {
+    background-color: $background_color;
+    color: $dialog_input_text_color !important;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px black inset !important;
+    background-color: $background_color !important;
+    color: $dialog_input_text_color !important;
+  }
 }
 
 .cell_item {
@@ -115,9 +147,9 @@ input {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active  {
+input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px black inset !important;
-  background-color: transparent !important;
+  background-color: $background_color !important;
   color: $dialog_input_text_color !important;
 }
 

@@ -18,10 +18,12 @@ import {
   EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
+  EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
   EVENT_MANAGER_MOVE_COMPETITOR,
   EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
   eventManagerDefaultCategoriesLoaded,
+  eventManagerDefaultFightResultsLoaded,
   eventManagerDisconnectSocket,
   eventManagerFightsEditorChangesSubmitted,
   myCompetitionsLoaded
@@ -77,6 +79,22 @@ export class EventManagerEffects {
         , map(response => {
           if (response && response.constructor === Array) {
             return eventManagerDefaultCategoriesLoaded(action.competitionId, response);
+          } else {
+            return errorEvent(JSON.stringify(response));
+          }
+        }));
+    })));
+
+  loadDefaultFightResults$ = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS),
+    mergeMap((action: CommonAction) => {
+      return this.infoService.getDefaultFightResults(action.competitionId).pipe(catchError(error => {
+          console.log(error);
+          return observableOf(error);
+        })
+        , map(response => {
+          if (response && response.constructor === Array) {
+            return eventManagerDefaultFightResultsLoaded({competitionId: action.competitionId, fightResults: response});
           } else {
             return errorEvent(JSON.stringify(response));
           }

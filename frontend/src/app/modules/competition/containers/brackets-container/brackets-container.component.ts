@@ -1,16 +1,10 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {of, Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {map, take, withLatestFrom} from 'rxjs/operators';
-import {ActivatedRoute, Router} from '@angular/router';
-import {BreakpointObserver} from '@angular/cdk/layout';
 import {Category} from '../../../../commons/model/competition.model';
-import {
-  eventManagerCategoryBracketsStageSelected,
-  eventManagerCategorySelected,
-  eventManagerCategoryUnselected
-} from '../../../event-manager/redux/event-manager-actions';
+import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../../event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {CommonBracketsContainer} from '../../../../commons/classes/common-brackets-container.component';
 
@@ -23,15 +17,13 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
 
   private subs = new Subscription();
 
-  bracketsInfo: CommonBracketsContainer;
-
-
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
+  bucketSize$: Observable<number>;
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private router: Router,
-              private observer: BreakpointObserver) {
-    this.bracketsInfo = new CommonBracketsContainer(store, observer, 6, 2);
+  constructor(private store: Store<AppState>,
+              public bracketsInfo: CommonBracketsContainer) {
+    this.bucketSize$ = bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 6));
   }
 
   optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));

@@ -21,7 +21,7 @@ import {
   CompetitorsCollection,
   competitorsInitialState,
   Fight,
-  fightEntityAdapter,
+  fightEntityAdapter, FightResultOption,
   FightsEditorChange,
   fightsEditorChangeEntityAdapter,
   fightsEditorInitialState,
@@ -51,7 +51,7 @@ import {
   EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
-  EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED,
+  EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED, EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
   EVENT_MANAGER_FIGHTER_UNSELECTED,
@@ -95,6 +95,7 @@ export interface CompetitionState {
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventSchedule: Schedule;
   selectedEventDefaultCategories: Category[];
+  selectedEventDefaultFightResultOptions: FightResultOption[];
   competitionProperties: CompetitionProperties;
 }
 
@@ -128,6 +129,7 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventCompetitors: competitorsInitialState,
   selectedEventSchedule: scheduleInitialState,
   selectedEventDefaultCategories: [],
+  selectedEventDefaultFightResultOptions: [],
   competitionProperties: {}
 } as CompetitionState;
 
@@ -578,6 +580,14 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED: {
         if ((action.competitionId === state.competitionProperties.id) && action.payload) {
           state.selectedEventDefaultCategories = action.payload;
+        }
+        break;
+      }
+      case EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED: {
+        if (action.fightResults) {
+          state.selectedEventDefaultFightResultOptions = action.fightResults;
+        } else {
+          state.selectedEventDefaultFightResultOptions = [];
         }
         break;
       }

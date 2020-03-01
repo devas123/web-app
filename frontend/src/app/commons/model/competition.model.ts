@@ -151,7 +151,12 @@ export interface Academy {
   created: number;
 }
 
-export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION';
+export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION' | 'GROUP';
+
+export enum GroupSortSpecifier { 'DIRECT_FIGHT_RESULT', 'MANUAL', 'POINTS_DIFFERENCE', 'TOTAL_POINTS'}
+
+export enum GroupSortDirection {'DESC', 'ASC'}
+
 export type StageType = 'PRELIMINARY' | 'FINAL';
 
 export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
@@ -202,16 +207,37 @@ export interface CategoryBracketsStage {
   waitForPrevious: boolean;
   hasThirdPlaceFight: boolean;
   stageOrder: number;
-  pointsAssignments: PointsAssignment[];
   resultDescriptor: StageResult;
   inputDescriptor: StageInputDescriptor;
 }
 
-export interface PointsAssignment {
-  id: string;
-  classifier: string;
-  points: string;
-  additionalPoints: string;
+export enum OperatorType {
+  'EQUALS', 'IS_IN', 'LESS', 'GREATER', 'LEQ', 'GEQ'
+}
+
+export enum SelectorClassifier {
+  'FIRST_N_PLACES',
+  'LAST_N_PLACES',
+  'WINNER_OF_FIGHT',
+  'LOSER_OF_FIGHT',
+}
+
+export interface CompetitorSelector {
+   applyToStageNumber: string;
+   logicalOperator: string;
+   classifier: SelectorClassifier;
+   operator: OperatorType;
+   selectorValue: string[];
+}
+
+export interface FightResultOption {
+  description: string;
+  shortName: string;
+  draw: boolean;
+  winnerPoints: number;
+  winnerAdditionalPoints: number;
+  loserPoints: number;
+  loserAdditionalPoints: number;
 }
 
 interface CompetitorResult {
@@ -223,19 +249,18 @@ interface CompetitorResult {
   groupId: string;
 }
 
+export interface AdditionalGroupSortingDescriptor {
+  groupSortDirection: GroupSortDirection;
+  groupSortSpecifier: GroupSortSpecifier;
+}
+
 interface StageResult {
   id: string;
   name: string;
   competitorResults: CompetitorResult[];
-}
-
-interface CompetitorSelector {
-  id: string;
-  applyToStageId: string;
-  logicalOperator: string;
-  classifier: string;
-  operator: string;
-  selectorValue: string[];
+  fightResultOptions: FightResultOption[];
+  forceManualAssignment: boolean;
+  additionalGroupSortingDescriptors: AdditionalGroupSortingDescriptor[];
 }
 
 export interface StageInputDescriptor {
@@ -294,7 +319,7 @@ export interface EventManagerState {
 export interface PeriodProperties {
   id: string;
   name: string;
-  startTime: String;
+  startTime: string;
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
@@ -343,7 +368,7 @@ export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getIniti
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
-  selectedFightId: null,
+  selectedFightId: null
 });
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({

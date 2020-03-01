@@ -26,6 +26,7 @@ import {FightersEditorComponent} from '../components/fighters-editor/fighters-ed
 import {FightersContainerComponent} from '../components/fighters-container/fighters-container.component';
 import {BracketPartComponent} from '../components/brackets-editor/bracket/bracket-part.component';
 import {StageDisplayComponent} from '../components/stage-display/stage-display.component';
+import {TagListComponent} from '../components/tag-list/tag-list.component';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -33,14 +34,16 @@ import {StageDisplayComponent} from '../components/stage-display/stage-display.c
     ScheduleDisplayComponent,
     CategoryEditorComponent,
     FightersEditorComponent,
-    FightersContainerComponent, BracketPartComponent, StageDisplayComponent],
+    FightersContainerComponent, BracketPartComponent, StageDisplayComponent,
+    TagListComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
     CategoryEditorComponent,
     FightersEditorComponent,
     FightersContainerComponent,
-    StageDisplayComponent],
+    StageDisplayComponent,
+    TagListComponent],
   imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })
 export class CommonsModule {

@@ -14,7 +14,9 @@ import {
 } from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+import {Injectable} from '@angular/core';
 
+@Injectable()
 export class CommonBracketsContainer {
   competition$: Observable<CompetitionProperties>;
   stages$: Observable<CategoryBracketsStage[]>;
@@ -24,10 +26,10 @@ export class CommonBracketsContainer {
   category$: Observable<Category>;
   categories$: Observable<Category[]>;
   numberOfCompetitor$: Observable<number>;
-  bucketsize$: Observable<number>;
+  bucketsize$: Observable<boolean>;
   changeFightsIds$: Observable<string[]>;
 
-  constructor(private store: Store<AppState>, private observer: BreakpointObserver, bigscrenColumns: number = 4, smallScreenColumns: number = 2) {
+  constructor(private store: Store<AppState>, private observer: BreakpointObserver) {
     this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
@@ -37,7 +39,7 @@ export class CommonBracketsContainer {
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.numberOfCompetitor$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));
     this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
-      map(b => b.matches ? smallScreenColumns : bigscrenColumns)
+      map(b => b.matches)
     );
     this.changeFightsIds$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds));
   }

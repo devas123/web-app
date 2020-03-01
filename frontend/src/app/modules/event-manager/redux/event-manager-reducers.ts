@@ -134,6 +134,7 @@ export const EVENT_MANAGER_REDUCERS: InjectionToken<ActionReducerMap<EventManage
 
 export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
 export const eventManagerGetSelectedEventDefaultCategories = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories);
+export const eventManagerGetSelectedEventDefaultFightResults = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultFightResultOptions);
 
 export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventProperties, event => event && event.registrationInfo);
 export const eventManagerGetSelectedEventRegistrationPeriods = createSelector(eventManagerGetSelectedEventRegistrationInfo, registrationInfo => registrationInfo && registrationInfo.registrationPeriods || []);

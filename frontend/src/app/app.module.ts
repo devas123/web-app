@@ -29,6 +29,7 @@ import {HotkeyModule} from 'angular2-hotkeys';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
 import {MiscEffects} from './effects/misc';
+import {CommonBracketsContainer} from './commons/classes/common-brackets-container.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import {MiscEffects} from './effects/misc';
     HttpAuthService,
     AccountService,
     SignUpGuard,
-    AuthGuard
+    AuthGuard,
+    CommonBracketsContainer
   ],
   bootstrap: [AppComponent]
 })
