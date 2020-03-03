@@ -85,7 +85,7 @@ export interface ScheduleEntry {
 export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
 
 export interface FightResult {
-  resultType: CompetitorResultType;
+  resultTypeId: String;
   winnerId: string;
   reason: string;
 }
@@ -93,62 +93,62 @@ export interface FightResult {
 export interface Competitor {
   id: string;
   email: string;
-  userId: string;
+  userId?: string;
   firstName: string;
   lastName: string;
-  birthDate: Date;
-  academy: Academy;
+  birthDate: Date | string;
+  academy?: Academy;
   categories: string[];
   competitionId: string;
   registrationStatus: string;
-  promo: string;
+  promo?: string;
 }
 
 export interface Score {
   advantages: number;
   points: number;
   penalties: number;
-  competitorId: string;
 }
 
 export interface CompScore {
-  id: string;
   competitor: Competitor;
   score: Score;
+  order?: number;
 }
 
-export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS';
+export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS' | 'GROUP';
 
 export interface Fight {
   fightName: string;
   id: string;
-  category: Category;
-  parentId1: string;
-  parentId2: string;
-  winFight: string;
-  loseFight: string;
+  categoryId: string;
+  category ?: Category;
+  parentId1?: string;
+  parentId2?: string;
+  winFight?: string;
+  loseFight?: string;
   competitionId: string;
-  internalId: string;
   duration: number;
   scores: CompScore[];
   round: number;
   roundType: RoundType;
   status: string;
-  fightResult: FightResult;
-  timeToStart: boolean;
+  fightResult?: FightResult;
   numberInRound: number;
-  mat: MatDescription;
-  numberOnMat: number;
+  mat?: MatDescription;
+  numberOnMat?: number;
   priority: number;
-  period: string;
-  startTime: Date;
+  period?: string;
+  stageId: string;
+  groupId: string;
+  startTime?: Date;
 }
 
 export interface Academy {
   id: string;
   name: string;
-  coaches: string[];
-  created: number;
+  coaches?: string[];
+  created?: number;
 }
 
 export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION' | 'GROUP';

@@ -1,3 +1,8 @@
+<ng-container *ngIf="bracketsType==='GROUP'">
+  <app-group-display [stageType]="stageType"
+                     [bracketsType]="bracketsType"
+                     [fights]="_mockFights"></app-group-display>
+</ng-container>
 <ng-container *ngIf="bracketsType==='SINGLE_ELIMINATION'">
   <app-bracket-part [editMode]="editMode" [isLoserBracket]="false" [bucketsize]="bucketsize"
                     [changeFightsIds]="changeFightsIds" [fights]="_fights"
@@ -16,7 +21,8 @@
                     [stageType]="stageType"
                     (fightSelected)="addFightToCurrentChange($event)"></app-bracket-part>
   <app-bracket-part *ngIf="!showUpperBrackets" [editMode]="editMode" [isLoserBracket]="true" [bucketsize]="bucketsize"
-                    [changeFightsIds]="changeFightsIds" [fights]="_loserFights" [losersFirstRoundSizeInFights]="getWInnerFightsLength()"
+                    [changeFightsIds]="changeFightsIds" [fights]="_loserFights"
+                    [losersFirstRoundSizeInFights]="getWInnerFightsLength()"
                     [rowWidthPx]="rowWidthPx"
                     [stageType]="stageType"
                     (fightSelected)="addFightToCurrentChange($event)"></app-bracket-part>

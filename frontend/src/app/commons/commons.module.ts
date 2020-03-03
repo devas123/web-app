@@ -13,13 +13,7 @@ import {BracketComponent} from '../components/brackets-editor/bracket/bracket.co
 import {BracketRoundComponent} from '../components/brackets-editor/bracketround/bracketround.component';
 import {ScheduleDisplayComponent} from '../components/schedule-display/schedule-display.component';
 import {CommonModule} from '@angular/common';
-import {
-  SuiAccordionModule,
-  SuiCheckboxModule,
-  SuiCollapseModule,
-  SuiPaginationModule,
-  SuiPopupModule
-} from 'ng2-semantic';
+import {SuiAccordionModule, SuiCheckboxModule, SuiCollapseModule, SuiPaginationModule, SuiPopupModule} from 'ng2-semantic';
 import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
 import {RouterModule} from '@angular/router';
 import {FightersEditorComponent} from '../components/fighters-editor/fighters-editor.component';
@@ -27,6 +21,8 @@ import {FightersContainerComponent} from '../components/fighters-container/fight
 import {BracketPartComponent} from '../components/brackets-editor/bracket/bracket-part.component';
 import {StageDisplayComponent} from '../components/stage-display/stage-display.component';
 import {TagListComponent} from '../components/tag-list/tag-list.component';
+import {CommonFightsEditorComponent} from '../components/brackets-editor/common-fights-editor.component';
+import {GroupDisplayComponent} from '../components/brackets-editor/group-display/group-display.component';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -35,7 +31,9 @@ import {TagListComponent} from '../components/tag-list/tag-list.component';
     CategoryEditorComponent,
     FightersEditorComponent,
     FightersContainerComponent, BracketPartComponent, StageDisplayComponent,
-    TagListComponent],
+    TagListComponent,
+    CommonFightsEditorComponent,
+    GroupDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
@@ -43,7 +41,9 @@ import {TagListComponent} from '../components/tag-list/tag-list.component';
     FightersEditorComponent,
     FightersContainerComponent,
     StageDisplayComponent,
-    TagListComponent],
+    TagListComponent,
+    CommonFightsEditorComponent,
+    GroupDisplayComponent],
   imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })
 export class CommonsModule {
