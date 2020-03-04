@@ -160,11 +160,11 @@ export class AddFightResultOptionFormComponent implements OnInit {
     return this.fb.group({
       description: [''],
       shortName: ['', [Validators.required, Validators.maxLength(10)]],
-      draw: [''],
-      winnerPoints: ['', [Validators.max(10)]],
-      winnerAdditionalPoints: ['', [Validators.max(10)]],
-      loserPoints: ['', [Validators.max(10)]],
-      loserAdditionalPoints: ['', [Validators.max(10)]]
+      draw: [false],
+      winnerPoints: [0, [Validators.max(10)]],
+      winnerAdditionalPoints: [0, [Validators.max(10)]],
+      loserPoints: [0, [Validators.max(10)]],
+      loserAdditionalPoints: [0, [Validators.max(10)]]
     });
   }
 }

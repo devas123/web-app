@@ -186,6 +186,6 @@ export class AddInputSelectorFormComponent implements OnInit {
   }
 
   addSelectorValue(i: number) {
-    this.getSelectorValue(i).push(this.fb.control(['']));
+    this.getSelectorValue(i).push(this.fb.control(''));
   }
 }

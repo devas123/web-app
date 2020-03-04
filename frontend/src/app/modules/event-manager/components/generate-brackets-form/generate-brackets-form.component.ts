@@ -1,14 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {
-  AdditionalGroupSortingDescriptor,
-  BracketsType,
-  CategoryBracketsStage,
-  CompetitorSelector,
-  FightResultOption,
-  GroupSortDirection,
-  GroupSortSpecifier,
-  StageInputDescriptor
-} from '../../../../commons/model/competition.model';
+import {AdditionalGroupSortingDescriptor, BracketsType, CategoryBracketsStage, CompetitorSelector, FightResultOption, GroupSortDirection, GroupSortSpecifier} from '../../../../commons/model/competition.model';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import produce from 'immer';
 import {SuiModalService} from 'ng2-semantic';
@@ -22,6 +13,7 @@ import {AddInputSelectorFormModal} from './add-input-selector-form.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenerateBracketsFormComponent implements OnInit {
+
   @Input()
   set smallScreen(value: boolean) {
     if (!value) {
@@ -84,14 +76,15 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   stageDescriptionConfig = (index: number) => this.fb.group({
+    fightResults: [null],
     stageType: ['', [Validators.required]],
     bracketType: ['', [Validators.required]],
     name: [''],
-    waitForPrevious: [''],
-    forceManualAssignment: [''],
-    hasThirdPlaceFight: [''],
+    waitForPrevious: [true],
+    forceManualAssignment: [false],
+    hasThirdPlaceFight: [false],
     inputDescriptor: this.fb.group({
-      numberOfCompetitors: [{value: index === 0 ? this.competitorsSize : '', disabled: index === 0}, [Validators.max(this._competitorsSize)]]
+      numberOfCompetitors: [{value: index === 0 ? this.competitorsSize : 0, disabled: index === 0}, [Validators.max(this._competitorsSize)]]
     }),
     groupDescriptors: this.fb.array([
       this.groupDescriptorConfig()
@@ -99,7 +92,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   });
 
   groupDescriptorConfig = () => this.fb.group({
-    size: ['', [Validators.required,
+    size: [0, [Validators.required,
       Validators.max(this.competitorsSize)]],
     name: ['']
   });
@@ -185,6 +178,10 @@ export class GenerateBracketsFormComponent implements OnInit {
     this.setStageControlValue(i, {forceManualAssignment: $event});
   }
 
+  getForceManualAssignment(i: number) {
+    return this.stageDescriptions.at(i).get('forceManualAssignment').value || false;
+  }
+
   setBracketsType(i: number, $event: BracketsType) {
     this.setStageControlValue(i, {bracketType: $event});
   }
@@ -200,18 +197,30 @@ export class GenerateBracketsFormComponent implements OnInit {
 
   doGenerateStages() {
     const formValue = this.stageDescriptions.value as CategoryBracketsStage[];
-    this.generateStages.next(formValue.map((value, index) => produce(value, draft => {
+    const fightResultOptions = this._fightResultOptions;
+    const additionalGroupSortings = this._additionalGroupSorting;
+    const competitorSelectors = this._additionalCompetitorSelector;
+    const stages = formValue.map((value, index) => produce(value, draft => {
       draft.stageOrder = index;
       if (index === 0) {
         draft.stageType = 'PRELIMINARY';
-        draft.inputDescriptor = {numberOfCompetitors: this._competitorsSize} as StageInputDescriptor;
       }
       if (index === formValue.length - 1) {
         draft.stageType = 'FINAL';
-      } else {
-        draft.hasThirdPlaceFight = false;
       }
-    })));
+      if (draft.inputDescriptor) {
+        draft.inputDescriptor.selectors = competitorSelectors[index];
+      } else {
+        draft.inputDescriptor = { numberOfCompetitors: this._competitorsSize, selectors: competitorSelectors[index] };
+      }
+      draft.resultDescriptor = {
+        id: '',
+        forceManualAssignment: this.getForceManualAssignment(index),
+        additionalGroupSortingDescriptors: additionalGroupSortings[index],
+        fightResultOptions: [...this.getFightResultOptions(index), ...(fightResultOptions[index] || [])]
+      };
+    }));
+    this.generateStages.next(stages);
   }
 
   removeAdditionalCompetitorSelector(i: number, k: number) {
@@ -234,9 +243,14 @@ export class GenerateBracketsFormComponent implements OnInit {
       this._additionalGroupSorting[i].push(<AdditionalGroupSortingDescriptor>{groupSortSpecifier: specifier, groupSortDirection: direction});
     }
   }
+
   compSelectorFormatter = (opt: CompetitorSelector) => `${opt.logicalOperator} in stage ${opt.applyToStageNumber + 1} ${opt.classifier} ${opt.operator} ${opt.selectorValue.join()}`;
   // tslint:disable-next-line:triple-equals
   // @ts-ignore
   // tslint:disable-next-line:triple-equals
   additionalGroupSortingFormatter = (opt: AdditionalGroupSortingDescriptor) => opt.groupSortSpecifier + (opt.groupSortSpecifier == 'MANUAL' ? '' : (':' + opt.groupSortDirection));
+
+  private getFightResultOptions(index: number) {
+    return (this.stageDescriptions.at(index).get('fightResults').value || []) as FightResultOption[];
+  }
 }

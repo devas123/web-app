@@ -23,6 +23,7 @@ import {StageDisplayComponent} from '../components/stage-display/stage-display.c
 import {TagListComponent} from '../components/tag-list/tag-list.component';
 import {CommonFightsEditorComponent} from '../components/brackets-editor/common-fights-editor.component';
 import {GroupDisplayComponent} from '../components/brackets-editor/group-display/group-display.component';
+import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/group-display/multiple-groups-display';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -33,7 +34,8 @@ import {GroupDisplayComponent} from '../components/brackets-editor/group-display
     FightersContainerComponent, BracketPartComponent, StageDisplayComponent,
     TagListComponent,
     CommonFightsEditorComponent,
-    GroupDisplayComponent],
+    GroupDisplayComponent,
+    MultipleGroupsDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
@@ -43,7 +45,8 @@ import {GroupDisplayComponent} from '../components/brackets-editor/group-display
     StageDisplayComponent,
     TagListComponent,
     CommonFightsEditorComponent,
-    GroupDisplayComponent],
+    GroupDisplayComponent,
+    MultipleGroupsDisplayComponent],
   imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })
 export class CommonsModule {

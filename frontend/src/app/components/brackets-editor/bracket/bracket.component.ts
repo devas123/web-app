@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {BracketsType, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
-import {mockData} from '../group-display/mockdata';
 
 @Component({
   selector: 'app-bracket',
@@ -23,7 +22,6 @@ export class BracketComponent extends CommonFightsEditorComponent implements OnI
   @Input()
   bucketsize = 3;
 
-  _mockFights = mockData;
   _fights: Fight[];
   _loserFights: Fight[];
 

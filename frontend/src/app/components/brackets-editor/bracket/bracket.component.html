@@ -1,7 +1,10 @@
 <ng-container *ngIf="bracketsType==='GROUP'">
-  <app-group-display [stageType]="stageType"
-                     [bracketsType]="bracketsType"
-                     [fights]="_mockFights"></app-group-display>
+  <app-multiple-groups-display [stageType]="stageType"
+                               [bracketsType]="bracketsType"
+                               [fights]="_fights"
+                               (fightSelected)="fightSelected.next($event)"
+                               [editMode]="editMode"
+                               [changeFightsIds]="changeFightsIds"></app-multiple-groups-display>
 </ng-container>
 <ng-container *ngIf="bracketsType==='SINGLE_ELIMINATION'">
   <app-bracket-part [editMode]="editMode" [isLoserBracket]="false" [bucketsize]="bucketsize"

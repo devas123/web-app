@@ -31,7 +31,7 @@
               </sui-select-option>
             </sui-select>
           </div>
-          <ng-container *ngIf="getBracketsType(i) !== 'GROUP'">
+          <ng-container *ngIf="getBracketsType(i) !== 'GROUP' || i > 0">
             <div class="ui field">
               <input class="ui input" type="text" placeholder="Stage name." formControlName="name"/>
             </div>
@@ -100,6 +100,7 @@
                   [optionFormatter]="formatter"
                   [maxSelected]="10"
                   placeholder="Select fight results to add"
+                  formControlName="fightResults"
                   #select>
                   <div class="ui icon search input">
                     <i class="search icon"></i>

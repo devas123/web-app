@@ -22,7 +22,7 @@ import {PeriodsManagementContainerComponent} from './containers/periods-manageme
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {FightersContainerComponent} from '../../components/fighters-container/fighters-container.component';
-import {CompetitionInfoEditorContainerComponent} from "./containers/competition-info-editor-container/competition-info-editor-container.component";
+import {CompetitionInfoEditorContainerComponent} from './containers/competition-info-editor-container/competition-info-editor-container.component';
 
 export const eventManagerRoutes: Routes = [
   {

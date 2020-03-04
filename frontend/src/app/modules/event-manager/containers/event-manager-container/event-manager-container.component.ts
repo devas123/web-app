@@ -17,27 +17,25 @@ import {selectUser} from '../../../competition/redux/reducers';
 @Component({
   selector: 'app-event-manager-container',
   template: `
-      <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
-          <div class="ui medium text loader">
-              Connecting to server.
-              <p></p>
-              <button class="ui button" (click)="cancelConnect()">Cancel</button>
+    <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
+      <div class="ui medium text loader">
+        Connecting to server.
+        <p></p>
+        <button class="ui button" (click)="cancelConnect()">Cancel</button>
+      </div>
+    </sui-dimmer>
+    <p></p>
+    <ng-container *ngIf="socketConnected$ | async">
+      <div class="event_manager_container">
+        <div class="event_manager_header" app-dynamic-header [hederDescription]="header$ | async"></div>
+        <div class="menu_row">
+          <app-eventmanager-menu *ngIf="(displayAsSidebar$ | async) !== true" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
+          <div appFlexCol [shrink]="shrinkMainContent$ | async" id="maincontent">
+            <router-outlet></router-outlet>
           </div>
-      </sui-dimmer>
-      <p></p>
-      <ng-container *ngIf="socketConnected$ | async">
-          <div class="ui grid container">
-              <div class="row">
-                  <div class="column" app-dynamic-header [hederDescription]="header$ | async"></div>
-              </div>
-              <div class="row">
-                  <app-eventmanager-menu *ngIf="(displayAsSidebar$ | async) !== true" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
-                  <div app-flex-col [shrink]="shrinkMainContent$ | async" id="maincontent">
-                      <router-outlet></router-outlet>
-                  </div>
-              </div>
-          </div>
-      </ng-container>
+        </div>
+      </div>
+    </ng-container>
   `
 })
 export class EventManagerContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {

@@ -113,6 +113,7 @@ export interface Score {
 export interface CompScore {
   competitor: Competitor;
   score: Score;
+  placeholderId?: string;
   order?: number;
 }
 
@@ -254,20 +255,20 @@ export interface AdditionalGroupSortingDescriptor {
   groupSortSpecifier: GroupSortSpecifier;
 }
 
-interface StageResult {
+export interface StageResult {
   id: string;
-  name: string;
-  competitorResults: CompetitorResult[];
-  fightResultOptions: FightResultOption[];
-  forceManualAssignment: boolean;
-  additionalGroupSortingDescriptors: AdditionalGroupSortingDescriptor[];
+  name?: string;
+  competitorResults?: CompetitorResult[];
+  fightResultOptions?: FightResultOption[];
+  forceManualAssignment?: boolean;
+  additionalGroupSortingDescriptors?: AdditionalGroupSortingDescriptor[];
 }
 
 export interface StageInputDescriptor {
-  selectors: CompetitorSelector[];
-  distributionType: string;
+  selectors?: CompetitorSelector[];
+  distributionType?: string;
   numberOfCompetitors: number;
-  id: string;
+  id?: string;
 }
 
 export interface CategoryBracketsStageCollection extends EntityState<CategoryBracketsStage> {
