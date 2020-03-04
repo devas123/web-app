@@ -8,7 +8,6 @@ import {CompetitionMainInfoComponent} from './components/competition-main-info/c
 import {ScheduleContainerComponent} from './containers/schedule-container/schedule-container.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 import {CategoryInfoContainerComponent} from './containers/category-info-container/category-info-container.component';
-import {CmpRegistrationComponent} from './components/cmp-registration/cmp-registration.component';
 
 
 export const compRoutes: Routes = [
@@ -50,10 +49,6 @@ export const compRoutes: Routes = [
         path: '',
         pathMatch: 'full',
         redirectTo: 'info'
-      },
-      {
-        path: 'cmpreg',
-        component: CmpRegistrationComponent,
       }
     ]
   }

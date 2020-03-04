@@ -1,0 +1,25 @@
+<div class="group_fights_container">
+  <div class="fights_line" [ngStyle]="ngStyle">
+    <div class="fight_cell black">{{ groupName || 'Group' }}</div>
+    <div class="fight_cell black centered"
+         *ngFor="let competitorId of _competitorIds; index as i">
+      <a class="ui grey circular label">{{i + 1}}</a>
+    </div>
+  </div>
+  <div class="fights_line" [ngStyle]="ngStyle" *ngFor="let competitorId of _competitorIds; index as i">
+    <div class="competitor_cell">
+      <div>
+        <a
+          class="ui grey circular label">{{i + 1}}</a>
+      </div>
+      <div class="competitor_cell_name">
+        <div>{{_competitorsDictionary[competitorId].firstName}}</div>
+        <div>{{_competitorsDictionary[competitorId].lastName}}</div>
+        <div class="academy">{{_competitorsDictionary[competitorId]?.academy?.name}}</div>
+      </div>
+    </div>
+    <div class="fight_cell centered" [ngClass]="{black: k === i}"
+         *ngFor="let fight of _fightsPerCompetitor[competitorId]; index as k"
+         [innerHTML]="k === i ? '' : displayFight(fight, competitorId)"></div>
+  </div>
+</div>

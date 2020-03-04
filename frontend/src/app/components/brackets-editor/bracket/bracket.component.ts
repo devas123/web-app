@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {BracketsType, Fight, StageType} from '../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {BracketsType, Fight} from '../../../commons/model/competition.model';
+import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 
 @Component({
   selector: 'app-bracket',
@@ -7,16 +8,7 @@ import {BracketsType, Fight, StageType} from '../../../commons/model/competition
   styleUrls: ['./bracket.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BracketComponent implements OnInit, OnDestroy {
-
-  @Input()
-  stageType: StageType;
-
-  @Input()
-  editMode = false;
-
-  @Input()
-  changeFightsIds: string[];
+export class BracketComponent extends CommonFightsEditorComponent implements OnInit, OnDestroy {
 
   @Input()
   set fights(fights: Fight[]) {
@@ -35,15 +27,7 @@ export class BracketComponent implements OnInit, OnDestroy {
 
   public rowWidthPx = 180;
 
-  @Output()
-  fightSelected = new EventEmitter<string>();
   showUpperBrackets = true;
-
-  addFightToCurrentChange(fight: string) {
-    if (this.editMode && fight) {
-      this.fightSelected.next(fight);
-    }
-  }
 
   ngOnDestroy(): void {
   }

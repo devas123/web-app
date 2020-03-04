@@ -7,7 +7,10 @@ import {
   getSelectedEventProperties
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {selectedEvent
+import {
+  eventManagerGetSelectedEventDefaultCategories,
+  eventManagerGetSelectedEventName,
+  getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
 import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -30,12 +33,23 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
   selector: 'app-category-editor-container',
-  template: `    
+  template: `
+    <ng-template #search>
+      <div class="item">
+        <div class="ui icon search input">
+          <i class="search icon"></i>
+          <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
+        </div>
+      </div>
+    </ng-template>
     <div class="ui container">
-      <app-category-editor [categories]="categories$"
+      <app-category-editor [categories]="categories$ | async"
+                           [searchString]="searchString$ | async"
+                           [defaultCategories]="defaultCategories$ | async"
                            [competition]="competition$ | async"
                            (categoryEditorClicked)="navigateToCategoryEditor($event)"
                            (createCustomCategoryClicked)="addCategory()"
+                           (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
                            (deleteCategoryEvent)="doDeleteCategory($event)"
                            (generateRandomFightersEvent)="generateRandomFighters($event)"
                            (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>
@@ -57,7 +71,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, public modalService: SuiModalService, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(selectedEvent.name()), filter(name => !!name), take(1), map(name => <HeaderDescription>{
+      header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
         header: 'Categories',
         subheader: name
       })),
@@ -67,7 +81,11 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
           action: () => this.router.navigate(['..'], {relativeTo: this.route})
         },
         {
-          name: 'Categories constructor',
+          name: 'Select categories',
+          action: () => this.openModal()
+        },
+        {
+          name: 'Create manually',
           action: () => this.addCategory()
         },
         {
@@ -77,15 +95,16 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
       ]
     }, menuService);
     this.competition$ = store.pipe(select(getSelectedEventProperties));
-    this.catState$ = store.pipe(select(selectedEvent.selectedCategory.state()));
-    this.defaultCategories$ = store.pipe(select(selectedEvent.defaultCategories()));
+    this.catState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
+    this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
   }
 
   openModal() {
     combineLatest([this.categories$, this.competition$]).pipe(filter(([cats, competition]) => !!cats && !!competition),
       take(1),
       map(([categories, competition]) =>
-        this.modalService.open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
+        this.modalService
+          .open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
             return !categories.find(value => cat.id === value.id);
           }))), competition))
           .onApprove((result: ISelectCategoriesResult) => {
@@ -104,7 +123,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   addCategory() {
-    this.router.navigate(['constructor'], {relativeTo: this.route}).catch(console.error);
+    this.router.navigate(['create'], {relativeTo: this.route}).catch(console.error);
   }
 
   doDeleteCategory({category, competitionId}) {

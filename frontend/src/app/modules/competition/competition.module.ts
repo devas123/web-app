@@ -4,7 +4,7 @@ import {RegistrationService} from './service/registration.service';
 import {CompetitorsEffects, FightsEffects} from './redux/effects';
 import {RouterModule} from '@angular/router';
 import {compRoutes} from './competition.routes';
-import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTabsModule, SuiTransitionModule} from 'ng2-semantic';
+import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTransitionModule} from 'ng2-semantic';
 import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -23,9 +23,6 @@ import {EventCalendarComponent} from './components/event-calendar/event-calendar
 import {FightersDisplayContainerComponent} from './containers/fighters-display-container/fighters-display-container.component';
 import {ScheduleContainerComponent} from './containers/schedule-container/schedule-container.component';
 import {CategoryInfoContainerComponent} from './containers/category-info-container/category-info-container.component';
-import { CmpRegistrationComponent } from './components/cmp-registration/cmp-registration.component';
-import {CreateCategoryComponent} from '../event-manager/components/create-category/create-category.component';
-import {EventManagerModule} from '../event-manager/event-manager.module';
 
 @NgModule({
   imports: [
@@ -39,8 +36,7 @@ import {EventManagerModule} from '../event-manager/event-manager.module';
     SuiTransitionModule,
     NgxMdModule,
     SuiSelectModule,
-    SuiDimmerModule,
-    SuiTabsModule
+    SuiDimmerModule
   ],
   declarations: [
     CompetitionMainInfoComponent,
@@ -49,8 +45,7 @@ import {EventManagerModule} from '../event-manager/event-manager.module';
     EventCardComponent, EventListComponent, EventCalendarComponent,
     FightersDisplayContainerComponent,
     ScheduleContainerComponent,
-    CategoryInfoContainerComponent,
-    CmpRegistrationComponent],
+    CategoryInfoContainerComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]
 })
 export class CompetitionModule {

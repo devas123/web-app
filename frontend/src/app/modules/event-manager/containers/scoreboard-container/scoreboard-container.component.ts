@@ -18,12 +18,12 @@ import {
   dashboardFightUnselected,
   dashboardSetFightResultCommand
 } from '../../redux/dashboard-actions';
+import {eventManagerGetSelectedEventCategory} from '../../redux/event-manager-reducers';
 import {
   ComponentCommonMetadataProvider,
   EventManagerRouterEntryComponent
 } from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {selectedEvent} from "../../redux/event-manager-reducers";
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
@@ -76,10 +76,10 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
       select(dashboardGetSelectedPeriodSelectedMatSelectedFight)
     );
 
-    this.fightCategory$ = <Observable<Category>>this.selectedFight$.pipe(
+    this.fightCategory$ = this.selectedFight$.pipe(
       filter(f => !!f),
       mergeMap(fight => this.store.pipe(
-        select(selectedEvent.categoriesCollection.category(), {id: fight.category.id}))
+        select(eventManagerGetSelectedEventCategory, {id: fight.category.id}))
       ),
       tap(cat => console.log(cat)));
   }

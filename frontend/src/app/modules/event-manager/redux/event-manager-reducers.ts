@@ -2,9 +2,9 @@ import {
   CommonAction,
   CompetitionProperties,
   competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState, CompetitionState,
+  competitionPropertiesEntitiesInitialState,
   EventPropsEntities, getSelectedEventProperties,
-  getSelectedEventState, RegistrationInfo, Schedule
+  getSelectedEventState
 } from '../../../reducers/global-reducers';
 import {
   COMPETITION_CREATED,
@@ -16,12 +16,11 @@ import {
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED
 } from './event-manager-actions';
-import {ActionReducerMap, createSelector, Selector, SelectorWithProps} from '@ngrx/store';
+import {ActionReducerMap, createSelector} from '@ngrx/store';
 import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
 import {
-  CategoriesCollection,
-  categoriesInitialState, Category, CategoryBracketsStageCollection,
-  categoryEntityAdapter, CategoryState,
+  categoriesInitialState,
+  categoryEntityAdapter,
   competitorEntityAdapter,
   competitorsInitialState,
   EventManagerState,
@@ -133,68 +132,84 @@ export const EVENT_MANAGER_REDUCERS: InjectionToken<ActionReducerMap<EventManage
     factory: eventManagerReducers
   });
 
-
-export const createNestedSelector = (basicSelector: () => any, nestedSelectors: any) => Object.assign(basicSelector, nestedSelectors);
-
-
-export let selectedEvent = {
-  properties: () => createSelector(getSelectedEventState, state => state && state.competitionProperties),
-  defaultCategories: () => createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories),
-  timeZone: () => createSelector(selectedEvent.properties(), (event: CompetitionProperties) => event && event.timeZone),
-  name: () => createSelector(selectedEvent.properties(), (event: CompetitionProperties) => event && event.competitionName),
-  schedule: () => createSelector(getSelectedEventState, state => state && state.selectedEventSchedule),
-
-  registrationInfo: createNestedSelector(() => createSelector(selectedEvent.properties(), (event: CompetitionProperties) => event && event.registrationInfo),
-    {
-      registrationPeriods: () => createSelector(selectedEvent.registrationInfo(), (registrationInfo: RegistrationInfo) => registrationInfo && registrationInfo.registrationPeriods || []),
-      availableRegistrationGroups: () => createSelector(selectedEvent.registrationInfo(), (registrationInfo: RegistrationInfo) => registrationInfo && registrationInfo.registrationGroups)
-    }),
-
-  categoriesCollection: createNestedSelector(() => createSelector(getSelectedEventState, state => (state && state.selectedEventCategories) || categoriesInitialState),
-    {
-      allCategories: () => categoryEntityAdapter.getSelectors(selectedEvent.categoriesCollection()).selectAll,
-      categoriesDictionary: () => categoryEntityAdapter.getSelectors(selectedEvent.categoriesCollection()).selectEntities,
-      category: () => createSelector(selectedEvent.categoriesCollection.categoriesDictionary(), (dict, props) : Category => props.id && dict[props.id]),
-      selectedCategoryId: () => createSelector(selectedEvent.categoriesCollection(), (cats: CategoriesCollection) => cats.selectedCategoryId),
-    }),
-
-  selectedCategory: createNestedSelector(() => createSelector(selectedEvent.categoriesCollection.categoriesDictionary(), selectedEvent.categoriesCollection.selectedCategoryId(),
-    (entities, selectedId: string) => selectedId && entities[selectedId]),
-    {
-      state: () => createSelector(selectedEvent.categoriesCollection(), (cats: CategoriesCollection) => cats.selectedCategoryState),
-      startTime: () => createSelector(selectedEvent.selectedCategory.schedule(), selectedEvent.categoriesCollection.selectedCategoryId(), (schedule: Schedule, categoryId) => {
-        if (schedule && categoryId && schedule.periods) {
-          const categories = schedule.periods.map(value => value.schedule).reduce((previousValue, currentValue) => [...previousValue, ...currentValue], []);
-          const entry = categories.find(value => value.categoryId === categoryId);
-          return entry && entry.startTime;
-        }
-      }),
-
-      selectedStage: createNestedSelector(() => createSelector(selectedEvent.categoriesCollection.selectedCategory.selectedStageId(), selectedEvent.categoriesCollection.selectedCategory.stagesDictionary(),
-        (stageId: number, stages: CategoriesCollection) => stageId && stages[stageId]),
-        {
-          id: () => createSelector(selectedEvent.categoriesCollection.selectedCategory.stagesCollection(), (stages: CategoryBracketsStageCollection) => stages.selectedStageId),
-          fightsCollection: () => createSelector(selectedEvent.selectedCategory.stagesCollection(), (stage: CategoryBracketsStageCollection) => (stage && stage.selectedStageFights) || fightsInitialState),
-          allFights: () => fightEntityAdapter.getSelectors(selectedEvent.selectedCategory.selectedStage.fightsCollection()).selectAll,
-          fightsEntities: () => fightEntityAdapter.getSelectors(selectedEvent.selectedCategory.selectedStage.fightsCollection()).selectEntities,
-        }),
-
-      stagesCollection: () => createSelector(selectedEvent.categoriesCollection(), (cats: CategoriesCollection) => cats.selectedCategoryStages),
-      selectedStageId: () => createSelector(selectedEvent.categoriesCollection.selectedCategory.stagesCollection(), (stages: CategoryBracketsStageCollection) => stages.selectedStageId),
-      numberOfCompetitors: () => createSelector(selectedEvent.categoriesCollection.selectedCategory.state(), (state: CategoryState) => state && state.numberOfCompetitors),
-      stagesDictionary: () => stagesEntityAdapter.getSelectors(selectedEvent.categoriesCollection.selectedCategory.stagesCollection()).selectEntities,
-      selectedStages: () => stagesEntityAdapter.getSelectors(selectedEvent.categoriesCollection.selectedCategory.stagesCollection()).selectAll,
-      stateLoading: () => createSelector(selectedEvent.categoriesCollection(), (category: CategoriesCollection) => category && category.categoryStateLoading)
-    }),
-
-};
-
-
 export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
+export const eventManagerGetSelectedEventDefaultCategories = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultCategories);
+export const eventManagerGetSelectedEventDefaultFightResults = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultFightResultOptions);
+
+export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventProperties, event => event && event.registrationInfo);
+export const eventManagerGetSelectedEventRegistrationPeriods = createSelector(eventManagerGetSelectedEventRegistrationInfo, registrationInfo => registrationInfo && registrationInfo.registrationPeriods || []);
+export const eventManagerGetSelectedEventTimeZone = createSelector(getSelectedEventProperties, event => event && event.timeZone);
+
+export const eventManagerGetSelectedEventName = createSelector(getSelectedEventProperties, event => event && event.competitionName);
+
+export const getSelectedEventCategoriesCollection = createSelector(getSelectedEventState, state => {
+  return (state && state.selectedEventCategories) || categoriesInitialState;
+});
+export const getSelectedEventSelectedCategoryState = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryState);
+export const getSelectedEventSelectedCategoryNumberOfCompetitors = createSelector(getSelectedEventSelectedCategoryState, state => state && state.numberOfCompetitors);
+export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryId);
+export const eventManagerGetSelectedEventSelectedCategoryStagesCollection = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryStages);
+export const eventManagerGetSelectedEventSelectedCategorySelectedStageId = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stages => stages.selectedStageId);
+
+const {
+  // select the dictionary of user entities
+  selectEntities: eventManagerGetSelectedEventSelectedCategoryStagesDictionary,
+
+  // select the array of users
+  selectAll: eventManagerGetSelectedEventSelectedCategoryALLStages
+
+  // select the total user count
+} = stagesEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryStagesCollection);
+
+export const eventManagerGetSelectedEventSelectedCategorySelectedStages = eventManagerGetSelectedEventSelectedCategoryALLStages;
+
+export const eventManagerGetSelectedEventSelectedCategorySelectedStage =
+  createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageId, eventManagerGetSelectedEventSelectedCategoryStagesDictionary, (stageId, stages) => stageId && stages[stageId]);
+export const eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection =
+  createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stage =>
+    (stage && stage.selectedStageFights) || fightsInitialState);
 
 
+export const {
+  // select the dictionary of user entities
+  selectEntities: eventManagerGetSelectedEventCategoriesDictionary,
 
-export const eventManagerGetSelectedEventSelectedCategoryFightsEditorState = createSelector(selectedEvent.categoriesCollection(), (cats: CategoriesCollection) => cats.selectedEventFightsEditorState);
+  // select the array of users
+  selectAll: eventManagerGetSelectedEventAllCategories
+
+  // select the total user count
+} = categoryEntityAdapter.getSelectors(getSelectedEventCategoriesCollection);
+
+export const {
+  selectAll: eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights,
+  selectEntities: eventManagerGetSelectedEventSelectedCategorySelectedStageFightsEntities
+} = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection);
+
+export const eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors = createSelector(getSelectedEventSelectedCategoryState, state => state && state.numberOfCompetitors);
+
+export const eventManagerGetSelectedEventSelectedCategory = createSelector(
+  eventManagerGetSelectedEventCategoriesDictionary,
+  eventManagerGetSelectedEventSelectedCategoryId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
+  }
+);
+export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
+  (dict, props) => props.id && dict[props.id]);
+export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
+export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => state && state.selectedEventSchedule);
+
+export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelector(eventManagerGetSelectedEventSchedule, eventManagerGetSelectedEventSelectedCategoryId, (schedule, categoryId) => {
+  if (schedule && categoryId && schedule.periods) {
+    const categories = schedule.periods.map(value => value.schedule).reduce((previousValue, currentValue) => [...previousValue, ...currentValue], []);
+    const entry = categories.find(value => value.categoryId === categoryId);
+    return entry && entry.startTime;
+  }
+});
+
+export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && regInfo.registrationGroups);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsEditorState = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedEventFightsEditorState);
 export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeId = createSelector(eventManagerGetSelectedEventSelectedCategoryFightsEditorState, cats => cats.selectedChangeId);
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAll,
@@ -215,7 +230,7 @@ export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelect
 
 export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights = createSelector(
   eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange,
-  selectedEvent.selectedCategory.selectedStage.fightsEntities(),// eventManagerGetSelectedEventSelectedCategorySelectedStageFightsEntities,
+  eventManagerGetSelectedEventSelectedCategorySelectedStageFightsEntities,
   (change, fightsEntities) => {
     return (change && fightsEntities && change.selectedFightIds && change.selectedFightIds.map(id => fightsEntities[id]).filter(f => !!f)) || [];
   });
@@ -232,9 +247,9 @@ export const eventManagerGetSelectedEventSchedulePeriods = createSelector(getSel
   return state && state.selectedEventSchedule && state.selectedEventSchedule.periods;
 });
 
-export const eventManagerGetSelectedEventSelectedCategorySelectedStageFights = selectedEvent.selectedCategory.selectedStage.allFights();
-/*export const eventManagerGetSelectedEventSelectedCategoryStateLoading = createSelector(getSelectedEventCategoriesCollection,
-  (category) => category && category.categoryStateLoading);*/
+export const eventManagerGetSelectedEventSelectedCategorySelectedStageFights = eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights;
+export const eventManagerGetSelectedEventSelectedCategoryStateLoading = createSelector(getSelectedEventCategoriesCollection,
+  (category) => category && category.categoryStateLoading);
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

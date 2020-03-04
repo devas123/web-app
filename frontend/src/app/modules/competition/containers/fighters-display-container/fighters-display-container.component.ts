@@ -6,10 +6,13 @@ import {select, Store} from '@ngrx/store';
 import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
-  eventManagerGetSelectedEventCompetitors,
-  eventManagerGetSelectedEventCompetitorsPageNumber,
-  eventManagerGetSelectedEventCompetitorsPageSize,
-  eventManagerGetSelectedEventCompetitorsTotal, selectedEvent
+    eventManagerGetSelectedEventCategories,
+    eventManagerGetSelectedEventCompetitors,
+    eventManagerGetSelectedEventCompetitorsPageNumber,
+    eventManagerGetSelectedEventCompetitorsPageSize,
+    eventManagerGetSelectedEventCompetitorsTotal,
+    eventManagerGetSelectedEventName,
+    eventManagerGetSelectedEventSelectedCategory
 } from '../../../event-manager/redux/event-manager-reducers';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerCompetitionFightersPageChanged} from '../../../event-manager/redux/event-manager-actions';
@@ -40,9 +43,9 @@ export class FightersDisplayContainerComponent implements OnInit {
 
     constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
         this.competitionId$ = this.store.pipe(select(getSelectedEventId));
-        this.category$ = this.store.pipe(select(selectedEvent.selectedCategory()));
-        this.categories$ = this.store.pipe(select(selectedEvent.categoriesCollection.allCategories()));
-        this.competitionName$ = this.store.pipe(select(selectedEvent.name()));
+        this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+        this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
+        this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
         this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));
         this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize));
         this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber));

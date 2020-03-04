@@ -1,6 +1,6 @@
 import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs';
 
-import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
+import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -10,7 +10,7 @@ import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
-import {CategoryBracketsStage, Fight} from '../commons/model/competition.model';
+import {CategoryBracketsStage, Fight, FightResultOption} from '../commons/model/competition.model';
 
 const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -29,7 +29,8 @@ const {
   mats,
   matFights,
   stageFights,
-  categoryStages
+  categoryStages,
+  defaultFightResults
 } = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
@@ -156,7 +157,7 @@ export class InfoService {
     return this.httpGet(categoriesEndpoint, {
       params: params,
       headers: this.headers
-    }).pipe(tap(x => console.log(x)));
+    });
   }
 
 
@@ -228,7 +229,7 @@ export class InfoService {
         }
       });
     });
-  }
+  };
 
   sendCommand(command: any, competitionId: string): Observable<any> {
     const normalizedCommand = this.normalizeCommand(command);
@@ -315,4 +316,13 @@ export class InfoService {
       headers: this.headers
     });
   }
+
+  getDefaultFightResults(competitionId: string): Observable<FightResultOption[]> {
+    const params = {competitionId};
+    return this.httpGet(defaultFightResults, {
+      params: params,
+      headers: this.headers
+    });
+  }
+
 }

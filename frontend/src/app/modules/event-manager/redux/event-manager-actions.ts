@@ -10,7 +10,7 @@ import {
 import {
   Category, CategoryBracketsStage,
   Competitor,
-  Fight,
+  Fight, FightResultOption,
   FightsEditorChange,
   HeaderDescription,
   PeriodProperties
@@ -44,9 +44,10 @@ export const EVENT_MANAGER_LOAD_FIGHTER_COMMAND = 'EVENT_MANAGER_LOAD_FIGHTER_CO
 export const EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND = 'CHANGE_COMPETITOR_CATEGORY_COMMAND';
 export const EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND = 'UPDATE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_UPDATE_REGISTRATION_INFO = 'UPDATE_REGISTRATION_INFO_COMMAND';
-export const EVENT_MANAGER_LOAD_DEFAULT_CATEGORIES = 'EVENT_MANAGER_LOAD_DEFAULT_CATEGORIES';
+export const EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS = 'EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS';
 
 // events
+export const EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED = 'EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED';
 export const EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED = 'EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED';
 export const EVENT_MANAGER_REGISTRATION_PERIOD_ADDED = 'REGISTRATION_PERIOD_ADDED';
 export const EVENT_MANAGER_REGISTRATION_PERIOD_DELETED = 'REGISTRATION_PERIOD_DELETED';
@@ -111,6 +112,8 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
+export const eventManagerLoadDefaultFightResults = createAction(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS);
+export const eventManagerDefaultFightResultsLoaded = createAction(EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED, props<{ competitionId: string, fightResults: FightResultOption[] }>());
 export const eventManagerUpdateRegistrationInfo = createAction(EVENT_MANAGER_UPDATE_REGISTRATION_INFO, props<{ registrationInfo: RegistrationInfo, competitionId: string }>());
 export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND, props<{ competitionId: string, categoryId: string; newStatus: boolean }>());
 export const eventManagerFightsEditorChangeAdded = createAction(EVENT_MANAGER_FIGHTS_EDITOR_CHANGE_ADDED, props<{ change: FightsEditorChange }>());
@@ -196,7 +199,7 @@ export const loadCategories = (competitionId: string) => ({
 
 export const competitionSelected = (competitionId: string) => ({
   competitionId: competitionId,
-  type: COMPETITION_SELECTED,ADD_CATEGORY_COMMAND
+  type: COMPETITION_SELECTED,
 });
 export const eventManagerAddCategory = (competitionId, category: Category) => ({
   type: ADD_CATEGORY_COMMAND,

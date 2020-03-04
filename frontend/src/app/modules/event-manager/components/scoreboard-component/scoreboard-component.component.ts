@@ -129,7 +129,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
       fightId: this.fight.id,
       fightResult: <FightResult>{
         reason: '',
-        resultType,
+        resultTypeId: `${resultType}`,
         winnerId: competitor.id
       },
       scores: this.fight.scores

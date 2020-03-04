@@ -1,7 +1,7 @@
 import {Directive, HostBinding, Input} from '@angular/core';
 
 @Directive({
-  selector: '[app-flex-col]',
+  selector: '[appFlexCol]'
 })
 export class FlexibleColumnDirective {
 

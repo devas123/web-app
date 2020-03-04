@@ -1,153 +1,168 @@
-import {
-  AfterContentChecked,
-  AfterViewChecked,
-  AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
-import {Category, RangeRestriction, ValueRestriction} from '../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Category, categoryFilter, getAgeDivisionName, getBeltType, getGender, getMaxValueInt, getMinValueInt, getRestrictionByType, getWeightId} from '../../commons/model/competition.model';
 import {CompetitionProperties} from '../../reducers/global-reducers';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
-import {ModalSize, ModalTemplate, SuiModalService, TemplateModalConfig} from "ng2-semantic";
-import {CreateCategoryModal} from "./add-category-modal.component";
-import {FormControl, FormGroup} from "@angular/forms";
-import {from, Observable, of} from "rxjs";
-import {
-  delay,
-  map,
-} from "rxjs/operators";
 
 
 @Component({
-  selector: 'app-category-editor',
-  templateUrl: './category-editor.component.html',
-  styleUrls: ['./category-editor.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-category-editor',
+    templateUrl: './category-editor.component.html',
+    styleUrls: ['./category-editor.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryEditorComponent implements OnInit, AfterViewInit, AfterViewChecked, AfterContentChecked {
+export class CategoryEditorComponent implements OnInit {
 
-  @Input()
-  editMode = true;
+    @Input()
+    editMode = true;
 
-  @Input()
-  detailedView = true;
+    @Input()
+    detailedView = true;
 
-  @Output()
-  createCustomCategoryClicked = new EventEmitter<string>();
-  @Output()
-  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
-  @Output()
-  generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
-
-  @Input()
-  competition: CompetitionProperties;
-
-  categories$: Observable<(Category & { selected?: boolean })[]>;
-
-  searchStr$: EventEmitter<string>;
-
-  @Output()
-  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
-
-  @Output()
-  registrationStatusToggled = new EventEmitter<{ categoryId: string, newStatus: boolean }>();
-  @Output()
-  categoryEditorClicked = new EventEmitter<string>();
-
-  @Output()
-  categoryHeaderClicked = new EventEmitter<string>();
-
-  editorControlForm: FormGroup;
-
-  constructor(public modalService: SuiModalService, private ref: ChangeDetectorRef) {
-  }
-
-
-  openAddModal() {
-    let category = <Category>{
-      restrictions: [{...new ValueRestriction(),name: "Gender", value: "Male"}, {...new ValueRestriction(),
-        name: "Belt",
-        value: "White"
-      },
-        {...new RangeRestriction(),name: 'Age', minValue: "18", maxValue: "60", unit: 'age'},
-        {...new RangeRestriction(),name: 'Weight', minValue: '50', maxValue: '100', unit: 'kg'}]
-    };
-    this.modalService.open(new CreateCategoryModal(category))
-  }
-
-
-  @Input()
-  set categories(value: Observable<Category[]>) {
-    this.categories$ = value.pipe(
-      map(x =>
-        x.map(val => {
-          return {...val, selected: false}
-        })),
-    );
-  }
-
-  ngAfterViewChecked() {
-    this.ref.detectChanges();
-
-  }
-
-  ngAfterViewInit(): void {
-    this.ref.detectChanges();
-  }
-
-  ngAfterContentChecked(): void {
-    this.ref.detectChanges();
-  }
-
-  searchStr: string;
-
-  displayCategory = AddFighterComponent.displayCategory;
-
-  searchFilter = (options: Category[], filter: string) => {
-    const filterParts = filter.split(/\W/);
-    filterParts.forEach((value) => {
-    });
-    return null;
-  }
-
-  ngOnInit() {
-    this.searchStr$ = new EventEmitter<string>();
-    this.categories$ = this.categories$.pipe(delay(0));
-  }
-
-  generateRandomFighters(category: Category) {
-    if (category) {
-      this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 10, 20));
+    @Input()
+    set searchString(value: string) {
+        if (value) {
+            const searchStr = value;
+            this.filteredCategories = this.searchFilter(this._categories, searchStr);
+            this.searchStr = searchStr;
+        } else {
+            this.filteredCategories = this._categories;
+            this.searchStr = null;
+        }
     }
-  }
+
+    constructor() {
+    }
 
 
-  deleteCategory(category: Category) {
-    this.deleteCategoryEvent.next({competitionId: this.competition.id, category});
-  }
+    get defaultCategories() {
+        if (!this._defaultCategories) {
+            this._defaultCategories = [];
+        }
+        return this._defaultCategories;
+    }
 
-  getCategoryId(category: Category) {
-    return category.id;
-  }
+    @Input()
+    set defaultCategories(value: Category[]) {
+        if (value && value.length > 0) {
+            if (this._categories && this._categories.length > 0) {
+                const ids = this._categories.map(c => c.id);
+                this._allDefaultCategories = value.filter(cat => {
+                    return ids.indexOf(cat.id) < 0;
+                });
+            } else {
+                this._allDefaultCategories = value;
+            }
+        } else {
+            this._allDefaultCategories = [];
+        }
+        this._defaultCategories = this._allDefaultCategories.slice(0, 50);
+    }
 
-  toggleRegistrationOpen(category: Category) {
-    this.registrationStatusToggled.next({categoryId: category.id, newStatus: !category.registrationOpen});
-  }
+    get categories() {
+        return this._categories;
+    }
 
-  handleCategoryEditorClicked(categoryId: string) {
-    this.categoryEditorClicked.next(categoryId);
-  }
+    @Input()
+    set categories(value: Category[]) {
+        if (value && value.length > 0) {
+            this._categories = value;
+            if (this._defaultCategories && this._defaultCategories.length > 0) {
+                const ids = this._categories.map(c => c.id);
+                this._defaultCategories = this._defaultCategories.filter(cat => {
+                    return ids.indexOf(cat.id) < 0;
+                });
+            }
+        } else {
+            this._categories = [];
+        }
+        if (this.searchStr && this.searchStr.length > 0) {
+            this.filteredCategories = this.searchFilter(this._categories, this.searchStr);
+        } else {
+            this.filteredCategories = this._categories;
+        }
+    }
 
-  handleCategoryHeaderClicked(categoryId: string) {
-    this.categoryHeaderClicked.next(categoryId);
-  }
+    _allDefaultCategories: Category[];
+    filteredCategories: Category[];
+
+    searchStr: string;
+
+    @Output()
+    createCustomCategoryClicked = new EventEmitter<string>();
+    @Output()
+    addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
+    @Output()
+    generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
+
+    @Input()
+    competition: CompetitionProperties;
+
+    _defaultCategories: Category[];
+
+    _categories: Category[];
+
+    @Output()
+    deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
+
+    @Output()
+    registrationStatusToggled = new EventEmitter<{ categoryId: string, newStatus: boolean }>();
+    @Output()
+    categoryEditorClicked = new EventEmitter<string>();
+
+    @Output()
+    categoryHeaderClicked = new EventEmitter<string>();
+
+    getCategoryGender = getGender;
+    getCategoryWeight = getWeightId;
+    getCategoryBelt = getBeltType;
+    getCategoryAge = getAgeDivisionName;
+    getCategoryRestrictionByType = getRestrictionByType;
+    displayCategory = AddFighterComponent.displayCategory;
+
+    getAgeMaxValue = getMaxValueInt('AGE');
+    getAgeMinValue = getMinValueInt('AGE');
+    getWeightMaxValue = getMaxValueInt('WEIGHT');
+    getWeightMinValue = getMinValueInt('WEIGHT');
+
+    searchFilter = (options: Category[], filter: string) => {
+        let filteredOptions = [...options];
+        const filterParts = filter.split(/\W/);
+
+        filterParts.forEach((value) => {
+            filteredOptions = filteredOptions.filter(categoryFilter(value));
+        });
+
+        return filteredOptions;
+    };
+
+    ngOnInit() {
+    }
+
+    generateRandomFighters(category: Category) {
+        if (category) {
+            this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 10, 20));
+        }
+    }
 
 
+    deleteCategory(category: Category) {
+        this.deleteCategoryEvent.next({competitionId: this.competition.id, category});
+    }
+
+    getCategoryId(category: Category) {
+        return category.id;
+    }
+
+    toggleRegistrationOpen(category: Category) {
+        this.registrationStatusToggled.next({categoryId: category.id, newStatus: !category.registrationOpen});
+    }
+
+    handleCategoryEditorClicked(categoryId: string) {
+        this.categoryEditorClicked.next(categoryId);
+    }
+
+    handleCategoryHeaderClicked(categoryId: string) {
+        this.categoryHeaderClicked.next(categoryId);
+    }
 }

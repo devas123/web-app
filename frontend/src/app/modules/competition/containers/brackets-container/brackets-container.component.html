@@ -29,7 +29,7 @@
   </div>
   <app-stage-display [fights]="bracketsInfo.fights$ | async"
                      [editMode]="false"
-                     [bucketSize]="bracketsInfo.bucketsize$ | async"
+                     [bucketSize]="bucketSize$ | async"
                      (stageSelected)="selectStage($event)"
                      [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                      [selectedStage]="bracketsInfo.stage$ | async"

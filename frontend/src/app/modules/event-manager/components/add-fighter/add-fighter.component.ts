@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
+import {Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {AppState, CommonAction, getSelectedEventId} from '../../../../reducers/global-reducers';
@@ -30,7 +30,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
 
   static displayCategory(cat: Category) {
-    return null;   /* displayCategory(cat);*/
+    return displayCategory(cat);
   }
 
 

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CompetitionProperties} from '../../reducers/global-reducers';
 import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
-import {Category} from '../../commons/model/competition.model';
+import {Category, categoryFilter} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
@@ -75,12 +75,12 @@ export class SelectCategoriesModalComponent implements OnInit {
       take(1),
       map(c => c.filter(cat => {
         const filterParts = query.split(/\W/);
-        return filterParts.map((value) => null)                                    /* categoryFilter(value)(cat))*/
+        return filterParts.map((value) => categoryFilter(value)(cat))
           .reduce((previousValue, currentValue) => previousValue || currentValue);
       })),
       tap(console.log)
     ).toPromise();
-  }
+  };
 
   formatter = (option: Category) => AddFighterComponent.displayCategory(option);
 

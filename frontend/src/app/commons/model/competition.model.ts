@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
 import {EventPropsEntities} from '../../reducers/global-reducers';
 
-/*const getRestrictionName = (res: CategoryRestriction, def = '') => {
+const getRestrictionName = (res: CategoryRestriction, def = '') => {
   if (res) {
     if (res.name) {
       return res.name;
@@ -37,14 +37,14 @@ export const getRestrictionByType = (cat: Category, type: RestrictionType) => {
   if (cat && cat.restrictions) {
     return cat.restrictions.find(r => r.type === type);
   }
-};*/
+};
 
-/*export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
+export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
 export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEIGHT', 'ALL WEIGHTS');
 export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
-export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');*/
+export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
 
-/*export const displayCategory = (cat: Category, truncate = true) => {
+export const displayCategory = (cat: Category, truncate = true) => {
   if (!cat) {
     return '';
   }
@@ -54,16 +54,16 @@ export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKI
     return `${name || 'Unnamed'} ` + fullName;
   }
   return name || (fullName.length < 20 ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
-};*/
+};
 
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
-/*export const categoryFilter = value => cat => {
+export const categoryFilter = value => cat => {
   return !value || value.length <= 0 || (cat.id
     && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
-};*/
+};
 
-export const categoriesComparer = (a: Category, b: Category) => a.name.localeCompare(b.name);
+export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
 
 
 export interface Period {
@@ -82,17 +82,10 @@ export interface ScheduleEntry {
   fightDuration: number;
 }
 
-export type CompetitorResultType =
-  'WIN_POINTS'
-  | 'WIN_SUBMISSION'
-  | 'WIN_DECISION'
-  | 'DRAW'
-  | 'OPPONENT_DQ'
-  | 'BOTH_DQ'
-  | 'WALKOVER';
+export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
 
 export interface FightResult {
-  resultType: CompetitorResultType;
+  resultTypeId: String;
   winnerId: string;
   reason: string;
 }
@@ -100,96 +93,87 @@ export interface FightResult {
 export interface Competitor {
   id: string;
   email: string;
-  userId: string;
+  userId?: string;
   firstName: string;
   lastName: string;
-  birthDate: Date;
-  academy: Academy;
+  birthDate: Date | string;
+  academy?: Academy;
   categories: string[];
   competitionId: string;
   registrationStatus: string;
-  promo: string;
+  promo?: string;
 }
 
 export interface Score {
   advantages: number;
   points: number;
   penalties: number;
-  competitorId: string;
 }
 
 export interface CompScore {
-  id: string;
   competitor: Competitor;
   score: Score;
+  placeholderId?: string;
+  order?: number;
 }
 
-export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS';
+export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS' | 'GROUP';
 
 export interface Fight {
   fightName: string;
   id: string;
-  category: Category;
-  parentId1: string;
-  parentId2: string;
-  winFight: string;
-  loseFight: string;
+  categoryId: string;
+  category ?: Category;
+  parentId1?: string;
+  parentId2?: string;
+  winFight?: string;
+  loseFight?: string;
   competitionId: string;
-  internalId: string;
   duration: number;
   scores: CompScore[];
   round: number;
   roundType: RoundType;
   status: string;
-  fightResult: FightResult;
-  timeToStart: boolean;
+  fightResult?: FightResult;
   numberInRound: number;
-  mat: MatDescription;
-  numberOnMat: number;
+  mat?: MatDescription;
+  numberOnMat?: number;
   priority: number;
-  period: string;
-  startTime: Date;
+  period?: string;
+  stageId: string;
+  groupId: string;
+  startTime?: Date;
 }
 
 export interface Academy {
   id: string;
   name: string;
-  coaches: string[];
-  created: number;
+  coaches?: string[];
+  created?: number;
 }
 
-export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION';
+export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION' | 'GROUP';
+
+export enum GroupSortSpecifier { 'DIRECT_FIGHT_RESULT', 'MANUAL', 'POINTS_DIFFERENCE', 'TOTAL_POINTS'}
+
+export enum GroupSortDirection {'DESC', 'ASC'}
+
 export type StageType = 'PRELIMINARY' | 'FINAL';
 
-
-export type RestrictionType = 'Range' | 'Value';
+export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
 
 export const restrictionTypes: RestrictionType[] = [
-  'Range', 'Value'
+  'AGE', 'SKILL', 'WEIGHT', 'GENDER', 'SPORTS'
 ];
 
-
-export type CategoryRestriction = ValueRestriction | RangeRestriction;
-
-
-export class ValueRestriction {
+export interface CategoryRestriction {
   id: string;
   name: string;
-  value?: string;
-  type: 'Value' = 'Value';
+  type: RestrictionType;
+  minValue: string;
+  maxValue: string;
+  unit: string;
 }
-
-
-export class RangeRestriction {
-  id: string;
-  name: string;
-  minValue?: string;
-  maxValue?: string;
-  unit?: string;
-  alias: string;
-  type: 'Range' = 'Range';
-}
-
 
 export interface Category {
   id: string;
@@ -224,16 +208,37 @@ export interface CategoryBracketsStage {
   waitForPrevious: boolean;
   hasThirdPlaceFight: boolean;
   stageOrder: number;
-  pointsAssignments: PointsAssignment[];
   resultDescriptor: StageResult;
   inputDescriptor: StageInputDescriptor;
 }
 
-export interface PointsAssignment {
-  id: string;
-  classifier: string;
-  points: string;
-  additionalPoints: string;
+export enum OperatorType {
+  'EQUALS', 'IS_IN', 'LESS', 'GREATER', 'LEQ', 'GEQ'
+}
+
+export enum SelectorClassifier {
+  'FIRST_N_PLACES',
+  'LAST_N_PLACES',
+  'WINNER_OF_FIGHT',
+  'LOSER_OF_FIGHT',
+}
+
+export interface CompetitorSelector {
+   applyToStageNumber: string;
+   logicalOperator: string;
+   classifier: SelectorClassifier;
+   operator: OperatorType;
+   selectorValue: string[];
+}
+
+export interface FightResultOption {
+  description: string;
+  shortName: string;
+  draw: boolean;
+  winnerPoints: number;
+  winnerAdditionalPoints: number;
+  loserPoints: number;
+  loserAdditionalPoints: number;
 }
 
 interface CompetitorResult {
@@ -245,26 +250,25 @@ interface CompetitorResult {
   groupId: string;
 }
 
-interface StageResult {
-  id: string;
-  name: string;
-  competitorResults: CompetitorResult[];
+export interface AdditionalGroupSortingDescriptor {
+  groupSortDirection: GroupSortDirection;
+  groupSortSpecifier: GroupSortSpecifier;
 }
 
-interface CompetitorSelector {
+export interface StageResult {
   id: string;
-  applyToStageId: string;
-  logicalOperator: string;
-  classifier: string;
-  operator: string;
-  selectorValue: string[];
+  name?: string;
+  competitorResults?: CompetitorResult[];
+  fightResultOptions?: FightResultOption[];
+  forceManualAssignment?: boolean;
+  additionalGroupSortingDescriptors?: AdditionalGroupSortingDescriptor[];
 }
 
 export interface StageInputDescriptor {
-  selectors: CompetitorSelector[];
-  distributionType: string;
+  selectors?: CompetitorSelector[];
+  distributionType?: string;
   numberOfCompetitors: number;
-  id: string;
+  id?: string;
 }
 
 export interface CategoryBracketsStageCollection extends EntityState<CategoryBracketsStage> {
@@ -316,7 +320,7 @@ export interface EventManagerState {
 export interface PeriodProperties {
   id: string;
   name: string;
-  startTime: String;
+  startTime: string;
   numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
@@ -365,7 +369,7 @@ export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getIniti
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
-  selectedFightId: null,
+  selectedFightId: null
 });
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({

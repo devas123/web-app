@@ -1,6 +1,34 @@
 .ui.basic.segment {
   padding-top: 0;
 }
+
+.ui.buttons.padded {
+  padding: 1em;
+}
+
 .ui.cards {
   margin-top: 1em !important;
 }
+
+.bottom_margin {
+  margin-bottom: 5em !important;
+}
+
+.results_section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1em;
+  .ui.card:first-child {
+    .content {
+      padding-left: 0 !important;
+    }
+    margin-left: 0 !important;
+  }
+}
+
+.large_font {
+  font-weight: bold;
+  font-size: large;
+}
+
+

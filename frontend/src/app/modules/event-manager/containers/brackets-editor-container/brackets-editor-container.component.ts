@@ -3,9 +3,11 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges, selectedEvent
+  eventManagerGetSelectedEventDefaultFightResults,
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges
 } from '../../redux/event-manager-reducers';
-import {Category, CategoryBracketsStage, HeaderDescription} from '../../../../commons/model/competition.model';
+import {Category, CategoryBracketsStage, FightResultOption, HeaderDescription} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
   eventManagerCategoryBracketsStageSelected,
@@ -15,7 +17,7 @@ import {
   eventManagerDropCategoryBracketsCommand,
   eventManagerFightForChangeSelected,
   eventManagerFightsEditorSubmitChanges,
-  eventManagerGenerateBrackets
+  eventManagerGenerateBrackets, eventManagerLoadDefaultFightResults
 } from '../../redux/event-manager-actions';
 import {filter, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -37,17 +39,19 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   private competitionId: string;
   private subs = new Subscription();
 
-  bracketsInfo: CommonBracketsContainer;
   changeFightsIds$: Observable<string[]>;
+  defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
 
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
+  private bracketsSize$: Observable<number>;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, private observer: BreakpointObserver, menuService: MenuService) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
+              private observer: BreakpointObserver, menuService: MenuService, public bracketsInfo: CommonBracketsContainer) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(
-        select(selectedEvent.name()),
+        select(eventManagerGetSelectedEventName),
         filter(name => !!name),
         map(name => <HeaderDescription>{
           header: 'Brackets',
@@ -90,7 +94,8 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     }, menuService);
     const competitionId$ = this.store.pipe(select(getSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
-    this.bracketsInfo = new CommonBracketsContainer(store, observer);
+    this.defaultFightResultOptions$ = this.store.pipe(select(eventManagerGetSelectedEventDefaultFightResults));
+    this.bracketsSize$ = this.bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 4));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
       if (competitionId && categoryId) {
@@ -104,7 +109,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
+  formatter = (option: Category) => AddFighterComponent.displayCategory(option);
 
   setCategoryId(category: Category) {
     this.editMode = false;
@@ -144,6 +149,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   ngOnInit() {
+    this.store.dispatch(eventManagerLoadDefaultFightResults());
   }
 
   generateBrackets(stages: CategoryBracketsStage[]) {
@@ -155,7 +161,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   ngOnDestroy() {
-    this.sendCommandFromCategoryId(categoryId => eventManagerCategoryUnselected(this.competitionId));
+    this.sendCommandFromCategoryId(() => eventManagerCategoryUnselected(this.competitionId));
     this.subs.unsubscribe();
     super.ngOnDestroy();
   }

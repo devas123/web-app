@@ -1,10 +1,10 @@
-<div class="ui basic segment" [formGroup]="form">
+<div class="ui basic segment bottom_margin" [formGroup]="form">
   <div class="ui buttons">
     <button class="ui button" (click)="doGenerateStages()">Generate</button>
     <button class="ui button" (click)="addStageDescription()">Add stage</button>
     <button class="ui button" (click)="removeAllStages()">Clear</button>
   </div>
-  <div class="ui two stackable cards" formArrayName="stageDescriptions">
+  <div class="ui one stackable cards" formArrayName="stageDescriptions">
     <div class="ui card" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
       <div class="content">
         <div class="right floated">
@@ -31,26 +31,145 @@
               </sui-select-option>
             </sui-select>
           </div>
-          <div class="ui field">
-            <input class="ui input" type="text" placeholder="Input stage name." formControlName="name"/>
-          </div>
-          <div class="ui fields" formGroupName="inputDescriptor">
+          <ng-container *ngIf="getBracketsType(i) !== 'GROUP' || i > 0">
             <div class="ui field">
-              <input class="ui input" type="number"
-                     [placeholder]="i === 0 ? (_competitorsSize + ' Competitors') : 'Number of competitors'"
-                     formControlName="numberOfCompetitors"/>
+              <input class="ui input" type="text" placeholder="Stage name." formControlName="name"/>
             </div>
-          </div>
-          <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
-            <sui-checkbox [name]="'hasThirdPlaceFight'"
-                          (checkChange)="setHasThirdPlaceFight(i, $event)"
-            >Has fight for 3d place
-            </sui-checkbox>
-          </div>
+            <div class="ui fields" formGroupName="inputDescriptor">
+              <div class="ui field">
+                <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
+                  stage.</label>
+                <input id="numberOfCompetitors" class="ui input" type="number" (focusout)="updateView()"
+                       [placeholder]="i === 0 ? (_competitorsSize + ' Competitors') : 'Number of competitors'"
+                       formControlName="numberOfCompetitors"/>
+              </div>
+            </div>
+            <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
+              <sui-checkbox [name]="'hasThirdPlaceFight'"
+                            (checkChange)="setHasThirdPlaceFight(i, $event)"
+              >Has fight for 3d place
+              </sui-checkbox>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="getBracketsType(i) === 'GROUP'">
+            <div formArrayName="groupDescriptors">
+              <button class="ui button" (click)="addGroupDescriptor(i)">Add group descriptor</button>
+              <p></p>
+              <div class="ui fields" *ngFor="let group of groupDescriptors(i).controls; index as k"
+                   [formGroupName]="k">
+                <div class="ui field">
+                  <input class="ui input" type="text" [placeholder]="1 + k + ' name (optional)'"
+                         formControlName="name"/>
+                </div>
+                <div class="ui field">
+                  <input class="ui input" type="number"
+                         [placeholder]="1 + k + ' size'"
+                         formControlName="size"/>
+                </div>
+                <div class="ui field">
+                  <button class="ui icon button" (click)="removeGroupDescriptor(i, k)"><i class="trash icon"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
           <div class="ui field" *ngIf="i > 0">
             <sui-checkbox [name]="'waitForPrevious'"
                           (checkChange)="setWaitForPrevious(i, $event)">Wait for previous stage to finish
             </sui-checkbox>
+          </div>
+          <div class="description" *ngIf="i > 0">Top {{getNumberOfCompetitors(i) || 0}} competitors from previous
+            stage will pass to this stage. You can add advanced selectors here.
+          </div>
+          <button *ngIf="i > 0" class="ui button" id="additionalSelectors" (click)="openAddInputSelectorModal(i)">
+            Add selectors
+          </button>
+          <app-tag-list [values]=" _additionalCompetitorSelector[i]"
+                        [formatter]="compSelectorFormatter"
+                        (itemRemoved)="removeAdditionalCompetitorSelector(i, $event.index)"></app-tag-list>
+          <div class="ui divider"></div>
+          <div class="results_section" [ngStyle]="ngStyle">
+            <div class="ui card">
+              <div class="content">
+                <div class="header">Possible results</div>
+                <sui-multi-select
+                  [isSearchable]="true"
+                  [isDisabled]="false"
+                  [options]="defaultFightResultOptions"
+                  [optionsFilter]="filterFightResults"
+                  [optionFormatter]="formatter"
+                  [maxSelected]="10"
+                  placeholder="Select fight results to add"
+                  formControlName="fightResults"
+                  #select>
+                  <div class="ui icon search input">
+                    <i class="search icon"></i>
+                    <input suiSelectSearch type="text" placeholder="Search options...">
+                  </div>
+                  <div class="divider"></div>
+                  <div class="header">
+                    <i class="list icon"></i>
+                    Options
+                  </div>
+                  <div class="scrolling menu">
+                    <sui-select-option *ngFor="let o of select.filteredOptions" [value]="o" suiPopup
+                                       [popupText]="o.description" popupBasic popupDelay="300"></sui-select-option>
+                  </div>
+                </sui-multi-select>
+                <app-tag-list [values]="_fightResultOptions[i]">
+                  <ng-template let-opt="$implicit" let-k="index">
+                    <div class="ui icon label">
+                      <span suiPopup [popupText]="opt.description" popupBasic popupDelay="300">{{opt.shortName}}</span>
+                      <i class="delete icon" (click)="removeFightResultOpiton(i, k)"></i>
+                    </div>
+                  </ng-template>
+                </app-tag-list>
+                <button class="ui button"
+                        (click)="openAddFightOptionsModal(i)">Create custom
+                </button>
+              </div>
+            </div>
+            <div class="ui card" *ngIf="getBracketsType(i) === 'GROUP'">
+              <div class="content">
+                <div class="header">Additional sorting</div>
+                <div class="ui field">
+                  <sui-checkbox [name]="'forceManualAssignment'"
+                                (checkChange)="setForceManualAssignment(i, $event)" #forceManual>Assign all results
+                    manually.
+                  </sui-checkbox>
+                </div>
+                <div class="ui fields" *ngIf="!forceManual.isChecked">
+                  <div class="ui field">
+                    <sui-select
+                      [isDisabled]="false"
+                      [options]="possibleGroupSortSpecifiers"
+                      placeholder="Specifier"
+                      #specifierSelect>
+                      <sui-select-option *ngFor="let o of specifierSelect.filteredOptions"
+                                         [value]="o"></sui-select-option>
+                    </sui-select>
+                  </div>
+                  <div class="ui field">
+                    <sui-select
+                      [isDisabled]="specifierSelect.selectedOption === 'MANUAL'"
+                      [options]="possibleGroupSortDirections"
+                      placeholder="Direction"
+                      #directionSelect>
+                      <sui-select-option *ngFor="let o of directionSelect.filteredOptions"
+                                         [value]="o"></sui-select-option>
+                    </sui-select>
+                  </div>
+                  <a
+                    (click)="addAdditionalSortingOption(i, specifierSelect.selectedOption, directionSelect.selectedOption)"><i
+                    class="check icon"></i></a>
+                </div>
+                <app-tag-list *ngIf="!forceManual.isChecked" [values]="_additionalGroupSorting[i]"
+                (itemRemoved)="removeAdditionalSortingOption(i, $event.index)" [formatter]="additionalGroupSortingFormatter"></app-tag-list>
+                <div class="description">The places in groups are assigned by points, but if the points are equal,
+                  you can add additional sorting.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
