@@ -25,18 +25,10 @@ export interface IAddInputSelectorFormContext {
     <div class="content" [formGroup]="f">
       <div class="ui form" formArrayName="form" [ngClass]="{error: form.invalid && form.touched}">
         <ng-container *ngFor="let sel of form.controls; index as i; last as isLast">
+          <div class="ui field">
+            <div class="ui label" *ngIf="i > 0">AND</div>
+          </div>
           <div class="ui fields" [formGroupName]="i">
-            <div class="ui field" *ngIf="i > 0">
-              <sui-select
-                formControlName="logicalOperator"
-                [isDisabled]="false"
-                [options]="logicalOperators"
-                placeholder="Logical operator"
-                #logicalOperator>
-                <sui-select-option *ngFor="let o of logicalOperator.filteredOptions"
-                                   [value]="o"></sui-select-option>
-              </sui-select>
-            </div>
             <div class="ui field">
               <sui-select
                 [isDisabled]="false"
@@ -61,33 +53,10 @@ export interface IAddInputSelectorFormContext {
               </sui-select>
             </div>
             <div class="ui field">
-              <sui-select
-                formControlName="operator"
-                [isDisabled]="false"
-                [options]="operations"
-                placeholder="Operation"
-                #operatorTypeSelect>
-                <sui-select-option *ngFor="let o of operatorTypeSelect.filteredOptions"
-                                   [value]="o"></sui-select-option>
-              </sui-select>
-            </div>
-            <div class="ui field">
-              <div class="ui action input">
-                <input type="text" [formControl]="getLastSelectorValueControl(i)" placeholder="Add value">
-                <button class="ui icon button" (click)="addSelectorValue(i)"><i class="check icon"></i></button>
+              <div class="ui input">
+                <input type="text" [formControl]="getSelectorValue(i)" placeholder="Value">
               </div>
             </div>
-          </div>
-          <app-tag-list [values]="getSelectorValue(i).controls.slice(0, getSelectorValue(i).controls.length - 1)"
-                        [vertical]="true">
-            <ng-template let-control="$implicit" let-k="index">
-              <div>
-                <span>{{control.value}}</span>
-                <i class="delete icon" (click)="removeSelectorValue(i, k)"></i>
-              </div>
-            </ng-template>
-          </app-tag-list>
-          <div class="ui buttons padded">
             <button class="ui icon button" *ngIf="isLast" (click)="addFormLine()"><i class="plus icon"></i></button>
             <button class="ui icon button" (click)="removeFormLine(i)"><i class="delete icon"></i></button>
           </div>
@@ -113,10 +82,6 @@ export class AddInputSelectorFormComponent implements OnInit {
   };
 
   selectorClassifiers = Object.keys(SelectorClassifier).filter(key => !isNaN(Number(SelectorClassifier[key])));
-  operations = Object.keys(OperatorType).filter(key => !isNaN(Number(OperatorType[key])));
-
-  logicalOperators = ['AND', 'OR', 'AND NOT', 'OR NOT', 'NOT'];
-
   stageNumbersFormatter = (opt: number) => `${opt + 1}`;
 
   getErrorMsg(fieldName: string, errors: ValidationErrors) {
@@ -129,14 +94,6 @@ export class AddInputSelectorFormComponent implements OnInit {
         }
       }).join(',');
     }
-  }
-
-  getSelectorValue(i: number) {
-    return this.form.at(i).get('selectorValue') as FormArray;
-  }
-
-  getLastSelectorValueControl(i: number) {
-    return this.getSelectorValue(i).controls[this.getSelectorValue(i).controls.length - 1] as FormControl;
   }
 
   addOptions() {
@@ -170,22 +127,21 @@ export class AddInputSelectorFormComponent implements OnInit {
   get form() {
     return this.f.get('form') as FormArray;
   }
-
   private competitorSelectorConfig() {
     return this.fb.group({
-      applyToStageNumber: ['', [Validators.required, Validators.maxLength(50)]],
-      logicalOperator: ['', [Validators.maxLength(50)]],
-      classifier: ['', [Validators.required, Validators.maxLength(50)]],
-      operator: ['', [Validators.required, Validators.maxLength(50)]],
-      selectorValue: this.fb.array([['']])
+      applyToStageNumber: ['', [Validators.required]],
+      logicalOperator: ['AND'],
+      classifier: ['', [Validators.required]],
+      operator: [OperatorType.EQUALS],
+      selectorValue: this.fb.array([['', [Validators.required]]])
     });
   }
 
-  removeSelectorValue(i: number, k) {
-    this.getSelectorValue(i).removeAt(k);
+  getSelectorValue(i) {
+    return this.getSelectorValues(i).at(0) as FormControl;
   }
 
-  addSelectorValue(i: number) {
-    this.getSelectorValue(i).push(this.fb.control(''));
+  getSelectorValues(i: number) {
+    return this.form.at(i).get('selectorValue') as FormArray;
   }
 }

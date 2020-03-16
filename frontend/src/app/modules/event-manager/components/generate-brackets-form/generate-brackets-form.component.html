@@ -1,10 +1,13 @@
 <div class="ui basic segment bottom_margin" [formGroup]="form">
   <div class="ui buttons">
-    <button class="ui button" (click)="doGenerateStages()">Generate</button>
+    <button class="ui button" (click)="doGenerateStages()" [disabled]="form.pristine || form.invalid">Generate</button>
     <button class="ui button" (click)="addStageDescription()">Add stage</button>
     <button class="ui button" (click)="removeAllStages()">Clear</button>
   </div>
-  <div class="ui one stackable cards" formArrayName="stageDescriptions">
+  <ng-container *ngIf="form.invalid">
+    <div class="ui message" *ngFor="let error of getErrors()">{{error}}</div>
+  </ng-container>
+  <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
     <div class="ui card" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
       <div class="content">
         <div class="right floated">
@@ -35,7 +38,7 @@
             <div class="ui field">
               <input class="ui input" type="text" placeholder="Stage name." formControlName="name"/>
             </div>
-            <div class="ui fields" formGroupName="inputDescriptor">
+            <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP'">
               <div class="ui field">
                 <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
                   stage.</label>
@@ -124,9 +127,13 @@
                     </div>
                   </ng-template>
                 </app-tag-list>
-                <button class="ui button"
-                        (click)="openAddFightOptionsModal(i)">Create custom
-                </button>
+                <div class="ui buttons">
+                  <button class="ui button"
+                          (click)="addAllFightOptions(i)">Add all</button>
+                  <button class="ui button"
+                          (click)="openAddFightOptionsModal(i)">Create custom
+                  </button>
+                </div>
               </div>
             </div>
             <div class="ui card" *ngIf="getBracketsType(i) === 'GROUP'">

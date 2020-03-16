@@ -6,10 +6,6 @@
   padding: 1em;
 }
 
-.ui.cards {
-  margin-top: 1em !important;
-}
-
 .bottom_margin {
   margin-bottom: 5em !important;
 }
@@ -24,6 +20,23 @@
     }
     margin-left: 0 !important;
   }
+}
+
+.stage_descriptions_grid {
+
+  .ui.card {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  place-content: stretch;
+  margin-top: 1em !important;
+  grid-auto-columns: minmax(300px, auto);
 }
 
 .large_font {

@@ -11,9 +11,9 @@ export class FlexibleColumnDirective {
   @Input()
   set shrink(value: boolean) {
     if (value) {
-      this._class = 'ui twelve wide column';
+      this._class = '_large';
     } else {
-      this._class = 'ui sixteen wide column';
+      this._class = '_small';
     }
   }
 

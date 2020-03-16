@@ -95,7 +95,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     const competitionId$ = this.store.pipe(select(getSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.defaultFightResultOptions$ = this.store.pipe(select(eventManagerGetSelectedEventDefaultFightResults));
-    this.bracketsSize$ = this.bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 4));
+    this.bracketsSize$ = this.bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 5));
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
       if (competitionId && categoryId) {

@@ -200,6 +200,12 @@ export interface CategoriesCollection extends EntityState<Category> {
   categoryStateLoading: boolean;
 }
 
+export interface GroupDescriptor {
+  id?: string;
+  name?: string;
+  size: number;
+}
+
 export interface CategoryBracketsStage {
   id: string;
   bracketType: BracketsType | null;
@@ -210,6 +216,7 @@ export interface CategoryBracketsStage {
   stageOrder: number;
   resultDescriptor: StageResult;
   inputDescriptor: StageInputDescriptor;
+  groupDescriptors: GroupDescriptor[];
 }
 
 export enum OperatorType {
