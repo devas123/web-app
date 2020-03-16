@@ -87,7 +87,7 @@
           <button *ngIf="i > 0" class="ui button" id="additionalSelectors" (click)="openAddInputSelectorModal(i)">
             Add selectors
           </button>
-          <app-tag-list [values]=" _additionalCompetitorSelector[i]"
+          <app-tag-list [values]=" getAdditionalCompetitorSelectors(i)?.value || []"
                         [formatter]="compSelectorFormatter"
                         (itemRemoved)="removeAdditionalCompetitorSelector(i, $event.index)"></app-tag-list>
           <div class="ui divider"></div>
@@ -119,7 +119,7 @@
                                        [popupText]="o.description" popupBasic popupDelay="300"></sui-select-option>
                   </div>
                 </sui-multi-select>
-                <app-tag-list [values]="_fightResultOptions[i]">
+                <app-tag-list [values]="getFightResultOptions(i)?.value || []">
                   <ng-template let-opt="$implicit" let-k="index">
                     <div class="ui icon label">
                       <span suiPopup [popupText]="opt.description" popupBasic popupDelay="300">{{opt.shortName}}</span>
@@ -129,7 +129,8 @@
                 </app-tag-list>
                 <div class="ui buttons">
                   <button class="ui button"
-                          (click)="addAllFightOptions(i)">Add all</button>
+                          (click)="addAllFightOptions(i)">Add all
+                  </button>
                   <button class="ui button"
                           (click)="openAddFightOptionsModal(i)">Create custom
                   </button>
@@ -170,8 +171,9 @@
                     (click)="addAdditionalSortingOption(i, specifierSelect.selectedOption, directionSelect.selectedOption)"><i
                     class="check icon"></i></a>
                 </div>
-                <app-tag-list *ngIf="!forceManual.isChecked" [values]="_additionalGroupSorting[i]"
-                (itemRemoved)="removeAdditionalSortingOption(i, $event.index)" [formatter]="additionalGroupSortingFormatter"></app-tag-list>
+                <app-tag-list *ngIf="!forceManual.isChecked" [values]="getAdditionalGroupSortingDescriptors(i)?.value"
+                              (itemRemoved)="removeAdditionalSortingOption(i, $event.index)"
+                              [formatter]="additionalGroupSortingFormatter"></app-tag-list>
                 <div class="description">The places in groups are assigned by points, but if the points are equal,
                   you can add additional sorting.
                 </div>
