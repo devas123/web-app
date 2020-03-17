@@ -18,8 +18,7 @@
         <div class="header">
           Stage #{{i + 1}}
         </div>
-      </div>
-      <div class="content">
+        <div class="ui basic divider"></div>
         <div class="ui form" [formGroupName]="i">
           <div class="ui field">
             <sui-select class="selection"
@@ -87,42 +86,45 @@
           <button *ngIf="i > 0" class="ui button" id="additionalSelectors" (click)="openAddInputSelectorModal(i)">
             Add selectors
           </button>
-          <app-tag-list [values]=" getAdditionalCompetitorSelectors(i)?.value || []"
+          <app-tag-list *ngIf="i > 0" [values]=" getAdditionalCompetitorSelectorsValue(i)"
                         [formatter]="compSelectorFormatter"
                         (itemRemoved)="removeAdditionalCompetitorSelector(i, $event.index)"></app-tag-list>
           <div class="ui divider"></div>
+
           <div class="results_section" [ngStyle]="ngStyle">
             <div class="ui card">
               <div class="content">
                 <div class="header">Possible results</div>
-                <sui-multi-select
-                  [isSearchable]="true"
-                  [isDisabled]="false"
-                  [options]="defaultFightResultOptions"
-                  [optionsFilter]="filterFightResults"
-                  [optionFormatter]="formatter"
-                  [maxSelected]="10"
-                  placeholder="Select fight results to add"
-                  formControlName="fightResults"
-                  #select>
-                  <div class="ui icon search input">
-                    <i class="search icon"></i>
-                    <input suiSelectSearch type="text" placeholder="Search options...">
-                  </div>
-                  <div class="divider"></div>
-                  <div class="header">
-                    <i class="list icon"></i>
-                    Options
-                  </div>
-                  <div class="scrolling menu">
-                    <sui-select-option *ngFor="let o of select.filteredOptions" [value]="o" suiPopup
-                                       [popupText]="o.description" popupBasic popupDelay="300"></sui-select-option>
-                  </div>
-                </sui-multi-select>
-                <app-tag-list [values]="getFightResultOptions(i)?.value || []">
+                <div class="fight_options_select">
+                  <a (click)="mergeSelectedFightResultOptions(i, select.selectedOptions); select.selectedOptions = []"><i class="ui check icon"></i></a>
+                  <sui-multi-select
+                    [isSearchable]="true"
+                    [isDisabled]="false"
+                    [options]="getFilteredDefaultOptions(i)"
+                    [optionsFilter]="filterFightResults"
+                    [optionFormatter]="formatter"
+                    [maxSelected]="10"
+                    placeholder="Select fight results to add"
+                    #select>
+                    <div class="ui icon search input">
+                      <i class="search icon"></i>
+                      <input suiSelectSearch type="text" placeholder="Search options...">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="header">
+                      <i class="list icon"></i>
+                      Options
+                    </div>
+                    <div class="scrolling menu">
+                      <sui-select-option *ngFor="let o of select.filteredOptions" [value]="o" suiPopup
+                                         [popupText]="o.description" popupBasic popupDelay="300"></sui-select-option>
+                    </div>
+                  </sui-multi-select>
+                </div>
+                <app-tag-list [values]="getFightResultOptionsValue(i) || []">
                   <ng-template let-opt="$implicit" let-k="index">
                     <div class="ui icon label">
-                      <span suiPopup [popupText]="opt.description" popupBasic popupDelay="300">{{opt.shortName}}</span>
+                      <span suiPopup [popupText]="opt?.description" popupBasic popupDelay="300">{{opt?.shortName}}</span>
                       <i class="delete icon" (click)="removeFightResultOpiton(i, k)"></i>
                     </div>
                   </ng-template>
@@ -171,7 +173,7 @@
                     (click)="addAdditionalSortingOption(i, specifierSelect.selectedOption, directionSelect.selectedOption)"><i
                     class="check icon"></i></a>
                 </div>
-                <app-tag-list *ngIf="!forceManual.isChecked" [values]="getAdditionalGroupSortingDescriptors(i)?.value"
+                <app-tag-list *ngIf="!forceManual.isChecked" [values]="getAdditionalGroupSortingDescriptorsValue(i)"
                               (itemRemoved)="removeAdditionalSortingOption(i, $event.index)"
                               [formatter]="additionalGroupSortingFormatter"></app-tag-list>
                 <div class="description">The places in groups are assigned by points, but if the points are equal,

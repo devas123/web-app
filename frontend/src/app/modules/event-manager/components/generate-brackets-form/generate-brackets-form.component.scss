@@ -44,4 +44,15 @@
   font-size: large;
 }
 
+.fight_options_select {
+  a {
+    align-self: center;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-items: center;
+  align-content: center;
+}
+
 

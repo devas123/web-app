@@ -61,6 +61,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   @Input()
   defaultFightResultOptions: FightResultOption[];
 
+
   possibleGroupSortSpecifiers = Object.keys(GroupSortSpecifier).filter(key => !isNaN(Number(GroupSortSpecifier[key])));
   possibleGroupSortDirections = Object.keys(GroupSortDirection).filter(key => !isNaN(Number(GroupSortDirection[key])));
 
@@ -72,24 +73,12 @@ export class GenerateBracketsFormComponent implements OnInit {
   form: FormGroup;
 
   private numberOfCompetitorsValidator = (index: number) => (control: FormGroup): ValidationErrors | null => {
-    const bracketsType = control.get('bracketType').value as BracketsType;
     const previousStageInput = index === 0 ? this._competitorsSize : this.getNumberOfCompetitors(index - 1);
-    let result;
-    if (bracketsType !== 'GROUP') {
-      const currentInput = control.get('inputDescriptor.numberOfCompetitors').value;
-      result = currentInput <= previousStageInput ? null : {'numberOfCompetitorsInvalid': true};
-      if (currentInput <= 0 || index === 0 && currentInput !== this._competitorsSize) {
-        return {'numberOfCompetitorsInvalid': true};
-      }
-    } else {
-      const groupDescriptors = control.get('groupDescriptors') as FormArray;
-      const groupInputSize: number = groupDescriptors.controls.map(c => c.get('size').value || 0).reduce(((previousValue, currentValue) => previousValue + currentValue));
-      result = groupInputSize <= previousStageInput ? null : {'numberOfCompetitorsInvalid': true};
-      if (groupInputSize <= 0 || index === 0 && groupInputSize !== this._competitorsSize) {
-        return {'numberOfCompetitorsInvalid': true};
-      }
+    const currentInput = this.inputCompetitorsForStage(control);
+    if (currentInput <= 0 || index === 0 && currentInput !== this._competitorsSize) {
+      return {'numberOfCompetitorsInvalid': true};
     }
-    return result;
+    return currentInput <= previousStageInput ? null : {'numberOfCompetitorsInvalid': true};
   };
 
 
@@ -97,11 +86,20 @@ export class GenerateBracketsFormComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  getNumberOfCompetitors(i) {
-    if (i === 0) {
-      return this._competitorsSize;
+  inputCompetitorsForStage = (sd: FormGroup) => {
+    const bracketsType = sd.get('bracketType').value as BracketsType;
+    if (bracketsType !== 'GROUP') {
+      return sd.get('inputDescriptor.numberOfCompetitors').value;
+    } else {
+      const groupDescriptors = sd.get('groupDescriptors') as FormArray;
+      const groupInputSize: number = groupDescriptors.controls.map(c => c.get('size').value || 0).reduce(((previousValue, currentValue) => previousValue + currentValue));
+      return groupInputSize;
     }
-    return this.stageDescriptions.at(i).get('inputDescriptor.numberOfCompetitors').value;
+  };
+
+  getNumberOfCompetitors(i) {
+    const sd = this.stageDescriptions.at(i) as FormGroup;
+    return this.inputCompetitorsForStage(sd);
   }
 
   stageDescriptionConfig = (index: number) => this.fb.group({
@@ -112,11 +110,11 @@ export class GenerateBracketsFormComponent implements OnInit {
     hasThirdPlaceFight: [false],
     resultDescriptor: this.fb.group({
       forceManualAssignment: [false],
-      fightResultOptions: this.fb.array([this.fightResultOptionControl()]),
-      additionalGroupSortingDescriptors: this.fb.array([this.additionalGroupSortingDescriptorsControl()])
+      fightResultOptions: this.fb.array([[]]),
+      additionalGroupSortingDescriptors: this.fb.array([[]])
     }),
     inputDescriptor: this.fb.group({
-      selectors: this.fb.array([this.competitorSelector()]),
+      selectors: this.fb.array([[]]),
       numberOfCompetitors: [{value: index === 0 ? this.competitorsSize : 0, disabled: index === 0}, [Validators.max(this._competitorsSize), Validators.min(1)]]
     }),
     groupDescriptors: this.fb.array([this.groupDescriptorConfig()])
@@ -239,7 +237,7 @@ export class GenerateBracketsFormComponent implements OnInit {
         }
         draft.inputDescriptor.numberOfCompetitors = numberOfCompetitors;
         if (!draft.inputDescriptor.selectors) {
-          draft.inputDescriptor.selectors = [<CompetitorSelector> {
+          draft.inputDescriptor.selectors = [<CompetitorSelector>{
             classifier: SelectorClassifier.FIRST_N_PLACES,
             operator: OperatorType.EQUALS,
             selectorValue: [`${numberOfCompetitors}`],
@@ -250,6 +248,9 @@ export class GenerateBracketsFormComponent implements OnInit {
 
       }
       draft.resultDescriptor.id = '';
+      draft.resultDescriptor.fightResultOptions = draft.resultDescriptor.fightResultOptions.filter(o => !!o);
+      draft.inputDescriptor.selectors = draft.inputDescriptor.selectors.filter(o => !!o);
+      draft.resultDescriptor.additionalGroupSortingDescriptors = draft.resultDescriptor.additionalGroupSortingDescriptors.filter(o => !!o);
     }));
     this.generateStages.next(stages);
   }
@@ -257,7 +258,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   addAdditionalSortingOption(i, specifier: any, direction: any) {
     // tslint:disable-next-line:triple-equals
     if (((specifier && direction) || specifier == 'MANUAL') && this.getAdditionalGroupSortingDescriptors(i).value
-      && !this.getAdditionalGroupSortingDescriptors(i).value.find(a => a.groupSortSpecifier === specifier)) {
+      && !this.getAdditionalGroupSortingDescriptorsValue(i).find(a => a.groupSortSpecifier === specifier)) {
       this.addAdditionalGroupSortingDescriptor(i, <AdditionalGroupSortingDescriptor>{groupSortSpecifier: specifier, groupSortDirection: direction});
     }
   }
@@ -294,16 +295,43 @@ export class GenerateBracketsFormComponent implements OnInit {
     return this.stageDescriptions.at(i).get('resultDescriptor.fightResultOptions') as FormArray;
   }
 
+  getFightResultOptionsValue(i) {
+    const av = this.getFightResultOptions(i).value.filter(v => !!v);
+    return av;
+  }
+
   getAdditionalGroupSortingDescriptors(i) {
     return this.stageDescriptions.at(i).get('resultDescriptor.additionalGroupSortingDescriptors') as FormArray;
   }
+
   getAdditionalCompetitorSelectors(i) {
     return this.stageDescriptions.at(i).get('inputDescriptor.selectors') as FormArray;
   }
 
   addFightResultOptionControl(i: number, o?: FightResultOption) {
-    this.getFightResultOptions(i).push(this.fightResultOptionControl(o));
+    const selectedOptions = this.getFightResultOptions(i).value.filter(v => !!v) as FightResultOption[];
+    if (o && !selectedOptions.find(s => s.shortName === o.shortName)) {
+      this.getFightResultOptions(i).push(this.fightResultOptionControl(o));
+    }
   }
+
+  mergeSelectedFightResultOptions(i: number, os: any[]) {
+    const optionsControls = this.getFightResultOptions(i);
+    const selectedOptions = optionsControls.value.filter(v => !!v) as FightResultOption[];
+    const optionsToAdd = os.filter(o => !selectedOptions.find(s => s.shortName === o.shortName));
+    const val = [...selectedOptions, ...optionsToAdd];
+    for (const k = 0; k < optionsControls.controls.length; i++) {
+      optionsControls.removeAt(k);
+    }
+    val.map(o => this.fightResultOptionControl(o)).forEach(c => optionsControls.push(c));
+  }
+
+  getFilteredDefaultOptions(i: number) {
+    const optionsControls = this.getFightResultOptions(i);
+    const selectedOptions = optionsControls.value.filter(v => !!v) as FightResultOption[];
+    return this.defaultFightResultOptions.filter(d => !selectedOptions.find(s => s.shortName === d.shortName));
+  }
+
 
   removeFightResultOpiton(i: number, k: number) {
     this.getFightResultOptions(i).removeAt(k);
@@ -328,7 +356,7 @@ export class GenerateBracketsFormComponent implements OnInit {
     logicalOperator: [(o && o.logicalOperator) || '', [Validators.required]],
     classifier: [(o && o.classifier) || '', [Validators.required]],
     operator: [(o && o.operator) || '', [Validators.required]],
-    selectorValue: [(o && o.selectorValue) || '', [Validators.required]]
+    selectorValue: this.fb.array([[(o && o.selectorValue) || '', [Validators.required]]])
   });
 
   addAdditionalCompetitorSelector(i: number, o?: CompetitorSelector) {
@@ -340,4 +368,11 @@ export class GenerateBracketsFormComponent implements OnInit {
     this.getAdditionalCompetitorSelectors(i).removeAt(k);
   }
 
+  getAdditionalCompetitorSelectorsValue(i: number) {
+    return this.getAdditionalCompetitorSelectors(i).value.filter(v => !!v);
+  }
+
+  getAdditionalGroupSortingDescriptorsValue(i: number) {
+    return this.getAdditionalGroupSortingDescriptors(i).value.filter(v => !!v);
+  }
 }
