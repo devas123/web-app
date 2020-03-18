@@ -3,6 +3,7 @@
     <h3 class="ui header">Schedule</h3>
     <app-schedule-display [categories]="categories$ | async"
                           [schedule]="selectedCompetitionSchedule$ | async"
+                          [schedulePeriods]="periods$ | async"
                           [timeZone]="timeZone$ | async"
                           [competitionId]="(selectedCompetitionProperties$ | async)?.id"
                           (categoryClicked)="navigateToCategory($event)"></app-schedule-display>
@@ -17,7 +18,7 @@
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
         <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
-        <div class="meta">{{period?.mats?.length + ' mats'}}</div>
+        <div class="meta">{{(getPeriodMatsLength(period.id) | async) + ' mats'}}</div>
       </div>
     </div>
   </div>

@@ -32,7 +32,7 @@ import {CommonBracketsContainer} from '../../../../commons/classes/common-bracke
 @Component({
   selector: 'app-brackets-editor-container',
   templateUrl: './brackets-editor-container.component.html',
-  styleUrls: ['./brackets-editor-container.component.css']
+  styleUrls: ['./brackets-editor-container.component.scss']
 })
 export class BracketsEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
@@ -45,7 +45,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
 
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
-  private bracketsSize$: Observable<number>;
+  bracketsSize$: Observable<number>;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
               private observer: BreakpointObserver, menuService: MenuService, public bracketsInfo: CommonBracketsContainer) {

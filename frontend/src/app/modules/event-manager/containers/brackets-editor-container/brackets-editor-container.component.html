@@ -17,11 +17,8 @@
   <h4 class="ui header">{{formatter(bracketsInfo?.category$ | async)}}</h4>
   <div class="ui description">{{bracketsInfo?.numberOfCompetitor$ | async}} competitors</div>
 </div>
-<div class="ui container" *ngIf="bracketsInfo?.fightsAreLoading$ | async">
-  <sui-dimmer class="ui dimmer rounded transparent" [isDimmed]="bracketsInfo?.fightsAreLoading$ | async"
-              [isClickable]="false">
-    <div class="ui text loader">Loading</div>
-  </sui-dimmer>
+<div *ngIf="bracketsInfo?.fightsAreLoading$ | async" class="ui active transparent dimmer centered">
+  <div class="ui text loader centered">Loading</div>
 </div>
 <app-fights-editor-container *ngIf="editMode"></app-fights-editor-container>
 <app-generate-brackets-form

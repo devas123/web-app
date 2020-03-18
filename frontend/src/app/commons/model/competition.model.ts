@@ -1,8 +1,8 @@
-import {DashboardState, MatDescription} from '../../modules/event-manager/redux/dashboard-reducers';
+import {DashboardState} from '../../modules/event-manager/redux/dashboard-reducers';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities} from '../../reducers/global-reducers';
+import {EventPropsEntities, MatDescription} from '../../reducers/global-reducers';
 
 const getRestrictionName = (res: CategoryRestriction, def = '') => {
   if (res) {
@@ -69,17 +69,45 @@ export const categoriesComparer = (a: Category, b: Category) => displayCategory(
 export interface Period {
   id: string;
   name: string;
-  startTime: Date;
-  schedule: ScheduleEntry[];
-  duration: number;
-  fightsByMats: any;
+  startTime: string;
+  endTime?: string;
+  isActive: boolean;
+  scheduleEntries?: ScheduleEntry[];
+  scheduleRequirements?: ScheduleRequirement[];
+  duration?: number;
+  numberOfMats: number;
+  timeBetweenFights: number;
+  riskPercent: number;
+  categories?: string[];
 }
 
 export interface ScheduleEntry {
+  id: string;
   categoryId: string;
   startTime: Date;
   numberOfFights: number;
   fightDuration: number;
+  categoryIds: string[];
+  fightIds: string[];
+  matId: string;
+  periodId: string;
+  description: string;
+  entryType: string;
+  requirementIds: string[];
+  duration: number;
+  order: number;
+}
+
+export interface ScheduleRequirement {
+  id: string;
+  categoryIds: string[];
+  fightIds: string[];
+  matId: string;
+  periodId: string;
+  entryType: string;
+  force: boolean;
+  startTime: Date;
+  endTime: Date;
 }
 
 export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
@@ -123,7 +151,7 @@ export interface Fight {
   fightName: string;
   id: string;
   categoryId: string;
-  category ?: Category;
+  category?: Category;
   parentId1?: string;
   parentId2?: string;
   winFight?: string;
@@ -231,11 +259,11 @@ export enum SelectorClassifier {
 }
 
 export interface CompetitorSelector {
-   applyToStageNumber: string;
-   logicalOperator: string;
-   classifier: SelectorClassifier;
-   operator: OperatorType;
-   selectorValue: string[];
+  applyToStageNumber: string;
+  logicalOperator: string;
+  classifier: SelectorClassifier;
+  operator: OperatorType;
+  selectorValue: string[];
 }
 
 export interface FightResultOption {
@@ -322,21 +350,6 @@ export interface EventManagerState {
   dashboardState: DashboardState;
   socketConnected: boolean;
   header: HeaderDescription;
-}
-
-export interface PeriodProperties {
-  id: string;
-  name: string;
-  startTime: string;
-  numberOfMats: number;
-  timeBetweenFights: number;
-  riskPercent: number;
-  categories: string[];
-}
-
-export interface ScheduleProperties {
-  competitionId: string;
-  periodPropertiesList: PeriodProperties[];
 }
 
 

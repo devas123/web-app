@@ -6,7 +6,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 
 
-import {AppState, CommonAction, getSelectedEventId} from '../../../reducers/global-reducers';
+import {AppState, CommonAction, getSelectedEventGetSelectedMatId, getSelectedEventId, getSelectedEventSelectedPeriodId} from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {ERROR_EVENT, errorEvent} from '../../../actions/actions';
 import {
@@ -26,11 +26,6 @@ import {
   dashboardStateLoaded,
   loadDashboardState
 } from './dashboard-actions';
-import {
-  dashboardGetSelectedPeriodId,
-  dashboardGetSelectedPeriodSelectedMatId,
-  dashboardGetSelectedPeriodSelectedMatSelectedFightId
-} from './dashboard-reducers';
 
 @Injectable()
 export class DashboardEffects {
@@ -91,8 +86,8 @@ export class DashboardEffects {
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, DASHBOARD_SET_FIGHT_RESULT_COMMAND),
     concatMap(action => of(action).pipe(
-      withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId)),
-        this.store.pipe(select(dashboardGetSelectedPeriodSelectedMatId)))
+      withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId)),
+        this.store.pipe(select(getSelectedEventGetSelectedMatId)))
     )),
     exhaustMap(([command, periodId, matId]: [CommonAction, string, string]) => this.infoService.sendCommandSync(command)
       .pipe(exhaustMap(() => from([loadDashboardState(command.competitionId), dashboardPeriodSelected(periodId, command.competitionId), dashboardMatSelected(command.competitionId, matId)])))))

@@ -2,27 +2,23 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   AppState,
   CompetitionProperties,
+  eventManagerGetSelectedEventSchedule,
+  getSelectedEventMats,
   getSelectedEventProperties,
+  getSelectedEventSelectedPeriod,
+  MatDescription,
   Schedule
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventScheduleProperties
-} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventName, getSelectedEventPeriods} from '../../redux/event-manager-reducers';
 import {Observable, Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {dashboardGetPeriods, dashboardGetSelectedPeriod, DashboardPeriod} from '../../redux/dashboard-reducers';
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
-import {
-  BasicCompetitionInfoContainer,
-  ComponentCommonMetadataProvider
-} from '../event-manager-container/common-classes';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {ScheduleProperties} from '../../../../commons/model/competition.model';
+import {Period} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-periods-management-container',
@@ -31,11 +27,12 @@ import {ScheduleProperties} from '../../../../commons/model/competition.model';
 })
 export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
-  periods$: Observable<DashboardPeriod[]>;
+  mats$: Observable<MatDescription[]>;
+  periods$: Observable<Period[]>;
   selectedCompetitionProperties$: Observable<CompetitionProperties>;
   selectedCompetitionSchedule$: Observable<Schedule>;
-  selectedCompetitionScheduleProperties$: Observable<ScheduleProperties>;
-  selectedPeriod$: Observable<DashboardPeriod>;
+  selectedCompetitionScheduleProperties$: Observable<Period[]>;
+  selectedPeriod$: Observable<Period>;
   subs = new Subscription();
   competitionProperties: CompetitionProperties;
 
@@ -66,12 +63,16 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
         }
       ]
     }, menuService);
-    this.periods$ = store.pipe(select(dashboardGetPeriods));
+    this.periods$ = store.pipe(select(getSelectedEventPeriods));
     this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventProperties));
     this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
-    this.selectedCompetitionScheduleProperties$ = store.pipe(select(eventManagerGetSelectedEventScheduleProperties));
-    this.selectedPeriod$ = this.store.pipe(select(dashboardGetSelectedPeriod));
+    this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));
+    this.mats$ = this.store.pipe(select(getSelectedEventMats));
     this.subs.add(this.selectedCompetitionProperties$.subscribe(props => this.competitionProperties = props));
+  }
+
+  getPeriodMatsLength(periodId: string) {
+    return this.mats$.pipe(map(ms => ms.filter(m => m.periodId === periodId).length));
   }
 
   navigateBack() {
@@ -82,7 +83,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
     return this.router.navigate(['..', '..', 'categories', categoryId], {relativeTo: this.route});
   }
 
-  removePeriod(period: DashboardPeriod) {
+  removePeriod(period: Period) {
     if (this.competitionProperties) {
       this.store.dispatch(dashboardRemovePeriod(this.competitionProperties.id, period.id));
     }

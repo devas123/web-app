@@ -1,28 +1,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  dashboardGetSelectedPeriodSelectedMatFights,
+  dashboardGetSelectedPeriodSelectedMatSelectedFight,
+  getSelectedEventGetSelectedMat,
+  getSelectedEventId,
+  getSelectedEventSelectedPeriod,
+  getSelectedEventSelectedPeriodId
+} from '../../../../reducers/global-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {Category, Fight, HeaderDescription} from '../../../../commons/model/competition.model';
-import {
-  dashboardGetSelectedPeriod,
-  dashboardGetSelectedPeriodId,
-  dashboardGetSelectedPeriodSelectedMat,
-  dashboardGetSelectedPeriodSelectedMatFights,
-  dashboardGetSelectedPeriodSelectedMatSelectedFight,
-  IScoreboardFightResultSet
-} from '../../redux/dashboard-reducers';
+import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {
-  dashboardFightSelected,
-  dashboardFightUnselected,
-  dashboardSetFightResultCommand
-} from '../../redux/dashboard-actions';
+import {dashboardFightSelected, dashboardFightUnselected, dashboardSetFightResultCommand} from '../../redux/dashboard-actions';
 import {eventManagerGetSelectedEventCategory} from '../../redux/event-manager-reducers';
-import {
-  ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
@@ -42,7 +36,8 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: combineLatest([store.pipe(select(dashboardGetSelectedPeriod)), store.pipe(select(dashboardGetSelectedPeriodSelectedMat))]).pipe(tap(console.log),
+      header: combineLatest([store.pipe(select(getSelectedEventSelectedPeriod)),
+        store.pipe(select(getSelectedEventGetSelectedMat))]).pipe(tap(console.log),
         filter(([p, m]) => !!p && !!m && !!m.matDescription),
         map(([per, mat]) => <HeaderDescription>{
           header: 'Mat view',
@@ -85,7 +80,8 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   }
 
   navigateBack() {
-    this.store.pipe(select(getSelectedEventId), withLatestFrom(this.store.pipe(select(dashboardGetSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
+    this.store.pipe(select(getSelectedEventId),
+      withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
       this.router.navigateByUrl(`/eventmanager/${id}/dashboard/${period}`).catch(console.error);
     });
   }

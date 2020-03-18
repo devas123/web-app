@@ -1,7 +1,7 @@
 // commands
 import {
   CommonAction,
-  CompetitionProperties,
+  CompetitionProperties, MatDescription,
   RegistrationGroup,
   RegistrationInfo,
   RegistrationPeriod,
@@ -12,8 +12,7 @@ import {
   Competitor,
   Fight, FightResultOption,
   FightsEditorChange,
-  HeaderDescription,
-  PeriodProperties
+  HeaderDescription, Period
 } from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 
@@ -207,7 +206,7 @@ export const eventManagerAddCategory = (competitionId, category: Category) => ({
   payload: {category}
 });
 
-export const eventManagerPeriodAdded = (competitionId, period: PeriodProperties) => ({
+export const eventManagerPeriodAdded = (competitionId, period: Period, mats: MatDescription[]) => ({
   type: EVENT_MANAGER_PERIOD_ADDED,
   competitionId,
   payload: period
