@@ -17,7 +17,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
 
 @Injectable()
-export class CommonBracketsContainer {
+export class CommonBracketsInfoContainer {
   competition$: Observable<CompetitionProperties>;
   stages$: Observable<CategoryBracketsStage[]>;
   fights$: Observable<Fight[]>;

@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Schedule} from '../../reducers/global-reducers';
+import {MatDescription, Schedule} from '../../reducers/global-reducers';
 import {Category, Period} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'app-schedule-display',
   template: `
-    <div [suiCollapse]="!schedulePeriods  || schedulePeriods?.length === 0">
+    <div [suiCollapse]="scheduleEmpty">
       <div class="ui two stackable cards">
         <div class="card" *ngFor="let period of schedulePeriods">
           <div class="content">
@@ -38,6 +39,15 @@ export class ScheduleDisplayComponent implements OnInit {
 
   constructor() {
   }
+
+  @Input()
+  private fightIdsByCategoryId: Dictionary<string[]>;
+
+  @Input()
+  mats: MatDescription[];
+
+  @Input()
+  scheduleEmpty = true;
 
   @Input()
   timeZone = 'UTC';

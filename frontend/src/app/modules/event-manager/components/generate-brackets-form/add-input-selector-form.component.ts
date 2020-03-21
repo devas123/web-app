@@ -133,7 +133,7 @@ export class AddInputSelectorFormComponent implements OnInit {
       logicalOperator: ['AND'],
       classifier: ['', [Validators.required]],
       operator: [OperatorType.EQUALS],
-      selectorValue: this.fb.array([['', [Validators.required]]])
+      selectorValue: this.fb.array([], [Validators.required])
     });
   }
 

@@ -1,58 +1,83 @@
 <div class="ui segments">
-    <div [suiCollapse]="!showEditor">
-        <div class="ui basic segment">
-            <button class="ui button" *ngIf="scheduleEmpty" (click)="openModal()">Add period</button>
-            <div class="ui basic segment" *ngIf="scheduleEmpty">
-                <div class="ui stackable cards" cdkDropListGroup>
-                    <div class="card">
-                        <div class="content">
-                            <div class="meta">Categories</div>
-                            <div class="inner-list list-container"
-                                 [ngClass]="{'empty-container': !filteredCategories || filteredCategories.length === 0}"
-                                 cdkDropList [cdkDropListData]="filteredCategories"
-                                 (cdkDropListDropped)="onItemDropBack($event)">
-                                <a class="item" *ngFor="let cat of filteredCategories" cdkDrag
-                                   [cdkDragData]="{id: null, cat: cat}">
-                                    <i class="circular users icon"></i>
-                                    <div class="content">
-                                        <div class="header" [innerHTML]="categoryName(cat?.id)"></div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" *ngFor="let period of periods">
-                        <div class="content">
-                            <div class="right floated meta">
-                                <i class="close link icon" (click)="removePeriod(period)"></i>
-                            </div>
-                            <div class="header">Period {{period?.name}}</div>
-                            <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
-                            <div class="inner-list list-container"
-                                 [ngClass]="{'empty-container': !period?.categories || period?.categories.length === 0}"
-                                 cdkDropList [cdkDropListData]="period?.categories"
-                                 (cdkDropListDropped)="onItemDrop($event, period.name)">
-                                <a class="item" *ngFor="let cat of period?.categories" cdkDrag
-                                   [cdkDragData]="{id: period.name, cat: cat}">
-                                    <i class="circular users icon"></i>
-                                    <div class="content">
-                                        <div class="header">{{categoryName(cat)}}</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="extra content" *ngIf="period?.categories && period?.categories?.length >= 0">
-                            Categories: {{period?.categories?.length}}
-                        </div>
-                    </div>
+  <div [suiCollapse]="!showEditor">
+    <div class="ui basic segment" cdkDropListGroup>
+      <button class="ui tiny button" *ngIf="scheduleEmpty" (click)="openAddSchedulePeriodModal()">Add period</button>
+      <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size > 1"
+              (click)="mergeSelectedReqs()">Merge selected
+      </button>
+      <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size === 1 && !requirementEditor?._visible"
+              (click)="editSelectedReq()">Edit selected
+      </button>
+      <app-requirement-editor *ngIf="_selectedReqs && _selectedReqs.size === 1"
+                              [req]="getRequirementForIds(_selectedReqs)[0]"
+                              [requirementCategories]="getRequirementCategories(getRequirementForIds(_selectedReqs)[0])"
+                              (save)="this._selectedReqs.clear()"
+                              (itemDropped)="onCategoryDropToRequirement($event, getRequirementForIds(_selectedReqs)[0])"></app-requirement-editor>
+      <div class="ui basic segment" *ngIf="scheduleEmpty">
+        <div class="ui two stackable cards">
+          <div class="card">
+            <div class="content">
+              <div class="meta">Categories</div>
+              <app-categories-list [periodId]="null"
+                                   [allCategories]="categories"
+                                   [linesToDisplay]="filteredCategories"
+                                   (itemDropped)="onItemDropBack($event, null)"
+                                   (requirementRemoveClicked)="removeUndispatchedRequirement($event, true)"></app-categories-list>
+            </div>
+          </div>
+          <div class="card" *ngFor="let period of periods">
+            <div class="content">
+              <div class="right floated meta">
+                <i class="close link icon" (click)="removePeriod(period)"></i>
+              </div>
+              <div class="header">Period {{period?.name}}</div>
+              <div class="meta">
+                <span>{{getPeriodMats(period.id)?.length}} {{getPeriodMats(period.id)?.length === 1 ? 'mat' : 'mats'}}</span>
+              </div>
+              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+              <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id)">Add Pause</button>
+              <app-requirements-display
+                *ngIf="getPeriodMats(period?.id)?.length > 1 || getPeriodMats(period?.id)?.length === 0"
+                class="padded-top"
+                [selectedReqs]="_selectedReqs"
+                [categories]="categories"
+                [requirements]="getScheduleRequirementsWithoutMat(period?.id)"
+                [periodId]="period.id"
+                [matId]="null"
+                [timeZone]="timeZone"
+                (itemDropped)="onItemDrop($event.event, $event.periodId, null)"
+                (requirementRemoved)="removeRequirement($event, period)"
+                (requirementSelectionChanged)="changeSelectionStatus($event)"></app-requirements-display>
+              <div class="inner-list list-container mat-grid"
+                   [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
+                <div *ngFor="let mat of getPeriodMats(period.id)" class="mat-container">
+                  <section>{{mat.name}}</section>
+                  <app-requirements-display
+                    [selectedReqs]="_selectedReqs"
+                    (requirementRemoved)="removeRequirement($event, period)"
+                    [categories]="categories"
+                    [requirements]="getScheduleRequirementsForMat(mat.id, period?.id)"
+                    [periodId]="period.id"
+                    [matId]="mat.id"
+                    [timeZone]="timeZone"
+                    (requirementSelectionChanged)="changeSelectionStatus($event)"
+                    (itemDropped)="onItemDrop($event.event, $event.periodId, mat.id)"></app-requirements-display>
                 </div>
+              </div>
             </div>
-            <div>
-                <button class="ui button" *ngIf="scheduleEmpty" [disabled]="filteredCategories.length > 0"
-                        (click)="sendGenerateSchedule()">Create schedule
-                </button>
-                <button class="ui button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
+            <div class="extra content">
+              <span>Categories: {{getPeriodCategories(period).length}}</span>
+              <span class="right floated">{{getPeriodFights(period.id)?.length}} fights</span>
             </div>
+          </div>
         </div>
+      </div>
+      <div>
+        <button class="ui button" *ngIf="scheduleEmpty" [disabled]="filteredCategories.length > 0"
+                (click)="sendGenerateSchedule()">Create schedule
+        </button>
+        <button class="ui button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
+      </div>
     </div>
+  </div>
 </div>

@@ -29,7 +29,8 @@ export const environment = {
   matFights: '/competitions/api/v1/store/matfights',
   stageFights: '/competitions/api/v1/store/stagefights',
   defaultFightResults: '/competitions/api/v1/store/defaultfightresults',
-  categoryStages: '/competitions/api/v1/store/stages'
+  categoryStages: '/competitions/api/v1/store/stages',
+  fightIdsBycategoryId: '/competitions/api/v1/store/fightsbycategories'
 };
 
 const comprops = '/jsserver/competition';
@@ -52,7 +53,8 @@ export const mocks = {
   matFights: '/jsserver/matfights',
   stageFights: '/jsserver/stagefights',
   defaultFightResults: '/jsserver/defaultfightresults',
-  categoryStages: '/jsserver/stages'
+  categoryStages: '/jsserver/stages',
+  fightIdsBycategoryId: '/jsserver/fightsbycategories'
 };
 
 

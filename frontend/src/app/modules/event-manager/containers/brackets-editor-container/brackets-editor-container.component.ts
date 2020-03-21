@@ -27,7 +27,7 @@ import {
 } from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {CommonBracketsContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
   selector: 'app-brackets-editor-container',
@@ -48,7 +48,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   bracketsSize$: Observable<number>;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
-              private observer: BreakpointObserver, menuService: MenuService, public bracketsInfo: CommonBracketsContainer) {
+              private observer: BreakpointObserver, menuService: MenuService, public bracketsInfo: CommonBracketsInfoContainer) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(
         select(eventManagerGetSelectedEventName),

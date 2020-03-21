@@ -233,14 +233,12 @@ export const eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelect
   });
 
 const {
-  selectAll: selectAllPeriods,
-  selectEntities: selectPeriodsDict,
-  selectIds: selectPeriodsIds
+  selectAll: selectAllPeriods
 } = periodEntityAdapter.getSelectors(eventManagerGetSelectedEventSchedulePeriodsCollection);
 
 export const getSelectedEventPeriods = selectAllPeriods;
-export const eventManagerGetSelectedEventScheduleEmpty = createSelector(getSelectedEventState, getSelectedEventPeriods, (state, periods) => {
-  return !(!!state && !!periods && periods.length > 0);
+export const eventManagerGetSelectedEventScheduleEmpty = createSelector(selectAllPeriods, (periods) => {
+  return !(!!periods && periods.length > 0 && periods.find(p => p.scheduleEntries && p.scheduleEntries.length > 0));
 });
 
 export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelector(eventManagerGetSelectedEventSchedule,

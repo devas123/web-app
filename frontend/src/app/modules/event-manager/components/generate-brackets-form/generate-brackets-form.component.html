@@ -1,10 +1,11 @@
 <div class="ui basic segment bottom_margin" [formGroup]="form">
   <div class="ui buttons">
-    <button class="ui button" (click)="doGenerateStages()" [disabled]="form.pristine || form.invalid">Generate</button>
+    <button class="ui button" (click)="doGenerateStages()" [disabled]="form.invalid">Generate</button>
     <button class="ui button" (click)="addStageDescription()">Add stage</button>
     <button class="ui button" (click)="removeAllStages()">Clear</button>
   </div>
   <ng-container *ngIf="form.invalid">
+    <h6 class="ui header">Errors: </h6>
     <div class="ui message" *ngFor="let error of getErrors()">{{error}}</div>
   </ng-container>
   <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
@@ -37,7 +38,7 @@
             <div class="ui field">
               <input class="ui input" type="text" placeholder="Stage name." formControlName="name"/>
             </div>
-            <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP'">
+            <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP' && i > 0">
               <div class="ui field">
                 <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
                   stage.</label>
@@ -121,7 +122,7 @@
                     </div>
                   </sui-multi-select>
                 </div>
-                <app-tag-list [values]="getFightResultOptionsValue(i) || []">
+                <app-tag-list [values]="getFightResultOptionsValue(i)">
                   <ng-template let-opt="$implicit" let-k="index">
                     <div class="ui icon label">
                       <span suiPopup [popupText]="opt?.description" popupBasic popupDelay="300">{{opt?.shortName}}</span>

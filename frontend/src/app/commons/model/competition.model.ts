@@ -75,10 +75,8 @@ export interface Period {
   scheduleEntries?: ScheduleEntry[];
   scheduleRequirements?: ScheduleRequirement[];
   duration?: number;
-  numberOfMats: number;
   timeBetweenFights: number;
   riskPercent: number;
-  categories?: string[];
 }
 
 export interface ScheduleEntry {
@@ -89,6 +87,7 @@ export interface ScheduleEntry {
   fightDuration: number;
   categoryIds: string[];
   fightIds: string[];
+  invalidFightIds: string[];
   matId: string;
   periodId: string;
   description: string;
@@ -98,16 +97,19 @@ export interface ScheduleEntry {
   order: number;
 }
 
+export type ScheduleRequirementType = 'CATEGORIES' | 'FIGHTS' | 'RELATIVE_PAUSE' | 'FIXED_PAUSE';
+
 export interface ScheduleRequirement {
   id: string;
   categoryIds: string[];
   fightIds: string[];
   matId: string;
   periodId: string;
-  entryType: string;
+  entryType: ScheduleRequirementType;
+  durationMinutes: number;
   force: boolean;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 }
 
 export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';

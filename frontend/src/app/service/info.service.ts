@@ -30,7 +30,8 @@ const {
   matFights,
   stageFights,
   categoryStages,
-  defaultFightResults
+  defaultFightResults,
+  fightIdsBycategoryId
 } = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
@@ -146,6 +147,14 @@ export class InfoService {
   getSchedule(competitionId: string) {
     const params = {competitionId};
     return this.httpGet(scheduleEndpoint, {
+      params: params,
+      headers: this.headers
+    });
+  }
+
+  getFightIdsByCategoryId(competitionId: string) {
+    const params = {competitionId};
+    return this.httpGet(fightIdsBycategoryId, {
       params: params,
       headers: this.headers
     });

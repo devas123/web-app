@@ -1,17 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {
-  AppState,
-  CompetitionProperties,
-  eventManagerGetSelectedEventSchedule,
-  getSelectedEventMats,
-  getSelectedEventProperties,
-  getSelectedEventSelectedPeriod,
-  MatDescription,
-  Schedule
-} from '../../../../reducers/global-reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventName, getSelectedEventPeriods} from '../../redux/event-manager-reducers';
-import {Observable, Subscription} from 'rxjs';
+import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
@@ -19,6 +10,7 @@ import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '..
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {Period} from '../../../../commons/model/competition.model';
+import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
 
 @Component({
   selector: 'app-periods-management-container',
@@ -27,18 +19,12 @@ import {Period} from '../../../../commons/model/competition.model';
 })
 export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
-  mats$: Observable<MatDescription[]>;
-  periods$: Observable<Period[]>;
-  selectedCompetitionProperties$: Observable<CompetitionProperties>;
-  selectedCompetitionSchedule$: Observable<Schedule>;
-  selectedCompetitionScheduleProperties$: Observable<Period[]>;
-  selectedPeriod$: Observable<Period>;
   subs = new Subscription();
-  competitionProperties: CompetitionProperties;
 
   showSchedule = false;
 
-  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
+  constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService,
+              public scheduleInfo: CommonScheduleInfoContainerService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
         header: 'Progress dashboard',
@@ -63,16 +49,10 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
         }
       ]
     }, menuService);
-    this.periods$ = store.pipe(select(getSelectedEventPeriods));
-    this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventProperties));
-    this.selectedCompetitionSchedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
-    this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));
-    this.mats$ = this.store.pipe(select(getSelectedEventMats));
-    this.subs.add(this.selectedCompetitionProperties$.subscribe(props => this.competitionProperties = props));
   }
 
   getPeriodMatsLength(periodId: string) {
-    return this.mats$.pipe(map(ms => ms.filter(m => m.periodId === periodId).length));
+    return this.scheduleInfo.mats$.pipe(map(ms => ms.filter(m => m.periodId === periodId).length));
   }
 
   navigateBack() {
@@ -84,9 +64,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
   }
 
   removePeriod(period: Period) {
-    if (this.competitionProperties) {
-      this.store.dispatch(dashboardRemovePeriod(this.competitionProperties.id, period.id));
-    }
+    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardRemovePeriod(competitionId, period.id));
   }
 
   selectPeriod(periodId: string) {
@@ -98,17 +76,13 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
   }
 
   sendUseScheduleCommand() {
-    if (this.competitionProperties && this.competitionProperties.id) {
-      this.store.dispatch(dashboardInitState(this.competitionProperties.id));
-      this.showSchedule = false;
-    }
+    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardInitState(competitionId));
+    this.showSchedule = false;
   }
 
   sendDeleteDashboardStateCommand() {
-    if (this.competitionProperties && this.competitionProperties.id) {
-      this.store.dispatch(dashboardDeleteState(this.competitionProperties.id));
-      this.showSchedule = true;
-    }
+    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardDeleteState(competitionId));
+    this.showSchedule = true;
   }
 
   ngOnInit() {

@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
-import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
+import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
 import * as uuidv4 from 'uuid/v4';
 
 import {
@@ -29,6 +29,7 @@ import {
   fightsEditorInitialState,
   fightsInitialState,
   Period,
+  ScheduleRequirement,
   stagesEntityAdapter,
   stagesInitialState
 } from '../commons/model/competition.model';
@@ -72,6 +73,8 @@ import {
   EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
+  EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED,
+  FIGHT_IDS_BY_CATEGORY_ID_LOADED,
   FIGHTS_START_TIME_UPDATED,
   REGISTRATION_INFO_UPDATED,
   SCHEDULE_GENERATED
@@ -163,12 +166,14 @@ export const periodEntityInitialState = periodEntityAdapter.getInitialState({
 export interface Schedule {
   competitionId: string;
   periods: PeriodEntities;
+  fightIdsBycategoryId: Dictionary<string[]>;
 }
 
 
 export const scheduleInitialState: Schedule = {
   periods: periodEntityInitialState,
-  competitionId: null
+  competitionId: null,
+  fightIdsBycategoryId: {}
 };
 
 export const initialCompetitionState: CompetitionState = {
@@ -177,7 +182,8 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventSchedule: scheduleInitialState,
   selectedEventDefaultCategories: [],
   selectedEventDefaultFightResultOptions: [],
-  competitionProperties: {}
+  competitionProperties: {},
+  selectedEventMats: matsInitialState
 } as CompetitionState;
 
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
@@ -468,11 +474,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             let newState = state;
             if (from) {
               let updatedPeriod = newState.selectedEventSchedule.periods.entities[from];
-              if (updatedPeriod && updatedPeriod.categories) {
+              if (updatedPeriod && updatedPeriod.scheduleRequirements) {
                 // @ts-ignore
                 updatedPeriod = {
                   ...updatedPeriod,
-                  categories: updatedPeriod.categories.filter(cat => cat !== category.id)
+                  scheduleRequirements: updatedPeriod.scheduleRequirements.filter(sr => sr.categoryIds.indexOf(category.id) < 0)
                 };
                 const update = <Update<Period>>{
                   id: updatedPeriod.id,
@@ -491,22 +497,29 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             if (to) {
               let updatedPeriod = newState.selectedEventSchedule.periods.entities[to];
               if (updatedPeriod) {
-                let newCategories = [...updatedPeriod.categories, category];
+                const periodRequirements = updatedPeriod.scheduleRequirements || [];
+                const newRequirement = <ScheduleRequirement>{
+                  id: competitionId + updatedPeriod.id + uuidv4().toString(),
+                  categoryIds: [category],
+                  entryType: 'CATEGORIES',
+                  periodId: updatedPeriod.id
+                };
+                let newCategories = [...periodRequirements, newRequirement];
                 if (index && +index > 0) {
-                  newCategories = [...updatedPeriod.categories.slice(0, index),
-                    category, ...updatedPeriod.categories.slice(index)];
+                  newCategories = [...periodRequirements.slice(0, index),
+                    newRequirement, ...periodRequirements.slice(index)];
                 } else {
-                  newCategories = [category, ...updatedPeriod.categories];
+                  newCategories = [newRequirement, ...periodRequirements];
                 }
-                if (updatedPeriod.categories) {
+                if (updatedPeriod.scheduleRequirements) {
                   updatedPeriod = {
                     ...updatedPeriod,
-                    categories: newCategories
+                    scheduleRequirements: newCategories
                   };
                 } else {
                   updatedPeriod = {
                     ...updatedPeriod,
-                    categories: [category]
+                    scheduleRequirements: [newRequirement]
                   };
                 }
                 const update = <Update<Period>>{
@@ -610,6 +623,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.selectedEventSchedule.periods = periodEntityAdapter.addAll(payload.periods, periodEntityInitialState);
           state.selectedEventSchedule.competitionId = payload.id;
         }
+        break;
+      }
+      case FIGHT_IDS_BY_CATEGORY_ID_LOADED: {
+        const {fightIdsBycategoryId} = action;
+        state.selectedEventSchedule.fightIdsBycategoryId = fightIdsBycategoryId;
         break;
       }
       case EVENT_MANAGER_CATEGORY_SELECTED: {
@@ -747,13 +765,20 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_PERIOD_ADDED: {
+        console.log('Period added');
         if (action.competitionId === state.competitionProperties.id) {
           const {period, mats} = action.payload;
-          if (period) {
-            state.selectedEventMats = matEntityAdapter.addAll(mats, state.selectedEventMats);
+          if (period && mats) {
+            state.selectedEventMats = matEntityAdapter.addMany(mats, state.selectedEventMats);
             state.selectedEventSchedule.periods = periodEntityAdapter.addOne(period, state.selectedEventSchedule.periods);
           }
         }
+        break;
+      }
+      case EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED: {
+        console.log('Periods updated');
+        const {periods} = action;
+        state.selectedEventSchedule.periods = periodEntityAdapter.addAll(periods, periodEntityInitialState);
         break;
       }
       case DASHBOARD_MATS_LOADED: {
@@ -887,6 +912,7 @@ export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEv
 export const eventManagerGetSelectedEventSchedulePeriodsCollection = createSelector(eventManagerGetSelectedEventSchedule, state => {
   return (state && state.periods) || periodEntityInitialState;
 });
+export const getSelectedEventScheduleFightsByCategoryId = createSelector(eventManagerGetSelectedEventSchedule, state => state && state.fightIdsBycategoryId);
 
 export const getSelectedEventSelectedPeriodId = createSelector(eventManagerGetSelectedEventSchedulePeriodsCollection,
   state => state && state.selectedPeriodId);

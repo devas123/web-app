@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../reducers/global-reducers';
 import {authorizeToken} from '../modules/account/flux/actions';
@@ -13,7 +13,8 @@ import {selectAccountState} from '../modules/competition/redux/reducers';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
 

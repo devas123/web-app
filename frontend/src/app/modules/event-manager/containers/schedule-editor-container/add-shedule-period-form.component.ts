@@ -35,13 +35,6 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
            [ngClass]="{error: (periodForm.touched || periodForm.dirty) && periodForm.invalid}">
         <div class="fields">
           <div class="three wide field"
-               [ngClass]="{error: numberOfMats.invalid && (numberOfMats.touched || numberOfMats.dirty)}">
-            <label>Number of mats</label>
-            <div class="ui input">
-              <input type="number" name="numberOfMats" placeholder="Number of mats" formControlName="numberOfMats">
-            </div>
-          </div>
-          <div class="three wide field"
                [ngClass]="{error: timeBetweenFights.invalid && (timeBetweenFights.touched || timeBetweenFights.dirty)}">
             <label>Time between fights</label>
             <div class="ui input">
@@ -57,19 +50,19 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
             </div>
           </div>
           <div class="field"
-               [ngClass]="{error: periodName.invalid && (periodName.touched || periodName.dirty)}">
+               [ngClass]="{error: name.invalid && (name.touched || name.dirty)}">
             <label>Period name</label>
             <div class="ui input">
-              <input type="text" name="periodName" placeholder="Period name" formControlName="periodName">
+              <input type="text" name="name" placeholder="Period name" formControlName="name">
             </div>
           </div>
           <div class="field">
             <label>Start time</label>
             <div class="ui input">
               <input suiDatepicker
-                     name="periodStartTime"
+                     name="startTime"
                      placeholder="Start time"
-                     formControlName="periodStartTime"
+                     formControlName="startTime"
                      [pickerMode]="'datetime'"
                      [pickerUseNativeOnMobile]="false"
                      autocomplete="off">
@@ -81,7 +74,7 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
     <div class="content" [formGroup]="matDescriptionsForm">
       <div class="ui button" (click)="addMat()">Add mat</div>
       <div class="ui divider"></div>
-      <div class="ui two stackable cards" formArrayName="mats">
+      <div class="ui three stackable cards mat-container" formArrayName="mats">
         <div class="ui card" *ngFor="let matCtrl of matDescriptionsArray.controls; index as i">
           <div class="content" [formGroupName]="i">
             <a class="right floated">
@@ -122,12 +115,11 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   }
 
   triggerAddSchedulePeriod() {
-    if (this.periodName.value) {
+    if (this.name.value) {
       const properties = {
-        id: btoa(this.periodName.value),
-        name: this.periodName.value,
-        startTime: InfoService.formatDate(this.periodStartTime.value, this.modal.context.timeZone),
-        numberOfMats: this.numberOfMats.value,
+        id: btoa(this.name.value),
+        name: this.name.value,
+        startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,
         riskPercent: this.riskPercent.value,
         categories: [] as string[],
@@ -137,9 +129,10 @@ export class AddSchedulePeriodFormComponent implements OnInit {
       } as Period;
       const mats = produce(this.mats.value as MatDescription[], draft => {
         draft.forEach((m, ind) => {
-          m.name = m.name || `Mat ${ind + 1}`;
+          const name = m.name || `Mat ${ind + 1}`;
+          m.name = name;
           m.periodId = properties.id;
-          m.id = btoa(m.name + m.periodId);
+          m.id = btoa(name + m.periodId);
         });
       });
       this.periodForm.reset();
@@ -155,7 +148,6 @@ export class AddSchedulePeriodFormComponent implements OnInit {
     this.periodForm = this.fb.group({
       name: ['', [Validators.required]],
       startTime: ['', [Validators.required]],
-      numberOfMats: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
       timeBetweenFights: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
       riskPercent: [0.1, [Validators.min(0), Validators.max(1)]],
       id: [''],
@@ -169,10 +161,6 @@ export class AddSchedulePeriodFormComponent implements OnInit {
     });
   }
 
-  get numberOfMats() {
-    return this.periodForm.get('numberOfMats');
-  }
-
   get timeBetweenFights() {
     return this.periodForm.get('timeBetweenFights');
   }
@@ -181,11 +169,11 @@ export class AddSchedulePeriodFormComponent implements OnInit {
     return this.periodForm.get('riskPercent');
   }
 
-  get periodName() {
+  get name() {
     return this.periodForm.get('name');
   }
 
-  get periodStartTime() {
+  get startTime() {
     return this.periodForm.get('startTime');
   }
 

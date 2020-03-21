@@ -21,7 +21,7 @@ import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {SuiModalService} from 'ng2-semantic';
 import {AddGroupModal, IAddRegistrationGroupResult} from '../../components/registration-info-editor/add-group-form.component';
-import {AddPeriodModal, IAddPeriodResult} from '../../components/registration-info-editor/add-period-form.component';
+import {AddPeriodModal, IAddRegistrationPeriodResult} from '../../components/registration-info-editor/add-registration-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
@@ -101,7 +101,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
 
   public openAddPeriodModal(competitionId, timeZone) {
     this.modalService.open(new AddPeriodModal(competitionId, timeZone))
-      .onApprove((result: IAddPeriodResult) => this.addRegistrationInfoPeriod(result))
+      .onApprove((result: IAddRegistrationPeriodResult) => this.addRegistrationInfoPeriod(result))
       .onDeny(_ => { /* deny callback */
       });
   }
@@ -112,7 +112,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
     }
   }
 
-  addRegistrationInfoPeriod(data: IAddPeriodResult) {
+  addRegistrationInfoPeriod(data: IAddRegistrationPeriodResult) {
     this.store.dispatch(eventManagerAddRegistrationPeriod(data.competitionId, data.period));
   }
 

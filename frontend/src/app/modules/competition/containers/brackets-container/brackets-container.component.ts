@@ -6,7 +6,7 @@ import {map, take, withLatestFrom} from 'rxjs/operators';
 import {Category} from '../../../../commons/model/competition.model';
 import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../../event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
-import {CommonBracketsContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
   selector: 'app-brackets-container',
@@ -22,12 +22,12 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   bucketSize$: Observable<number>;
 
   constructor(private store: Store<AppState>,
-              public bracketsInfo: CommonBracketsContainer) {
+              public bracketsInfo: CommonBracketsInfoContainer) {
     this.bucketSize$ = bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 6));
   }
 
   optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
+  formatter = (option: Category) => AddFighterComponent.displayCategory(option);
 
   setCategoryId(category: Category) {
     of(category.id).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([categoryId, competitionId]) => eventManagerCategorySelected(competitionId, categoryId))).subscribe(this.store);
