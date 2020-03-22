@@ -24,10 +24,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   menu$: Observable<MenuItem[]>;
   subs = new Subscription();
 
-  @ViewChild('sidebar', {static: false})
+  @ViewChild('sidebar')
   private _sidebar: any;
 
-  @ViewChild('childcontainer', {static: false, read: ViewContainerRef})
+  @ViewChild('childcontainer', { read: ViewContainerRef })
   childcontainer: ViewContainerRef;
 
   constructor(private store: Store<AppState>, private menuService: MenuService) {

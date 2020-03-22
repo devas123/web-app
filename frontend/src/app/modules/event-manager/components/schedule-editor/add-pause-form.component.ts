@@ -109,7 +109,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
-  @ViewChild('multiSelect', {static: false})
+  @ViewChild('multiSelect')
   select: SuiMultiSelect<MatDescription, MatDescription>;
   _all = false;
   pauseForm: FormGroup;

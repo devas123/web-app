@@ -33,7 +33,7 @@ import {MenuItem} from '../../../../commons/model/competition.model';
   ]
 })
 export class EventManagerMenuComponent {
-  @ViewChild('container', {static: false, read: ViewContainerRef})
+  @ViewChild('container', { read: ViewContainerRef })
   container: ViewContainerRef;
 
   @Input()

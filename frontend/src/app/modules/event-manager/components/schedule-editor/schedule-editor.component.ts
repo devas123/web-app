@@ -69,7 +69,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   @Input()
   private fightIdsByCategoryId: Dictionary<string[]>;
 
-  @ViewChild(RequirementEditorComponent, {static: false})
+  @ViewChild(RequirementEditorComponent)
   requirementEditor: RequirementEditorComponent;
 
   constructor(public modalService: SuiModalService, public cd: ChangeDetectorRef) {

@@ -70,7 +70,7 @@ export class FightersEditorComponent implements OnInit {
   showRegistrationStatus = true;
 
 
-  @ViewChild('pagination', {static: false})
+  @ViewChild('pagination')
   set pagination(value: SuiPagination) {
     if (value) {
       this._pagination = value;

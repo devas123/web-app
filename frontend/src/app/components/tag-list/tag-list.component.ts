@@ -33,7 +33,7 @@ export class TagListComponent<T> {
     }
   }
 
-  @ContentChild(TemplateRef, {static: false})
+  @ContentChild(TemplateRef)
   template: TemplateRef<any>;
 
   @Input()
