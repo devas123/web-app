@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {MatDescription, Schedule} from '../../../../reducers/global-reducers';
 import {Category, Period, ScheduleRequirement} from '../../../../commons/model/competition.model';
-import {SuiModalService} from 'ng2-semantic';
+import {SuiModalService} from '@devas123/ng2-semantic';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodModal, IAddSchedulePeriodResult} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 import {Dictionary} from '@ngrx/entity';

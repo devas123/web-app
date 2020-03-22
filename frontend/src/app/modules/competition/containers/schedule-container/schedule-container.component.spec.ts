@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from 'ng2-semantic';
+import {SuiModule} from '@devas123/ng2-semantic';
 import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';

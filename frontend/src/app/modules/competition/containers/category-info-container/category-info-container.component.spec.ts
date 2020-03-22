@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryInfoContainerComponent } from './category-info-container.component';
 import {CategoryEditorComponent} from '../../../../components/category-editor/category-editor.component';
-import {SuiAccordionModule} from 'ng2-semantic';
+import {SuiAccordionModule} from '@devas123/ng2-semantic';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';

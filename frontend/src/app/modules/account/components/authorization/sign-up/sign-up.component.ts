@@ -9,7 +9,7 @@ import {regexpValidator} from '../authorization.component';
 
 
 
-import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
+import {Transition, TransitionController, TransitionDirection} from '@devas123/ng2-semantic';
 import {Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';
 import {Router} from '@angular/router';

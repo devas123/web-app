@@ -12,7 +12,7 @@ import {
 } from '../../../../commons/model/competition.model';
 import {FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import produce from 'immer';
-import {SuiModalService} from 'ng2-semantic';
+import {SuiModalService} from '@devas123/ng2-semantic';
 import {AddFightResultOptionModal} from './add-fight-result-option-form.component';
 import {AddInputSelectorFormModal} from './add-input-selector-form.component';
 

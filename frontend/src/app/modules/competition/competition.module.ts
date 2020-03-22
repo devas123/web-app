@@ -4,7 +4,7 @@ import {RegistrationService} from './service/registration.service';
 import {CompetitorsEffects, FightsEffects} from './redux/effects';
 import {RouterModule} from '@angular/router';
 import {compRoutes} from './competition.routes';
-import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTransitionModule} from 'ng2-semantic';
+import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTransitionModule} from '@devas123/ng2-semantic';
 import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';

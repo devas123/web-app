@@ -24,7 +24,7 @@ import {
   ComponentCommonMetadataProvider
 } from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {SuiModalService} from 'ng2-semantic';
+import {SuiModalService} from '@devas123/ng2-semantic';
 import {
   ISelectCategoriesResult,
   SelectCategoriesModal
