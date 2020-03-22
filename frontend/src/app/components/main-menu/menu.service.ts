@@ -1,5 +1,5 @@
 import {EmbeddedViewRef, Injectable, TemplateRef, ViewContainerRef} from '@angular/core';
-import {IImplicitContext, SuiSidebar} from 'ng2-semantic/index';
+import {IImplicitContext, SuiSidebar} from '@devas123/ng2-semantic/index';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
