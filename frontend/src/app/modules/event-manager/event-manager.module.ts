@@ -164,16 +164,7 @@ import {RequirementEditorComponent} from './components/schedule-editor/requireme
     TimerControlsComponent,
     FighterProfileComponent,
     AddInputSelectorFormComponent],
-  providers: [EventManagerService],
-  entryComponents: [
-    AddInputSelectorFormComponent,
-    AddFightResultOptionFormComponent,
-    AddGroupFormComponent,
-    AddRegistrationPeriodFormComponent,
-    SelectCategoriesModalComponent,
-    AddSchedulePeriodFormComponent,
-    AddSchedulePauseFormComponent
-  ]
+  providers: [EventManagerService]
 })
 export class EventManagerModule {
 }

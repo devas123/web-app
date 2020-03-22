@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../reducers/global-reducers';
@@ -12,18 +12,19 @@ declare var $: any;
 @Component({
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',
-  styleUrls: ['./main-menu.component.css']
+  styleUrls: ['./main-menu.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainMenuComponent {
-
-  @Input()
-  sidebarRef: any;
 
   @Input()
   public user: Account;
 
   @Input()
   displayButton: boolean;
+
+  @Output()
+  sidebarToggle = new EventEmitter<void>();
 
   constructor(private router: Router, private store: Store<AppState>, public sanitizer: DomSanitizer) {
   }
@@ -56,4 +57,7 @@ export class MainMenuComponent {
   }
 
 
+  sidebarToggled() {
+    this.sidebarToggle.next();
+  }
 }

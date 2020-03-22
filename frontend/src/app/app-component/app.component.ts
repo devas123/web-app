@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../reducers/global-reducers';
 import {authorizeToken} from '../modules/account/flux/actions';
@@ -16,7 +16,7 @@ import {selectAccountState} from '../modules/competition/redux/reducers';
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
 
   title = 'app';
   displayMenuButton$: Observable<boolean>;
@@ -24,11 +24,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   menu$: Observable<MenuItem[]>;
   subs = new Subscription();
 
-  @ViewChild('sidebar')
-  private _sidebar: any;
-
-  @ViewChild('childcontainer', { read: ViewContainerRef })
+  @ViewChild('childcontainer', {read: ViewContainerRef})
   childcontainer: ViewContainerRef;
+  sidebarVisible = false;
 
   constructor(private store: Store<AppState>, private menuService: MenuService) {
     this.displayMenuButton$ = menuService.displaySidebar$;
@@ -44,11 +42,5 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (localStorage.getItem('token')) {
       this.store.dispatch(authorizeToken(localStorage.getItem('token')));
     }
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.menuService.sidebar = this._sidebar;
-    });
   }
 }
