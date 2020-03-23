@@ -357,7 +357,8 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   removeRequirement(req: ScheduleRequirement, period: Period) {
     this.periods = produce(this.periods, draft => {
-      draft.find(p => p.id === period.id).scheduleRequirements = period.scheduleRequirements.filter(sr => sr.id !== req.id);
+      const reqs = draft.find(p => p.id === period.id).scheduleRequirements || [];
+      draft.find(p => p.id === period.id).scheduleRequirements = reqs.filter(sr => sr.id !== req.id);
     });
     this.persistUpdates();
   }
@@ -415,10 +416,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   getPeriodFights(id: string) {
     const categories = this.getPeriodCategories(this.getPeriodForId(id)) || [];
     return categories.map(c => this.fightIdsByCategoryId[c] || []).reduce((previousValue, currentValue) => previousValue.concat(currentValue), []);
-  }
-
-  private getPeriodRequirements(id: string) {
-    return this.getPeriodForId(id).scheduleRequirements;
   }
 
   getRequirementForIds(ids: Set<string>) {
