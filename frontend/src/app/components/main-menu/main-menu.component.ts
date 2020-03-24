@@ -6,9 +6,6 @@ import {logout} from '../../modules/account/flux/actions';
 import {Account} from '../../modules/account/model/Account';
 import {DomSanitizer} from '@angular/platform-browser';
 
-declare var $: any;
-
-
 @Component({
   selector: 'app-main-menu',
   templateUrl: './main-menu.component.html',

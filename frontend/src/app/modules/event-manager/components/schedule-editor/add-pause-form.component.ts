@@ -42,6 +42,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
         </div>
         <sui-multi-select *ngIf="!_all"
                           [options]="modal.context.mats"
+                          placeholder="Mat"
                           labelField="name"
                           [optionFormatter]="matOptionFormatter"
                           [isSearchable]="false"
@@ -113,7 +114,6 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
   select: SuiMultiSelect<MatDescription, MatDescription>;
   _all = false;
   pauseForm: FormGroup;
-  sub = new Subscription();
   private formValidator: ValidatorFn = control => {
     const entryType = control.get('entryType').value as ScheduleRequirementType;
     const startTime = control.get('startTime').value;
@@ -184,11 +184,9 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
       matId: [''],
       entryType: ['FIXED_PAUSE']
     }, {validators: [this.formValidator]});
-    this.pauseForm.valueChanges.subscribe(console.log);
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
   }
 
   get durationMunutes() {

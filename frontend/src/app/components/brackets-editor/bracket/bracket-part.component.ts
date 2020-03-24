@@ -25,7 +25,7 @@ import {ConnectionType} from '../bracketround/bracketround.component';
                             [fights]="getFightsForRound(round)"
                             [round]="round"
                             [oneFightInPercent]="getOneFightInPercent(round)"
-                            [elementsSelectable]="editMode && (changeFightsIds?.length < 2)"
+                            [elementsSelectable]="editMode"
                             [connectionsType]="getConnectionType(isLast, round)"
                             [slotHeightPx]="120"
                             (fightSelected)="addFightToCurrentChange($event)"></app-bracketround>

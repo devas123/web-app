@@ -15,6 +15,7 @@ import {
 import {filter, map, take} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
+import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../modules/event-manager/redux/event-manager-actions';
 
 @Injectable()
 export class CommonBracketsInfoContainer {
@@ -52,4 +53,26 @@ export class CommonBracketsInfoContainer {
     }), filter(act => !!act && !!act.type)).subscribe(this.store);
   }
 
+  mapBucketSize(bigScreenSize: number, smallScreenSize: number) {
+    return this.bucketsize$.pipe(map(val => val ? smallScreenSize : bigScreenSize));
+  }
+
+  selectStage(id: string, competitionId: string) {
+    this.store.dispatch(eventManagerCategoryBracketsStageSelected({
+      competitionId: competitionId,
+      selectedStageId: id
+    }));
+  }
+
+  selectCategory(categoryId: string, competitionId: string) {
+    if (competitionId && categoryId) {
+      this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
+    }
+  }
+
+  clearCategorySelection(competitionId: string) {
+    if (competitionId) {
+      this.store.dispatch(eventManagerCategoryUnselected(competitionId));
+    }
+  }
 }

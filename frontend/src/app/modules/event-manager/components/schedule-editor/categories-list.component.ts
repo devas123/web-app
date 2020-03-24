@@ -10,7 +10,7 @@ import {CatReq} from './schedule-editor.component';
          (cdkDropListDropped)="onItemDrop($event)">
       <div class="inner-list padded-vertical">
         <ng-container *ngFor="let catReq of linesToDisplay">
-          <div *ngIf="catReq.cat" class="item flex-container" cdkDrag
+          <div *ngIf="catReq.cat" class="item schedule_page flex-container" cdkDrag
                [cdkDragData]="{fromPeriod: periodId, cat: catReq.cat}">
             <div cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
             <div class="content">
@@ -19,7 +19,7 @@ import {CatReq} from './schedule-editor.component';
             <div class="filler"></div>
             <div class="right-floated">
               <a (click)="infoIconClicked.next(catReq.cat)"><i class="info icon"></i></a>
-              <a (click)="editIconCicked.next(catReq.cat)"><i class="edit icon"></i></a>
+              <a (click)="splitIconCicked.next(catReq)"><i class="fas fa-project-diagram"></i></a>
             </div>
           </div>
           <app-requirement-line
@@ -32,6 +32,9 @@ import {CatReq} from './schedule-editor.component';
             [req]="catReq.req"
             [requirementCategories]="getRequirementCategories(catReq.req)"
             (removed)="requirementRemoveClicked.next(catReq)"
+            [canDelete]="true"
+            [canSplit]="true"
+            (split)="this.splitIconCicked.next(catReq)"
           ></app-requirement-line>
         </ng-container>
       </div>
@@ -56,7 +59,7 @@ export class CategoriesListComponent {
   @Output()
   itemDropped = new EventEmitter<CdkDragDrop<any, any>>();
   @Output()
-  editIconCicked = new EventEmitter<Category>();
+  splitIconCicked = new EventEmitter<CatReq>();
   @Output()
   infoIconClicked = new EventEmitter<Category>();
   @Output()

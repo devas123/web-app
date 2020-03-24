@@ -1,18 +1,10 @@
-<div class="ui segments">
+<div class="ui segments" id="schedule_page">
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment" cdkDropListGroup>
       <button class="ui tiny button" *ngIf="scheduleEmpty" (click)="openAddSchedulePeriodModal()">Add period</button>
       <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size > 1"
               (click)="mergeSelectedReqs()">Merge selected
       </button>
-      <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size === 1 && !requirementEditor?._visible"
-              (click)="editSelectedReq()">Edit selected
-      </button>
-      <app-requirement-editor *ngIf="_selectedReqs && _selectedReqs.size === 1"
-                              [req]="getRequirementForIds(_selectedReqs)[0]"
-                              [requirementCategories]="getRequirementCategories(getRequirementForIds(_selectedReqs)[0])"
-                              (save)="this._selectedReqs.clear()"
-                              (itemDropped)="onCategoryDropToRequirement($event, getRequirementForIds(_selectedReqs)[0])"></app-requirement-editor>
       <div class="ui basic segment" *ngIf="scheduleEmpty">
         <div class="ui two stackable cards">
           <div class="card">
@@ -21,8 +13,9 @@
               <app-categories-list [periodId]="null"
                                    [allCategories]="categories"
                                    [linesToDisplay]="filteredCategories"
+                                   (splitIconCicked)="openSplitModal($event)"
                                    (itemDropped)="onItemDropBack($event, null)"
-                                   (requirementRemoveClicked)="removeUndispatchedRequirement($event, true)"></app-categories-list>
+                                   (requirementRemoveClicked)="deleteUndispatchedRequirement($event)"></app-categories-list>
             </div>
           </div>
           <div class="card" *ngFor="let period of periods">
@@ -45,8 +38,9 @@
                 [periodId]="period.id"
                 [matId]="null"
                 [timeZone]="timeZone"
+                (splitIconCicked)="openSplitModal({req: $event})"
                 (itemDropped)="onItemDrop($event.event, $event.periodId, null)"
-                (requirementRemoved)="removeRequirement($event, period)"
+                (requirementRemoved)="removeDispatchedRequirement($event, period)"
                 (requirementSelectionChanged)="changeSelectionStatus($event)"></app-requirements-display>
               <div class="inner-list list-container mat-grid"
                    [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
@@ -54,12 +48,13 @@
                   <section>{{mat.name}}</section>
                   <app-requirements-display
                     [selectedReqs]="_selectedReqs"
-                    (requirementRemoved)="removeRequirement($event, period)"
+                    (requirementRemoved)="removeDispatchedRequirement($event, period)"
                     [categories]="categories"
                     [requirements]="getScheduleRequirementsForMat(mat.id, period?.id)"
                     [periodId]="period.id"
                     [matId]="mat.id"
                     [timeZone]="timeZone"
+                    (splitIconCicked)="openSplitModal({req: $event})"
                     (requirementSelectionChanged)="changeSelectionStatus($event)"
                     (itemDropped)="onItemDrop($event.event, $event.periodId, mat.id)"></app-requirements-display>
                 </div>

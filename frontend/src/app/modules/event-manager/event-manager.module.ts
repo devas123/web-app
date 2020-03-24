@@ -81,7 +81,8 @@ import {RequirementsDisplayComponent} from './components/schedule-editor/require
 import {CategoriesListComponent} from './components/schedule-editor/categories-list.component';
 import {AddSchedulePauseFormComponent} from './components/schedule-editor/add-pause-form.component';
 import {RequirementLineComponent} from './components/schedule-editor/requirement-line.component';
-import {RequirementEditorComponent} from './components/schedule-editor/requirement-editor.component';
+import {SplitCategoryFormComponent} from './components/schedule-editor/split-category-modal.component';
+import {EditFightsRequirementModalComponent} from './components/schedule-editor/edit-fights-requirement-modal.component';
 
 @NgModule({
   imports: [
@@ -107,7 +108,6 @@ import {RequirementEditorComponent} from './components/schedule-editor/requireme
     DragDropModule
   ],
   declarations: [
-    RequirementEditorComponent,
     RequirementLineComponent,
     AddSchedulePauseFormComponent,
     CategoriesListComponent,
@@ -163,6 +163,8 @@ import {RequirementEditorComponent} from './components/schedule-editor/requireme
     TimerComponent,
     TimerControlsComponent,
     FighterProfileComponent,
+    SplitCategoryFormComponent,
+    EditFightsRequirementModalComponent,
     AddInputSelectorFormComponent],
   providers: [EventManagerService]
 })

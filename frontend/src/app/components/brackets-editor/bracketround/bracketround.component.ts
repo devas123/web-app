@@ -54,7 +54,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
 
   canSelectFight(fight: Fight) {
     const fightId = fight && fight.id;
-    return (fightId && this.elementsSelectable && ((!this.changeFightIds || this.changeFightIds.indexOf(fightId) < 0)) && fight.scores && fight.scores.length > 0);
+    return (fightId && this.elementsSelectable && ((!this.changeFightIds || this.changeFightIds.indexOf(fightId) < 0)));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

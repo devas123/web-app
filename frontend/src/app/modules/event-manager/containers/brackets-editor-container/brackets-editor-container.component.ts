@@ -2,31 +2,22 @@ import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/cor
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
-import {
-  eventManagerGetSelectedEventDefaultFightResults,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges
-} from '../../redux/event-manager-reducers';
+import {eventManagerGetSelectedEventDefaultFightResults, eventManagerGetSelectedEventName, eventManagerGetSelectedEventSelectedCategoryFightsEditorStateAllChanges} from '../../redux/event-manager-reducers';
 import {Category, CategoryBracketsStage, FightResultOption, HeaderDescription} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
-  eventManagerCategoryBracketsStageSelected,
-  eventManagerCategorySelected,
   eventManagerCategoryUnselected,
   eventManagerDropAllBracketsCommand,
   eventManagerDropCategoryBracketsCommand,
   eventManagerFightForChangeSelected,
   eventManagerFightsEditorSubmitChanges,
-  eventManagerGenerateBrackets, eventManagerLoadDefaultFightResults
+  eventManagerGenerateBrackets,
+  eventManagerLoadDefaultFightResults
 } from '../../redux/event-manager-actions';
 import {filter, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {
-  BasicCompetitionInfoContainer,
-  ComponentCommonMetadataProvider
-} from '../event-manager-container/common-classes';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {BreakpointObserver} from '@angular/cdk/layout';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
@@ -38,8 +29,6 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
 
   private competitionId: string;
   private subs = new Subscription();
-
-  changeFightsIds$: Observable<string[]>;
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
 
@@ -47,8 +36,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   categorySelect: TemplateRef<any>;
   bracketsSize$: Observable<number>;
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
-              private observer: BreakpointObserver, menuService: MenuService, public bracketsInfo: CommonBracketsInfoContainer) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, menuService: MenuService, public bracketsInfo: CommonBracketsInfoContainer) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(
         select(eventManagerGetSelectedEventName),
@@ -95,12 +83,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     const competitionId$ = this.store.pipe(select(getSelectedEventId));
     const categoryId$ = this.route.queryParams.pipe(map(params => params['categoryId']));
     this.defaultFightResultOptions$ = this.store.pipe(select(eventManagerGetSelectedEventDefaultFightResults));
-    this.bracketsSize$ = this.bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 5));
+    this.bracketsSize$ = this.bracketsInfo.mapBucketSize(5, 2);
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
-      if (competitionId && categoryId) {
-        this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
-      }
+      this.bracketsInfo.selectCategory(categoryId, competitionId);
     }));
   }
 
@@ -171,9 +157,6 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   selectStage(id: string) {
-    this.store.dispatch(eventManagerCategoryBracketsStageSelected({
-      competitionId: this.competitionId,
-      selectedStageId: id
-    }));
+    this.bracketsInfo.selectStage(id, this.competitionId);
   }
 }

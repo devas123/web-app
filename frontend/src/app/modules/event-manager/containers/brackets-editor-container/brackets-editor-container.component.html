@@ -33,7 +33,7 @@
                    [bucketSize]="bracketsSize$ | async"
                    (fightSelected)="addFightToCurrentChange($event)"
                    (stageSelected)="selectStage($event)"
-                   [changeFightIds]="changeFightsIds$ | async"
+                   [changeFightIds]="bracketsInfo.changeFightsIds$ | async"
                    [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                    [selectedStage]="bracketsInfo.stage$ | async"
                    [stages]="bracketsInfo.stages$ | async"
