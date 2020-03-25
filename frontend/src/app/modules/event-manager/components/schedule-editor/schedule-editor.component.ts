@@ -61,7 +61,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[] }>();
 
   @Output()
-  periodsUpdated = new EventEmitter<Period[]>();
+  periodsUpdated = new EventEmitter<{ periods: Period[], undispatchedRequirements: ScheduleRequirement[] }>();
 
   filteredCategories = [] as CatReq[];
   _requirements = [] as ScheduleRequirement[];
@@ -71,13 +71,18 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   @Input()
   private set periods(value: Period[]) {
     if (value) {
-      const undispatched = this.undispatchedRequirements.map(cr => cr.req);
-      const dispatched = value.map(p => p.scheduleRequirements).reduce(collectingReducer, []);
-      this._requirements = [...dispatched, ...undispatched];
+      this._requirements = value.map(p => p.scheduleRequirements).reduce(collectingReducer, []);
     } else {
-      this._requirements = this.undispatchedRequirements.map(cr => cr.req);
+      this._requirements = [];
     }
     this._periods = value;
+  }
+
+  @Input()
+  set undispatched(value: ScheduleRequirement[]) {
+    if (value) {
+      this._requirements = [...this._requirements, ...value].filter(uniqueFilter);
+    }
   }
 
   private get periods(): Period[] {
@@ -248,7 +253,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   persistUpdates() {
     this.cleanupEmptyRequirements();
-    this.periodsUpdated.next(this.periods);
+    this.periodsUpdated.next({periods: this.periods, undispatchedRequirements: this.undispatchedRequirements.map(cr => cr.req).filter(v => !!v)});
   }
 
   cleanupEmptyRequirements() {
@@ -344,7 +349,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
             break;
           case 'RELATIVE_PAUSE':
           case 'FIXED_PAUSE':
-            this.removeDispatchedRequirement(req, fromPeriod, false);
+            this.removeRequirement(req, false);
             break;
         }
         this.changeSelectionStatus({id: req.id, value: false});
@@ -363,10 +368,11 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   detectChanges() {
+    console.log('Detect changes');
     this.cd.markForCheck();
   }
 
-  removeDispatchedRequirement(req: ScheduleRequirement, period: Period, persist = true) {
+  removeRequirement(req: ScheduleRequirement, persist = true) {
     this._requirements = this._requirements.filter(sr => sr.id !== req.id);
     this.adjustRequirementsAfterDeletion(req);
     this._selectedReqs.delete(req.id);
@@ -382,15 +388,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
           .forEach(mat => this.addPauseScheduleRequirementToPeriod(periodId, mat.id, result.pauseRequirement));
         this.persistUpdates();
       });
-  }
-
-  private changeRequirementMatId(req: ScheduleRequirement, periodId: string, matId: string) {
-    this._requirements = produce(this._requirements, draft => {
-      const r = draft.find(p => p.id === req.id && p.periodId === periodId);
-      if (r) {
-        r.matId = matId;
-      }
-    });
   }
 
   removeRequirementsForCategoryIds(categoryIds: string[]) {
@@ -410,14 +407,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
         defaultReq.fightIds = defaultReq.fightIds.filter(uniqueFilter);
       }
     });
-  }
-
-
-  deleteUndispatchedRequirement(catReq: CatReq) {
-    if (catReq.req) {
-      this.adjustRequirementsAfterDeletion(catReq.req);
-      this.persistUpdates();
-    }
   }
 
 

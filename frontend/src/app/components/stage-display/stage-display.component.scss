@@ -1,0 +1,7 @@
+.loader_segment {
+  height: 100px !important;
+}
+
+.loader_segment:before {
+  background-color: unset !important;
+}

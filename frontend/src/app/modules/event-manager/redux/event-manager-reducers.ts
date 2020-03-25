@@ -237,6 +237,7 @@ const {
 } = periodEntityAdapter.getSelectors(eventManagerGetSelectedEventSchedulePeriodsCollection);
 
 export const getSelectedEventPeriods = selectAllPeriods;
+export const getSelectedEventUndispatchedRequirements = createSelector(eventManagerGetSelectedEventSchedule, schedule => (schedule && schedule.undispatchedRequirements) || []);
 export const eventManagerGetSelectedEventScheduleEmpty = createSelector(selectAllPeriods, (periods) => {
   return !(!!periods && periods.length > 0 && periods.find(p => p.scheduleEntries && p.scheduleEntries.length > 0));
 });
@@ -253,8 +254,8 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
 
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFights = eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights;
-export const eventManagerGetSelectedEventSelectedCategoryStateLoading = createSelector(getSelectedEventCategoriesCollection,
-  (category) => category && category.categoryStateLoading);
+export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(getSelectedEventCategoriesCollection, eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights,
+  (category, fights) => category && (category.categoryStateLoading || !fights || fights.length === 0));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

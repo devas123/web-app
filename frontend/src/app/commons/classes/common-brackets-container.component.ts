@@ -10,7 +10,7 @@ import {
   eventManagerGetSelectedEventSelectedCategorySelectedStage,
   eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStages,
-  eventManagerGetSelectedEventSelectedCategoryStateLoading
+  eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
 } from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
@@ -35,7 +35,7 @@ export class CommonBracketsInfoContainer {
     this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights));
-    this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStateLoading));
+    this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.numberOfCompetitor$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));

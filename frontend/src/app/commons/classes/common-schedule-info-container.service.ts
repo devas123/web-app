@@ -9,9 +9,15 @@ import {
   MatDescription,
   Schedule
 } from '../../reducers/global-reducers';
-import {Category, Period} from '../model/competition.model';
+import {Category, Period, ScheduleRequirement} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventCategories, eventManagerGetSelectedEventScheduleEmpty, eventManagerGetSelectedEventTimeZone, getSelectedEventPeriods} from '../../modules/event-manager/redux/event-manager-reducers';
+import {
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventScheduleEmpty,
+  eventManagerGetSelectedEventTimeZone,
+  getSelectedEventPeriods,
+  getSelectedEventUndispatchedRequirements
+} from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
@@ -24,6 +30,7 @@ export class CommonScheduleInfoContainerService {
   timeZone$: Observable<string>;
   competitionId$: Observable<string>;
   periods$: Observable<Period[]>;
+  undispatchedRequirements$: Observable<ScheduleRequirement[]>;
   mats$: Observable<MatDescription[]>;
   selectedCompetitionProperties$: Observable<CompetitionProperties>;
   selectedPeriod$: Observable<Period>;
@@ -33,6 +40,7 @@ export class CommonScheduleInfoContainerService {
   constructor(private store: Store<AppState>) {
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.periods$ = store.pipe(select(getSelectedEventPeriods));
+    this.undispatchedRequirements$ = store.pipe(select(getSelectedEventUndispatchedRequirements));
     this.scheduleEmpty$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));

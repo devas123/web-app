@@ -1,3 +1,7 @@
+<div class="ui basic loading segment loader_segment" *ngIf="fightsAreLoading">
+  <p></p>
+  <p></p>
+</div>
 <div *ngIf="category && _stages?.length > 0 && !fightsAreLoading">
   <div class="ui pointing secondary menu">
     <a class="item" [ngClass]="{active:  selectedStage?.id === stage?.id}"

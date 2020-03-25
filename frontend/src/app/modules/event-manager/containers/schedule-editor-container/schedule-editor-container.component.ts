@@ -4,7 +4,7 @@ import {AppState, getSelectedEventId, Schedule} from '../../../../reducers/globa
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
-import {HeaderDescription, Period} from '../../../../commons/model/competition.model';
+import {HeaderDescription, Period, ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved, schedulePeriodsUpdated} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -80,9 +80,6 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
     this.subs.add(this.store.pipe(select(getSelectedEventId), map(id => eventManagerPeriodRemoved(id, periodId))).subscribe(this.store));
   }
 
-  updatePeriods(event: Period[]) {
-    this.store.dispatch(schedulePeriodsUpdated({periods: event}));
-  }
 
   sendGenerateSchedule({competitionId, periods}) {
 
@@ -91,5 +88,9 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
 
   sendDropSchedule(competitionId: string) {
     this.store.dispatch(eventManagerDropScheduleCommand(competitionId));
+  }
+
+  updatePeriods(event: { periods: Period[]; undispatchedRequirements: ScheduleRequirement[] }) {
+    this.store.dispatch(schedulePeriodsUpdated(event));
   }
 }

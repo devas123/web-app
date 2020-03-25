@@ -1,6 +1,6 @@
 // commands
 import {CompetitionProperties, MatDescription, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule} from '../../../reducers/global-reducers';
-import {Category, CategoryBracketsStage, Competitor, Fight, FightResultOption, FightsEditorChange, HeaderDescription, Period} from '../../../commons/model/competition.model';
+import {Category, CategoryBracketsStage, Competitor, Fight, FightResultOption, FightsEditorChange, HeaderDescription, Period, ScheduleRequirement} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 
@@ -92,7 +92,7 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
-export const schedulePeriodsUpdated = createAction(EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED, props<{periods: Period[]}>());
+export const schedulePeriodsUpdated = createAction(EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED, props<{periods: Period[], undispatchedRequirements: ScheduleRequirement[]}>());
 export const fightIdsByCategoryIdLoaded = createAction(FIGHT_IDS_BY_CATEGORY_ID_LOADED, props<{fightIdsBycategoryId: Dictionary<string[]>}>());
 export const eventManagerLoadDefaultFightResults = createAction(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS);
 export const eventManagerDefaultFightResultsLoaded = createAction(EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED, props<{ competitionId: string, fightResults: FightResultOption[] }>());

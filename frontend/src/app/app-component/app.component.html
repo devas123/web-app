@@ -9,7 +9,10 @@
     <div #childcontainer></div>
   </sui-sidebar>
   <sui-sidebar-sibling [isDimmedWhenVisible]="true" class="flexible">
-    <app-main-menu (sidebarToggle)="sidebarVisible = !sidebarVisible" [user]="user$ | async"
+    <app-main-menu (sidebarToggle)="sidebarVisible = !sidebarVisible"
+                   [user]="user$ | async"
+                   (logout)="doLogout()"
+                   (navigate)="navigate($event)"
                    [displayButton]="displayMenuButton$ | async"></app-main-menu>
     <router-outlet></router-outlet>
   </sui-sidebar-sibling>

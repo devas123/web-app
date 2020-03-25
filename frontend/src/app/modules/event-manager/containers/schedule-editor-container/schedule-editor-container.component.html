@@ -5,6 +5,7 @@
                      [showEditor]="showEditor"
                      [competitionId]="scheduleInfo.competitionId$ | async"
                      [periods]="scheduleInfo.periods$ | async"
+                     [undispatched]="scheduleInfo.undispatchedRequirements$ | async"
                      [fightIdsByCategoryId]="scheduleInfo.fightsByCategoryId$ | async"
                      [mats]="scheduleInfo.mats$ | async"
                      (periodAdded)="addPeriod($event)"

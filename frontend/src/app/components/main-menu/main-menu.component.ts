@@ -1,8 +1,4 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../reducers/global-reducers';
-import {logout} from '../../modules/account/flux/actions';
 import {Account} from '../../modules/account/model/Account';
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -23,34 +19,35 @@ export class MainMenuComponent {
   @Output()
   sidebarToggle = new EventEmitter<void>();
 
-  constructor(private router: Router, private store: Store<AppState>, public sanitizer: DomSanitizer) {
-  }
+  @Output()
+  logout = new EventEmitter<void>();
 
-  private navigate(location: any[]) {
-    this.router.navigate(location).catch(error => console.error(`Navigation error ${location}: ${error}`));
+  @Output()
+  navigate = new EventEmitter<any[]>();
+
+  constructor(public sanitizer: DomSanitizer) {
   }
 
   eventsNav() {
-    this.navigate(['/events']);
+    this.navigate.next(['/events']);
   }
 
   loginNav() {
-    this.navigate(['/login']);
+    this.navigate.next(['/login']);
   }
 
 
   accountPage() {
-    this.navigate(['/user', this.user.userId]);
+    this.navigate.next(['/user', this.user.userId]);
   }
 
   eventManagerPage() {
-    this.navigate(['/eventmanager']);
+    this.navigate.next(['/eventmanager']);
   }
 
 
-  logout() {
-    this.store.dispatch(logout());
-    this.navigate(['/']);
+  doLogout() {
+    this.logout.next();
   }
 
 

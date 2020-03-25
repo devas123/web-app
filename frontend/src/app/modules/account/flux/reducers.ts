@@ -12,12 +12,12 @@ export function accountStateReducer(state: AccountState = initialAccountState, a
       return state;
     case USER_AUTHORIZED: {
       if (action.payload) {
-        const {avatar} = action.payload;
+        const avatar = action.payload.avatar;
         return {
           ...state,
           user: {
             ...action.payload,
-            avatar: avatar ? (window.URL || (window as any).webkitURL).createObjectURL(b64toBlob(avatar, 'image/png')) : null
+            avatar: avatar ? (window.URL || (window as any).webkitURL).createObjectURL(b64toBlob(avatar, 'image/png')) : 'assets/images/empty.png'
           }
         };
       }

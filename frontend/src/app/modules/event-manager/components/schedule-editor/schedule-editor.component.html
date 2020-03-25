@@ -15,7 +15,7 @@
                                    [linesToDisplay]="filteredCategories"
                                    (splitIconCicked)="openSplitModal($event)"
                                    (itemDropped)="onItemDropBack($event, null)"
-                                   (requirementRemoveClicked)="deleteUndispatchedRequirement($event)"></app-categories-list>
+                                   (requirementRemoveClicked)="removeRequirement($event.req)"></app-categories-list>
             </div>
           </div>
           <div class="card" *ngFor="let period of _periods">
@@ -40,7 +40,7 @@
                 [timeZone]="timeZone"
                 (splitIconCicked)="openSplitModal({req: $event})"
                 (itemDropped)="onItemDrop($event.event, $event.periodId, null)"
-                (requirementRemoved)="removeDispatchedRequirement($event, period)"
+                (requirementRemoved)="removeRequirement($event)"
                 (requirementSelectionChanged)="changeSelectionStatus($event)"></app-requirements-display>
               <div class="inner-list list-container mat-grid"
                    [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
@@ -48,7 +48,7 @@
                   <section>{{mat.name}}</section>
                   <app-requirements-display
                     [selectedReqs]="_selectedReqs"
-                    (requirementRemoved)="removeDispatchedRequirement($event, period)"
+                    (requirementRemoved)="removeRequirement($event)"
                     [categories]="categories"
                     [requirements]="getScheduleRequirementsForMat(mat.id, period?.id)"
                     [periodId]="period.id"

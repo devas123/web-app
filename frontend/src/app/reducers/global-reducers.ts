@@ -166,12 +166,14 @@ export const periodEntityInitialState = periodEntityAdapter.getInitialState({
 export interface Schedule {
   competitionId: string;
   periods: PeriodEntities;
+  undispatchedRequirements: ScheduleRequirement[];
   fightIdsBycategoryId: Dictionary<string[]>;
 }
 
 
 export const scheduleInitialState: Schedule = {
   periods: periodEntityInitialState,
+  undispatchedRequirements: [],
   competitionId: null,
   fightIdsBycategoryId: {}
 };
@@ -653,16 +655,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_CATEGORY_UNSELECTED: {
         if (action.competitionId === state.competitionProperties.id) {
-          return {
-            ...state,
-            selectedEventCategories: {
-              ...state.selectedEventCategories,
-              selectedCategoryId: null,
-              selectedCategoryState: null
-            }
-          };
+          state.selectedEventCategories.selectedCategoryId = null;
+          state.selectedEventCategories.selectedCategoryStages = stagesInitialState;
+          state.selectedEventCategories.selectedEventFightsEditorState = fightsEditorInitialState;
+          state.selectedEventCategories.categoryStateLoading = false;
         }
-        return state;
+        break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED: {
         if (action.competitionId === state.competitionProperties.id) {
@@ -777,8 +775,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED: {
         console.log('Periods updated');
-        const {periods} = action;
+        const {periods, undispatchedRequirements} = action;
         state.selectedEventSchedule.periods = periodEntityAdapter.addAll(periods, periodEntityInitialState);
+        state.selectedEventSchedule.undispatchedRequirements = undispatchedRequirements || [];
         break;
       }
       case DASHBOARD_MATS_LOADED: {
@@ -902,7 +901,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
   });
 }
 
-export const getSelectedEventState = (state: AppState) => state.selectedEventState;
+export const getSelectedEventState = createSelector(state => state, (state: AppState) => state.selectedEventState);
 
 
 export const getSelectedEventProperties = createSelector(getSelectedEventState, state => state && state.competitionProperties);

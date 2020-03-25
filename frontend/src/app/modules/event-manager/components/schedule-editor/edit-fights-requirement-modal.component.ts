@@ -36,7 +36,8 @@ export class EditFightsRequirementModal extends ComponentModalConfig<IEditFights
     <div class="content">
       <div class="ui stackable compact menu">
         <a class="item" *ngFor="let category of getCategories()" (click)="selectCategory(category.id)">
-          <i class="icon users"></i>{{category | displayCategory}}
+          <i class="icon users"></i><span>{{category | displayCategory}}</span>
+          <a><i class="delete icon"></i></a>
           <div class="floating ui red label">{{getFightsForCategoryIdInThisRequirement(category.id)?.length}}</div>
         </a>
       </div>
