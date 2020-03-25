@@ -64,11 +64,29 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   periodsUpdated = new EventEmitter<Period[]>();
 
   filteredCategories = [] as CatReq[];
-  undispatchedRequirements = new Set<CatReq>();
+  _requirements = [] as ScheduleRequirement[];
   _selectedReqs: Set<string> = new Set<string>();
+  _periods: Period[];
 
   @Input()
-  private periods: Period[];
+  private set periods(value: Period[]) {
+    if (value) {
+      const undispatched = this.undispatchedRequirements.map(cr => cr.req);
+      const dispatched = value.map(p => p.scheduleRequirements).reduce(collectingReducer, []);
+      this._requirements = [...dispatched, ...undispatched];
+    } else {
+      this._requirements = this.undispatchedRequirements.map(cr => cr.req);
+    }
+    this._periods = value;
+  }
+
+  private get periods(): Period[] {
+    return produce(this._periods, draft => {
+      draft.forEach(p => {
+        p.scheduleRequirements = this._requirements.filter(sr => sr.periodId === p.id);
+      });
+    });
+  }
 
   @Input()
   private fightIdsByCategoryId: Dictionary<string[]>;
@@ -81,11 +99,11 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   getScheduleRequirementsForMat(matId: string, periodId: string) {
-    return this.getPeriodForId(periodId).scheduleRequirements.filter(sr => sr.matId === matId);
+    return this._requirements.filter(sr => sr.periodId === periodId && sr.matId === matId);
   }
 
   getScheduleRequirementsWithoutMat(periodId: string) {
-    return this.getPeriodForId(periodId).scheduleRequirements.filter(sr => !sr.matId);
+    return this._requirements.filter(sr => sr.periodId === periodId && !sr.matId);
   }
 
   sendGenerateSchedule() {
@@ -135,103 +153,93 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       this.addCategoryScheduleRequirementToPeriod(to, cat, req);
     }
     if (fromPeriod && fromRequirementId) {
-      this.removeCategoryFromRequirement(fromPeriod, fromRequirementId, cat);
+      this.removeCategoryFromRequirement(fromRequirementId, cat);
     }
   }
 
-  private moveRequirement(e: CdkDragDrop<String[]>, to: string, req: ScheduleRequirement, toMatId: string, fromMatId: string) {
+  private moveRequirement(e: CdkDragDrop<String[]>, to: string, reqId: string, toMatId: string, fromMatId: string) {
     // Get the dropped data here
     const {fromPeriod} = e.item.data;
-    if (fromPeriod !== to) {
-      if (to) {
-        const toPeriod = this.getPeriodForId(to);
-        if (!toPeriod.scheduleRequirements.find(sr => sr.id === req.id)) {
-          const newReq = produce(req, draft => {
-            draft.periodId = to;
-          });
-          this.periods = produce(this.periods, draft => {
-            draft.find(p => p.id === to).scheduleRequirements = [...(toPeriod.scheduleRequirements || []), newReq];
-          });
-        }
+    this._requirements = produce(this._requirements, draft => {
+      const ids = draft.map(pr => pr.id);
+
+      // tslint:disable-next-line:triple-equals
+      const toPeriodRequirements = draft.filter(sr => sr.periodId == to && sr.matId == toMatId && sr.entryType !== 'FIXED_PAUSE');
+      // tslint:disable-next-line:triple-equals
+      const fromPeriodRequirements = draft.filter(sr => sr.periodId == fromPeriod && sr.matId == fromMatId && sr.entryType !== 'FIXED_PAUSE');
+      const reqAtCurrentIndex = toPeriodRequirements[e.currentIndex];
+      let reqAtPreviousIndex;
+      if (!fromPeriod) {
+        // this is an undispatched requirement;
+        reqAtPreviousIndex = this.filteredCategories.map(cr => (cr.cat && cr.cat.id) || cr.req.id)[e.previousIndex];
       } else {
-        this.moveRequirementToUndispatched(fromPeriod, req);
+        reqAtPreviousIndex = fromPeriodRequirements[e.previousIndex];
       }
-      if (fromPeriod) {
-        const fromPer = this.getPeriodForId(fromPeriod);
-        this.periods = produce(this.periods, draft => {
-          draft.find(p => p.id === fromPeriod).scheduleRequirements = fromPer.scheduleRequirements.filter(sr => sr.id !== req.id);
-        });
-      } else {
-        this.markRequirementAsDispatched({req}, false);
+      const globalCurrentIndex = (reqAtCurrentIndex && ids.indexOf(reqAtCurrentIndex.id)) || 0;
+      const globalPreviousIndex = ids.indexOf(reqAtPreviousIndex.id);
+      moveItemInArray(draft,
+        globalPreviousIndex,
+        globalCurrentIndex);
+      if (!draft.find(sr => sr.periodId === to && sr.id === reqId)) {
+        draft.find(sr => sr.id === reqId).periodId = to;
       }
-    } else if (!!fromPeriod && !!to) {
-      // move inside period;
-      this.periods = produce(this.periods, draft => {
-        const periodRequirements = draft.find(per => per.id === to).scheduleRequirements;
-        const reqAtCurrentIndex = periodRequirements.filter(r => r.matId === toMatId && r.entryType !== 'FIXED_PAUSE')[e.currentIndex];
-        const reqAtPreviousIndex = periodRequirements.filter(r => r.matId === fromMatId && r.entryType !== 'FIXED_PAUSE')[e.previousIndex];
-        const globalCurrentIndex = (reqAtCurrentIndex && periodRequirements.map(pr => pr.id).indexOf(reqAtCurrentIndex.id)) || 0;
-        const globalPreviousIndex = periodRequirements.map(pr => pr.id).indexOf(reqAtPreviousIndex.id);
-        moveItemInArray(draft.find(per => per.id === to).scheduleRequirements,
-          globalPreviousIndex,
-          globalCurrentIndex);
-      });
-    }
+      draft.find(sr => sr.id === reqId).matId = toMatId;
+    });
+
   }
 
 
-  private removeCategoryFromRequirement(fromPeriodId, fromRequirementId, cat) {
-    const fromRequirement = this.getPeriodForId(fromPeriodId).scheduleRequirements.find(sr => sr.id === fromRequirementId);
+  private removeCategoryFromRequirement(fromRequirementId, cat) {
+    const fromRequirement = this._requirements.find(sr => sr.id === fromRequirementId);
     if (fromRequirement.categoryIds.find(c => c === cat.id)) {
       if (fromRequirement.categoryIds.length === 1) {
-        this.periods = produce(this.periods, draft => {
-          draft.find(p => p.id === fromPeriodId).scheduleRequirements = draft.find(p => p.id === fromPeriodId).scheduleRequirements.filter(sr => sr.id !== fromRequirementId);
-        });
+        this._requirements = this._requirements.filter(sr => sr.id !== fromRequirement.id);
       } else {
-        this.periods = produce(this.periods, draft => {
-          draft.find(p => p.id === fromPeriodId).scheduleRequirements
-            .find(sr => sr.id === fromRequirementId).categoryIds = fromRequirement.categoryIds.splice(fromRequirement.categoryIds.indexOf(cat.id));
+        this._requirements = produce(this._requirements, draft => {
+          draft
+            .find(sr => sr.id === fromRequirementId).categoryIds.splice(fromRequirement.categoryIds.indexOf(cat.id), 1);
         });
       }
     }
   }
 
   private addCategoryScheduleRequirementToPeriod(to: string, cat: Category, req: ScheduleRequirement) {
-    const toPeriod = this.getPeriodForId(to);
-    if (!toPeriod.scheduleRequirements.find(sr => sr.categoryIds.indexOf(cat.id) >= 0)) {
+    if (!this._requirements.find(sr => sr.periodId === to && sr.categoryIds.includes(cat.id))) {
       const newSr = req;
-      this.periods = produce(this.periods, draft => {
-        if (!toPeriod.scheduleRequirements.find(sr => sr.id === newSr.id)) {
-          draft.find(p => p.id === to).scheduleRequirements = [...(toPeriod.scheduleRequirements || []), newSr];
+      this._requirements = produce(this._requirements, draft => {
+        if (!draft.find(sr => sr.id === newSr.id)) {
+          draft.push(newSr);
         } else {
-          draft.find(p => p.id === to).scheduleRequirements.find(sr => sr.id === newSr.id).categoryIds.push(cat.id);
+          draft.find(p => p.id === newSr.id).periodId = to;
         }
+        const srToUpdate = draft.find(p => p.id === newSr.id);
+        srToUpdate.categoryIds = [...srToUpdate.categoryIds, cat.id];
+        srToUpdate.fightIds = [...srToUpdate.fightIds, ...newSr.fightIds];
+        srToUpdate.categoryIds = srToUpdate.categoryIds.filter(uniqueFilter);
+        srToUpdate.fightIds = srToUpdate.fightIds.filter(uniqueFilter);
       });
     }
   }
 
   private addPauseScheduleRequirementToPeriod(to: string, matId: string, requirement: ScheduleRequirement) {
-    const toPeriod = this.getPeriodForId(to);
     const reqWithMat = produce(requirement, r => {
       if (!r.id || r.id.length <= 0) {
         r.id = this.requirementId();
       }
+      r.periodId = to;
       r.categoryIds = [];
       r.fightIds = [];
       r.matId = matId;
     });
-    this.periods = produce(this.periods, draft => {
-      draft.find(p => p.id === to).scheduleRequirements = [...(toPeriod.scheduleRequirements || []), reqWithMat];
-    });
+    this._requirements.push(reqWithMat);
   }
 
 
-  getPeriodCategories(period: Period) {
-    return (period && period.scheduleRequirements &&
-      period.scheduleRequirements
-        .map(r => r.categoryIds || [])
-        .reduce(collectingReducer, [])
-        .filter((value, index, array) => array.indexOf(value) === index)) || [];
+  getPeriodCategories(periodId: string) {
+    return (periodId && this._requirements.filter(sr => sr.periodId === periodId)
+      .map(r => r.categoryIds || [])
+      .reduce(collectingReducer, [])
+      .filter((value, index, array) => array.indexOf(value) === index)) || [];
   }
 
   ngOnInit() {
@@ -245,10 +253,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   cleanupEmptyRequirements() {
     const reqFilter = (sr: ScheduleRequirement) => sr.entryType === 'FIXED_PAUSE' || sr.entryType === 'RELATIVE_PAUSE' || (sr.fightIds && sr.fightIds.length > 0 && sr.categoryIds && sr.categoryIds.length > 0);
-    this.periods = produce(this.periods, draft => {
-      draft.forEach(p => p.scheduleRequirements = p.scheduleRequirements.filter(reqFilter));
-    });
-    this.updateUndispatched(undisp => undisp.filter(cr => cr.cat || (cr.req && reqFilter(cr.req))));
+    this._requirements = this._requirements.filter(reqFilter);
   }
 
   refreshAll() {
@@ -261,7 +266,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   allCategoryFightsDispatched(categoryId: string) {
-    const allScheduleRequirements = this.getAllRequirements(this.periods);
+    const allScheduleRequirements = this.getAllRequirements();
     const distributedCategories = allScheduleRequirements.filter(r => r.entryType === 'CATEGORIES' && !!r.categoryIds)
       .map(r => r.categoryIds.filter(c => !!c)).reduce(collectingReducer, []);
     const distributedFights = allScheduleRequirements.filter(r => r.entryType === 'FIGHTS' && !!r.fightIds)
@@ -275,16 +280,17 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   refreshFilteredCategories() {
     if (this.categories && this.periods) {
-      this.periods.map(p => p.scheduleRequirements.map(r => r.categoryIds.filter(c => !!c)).reduce(collectingReducer, []))
-        .reduce(collectingReducer, []).concat();
       this.filteredCategories = this.categories.filter(cat => !this.allCategoryFightsDispatched(cat.id))
         .map(cat => ({cat}));
     } else {
       this.filteredCategories = (this.categories || []).map(cat => ({cat}));
     }
-    this.filteredCategories = produce(this.filteredCategories, draft => {
-      draft.push(...Array.from(this.undispatchedRequirements));
-    });
+
+    this.filteredCategories = [...this.filteredCategories, ...this.undispatchedRequirements];
+  }
+
+  get undispatchedRequirements() {
+    return this._requirements.filter(sr => !sr.periodId).map(req => ({req}));
   }
 
   onItemDrop(e: CdkDragDrop<any, any>, to: string, toMatId?: string) {
@@ -294,12 +300,10 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       const {req, fromMatId} = e.item.data;
       const type = req.entryType;
       if (type === 'CATEGORIES' || type === 'FIGHTS') {
-        this.moveRequirement(e, to, req, toMatId, fromMatId);
-        this.changeRequirementMatId(req, to, toMatId);
+        this.moveRequirement(e, to, req.id, toMatId, fromMatId);
       }
       if (type === 'RELATIVE_PAUSE' && toMatId) {
-        this.moveRequirement(e, to, req, toMatId, fromMatId);
-        this.changeRequirementMatId(req, to, toMatId);
+        this.moveRequirement(e, to, req.id, toMatId, fromMatId);
       }
     }
     this.persistUpdates();
@@ -307,7 +311,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   syncSelectedReqs() {
-    const allReqs = this.getAllRequirements(this.periods);
+    const allReqs = this.getAllRequirements();
     const selectedReqs = Array.from(this._selectedReqs);
     this._selectedReqs.clear();
     selectedReqs.filter(sr => !!allReqs.find(r => r.id === sr)).forEach(e => this._selectedReqs.add(e));
@@ -318,21 +322,17 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     if (to !== fromPeriod) {
       if (e.item.data.cat) {
         const {cat} = e.item.data;
-        this.periods = produce(this.periods, draft => {
+        this._requirements = produce(this._requirements, draft => {
           if (fromRequirement) {
-            draft.find(p => p.id === fromPeriod).scheduleRequirements.forEach(sr => {
-              if (sr.categoryIds && sr.categoryIds.indexOf(cat.id) >= 0) {
+            draft.filter(p => p.periodId === fromPeriod).forEach(sr => {
+              if (sr.categoryIds && sr.categoryIds.includes(cat.id)) {
                 sr.categoryIds.splice(sr.categoryIds.indexOf(cat.id), 1);
               }
             });
           }
-
-          draft.find(p => p.id === fromPeriod).scheduleRequirements =
-            draft.find(p => p.id === fromPeriod).scheduleRequirements
-              .filter(sr => sr.entryType === 'RELATIVE_PAUSE' || sr.entryType === 'FIXED_PAUSE'
-                || sr.categoryIds.length > 0
-                || sr.fightIds.length > 0);
         });
+        this._requirements = this._requirements.filter(sr => sr.entryType === 'RELATIVE_PAUSE' || sr.entryType === 'FIXED_PAUSE'
+          || (sr.categoryIds.length > 0 && sr.fightIds.length > 0));
         this.syncSelectedReqs();
       } else if (e.item.data.req) {
         const {req} = e.item.data;
@@ -340,7 +340,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
         switch (type) {
           case 'CATEGORIES':
           case 'FIGHTS':
-            this.moveRequirementToUndispatched(fromPeriod, req);
+            this.moveRequirementToUndispatched(req);
             break;
           case 'RELATIVE_PAUSE':
           case 'FIXED_PAUSE':
@@ -354,15 +354,11 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     this.refreshAll();
   }
 
-  private moveRequirementToUndispatched(fromPeriod: string, req: ScheduleRequirement) {
-    const period = this.getPeriodForId(fromPeriod);
-    const requirement = produce(period.scheduleRequirements.find(sr => sr.id === req.id), draft => {
+  private moveRequirementToUndispatched(req: ScheduleRequirement) {
+    this._requirements = produce(this._requirements, d => {
+      const draft = d.find(sr => sr.id === req.id);
       draft.matId = null;
       draft.periodId = null;
-    });
-    this.undispatchedRequirements.add({req: requirement});
-    this.periods = produce(this.periods, draft => {
-      draft.find(p => p.id === fromPeriod).scheduleRequirements = period.scheduleRequirements.filter(sr => sr.id !== req.id);
     });
   }
 
@@ -371,10 +367,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   removeDispatchedRequirement(req: ScheduleRequirement, period: Period, persist = true) {
-    this.periods = produce(this.periods, draft => {
-      const reqs = draft.find(p => p.id === period.id).scheduleRequirements || [];
-      draft.find(p => p.id === period.id).scheduleRequirements = reqs.filter(sr => sr.id !== req.id);
-    });
+    this._requirements = this._requirements.filter(sr => sr.id !== req.id);
     this.adjustRequirementsAfterDeletion(req);
     this._selectedReqs.delete(req.id);
     if (persist) {
@@ -392,22 +385,16 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   private changeRequirementMatId(req: ScheduleRequirement, periodId: string, matId: string) {
-    this.periods = produce(this.periods, draft => {
-      const period = draft.find(p => p.id === periodId);
-      if (period && period.scheduleRequirements && period.scheduleRequirements.find(sr => sr.id === req.id)) {
-        period.scheduleRequirements.find(sr => sr.id === req.id).matId = matId;
+    this._requirements = produce(this._requirements, draft => {
+      const r = draft.find(p => p.id === req.id && p.periodId === periodId);
+      if (r) {
+        r.matId = matId;
       }
     });
   }
 
   removeRequirementsForCategoryIds(categoryIds: string[]) {
-    this.periods = produce(this.periods, draft => {
-      draft.forEach(p => {
-        p.scheduleRequirements = p.scheduleRequirements
-          .filter(sr => !sr.categoryIds.find(c => categoryIds.includes(c)));
-      });
-    });
-    this.updateUndispatched(tmpUnd => tmpUnd.filter(cr => cr.cat || !cr.req.categoryIds.find(c => categoryIds.includes(c))));
+    this._requirements = this._requirements.filter(sr => !sr.categoryIds.find(c => categoryIds.includes(c)));
   }
 
   dispatchSpareFights(categoryIds: string[], fightIds: string[]) {
@@ -416,34 +403,18 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   moveFightsToDefaultCategoryRequirement(categoryId: string, fightIds: string[]) {
-    this.periods = produce(this.periods, draft => {
-      const defaultReq = draft.map(p => p.scheduleRequirements || []).reduce(collectingReducer, [] as ScheduleRequirement[]).find(sr => sr.entryType === 'CATEGORIES' && sr.categoryIds.includes(categoryId));
+    this._requirements = produce(this._requirements, draft => {
+      const defaultReq = draft.find(sr => sr.entryType === 'CATEGORIES' && sr.categoryIds.includes(categoryId));
       if (defaultReq) {
         defaultReq.fightIds.push(...fightIds);
-        draft.forEach(p => p.scheduleRequirements.forEach(sr => {
-          if (sr.id === defaultReq.id) {
-            sr.fightIds = defaultReq.fightIds;
-          }
-        }));
+        defaultReq.fightIds = defaultReq.fightIds.filter(uniqueFilter);
       }
     });
-    this.updateUndispatched(undisp => produce(undisp, draft => {
-      const defaultReq = draft.find(cr => cr.req && cr.req.entryType === 'CATEGORIES' && cr.req.categoryIds.includes(categoryId));
-      if (defaultReq) {
-        defaultReq.req.fightIds.push(...fightIds);
-      }
-    }));
   }
 
-  updateUndispatched(transform: (c: CatReq[]) => CatReq[]) {
-    const undispatched = Array.from(this.undispatchedRequirements);
-    this.undispatchedRequirements.clear();
-    transform(undispatched).forEach(cr => this.undispatchedRequirements.add(cr));
-  }
 
   deleteUndispatchedRequirement(catReq: CatReq) {
     if (catReq.req) {
-      this.markRequirementAsDispatched(catReq, false);
       this.adjustRequirementsAfterDeletion(catReq.req);
       this.persistUpdates();
     }
@@ -459,14 +430,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  markRequirementAsDispatched(catReq: CatReq, persist: boolean) {
-    if (!this.undispatchedRequirements.delete(catReq)) {
-      this.updateUndispatched(tmpUnd => tmpUnd.filter(cr => cr.req.id !== catReq.req.id));
-    }
-    if (persist) {
-      this.persistUpdates();
-    }
-  }
 
   changeSelectionStatus(event: { id: string; value: boolean }) {
     const {id, value} = event;
@@ -500,25 +463,17 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  getPeriodForId = (id) => this.periods.find(p => p.id === id);
-
   getPeriodFights(id: string) {
-    return this.getPeriodForId(id).scheduleRequirements.map(c => c.fightIds || []).reduce(collectingReducer, []);
+    return this._requirements.filter(r => r.periodId === id).map(c => c.fightIds || []).reduce(collectingReducer, []);
   }
 
   getRequirementsForIds(ids: Set<string>) {
-    const allReqs = this.getAllRequirements(this.periods);
+    const allReqs = this._requirements;
     return Array.from(ids).map(id => allReqs.find(sr => sr.id === id));
   }
 
-  private getAllRequirements(periods: Period[]) {
-    if (periods) {
-      const dispatchedRequirements = periods.map(per => per.scheduleRequirements || [])
-        .reduce(collectingReducer, []);
-      const undispatched = Array.from(this.undispatchedRequirements).map(cr => cr.req).filter(r => !!r);
-      return [...dispatchedRequirements, ...undispatched];
-    }
-    return [] as ScheduleRequirement[];
+  private getAllRequirements() {
+    return this._requirements;
   }
 
   categoryForFightId = (fightId: string) => Object.keys(this.fightIdsByCategoryId).find(key => this.fightIdsByCategoryId[key].indexOf(fightId) >= 0);
@@ -534,21 +489,19 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     let categoryIds = [];
     if (catReq.cat) {
       const categoryId = catReq.cat.id;
-      this.getAllRequirements(this.periods).filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0);
+      this.getAllRequirements().filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0);
       this.modalService.open(new SplitCategoryModal(this.competitionId, categoryId, this.createSrFromFightIds(null)(null)('FIGHTS'),
-        this.getAllRequirements(this.periods).filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0)))
+        this.getAllRequirements().filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0)))
         .onApprove((result: ISplitCategoryResult) => {
           if (result.requirements && result.requirements.filter(fs => fs.fightIds && fs.fightIds.length > 0).length > 0) {
             const remainingFights = this.fightIdsByCategoryId[categoryId].filter(f => !result.requirements.find(sf => sf.fightIds.indexOf(f) >= 0));
-            const undispatchedRequirements = result.requirements.filter(sr => !sr.periodId);
-            undispatchedRequirements.filter(fs => fs && fs.fightIds.length > 0).forEach(fs => {
-              this.undispatchedRequirements.add({req: fs});
-            });
-            const dispatchedRequirements = result.requirements.filter(sr => !!sr.periodId);
+            const dispatchedRequirements = result.requirements.filter(r => this._requirements.find(sr => sr.id === r.id));
+            const newRequirements = result.requirements.filter(r => !this._requirements.find(sr => sr.id === r.id));
+            this._requirements.push(...newRequirements);
             this.updateRequirements(dispatchedRequirements);
             if (remainingFights && remainingFights.length > 0) {
               const defaultSr = this.createSrFromFightIds(null)(null)('CATEGORIES')(remainingFights, [categoryId]);
-              this.undispatchedRequirements.add({req: defaultSr});
+              this._requirements.push(defaultSr);
             }
             this.persistUpdates();
           }
@@ -564,15 +517,11 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
               .filter(f => result.requirement.fightIds.indexOf(f) < 0))
               .reduce(collectingReducer, [] as string[]);
             if (remainingFights && remainingFights.length > 0) {
-              this.periods = produce(this.periods, draft => {
-                const allReqs = this.getAllRequirements(draft);
-                let growingAllReqs = [...allReqs];
-                // for the fights that are not in the updated requirement but are have a category requirement, we have to convert
-                // the category requirement to fights requirement for consistency.
+              this._requirements = produce(this._requirements, draft => {
                 remainingFights.forEach(rf => {
-                  if (!allReqs.find(sr => sr.id !== result.requirement.id && sr.fightIds.indexOf(rf) >= 0)) {
+                  if (!draft.find(sr => sr.id !== result.requirement.id && sr.fightIds.indexOf(rf) >= 0)) {
                     // find default requirement for this fight
-                    const fightRequirement = this.getDefaultRequirementForFightId(rf, growingAllReqs);
+                    const fightRequirement = this.getDefaultRequirementForFightId(rf, draft);
                     if (fightRequirement) {
                       fightRequirement.fightIds.push(rf);
                     } else {
@@ -580,22 +529,15 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
                       const fightIds = this.fightIdsByCategoryId[categoryForFight]
                         .filter(id => result.requirement.fightIds.indexOf(id) < 0);
                       const defaultSr = this.createSrFromFightIds(null)(null)('CATEGORIES')(fightIds, [categoryForFight]);
-                      this.undispatchedRequirements.add({req: defaultSr});
-                      growingAllReqs = [...growingAllReqs, defaultSr];
+                      draft.push(defaultSr);
+                      draft.push(defaultSr);
                     }
                   }
                 });
                 result.requirement.fightIds.forEach(fid => {
-                  draft.forEach(p => this.removeFightIdsFromScheduleReqs(fid, p.scheduleRequirements));
+                  this.removeFightIdsFromScheduleReqs(fid, draft);
                 });
               });
-              this.updateUndispatched(undispatched => produce(undispatched, draft => {
-                draft.forEach(cr => {
-                  if (cr.req) {
-                    cr.req.fightIds = cr.req.fightIds.filter(f => !result.requirement.fightIds.includes(f));
-                  }
-                });
-              }));
             }
             this.persistUpdates();
           }
@@ -612,50 +554,27 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   private updateRequirements(dispatchedRequirements: ScheduleRequirement[]) {
-    this.periods = produce(this.periods, draft => {
-      dispatchedRequirements.forEach(dsr => {
-        const {periodId} = dsr;
-        const period = draft.find(p => p.id === periodId);
-        if (period) {
-          const indexOf = period.scheduleRequirements.map(s => s.id).indexOf(dsr.id);
-          if (indexOf >= 0) {
-            period.scheduleRequirements = [...period.scheduleRequirements.slice(0, indexOf), dsr, ...period.scheduleRequirements.slice(indexOf + 1)];
-          }
-        }
-      });
+    const ids = this._requirements.map(s => s.id);
+    dispatchedRequirements.forEach(dsr => {
+      const indexOf = ids.indexOf(dsr.id);
+      if (indexOf >= 0) {
+        this._requirements[indexOf] = dsr;
+      }
     });
+
   }
 
   private removeRequirementsWithIds(strings: string[]) {
-    this.periods = produce(this.periods, draft => {
-      draft.forEach(p => {
-        if (p.scheduleRequirements) {
-          p.scheduleRequirements = p.scheduleRequirements.filter(sr => !strings.includes(sr.id));
-        }
-      });
-    });
+    this._requirements = this._requirements.filter(sr => !strings.includes(sr.id));
   }
 
   private addRequirementToPeriodAndMatOrUndispatched(periodId: string, matId: string, newSr: ScheduleRequirement) {
-    if (periodId) {
-      const srToAdd = produce(newSr, n => {
-        n.periodId = periodId;
-        n.matId = matId;
-      });
-      this.periods = produce(this.periods, draft => {
-        const periodToUpdate = draft.find(p => p.id === periodId);
-        if (!periodToUpdate.scheduleRequirements.find(sr => sr.id === srToAdd.id)) {
-          periodToUpdate.scheduleRequirements.push(srToAdd);
-        }
-      });
-    } else {
-      const srToAdd = produce(newSr, n => {
-        n.periodId = null;
-        n.matId = null;
-      });
-      this.updateUndispatched(undisp => produce(undisp, draft => {
-        draft.push({req: srToAdd});
-      }));
+    const srToAdd = produce(newSr, n => {
+      n.periodId = periodId;
+      n.matId = matId;
+    });
+    if (!this._requirements.find(sr => sr.id === srToAdd.id)) {
+      this._requirements.push(srToAdd);
     }
   }
 }

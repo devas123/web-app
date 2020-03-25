@@ -18,7 +18,7 @@
                                    (requirementRemoveClicked)="deleteUndispatchedRequirement($event)"></app-categories-list>
             </div>
           </div>
-          <div class="card" *ngFor="let period of periods">
+          <div class="card" *ngFor="let period of _periods">
             <div class="content">
               <div class="right floated meta">
                 <i class="close link icon" (click)="removePeriod(period)"></i>
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="extra content">
-              <span>Categories: {{getPeriodCategories(period).length}}</span>
+              <span>Categories: {{getPeriodCategories(period.id).length}}</span>
               <span class="right floated">{{getPeriodFights(period.id)?.length}} fights</span>
             </div>
           </div>
