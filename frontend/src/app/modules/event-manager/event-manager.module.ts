@@ -83,6 +83,7 @@ import {AddSchedulePauseFormComponent} from './components/schedule-editor/add-pa
 import {RequirementLineComponent} from './components/schedule-editor/requirement-line.component';
 import {SplitCategoryFormComponent} from './components/schedule-editor/split-category-modal.component';
 import {EditRequirementModalComponent} from './components/schedule-editor/edit-requirement-modal.component';
+import {ColorChromeModule} from 'ngx-color/chrome';
 
 @NgModule({
   imports: [
@@ -105,7 +106,8 @@ import {EditRequirementModalComponent} from './components/schedule-editor/edit-r
     SuiPaginationModule,
     SuiMessageModule,
     CommonsModule,
-    DragDropModule
+    DragDropModule,
+    ColorChromeModule
   ],
   declarations: [
     RequirementLineComponent,

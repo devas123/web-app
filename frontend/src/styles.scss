@@ -9,6 +9,10 @@ $dialog_input_text_color: lemonchiffon;
 $item_color: #162830;
 $mat_border_color: #3c3f41;
 
+.compman_clickable {
+  cursor: pointer !important;
+}
+
 .category_hoverable:hover, .group_selected {
   background-color: lighten($background_color, 10) !important;
 }

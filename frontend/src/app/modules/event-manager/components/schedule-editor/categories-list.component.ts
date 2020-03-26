@@ -11,15 +11,16 @@ import {CatReq} from './schedule-editor.component';
       <div class="inner-list padded-vertical">
         <ng-container *ngFor="let catReq of linesToDisplay">
           <div *ngIf="catReq.cat" class="item schedule_page flex-container" cdkDrag
-               [cdkDragData]="{fromPeriod: periodId, cat: catReq.cat}">
-            <div cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
+               [cdkDragData]="{fromPeriod: periodId, cat: catReq.cat}" [ngClass]="{'compman_clickable': categoryClickable}">
+            <div *ngIf="canDrag" cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
             <div class="content">
               <div class="header">{{catReq.cat | displayCategory}}</div>
             </div>
             <div class="filler"></div>
             <div class="right-floated">
-              <a (click)="infoIconClicked.next(catReq.cat)"><i class="info icon"></i></a>
-              <a (click)="splitIconCicked.next(catReq)"><i class="fas fa-project-diagram"></i></a>
+              <a *ngIf="showInfoIcon" (click)="infoIconClicked.next(catReq.cat)"><i class="info icon"></i></a>
+              <a *ngIf="canSplitCategories" (click)="splitIconCicked.next(catReq)"><i class="fas fa-project-diagram"></i></a>
+              <a *ngIf="canDeleteCategories" (click)="requirementRemoveClicked.next(catReq)"><i class="delete icon"></i></a>
             </div>
           </div>
           <app-requirement-line
@@ -48,6 +49,27 @@ import {CatReq} from './schedule-editor.component';
 export class CategoriesListComponent {
 
   @Input()
+
+
+  @Input()
+  categoryClickable = false;
+
+  @Input()
+  lineColor = '#162830';
+
+  @Input()
+  showInfoIcon = true;
+
+  @Input()
+  canDrag = true;
+
+  @Input()
+  canDeleteCategories = false;
+
+  @Input()
+  canSplitCategories = true;
+
+  @Input()
   periodId: string;
 
   @Input()
@@ -62,8 +84,13 @@ export class CategoriesListComponent {
   splitIconCicked = new EventEmitter<CatReq>();
   @Output()
   infoIconClicked = new EventEmitter<Category>();
+
   @Output()
   requirementRemoveClicked = new EventEmitter<CatReq>();
+
+  @Output()
+  itemClicked = new EventEmitter<CatReq>();
+
 
   getRequirementCategories(req: ScheduleRequirement) {
     if (req && req.categoryIds && this.allCategories) {

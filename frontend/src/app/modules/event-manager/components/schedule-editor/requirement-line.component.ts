@@ -8,7 +8,7 @@ import {Category, ScheduleRequirement} from '../../../../commons/model/competiti
          [ngClass]="{'category-restriction': req.entryType === 'CATEGORIES',
              'pause': req.entryType === 'RELATIVE_PAUSE',
              'fight-restriction': req.entryType === 'FIGHTS',
-              'selected': selected && canSelect}">
+              'selected': selected && canSelect}" [style]="getRequirementStyle(req)">
       <div cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
       <div>{{ getRequirementDisplay(req) }}</div>
       <div class="filler"></div>
@@ -58,6 +58,9 @@ export class RequirementLineComponent {
   edit = new EventEmitter<void>();
 
   getRequirementDisplay(req: ScheduleRequirement) {
+    if (req.name && req.name.length > 0) {
+      return req.name;
+    }
     if (req.entryType === 'CATEGORIES') {
       if (!this.requirementCategories) {
         return 'empty';
@@ -78,5 +81,9 @@ export class RequirementLineComponent {
 
   removeFromSelected() {
     this.selectionChanged.next(false);
+  }
+
+  getRequirementStyle(req: ScheduleRequirement) {
+    return (req.color && `border: 2px solid ${req.color}`) || '';
   }
 }

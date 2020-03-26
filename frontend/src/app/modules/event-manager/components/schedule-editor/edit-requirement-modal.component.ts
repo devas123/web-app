@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ComponentModalConfig, IPopup, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {Category, displayCategory, ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {defaultActiveSelectionColor, uniqueFilter} from '../../../account/utils';
+import {ColorEvent} from 'ngx-color';
 
 export interface IEditRequirementContext {
   competitionId: string;
@@ -35,14 +36,15 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
 @Component({
   selector: 'app-edit-requirement-modal',
   template: `
+    <ng-template let-popup #popupTemplate>
+      <div class="header">Pick color</div>
+      <div class="content">
+        <color-chrome [color]="requirement.color || '#0e5375'" (onChangeComplete)="changeRequirementColor($event);"></color-chrome>
+      </div>
+    </ng-template>
     <div class="header">Edit requirement.</div>
     <div class="content">
       <div class="ui stackable compact menu">
-        <a class="item" *ngFor="let category of getCategories()" (click)="selectCategory(category.id)">
-          <i class="icon users"></i><span>{{category | displayCategory}}</span>
-          <a (click)="deleteCategory(category.id)"><i class="delete icon"></i></a>
-          <div class="floating ui red label">{{getCategoryFightsForThisRequirement(category.id)?.length}}</div>
-        </a>
         <div class="item">
           <sui-select
             [isDisabled]="false"
@@ -56,20 +58,43 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
           </sui-select>
         </div>
       </div>
-      <div class="schedule_page_scrollable" *ngIf="selectedCategory">
-        <app-stage-display [fights]="bracketsInfo.fights$ | async"
-                           [editMode]="true"
-                           [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
-                           (fightSelected)="toggleFightSelection($event)"
-                           (stageSelected)="bracketsInfo.selectStage($event, modal.context.competitionId)"
-                           [changeFightIds]="getFightsColors()"
-                           [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
-                           [selectedStage]="bracketsInfo.stage$ | async"
-                           [stages]="bracketsInfo.stages$ | async"
-                           [category]="bracketsInfo.category$ | async"></app-stage-display>
+      <!--      <a class="item" *ngFor="let category of getCategories()" (click)="selectCategory(category.id)">-->
+      <!--        <i class="icon users"></i><span>{{category | displayCategory}}</span>-->
+      <!--        <a (click)="deleteCategory(category.id)"><i class="delete icon"></i></a>-->
+      <!--        <div class="floating ui red label">{{getCategoryFightsForThisRequirement(category.id)?.length}}</div>-->
+      <!--      </a>-->
+      <div class="inner-list padded-vertical">
+        <div *ngFor="let cat of getCategories()" class="item schedule_page flex-container compman_clickable" (click)="selectCategory(cat.id)" [style]="getCategoryStyle(cat.id)">
+          <div class="content">
+            <div class="header">{{cat | displayCategory}}</div>
+          </div>
+          <div class="ui label">{{getCategoryFightsForThisRequirement(cat.id)?.length}} fights</div>
+          <div class="filler"></div>
+          <div class="right-floated">
+            <a (click)="deleteCategory(cat.id)"><i class="delete icon"></i></a>
+          </div>
+        </div>
       </div>
+      <label class="margin-horizontal" for="reqName">Name</label>
+      <div class="ui input margin-horizontal">
+        <input type="text" maxlength="20" id="reqName" placeholder="Name" (change)="changeName($event)">
+      </div>
+      <div class="ui button" #popup="suiPopup" suiPopup [popupTemplate]="popupTemplate" popupTrigger="manual" (click)="toggleColorPicker(popup)">{{ showColorPicker ? 'Close' : 'Change color'}}</div>
+      <div class="ui button" (click)="toggleBrackets()">{{showFightsPicker ? 'Close' : 'Select fights'}}</div>
     </div>
-    <div class="ui basic segment" *ngIf="!selectedCategory">Select category.</div>
+    <div class="schedule_page_scrollable" *ngIf="selectedCategory && showFightsPicker">
+      <app-stage-display [fights]="bracketsInfo.fights$ | async"
+                         [editMode]="true"
+                         [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
+                         (fightSelected)="toggleFightSelection($event)"
+                         (stageSelected)="bracketsInfo.selectStage($event, modal.context.competitionId)"
+                         [changeFightIds]="getFightsColors()"
+                         [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
+                         [selectedStage]="bracketsInfo.stage$ | async"
+                         [stages]="bracketsInfo.stages$ | async"
+                         [category]="bracketsInfo.category$ | async"></app-stage-display>
+    </div>
+    <div class="ui basic segment" *ngIf="!selectedCategory && showFightsPicker">Select category.</div>
     <div class="actions">
       <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
       <button class="ui green button" [disabled]="!requirement" (click)="approveModal()" autofocus>OK</button>
@@ -78,9 +103,23 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditRequirementModalComponent implements OnInit, OnDestroy {
+
+  constructor(public modal: SuiModal<IEditRequirementContext, IEditRequirementResult, void>, public bracketsInfo: CommonBracketsInfoContainer, private cd: ChangeDetectorRef) {
+  }
+
+  get undispatchedCategories() {
+    return this.modal.context.undispatchedCategories || [];
+  }
+
+  get fightIdsByCategoryId() {
+    return this.modal.context.fightIdsByCategoryId;
+  }
+
   selectedCategory: string;
   requirement: ScheduleRequirement;
   affectedCategoryIds = new Set<string>();
+  showColorPicker = false;
+  showFightsPicker = false;
   categoryFormatter = (category: Category) => displayCategory(category, 10);
 
   getFightsForCategoryId(id: string) {
@@ -112,9 +151,6 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
     return this.modal.context.allCategories.filter(cat => this.requirement.categoryIds.indexOf(cat.id) < 0);
   }
 
-  constructor(public modal: SuiModal<IEditRequirementContext, IEditRequirementResult, void>, public bracketsInfo: CommonBracketsInfoContainer) {
-  }
-
   deleteCategory(catId: string) {
     this.requirement = produce(this.requirement, draft => {
       draft.categoryIds = draft.categoryIds.filter(id => id !== catId);
@@ -143,26 +179,20 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  get undispatchedCategories() {
-    return this.modal.context.undispatchedCategories || [];
-  }
-
-  get fightIdsByCategoryId() {
-    return this.modal.context.fightIdsByCategoryId;
-  }
-
   approveModal() {
     this.modal.approve({requirement: this.requirement, affectedCategoryIds: Array.from(this.affectedCategoryIds)});
   }
 
   ngOnInit(): void {
     this.requirement = this.modal.context.requirement;
-    this.selectCategory(this.requirement.categoryIds[0]);
   }
 
   selectCategory(category: string) {
+    console.log(category);
     this.selectedCategory = category;
-    this.bracketsInfo.selectCategory(category, this.modal.context.competitionId);
+    if (this.showFightsPicker) {
+      this.bracketsInfo.selectCategory(category, this.modal.context.competitionId);
+    }
   }
 
   ngOnDestroy(): void {
@@ -178,6 +208,56 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
           draft.fightIds = [...draft.fightIds, ...this.fightIdsByCategoryId[event.id]];
         }
       });
+    }
+  }
+
+  changeRequirementColor(colorEvent: ColorEvent) {
+    if (colorEvent.color.hex && colorEvent.color.hex !== this.requirement.color) {
+      this.requirement = produce(this.requirement, draft => {
+        draft.color = colorEvent.color.hex;
+      });
+      this.cd.markForCheck();
+    }
+  }
+
+  changeName($event: any) {
+    $event.preventDefault();
+    if (this.requirement.name !== $event.target.value) {
+      this.requirement = produce(this.requirement, draft => {
+        draft.name = $event.target.value;
+      });
+    }
+  }
+
+  toggleBrackets() {
+    if (!this.showFightsPicker) {
+      if (this.selectedCategory) {
+        this.bracketsInfo.selectCategory(this.selectedCategory, this.modal.context.competitionId);
+      } else if (this.requirement.categoryIds && this.requirement.categoryIds.length > 0) {
+        this.selectedCategory = this.requirement.categoryIds[0];
+        this.bracketsInfo.selectCategory(this.requirement.categoryIds[0], this.modal.context.competitionId);
+      }
+      this.showFightsPicker = true;
+    } else {
+      this.bracketsInfo.clearCategorySelection(this.modal.context.competitionId);
+      this.showFightsPicker = false;
+    }
+  }
+
+  getCategoryStyle(id: string) {
+    if (id === this.selectedCategory) {
+      return `border: 2px solid ${this.requirement.color || defaultActiveSelectionColor}`;
+    }
+    return '';
+  }
+
+  toggleColorPicker(popup: IPopup) {
+    if (this.showColorPicker) {
+      popup.close();
+      this.showColorPicker = false;
+    } else {
+      popup.open();
+      this.showColorPicker = true;
     }
   }
 }
