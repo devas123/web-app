@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FightStartTime, MatDescription, Schedule} from '../../reducers/global-reducers';
-import {Category, Period} from '../../commons/model/competition.model';
+import {Category, Period, ScheduleEntry, ScheduleRequirement} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
@@ -22,14 +22,15 @@ import {uniqueFilter} from '../../modules/account/utils';
               <label>{{matsView ? 'Hide mats' : 'Show mats' }}</label>
             </div>
             <div class="ui middle aligned divided list">
-              <a class="item" *ngFor="let scheduleEntry of getPeriodEntries(period)">
+              <a class="item" *ngFor="let scheduleEntry of getPeriodEntries(period)" [style]="getEntryStyle(scheduleEntry)">
                 <i class="users icon"></i>
                 <div class="content">
+                  <div class="header" *ngIf="scheduleEntry.name">{{scheduleEntry.name}}</div>
                   <div class="category_hoverable"
                        (mouseenter)="highlightCategory(categoryId)"
                        (mouseleave)="clearCategoryHighLight()"
                        (click)="goToCategoryEditor(categoryId)"
-                       [ngClass]="{header: isFirst, description: !isFirst, group_selected: isCategorySelected(categoryId)}"
+                       [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: isCategorySelected(categoryId)}"
                        *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{categoryNameForCategoryId(categoryId)}}</div>
                   <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
                   <div class="description">{{matName(scheduleEntry?.matId)}}</div>
@@ -151,6 +152,11 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
   ngOnInit() {
 
   }
+
+  getEntryStyle(req: ScheduleEntry) {
+    return (req.color && `border: 2px solid ${req.color}`) || '';
+  }
+
 
   getPeriodMats(id: string) {
     return this.mats.filter(mat => mat.periodId === id);

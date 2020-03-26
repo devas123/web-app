@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "postinstall": "ngcc",
     "ng": "ng",
     "json-server": "json-server --watch db.json",
     "start": "ng serve --proxy-config proxy.conf.js",
@@ -44,6 +45,7 @@
     "marked": "^0.8.0",
     "ng2-stomp-service": "^1.2.2",
     "ngx-avatar": "^3.7.0",
+    "ngx-color": "^5.0.2",
     "ngx-img-cropper": "^8.0.1",
     "ngx-md": "^8.1.6",
     "rxjs": "^6.4.0",
