@@ -44,16 +44,16 @@ export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEI
 export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
 export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
 
-export const displayCategory = (cat: Category, truncate = true) => {
+export const displayCategory = (cat: Category, maxLength: number = -1) => {
   if (!cat) {
     return '';
   }
   const name = cat.name;
   const fullName = `${getGender(cat)}/${getAgeDivisionName(cat)}/${getBeltType(cat)}/${getWeightId(cat)}`;
-  if (!truncate) {
-    return `${name || 'Unnamed'} ` + fullName;
+  if (maxLength <= 0) {
+    return name || fullName;
   }
-  return name || (fullName.length < 20 ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
+  return name || (fullName.length < maxLength ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
 };
 
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
@@ -72,6 +72,7 @@ export interface Period {
   startTime: string;
   endTime?: string;
   isActive: boolean;
+  mats: MatDescription[];
   scheduleEntries?: ScheduleEntry[];
   scheduleRequirements?: ScheduleRequirement[];
   duration?: number;
@@ -81,8 +82,9 @@ export interface Period {
 
 export interface ScheduleEntry {
   id: string;
-  categoryId: string;
-  startTime: Date;
+  startTime: string;
+  color: string;
+  name: string;
   numberOfFights: number;
   fightDuration: number;
   categoryIds: string[];
@@ -107,6 +109,8 @@ export interface ScheduleRequirement {
   periodId: string;
   entryType: ScheduleRequirementType;
   durationMinutes: number;
+  name: string;
+  color: string;
   force: boolean;
   startTime: string;
   endTime: string;
@@ -310,6 +314,7 @@ export interface StageInputDescriptor {
 
 export interface CategoryBracketsStageCollection extends EntityState<CategoryBracketsStage> {
   selectedStageId: string | null;
+  fightsAreLoading: boolean;
   selectedStageFights: FightsCollection;
 }
 
@@ -396,6 +401,7 @@ export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitia
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({
   selectedStageId: null,
+  fightsAreLoading: false,
   selectedStageFights: fightsInitialState
 });
 

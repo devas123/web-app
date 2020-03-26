@@ -17,7 +17,7 @@ import {Category, ScheduleRequirement} from '../../../../commons/model/competiti
           <a><i *ngIf="!selected" class="ui check icon" (click)="addToSelected()"></i></a>
           <a><i *ngIf="selected" class="ui minus icon" (click)="removeFromSelected()"></i></a>
         </ng-container>
-        <a *ngIf="canSplit"><i class="fas fa-project-diagram" (click)="split.next()"></i></a>
+        <a *ngIf="canSplit"><i class="ui edit icon" (click)="edit.next()"></i></a>
         <a *ngIf="canDelete"><i class="ui trash icon" (click)="removed.next()"></i></a>
       </div>
     </div>`,
@@ -55,7 +55,7 @@ export class RequirementLineComponent {
   removed = new EventEmitter<void>();
 
   @Output()
-  split = new EventEmitter<void>();
+  edit = new EventEmitter<void>();
 
   getRequirementDisplay(req: ScheduleRequirement) {
     if (req.entryType === 'CATEGORIES') {

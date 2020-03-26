@@ -1,8 +1,11 @@
 .selectable {
-  rect.compholder {
-    fill: #1d0e08;
-  }
   cursor: pointer;
+}
+
+.selected {
+  rect.compholder {
+    fill: #3c5d96;
+  }
 }
 
 .compholder {

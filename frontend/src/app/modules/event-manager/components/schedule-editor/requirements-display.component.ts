@@ -29,7 +29,8 @@ import {Dictionary} from '@ngrx/entity';
                               (selectionChanged)="changeSelection($event, req.id)"
                               [canDelete]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES'"
                               [canSplit]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES'"
-                              (split)="this.splitIconCicked.next(req)"
+                              [canSelect]="canSelect(req)"
+                              (edit)="this.splitIconCicked.next(req)"
                               *ngFor="let req of _requirements"></app-requirement-line>
       </div>
     </div>
@@ -68,6 +69,9 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   _fixedPauses: ScheduleRequirement[];
 
   @Input()
+  allRequirements: ScheduleRequirement[];
+
+  @Input()
   selectedReqs: Set<string> = new Set<string>();
 
   private _categories: Category[];
@@ -90,6 +94,13 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
 
   isSelected(id: string) {
     return this.selectedReqs.has(id);
+  }
+
+  canSelect(scheduleRequirement: ScheduleRequirement) {
+    if (!scheduleRequirement || (scheduleRequirement.entryType !== 'FIGHTS' && scheduleRequirement.entryType !== 'CATEGORIES')) {
+      return false;
+    }
+    return this.selectedReqs.size === 0 || this.allRequirements.find(r => r.id === this.selectedReqs.values().next().value).entryType === scheduleRequirement.entryType;
   }
 
 

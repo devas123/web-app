@@ -248,10 +248,10 @@ export const eventManagerGenerateBrackets = (competitionId, categoryId, stageDes
   }
 });
 
-export const eventManagerGenerateSchedule = (competitionId, scheduleProperties) => ({
+export const eventManagerGenerateSchedule = (competitionId, periods: Period[]) => ({
   type: EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   competitionId,
-  payload: scheduleProperties
+  payload: { periods }
 });
 export const eventManagerCategorySelected = (competitionId: string, categoryId: string) => ({
   type: EVENT_MANAGER_CATEGORY_SELECTED,

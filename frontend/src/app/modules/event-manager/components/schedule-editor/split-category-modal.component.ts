@@ -2,11 +2,15 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {ScheduleRequirement} from '../../../../commons/model/competition.model';
+import {Dictionary} from '@ngrx/entity';
+import produce from 'immer';
+import {defaultSelectionColor} from '../../../account/utils';
 
 export interface ISplitCategoryContext {
   competitionId: string;
   categoryId?: string;
   connectedRequirements: ScheduleRequirement[];
+  fightsColors: Dictionary<string[]>;
   requirementFactory: (fightIds, categoryId) => ScheduleRequirement;
 }
 
@@ -15,8 +19,9 @@ export interface ISplitCategoryResult {
 }
 
 export class SplitCategoryModal extends ComponentModalConfig<ISplitCategoryContext, ISplitCategoryResult, void> {
-  constructor(competitionId: string, categoryId: string, requirementFactory: (fightIds, categoryId) => ScheduleRequirement, connectedRequirements: ScheduleRequirement[], size = ModalSize.Large) {
-    super(SplitCategoryFormComponent, {competitionId, categoryId, requirementFactory, connectedRequirements});
+  constructor(competitionId: string, categoryId: string, requirementFactory: (fightIds, categoryId) => ScheduleRequirement,
+              connectedRequirements: ScheduleRequirement[], fightsColors: Dictionary<string[]>, size = ModalSize.Large) {
+    super(SplitCategoryFormComponent, {competitionId, categoryId, requirementFactory, connectedRequirements, fightsColors});
     this.isClosable = true;
     this.transitionDuration = 200;
     this.size = size;
@@ -44,7 +49,7 @@ export class SplitCategoryModal extends ComponentModalConfig<ISplitCategoryConte
                            [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
                            (fightSelected)="toggleFightSelection($event)"
                            (stageSelected)="bracketsInfo.selectStage($event, modal.context.competitionId)"
-                           [changeFightIds]="getAllSelectedFights()"
+                           [changeFightIds]="getFightsColors()"
                            [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                            [selectedStage]="bracketsInfo.stage$ | async"
                            [stages]="bracketsInfo.stages$ | async"
@@ -69,6 +74,19 @@ export class SplitCategoryFormComponent implements OnInit, OnDestroy {
   addFightsGroup() {
     this.requirements.push(this.createRequirement([]));
   }
+
+  getFightsColors() {
+    return produce(this.modal.context.fightsColors, draft => {
+      this.requirements.forEach(requirement => {
+        const color = requirement.color || defaultSelectionColor;
+        if (!draft[color]) {
+          draft[color] = [];
+        }
+        draft[color].push(...requirement.fightIds);
+      });
+    });
+  }
+
 
   getAllSelectedFights() {
     return this.requirements.reduce((previousValue, currentValue) => previousValue.concat(currentValue.fightIds || []), <string[]>[]);

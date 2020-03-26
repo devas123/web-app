@@ -34,7 +34,7 @@ import {CatReq} from './schedule-editor.component';
             (removed)="requirementRemoveClicked.next(catReq)"
             [canDelete]="true"
             [canSplit]="true"
-            (split)="this.splitIconCicked.next(catReq)"
+            (edit)="this.splitIconCicked.next(catReq)"
           ></app-requirement-line>
         </ng-container>
       </div>

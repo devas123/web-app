@@ -18,7 +18,8 @@
         <div class="academy">{{_competitorsDictionary[competitorId]?.academy?.name}}</div>
       </div>
     </div>
-    <div class="fight_cell centered" [ngClass]="{black: k === i}"
+    <div class="fight_cell centered" (click)="fightSelected.next(fight?.id)" [ngClass]="{black: k === i, selectable_fight: k !== i}"
+         [ngStyle]="{ 'background-color': getBackgroundColor(fight.id) }"
          *ngFor="let fight of _fightsPerCompetitor[competitorId]; index as k"
          [innerHTML]="k === i ? '' : displayFight(fight, competitorId)"></div>
   </div>

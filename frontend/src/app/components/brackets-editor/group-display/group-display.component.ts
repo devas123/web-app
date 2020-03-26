@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 import {BracketsType, Competitor, CompScore, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 import {Dictionary} from '@ngrx/entity';
+import {defaultSelectionColor, getKeyForEntry} from '../../../modules/account/utils';
 
 @Component({
   selector: 'app-group-display',
@@ -83,9 +84,13 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent {
       }
       return `<div class="score"><div>${wol}</div><div><span>${score.points}/${score.advantages}/${score.penalties}</span></div></div>`;
     } else if (f.mat && f.mat.id) {
-      return `<span>M ${f.mat} / F#${f.numberOnMat + 1}</span>`;
+      return `<span>${f.mat.name}/F#${f.numberOnMat + 1}</span>`;
     } else {
       return `<span>F#${f.numberInRound + 1}</span>`;
     }
   };
+
+  getBackgroundColor(id: string) {
+    return getKeyForEntry(this.changeFightsIds, id) || defaultSelectionColor;
+  }
 }

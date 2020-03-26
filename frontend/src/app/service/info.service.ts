@@ -106,7 +106,7 @@ export class InfoService {
       retryWhen(genericRetryStrategy()),
       catchError(error => {
         console.log(error);
-        return observableOf(error);
+        return observableOf(undefined);
       }),
       mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`))
     );

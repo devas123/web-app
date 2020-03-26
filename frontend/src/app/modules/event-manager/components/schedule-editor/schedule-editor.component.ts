@@ -6,18 +6,15 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodModal, IAddSchedulePeriodResult} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
-import * as uuidv4 from 'uuid/v4';
 import {AddSchedulePauseModal, IAddSchedulePauseResult} from './add-pause-form.component';
 import {ISplitCategoryResult, SplitCategoryModal} from './split-category-modal.component';
-import {EditFightsRequirementModal, IEditFightsRequirementResult} from './edit-fights-requirement-modal.component';
+import {EditRequirementModal, IEditRequirementResult} from './edit-requirement-modal.component';
+import {collectingReducer, defaultSelectionColor, generateUuid, uniqueFilter} from '../../../account/utils';
 
 export interface CatReq {
   cat?: Category;
   req?: ScheduleRequirement;
 }
-
-const collectingReducer = <T>(previousValue: T[], currentValue: T[]) => [...previousValue, ...currentValue];
-const uniqueFilter = <T>(e: T, i: number, a: T[]) => a.indexOf(e) === i;
 
 @Component({
   selector: 'app-schedule-editor',
@@ -112,7 +109,13 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   sendGenerateSchedule() {
-    this.generateSchedule.next({competitionId: this.competitionId, periods: this.periods});
+    this.generateSchedule.next({
+      competitionId: this.competitionId, periods: produce(this.periods, draft => {
+        draft.forEach(p => {
+          p.mats = this.getPeriodMats(p.id);
+        });
+      })
+    });
   }
 
   removePeriod(p: Period) {
@@ -137,7 +140,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       });
   }
 
-  requirementId = () => `${uuidv4().toString()}-requirement`;
+  requirementId = () => `${generateUuid().toString()}`;
 
   createSrFromFightIds = (matId: string) => (periodId: string) => (entryType: ScheduleRequirementType) => (fightIds: string[], categoryIds: string[]) => (<ScheduleRequirement>{
     id: this.requirementId(),
@@ -467,20 +470,40 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   categoryForFightId = (fightId: string) => Object.keys(this.fightIdsByCategoryId).find(key => this.fightIdsByCategoryId[key].indexOf(fightId) >= 0);
 
-  private getDefaultRequirementForFightId(fightId: string, allReqs: ScheduleRequirement[]) {
-    const cat = this.categoryForFightId(fightId);
-    return allReqs.find(sr => {
-      return (sr.entryType === 'CATEGORIES' && sr.categoryIds.indexOf(cat) >= 0);
+  private getDefaultRequirementForFightId(fightId: string) {
+    this._requirements = produce(this._requirements, draft => {
+      const cat = this.categoryForFightId(fightId);
+      const defaultCat = draft.find(sr => {
+        return (sr.entryType === 'CATEGORIES' && sr.categoryIds.indexOf(cat) >= 0);
+      });
+      if (defaultCat) {
+        defaultCat.fightIds.push(fightId);
+      } else {
+        const defaultSr = this.createSrFromFightIds(null)(null)('CATEGORIES')([fightId], [cat]);
+        draft.push(defaultSr);
+      }
     });
   }
 
+  getFightsColors(exceptRequirements: string[]) {
+    const draft = {} as Dictionary<string[]>;
+    const exReq = exceptRequirements || [];
+    this._requirements.filter(req => !exReq.includes(req.id)).forEach(requirement => {
+      const color = requirement.color || defaultSelectionColor;
+      if (!draft[color]) {
+        draft[color] = [];
+      }
+      draft[color].push(...requirement.fightIds);
+    });
+    return draft;
+  }
+
   openSplitModal(catReq: CatReq) {
-    let categoryIds = [];
     if (catReq.cat) {
       const categoryId = catReq.cat.id;
       this.getAllRequirements().filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0);
       this.modalService.open(new SplitCategoryModal(this.competitionId, categoryId, this.createSrFromFightIds(null)(null)('FIGHTS'),
-        this.getAllRequirements().filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0)))
+        this.getAllRequirements().filter(sr => sr.entryType === 'FIGHTS' && sr.categoryIds.indexOf(categoryId) >= 0), this.getFightsColors([])))
         .onApprove((result: ISplitCategoryResult) => {
           if (result.requirements && result.requirements.filter(fs => fs.fightIds && fs.fightIds.length > 0).length > 0) {
             const remainingFights = this.fightIdsByCategoryId[categoryId].filter(f => !result.requirements.find(sf => sf.fightIds.indexOf(f) >= 0));
@@ -496,37 +519,44 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
           }
         });
     } else if (catReq.req) {
-      categoryIds = catReq.req.categoryIds;
-      this.modalService.open(new EditFightsRequirementModal(this.competitionId, this.categories, categoryIds, this.fightIdsByCategoryId,
-        catReq.req, this.createSrFromFightIds(null)(null)('FIGHTS')))
-        .onApprove((result: IEditFightsRequirementResult) => {
+      this.modalService.open(new EditRequirementModal(this.competitionId, this.categories, this.filteredCategories.filter(cr => cr.cat).map(cr => cr.cat.id), this.fightIdsByCategoryId,
+        this.getFightsColors([catReq.req.id]), catReq.req, this.createSrFromFightIds(null)(null)('FIGHTS')))
+        .onApprove((result: IEditRequirementResult) => {
           if (result.requirement) {
-            const affectedCategoryIds = result.requirement.categoryIds || [];
-            const remainingFights = affectedCategoryIds.map(categoryId => this.fightIdsByCategoryId[categoryId]
-              .filter(f => result.requirement.fightIds.indexOf(f) < 0))
-              .reduce(collectingReducer, [] as string[]);
-            if (remainingFights && remainingFights.length > 0) {
-              this._requirements = produce(this._requirements, draft => {
-                remainingFights.forEach(rf => {
-                  if (!draft.find(sr => sr.id !== result.requirement.id && sr.fightIds.indexOf(rf) >= 0)) {
-                    // find default requirement for this fight
-                    const fightRequirement = this.getDefaultRequirementForFightId(rf, draft);
-                    if (fightRequirement) {
-                      fightRequirement.fightIds.push(rf);
-                    } else {
-                      const categoryForFight = this.categoryForFightId(rf);
-                      const fightIds = this.fightIdsByCategoryId[categoryForFight]
-                        .filter(id => result.requirement.fightIds.indexOf(id) < 0);
-                      const defaultSr = this.createSrFromFightIds(null)(null)('CATEGORIES')(fightIds, [categoryForFight]);
-                      draft.push(defaultSr);
-                      draft.push(defaultSr);
+            if (result.requirement.categoryIds.length > 0 && result.requirement.fightIds.length > 0) {
+              const affectedCategoryIds = result.affectedCategoryIds || [];
+              const allDispatchedFightIds = this._requirements.filter(r => r.id !== result.requirement.id).map(r => r.fightIds || []).reduce(collectingReducer, []);
+              const remainingFights = affectedCategoryIds.map(categoryId => this.fightIdsByCategoryId[categoryId]
+                .filter(f => result.requirement.fightIds.indexOf(f) < 0)
+                .filter(f => !allDispatchedFightIds.includes(f)))
+                .reduce(collectingReducer, [] as string[]);
+              if (remainingFights && remainingFights.length > 0) {
+                if (result.requirement.entryType === 'FIGHTS') {
+                  remainingFights.forEach(rf => {
+                    if (!this._requirements.find(sr => sr.id !== result.requirement.id && sr.fightIds.indexOf(rf) >= 0)) {
+                      // find default requirement for this fight
+                      this.getDefaultRequirementForFightId(rf);
                     }
-                  }
-                });
+                  });
+                }
+                if (result.requirement.entryType === 'CATEGORIES') {
+                  const categories = remainingFights.map(id => this.categoryForFightId(id)).filter(uniqueFilter);
+                  const remainingRequirement = this.createSrFromFightIds(null)(null)('FIGHTS')(remainingFights, categories);
+                  this._requirements = this.updateRequirement(remainingRequirement, this._requirements);
+                }
+              }
+              this._requirements = produce(this._requirements, draft => {
                 result.requirement.fightIds.forEach(fid => {
-                  this.removeFightIdsFromScheduleReqs(fid, draft);
+                  draft.forEach(psr => {
+                    if (psr.id !== result.requirement.id && psr.fightIds.indexOf(fid) >= 0) {
+                      psr.fightIds.splice(psr.fightIds.indexOf(fid), 1);
+                    }
+                  });
                 });
               });
+              this._requirements = this.updateRequirement(result.requirement, this._requirements);
+            } else {
+              this.removeRequirement(catReq.req, false);
             }
             this.persistUpdates();
           }
@@ -534,12 +564,15 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  removeFightIdsFromScheduleReqs(fightId: string, scheduleRequirements: ScheduleRequirement[]) {
-    scheduleRequirements.forEach(psr => {
-      if (psr.fightIds.indexOf(fightId) >= 0) {
-        psr.fightIds = psr.fightIds.filter(id => id !== fightId);
-      }
-    });
+  updateRequirement(req: ScheduleRequirement, requirements: ScheduleRequirement[]) {
+    const editable = [...requirements];
+    const index = editable.map(r => r.id).indexOf(req.id);
+    if (index >= 0) {
+      editable[index] = req;
+    } else {
+      editable.push(req);
+    }
+    return editable;
   }
 
   private updateRequirements(dispatchedRequirements: ScheduleRequirement[]) {

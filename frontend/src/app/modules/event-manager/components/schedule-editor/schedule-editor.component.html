@@ -38,6 +38,7 @@
                 [periodId]="period.id"
                 [matId]="null"
                 [timeZone]="timeZone"
+                [allRequirements]="_requirements"
                 (splitIconCicked)="openSplitModal({req: $event})"
                 (itemDropped)="onItemDrop($event.event, $event.periodId, null)"
                 (requirementRemoved)="removeRequirement($event)"
@@ -54,6 +55,7 @@
                     [periodId]="period.id"
                     [matId]="mat.id"
                     [timeZone]="timeZone"
+                    [allRequirements]="_requirements"
                     (splitIconCicked)="openSplitModal({req: $event})"
                     (requirementSelectionChanged)="changeSelectionStatus($event)"
                     (itemDropped)="onItemDrop($event.event, $event.periodId, mat.id)"></app-requirements-display>

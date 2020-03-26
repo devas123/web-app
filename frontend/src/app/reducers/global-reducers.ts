@@ -84,6 +84,7 @@ import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {DASHBOARD_FIGHT_SELECTED, DASHBOARD_FIGHT_UNSELECTED, DASHBOARD_MAT_FIGHTS_LOADED, DASHBOARD_MAT_SELECTED, DASHBOARD_MAT_UNSELECTED, DASHBOARD_MATS_LOADED} from '../modules/event-manager/redux/dashboard-actions';
+import {collectingReducer} from '../modules/account/utils';
 
 export interface AppState {
   accountState: AccountState;
@@ -96,13 +97,14 @@ export interface CommonAction extends Action {
   competitionId: string | null;
 }
 
-interface FightStartTime {
+export interface FightStartTime {
   fightId: string;
   matId: string;
   numberOnMat: number;
   startTime: Date;
   periodId: string;
   fightCategoryId: string;
+  invalid?: boolean;
 }
 
 export interface MatDescription {
@@ -111,6 +113,7 @@ export interface MatDescription {
   numberOfFights: number;
   periodId: string;
   matOrder: number;
+  fightStartTimes: FightStartTime[];
 }
 
 export interface MatsCollection extends EntityState<MatDescription> {
@@ -347,6 +350,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
+        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         break;
       }
       case competitorsActions.COMPETITOR_ADDED: {
@@ -549,6 +553,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.selectedEventCategories.selectedCategoryStages.selectedStageFights
             = fightEntityAdapter.addAll(fights, fightsInitialState);
         }
+        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
         break;
       }
 
@@ -621,8 +626,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_SCHEDULE_LOADED: {
         const {payload} = action;
-        if (action.competitionId === state.competitionProperties.id) {
-          state.selectedEventSchedule.periods = periodEntityAdapter.addAll(payload.periods, periodEntityInitialState);
+        if (action.competitionId === state.competitionProperties.id && payload.periods) {
+          const periods = payload.periods as Period[];
+          const mats = periods.map(p => p.mats || []).reduce(collectingReducer, [] as MatDescription[]);
+          state.selectedEventSchedule.periods = periodEntityAdapter.addAll(periods, periodEntityInitialState);
+          state.selectedEventMats = matEntityAdapter.addAll(mats, matsInitialState);
           state.selectedEventSchedule.competitionId = payload.id;
         }
         break;

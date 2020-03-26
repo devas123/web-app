@@ -9,8 +9,7 @@ import {
   eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
   eventManagerGetSelectedEventSelectedCategorySelectedStage,
   eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
-  eventManagerGetSelectedEventSelectedCategorySelectedStages,
-  eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
+  eventManagerGetSelectedEventSelectedCategorySelectedStages, eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
 } from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import {Fight, StageType} from '../../../commons/model/competition.model';
 import {ConnectionType} from '../bracketround/bracketround.component';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'app-bracket-part',
@@ -57,7 +58,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
   editMode = false;
 
   @Input()
-  changeFightsIds: string[];
+  changeFightsIds: Dictionary<string[]> = {};
 
   @Input()
   isLoserBracket = false;

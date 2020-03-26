@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
 
 @Component({
-  selector: 'app-schedule-editor-container',
+  selector: 'app-schedule-container',
   template: `
     <div class="ui basic segment margins_container">
       <app-schedule-display

@@ -82,7 +82,7 @@ import {CategoriesListComponent} from './components/schedule-editor/categories-l
 import {AddSchedulePauseFormComponent} from './components/schedule-editor/add-pause-form.component';
 import {RequirementLineComponent} from './components/schedule-editor/requirement-line.component';
 import {SplitCategoryFormComponent} from './components/schedule-editor/split-category-modal.component';
-import {EditFightsRequirementModalComponent} from './components/schedule-editor/edit-fights-requirement-modal.component';
+import {EditRequirementModalComponent} from './components/schedule-editor/edit-requirement-modal.component';
 
 @NgModule({
   imports: [
@@ -164,7 +164,7 @@ import {EditFightsRequirementModalComponent} from './components/schedule-editor/
     TimerControlsComponent,
     FighterProfileComponent,
     SplitCategoryFormComponent,
-    EditFightsRequirementModalComponent,
+    EditRequirementModalComponent,
     AddInputSelectorFormComponent],
   providers: [EventManagerService]
 })

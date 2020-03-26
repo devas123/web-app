@@ -17,7 +17,7 @@
   <h4 class="ui header">{{formatter(bracketsInfo?.category$ | async)}}</h4>
   <div class="ui description">{{bracketsInfo?.numberOfCompetitor$ | async}} competitors</div>
 </div>
-<div *ngIf="bracketsInfo?.fightsAreLoading$ | async" class="ui active transparent dimmer centered">
+<div *ngIf="(bracketsInfo?.fightsAreLoading$ | async)" class="ui active transparent dimmer centered">
   <div class="ui text loader centered">Loading</div>
 </div>
 <app-fights-editor-container *ngIf="editMode"></app-fights-editor-container>
@@ -33,7 +33,6 @@
                    [bucketSize]="bracketsSize$ | async"
                    (fightSelected)="addFightToCurrentChange($event)"
                    (stageSelected)="selectStage($event)"
-                   [changeFightIds]="bracketsInfo.changeFightsIds$ | async"
                    [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                    [selectedStage]="bracketsInfo.stage$ | async"
                    [stages]="bracketsInfo.stages$ | async"

@@ -1,28 +1,60 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MatDescription, Schedule} from '../../reducers/global-reducers';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {FightStartTime, MatDescription, Schedule} from '../../reducers/global-reducers';
 import {Category, Period} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
+import produce from 'immer';
+import {InfoService} from '../../service/info.service';
+import {uniqueFilter} from '../../modules/account/utils';
 
 @Component({
   selector: 'app-schedule-display',
+  styleUrls: ['schedule-display.component.scss'],
   template: `
     <div [suiCollapse]="scheduleEmpty">
-      <div class="ui two stackable cards">
+      <div class="ui three stackable cards no_margin">
         <div class="card" *ngFor="let period of schedulePeriods">
           <div class="content">
             <div class="header">{{period?.name}}</div>
             <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+            <div class="ui toggle checkbox margin-vertical">
+              <input type="checkbox" name="public" [value]="matsView" (click)="toggleMatsView()">
+              <label>{{matsView ? 'Hide mats' : 'Show mats' }}</label>
+            </div>
             <div class="ui middle aligned divided list">
-              <a class="item" *ngFor="let scheduleEntry of period.scheduleEntries"
-                 (click)="goToCategoryEditor(scheduleEntry?.categoryId)">
+              <a class="item" *ngFor="let scheduleEntry of getPeriodEntries(period)">
                 <i class="users icon"></i>
                 <div class="content">
-                  <div class="header">{{categoryNameForCategoryId(scheduleEntry?.categoryId)}}</div>
-                  <div class="description">{{scheduleEntry?.numberOfFights}} fights</div>
+                  <div class="category_hoverable"
+                       (mouseenter)="highlightCategory(categoryId)"
+                       (mouseleave)="clearCategoryHighLight()"
+                       (click)="goToCategoryEditor(categoryId)"
+                       [ngClass]="{header: isFirst, description: !isFirst, group_selected: isCategorySelected(categoryId)}"
+                       *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{categoryNameForCategoryId(categoryId)}}</div>
+                  <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
+                  <div class="description">{{matName(scheduleEntry?.matId)}}</div>
                   <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
                 </div>
               </a>
+            </div>
+            <div class="header" *ngIf="matsView">Mats view</div>
+            <div class="inner-list list-container mat-grid margin-horizontal" *ngIf="matsView"
+                 [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
+              <div *ngFor="let mat of getPeriodMats(period.id)" class="mat-container" [ngClass]="{'single-mat': getPeriodMats(period.id)?.length === 1}">
+                <p>{{mat.name}}</p>
+                <div class="inner-list">
+                  <div class="item schedule_page flex-container clickable"
+                       (mouseenter)="highlightCategory(mfs.cat)"
+                       (mouseleave)="clearCategoryHighLight()"
+                       (click)="goToCategoryEditor(mfs.cat)"
+                       [ngClass]="{group_selected: isCategorySelected(mfs.cat)}"
+                       *ngFor="let mfs of _matCategories[mat.id]">
+                    <span>{{categoryNameForCategoryId(mfs.cat)}}</span>
+                    <span>{{mfs.fightStartTimes?.length}} fights</span>
+                  </div>
+                </div>
+                <section>{{mat.fightStartTimes?.length}} fights</section>
+              </div>
             </div>
           </div>
           <div class="extra content">
@@ -35,9 +67,11 @@ import {Dictionary} from '@ngrx/entity';
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScheduleDisplayComponent implements OnInit {
+export class ScheduleDisplayComponent implements OnInit, OnChanges {
+  @Input()
+  highlightedCategory: string;
 
-  constructor() {
+  constructor(private cd: ChangeDetectorRef) {
   }
 
   @Input()
@@ -71,28 +105,83 @@ export class ScheduleDisplayComponent implements OnInit {
   showTotalFights = true;
   @Input()
   showDuration = true;
+
+  @Input()
+  matsView = false;
+
+  _matCategories = {} as Dictionary<{ cat: string, fightStartTimes: FightStartTime[] }[]>;
+
+
   getFightsNumberForPeriod = (period: Period) => {
     if (!period || !period.scheduleEntries || period.scheduleEntries.length === 0) {
       return 0;
     }
-    return period.scheduleEntries.map(e => e.numberOfFights).reduce((previousValue, currentValue) => previousValue + currentValue);
+    return period.scheduleEntries.map(e => e.fightIds.length).reduce((previousValue, currentValue) => previousValue + currentValue);
   };
   categoryName = (cat: Category) => AddFighterComponent.displayCategory(cat);
 
+  getPeriodEntries(period: Period) {
+    return (period.scheduleEntries && produce(period.scheduleEntries, draft => {
+      draft.sort((a, b) => InfoService.parseDate(a.startTime).getTime() - InfoService.parseDate(b.startTime).getTime());
+    })) || [];
+  }
+
+  matName = (matId: string) => {
+    if (matId) {
+      return 'Goes on ' + this.mats.find(m => m.id === matId).name;
+    } else {
+      return 'Goes on several mats';
+    }
+  };
+
   goToCategoryEditor(categoryId: string) {
+    console.log(categoryId);
     this.categoryClicked.next(categoryId);
   }
 
-  categoryNameForCategoryId(categoryId: string) {
-    const category = this.categories.find(cat => cat.id === categoryId);
+  categoryNameForCategoryId(id: string) {
+    const category = this.categories.find(cat => cat.id === id);
     if (category) {
       return this.categoryName(category);
     } else {
-      return categoryId;
+      return id;
     }
   }
 
   ngOnInit() {
 
+  }
+
+  getPeriodMats(id: string) {
+    return this.mats.filter(mat => mat.periodId === id);
+  }
+
+  getMatCategories() {
+    this._matCategories = {};
+    this.mats.forEach(mat => {
+      const categories = mat.fightStartTimes.map(f => f.fightCategoryId).filter(uniqueFilter);
+      this._matCategories[mat.id] = categories.map(cat => ({cat, fightStartTimes: mat.fightStartTimes.filter(fs => fs.fightCategoryId === cat)}));
+    });
+  }
+
+  highlightCategory(categoryId: string) {
+    this.highlightedCategory = categoryId;
+  }
+
+  clearCategoryHighLight() {
+    this.highlightedCategory = null;
+  }
+
+  isCategorySelected(cat: string) {
+    return cat === this.highlightedCategory;
+  }
+
+  toggleMatsView() {
+    this.matsView = !this.matsView;
+    this.cd.markForCheck();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getMatCategories();
   }
 }

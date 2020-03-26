@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {StageType} from '../../commons/model/competition.model';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'app-common-fights-editor',
@@ -13,7 +14,7 @@ export class CommonFightsEditorComponent {
   editMode = false;
 
   @Input()
-  changeFightsIds: string[];
+  changeFightsIds: Dictionary<string[]> = {};
 
   @Output()
   fightSelected = new EventEmitter<string>();

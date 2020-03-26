@@ -7,7 +7,7 @@ import {Category, displayCategory} from '../commons/model/competition.model';
 export class DisplayCategoryPipe implements PipeTransform {
   transform(value?: Category): string {
     if (value) {
-      return displayCategory(value);
+      return displayCategory(value, 20);
     } else {
       return '';
     }

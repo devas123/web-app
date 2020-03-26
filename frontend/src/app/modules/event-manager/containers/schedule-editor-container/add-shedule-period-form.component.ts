@@ -5,6 +5,7 @@ import {InfoService} from '../../../../service/info.service';
 import {Period} from '../../../../commons/model/competition.model';
 import produce from 'immer';
 import {MatDescription} from '../../../../reducers/global-reducers';
+import {generateUuid} from '../../../account/utils';
 
 export interface IAddSchedulePeriodContext {
   competitionId: string;
@@ -117,7 +118,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   triggerAddSchedulePeriod() {
     if (this.name.value) {
       const properties = {
-        id: btoa(this.name.value),
+        id: btoa(this.modal.context.competitionId + this.name.value) + generateUuid(),
         name: this.name.value,
         startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,
@@ -125,14 +126,14 @@ export class AddSchedulePeriodFormComponent implements OnInit {
         categories: [] as string[],
         scheduleEntries: [],
         scheduleRequirements: [],
-        isActive: false
+        isActive: false,
+        mats: []
       } as Period;
       const mats = produce(this.mats.value as MatDescription[], draft => {
         draft.forEach((m, ind) => {
-          const name = m.name || `Mat ${ind + 1}`;
-          m.name = name;
+          m.name = m.name || `Mat ${ind + 1}`;
           m.periodId = properties.id;
-          m.id = btoa(name + m.periodId);
+          m.id = m.periodId + generateUuid();
         });
       });
       this.periodForm.reset();
