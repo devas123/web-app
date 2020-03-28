@@ -46,7 +46,7 @@
               fill="white"
               class="fighter"
               x="10"
-              y="45%">{{fight?.scores[ci]?.competitor | getname:true}}
+              y="45%">{{getCompetitor(fight?.scores[ci]?.competitorId) | getname:true}}
             </svg:text>
             <!--      fighter name      -->
             <svg:text
@@ -54,7 +54,7 @@
               fill="navajowhite"
               class="academy"
               x="10"
-              y="80%">{{fight?.scores[ci]?.competitor?.academy | getacademy:15}}
+              y="80%">{{getCompetitor(fight?.scores[ci]?.competitorId)?.academy | getacademy:15}}
             </svg:text>
             <!--      score      -->
             <svg:svg *ngIf="fight?.status === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">

@@ -44,7 +44,8 @@ export class SplitCategoryModal extends ComponentModalConfig<ISplitCategoryConte
         </ng-template>
       </app-tag-list>
       <div class="schedule_page_scrollable">
-        <app-stage-display [fights]="bracketsInfo.fights$ | async"
+        <app-stage-display [competitors]="bracketsInfo.competitors$ | async"
+                           [fights]="bracketsInfo.fights$ | async"
                            [editMode]="true"
                            [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
                            (fightSelected)="toggleFightSelection($event)"

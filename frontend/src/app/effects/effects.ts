@@ -25,6 +25,7 @@ import {
   eventManagerCategoryStateLoaded,
   eventManagerFighterLoaded,
   eventManagerFightersForCompetitionLoaded,
+  eventManagerLoadFightersForCompetition,
   eventManagerScheduleLoaded,
   fightIdsByCategoryIdLoaded,
   LOAD_CATEGORIES_COMMAND,
@@ -42,7 +43,7 @@ export class Effects {
 
   @Effect()
   getCompetitions$: Observable<Action> = this.actions$.pipe(ofType(allActions.LOAD_COMPETITIONS_LIST),
-    mergeMap(() =>
+    switchMap(() =>
       this.infoService.getCompetitions(null, 'PUBLISHED').pipe(
         map((payload: CompetitionProperties[]) => {
           return allActions.competitionsLoaded(payload);
@@ -65,7 +66,7 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
     allActions.UNPUBLISH_COMPETITION_COMMAND),
-    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId)));
+    concatMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId)));
 
   @Effect({dispatch: false})
   createCompetition$: Observable<Action> = this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
@@ -78,7 +79,7 @@ export class Effects {
 
   loadMyCategories$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(LOAD_CATEGORIES_COMMAND),
-    mergeMap((action: CommonAction) => {
+    switchMap((action: CommonAction) => {
       return this.infoService.getCategories(action.payload).pipe(map(payload => {
         const categories = (payload || []) as any[];
         return eventManagerCategoriesLoaded(action.payload, categories);
@@ -87,7 +88,7 @@ export class Effects {
 
   loadSelectedEventSchedule$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(COMPETITION_SELECTED),
-    mergeMap((action: CommonAction) => {
+    switchMap((action: CommonAction) => {
       return this.infoService.getSchedule(action.competitionId).pipe(map(payload => {
         const schedule = (payload || {}) as Schedule;
         return eventManagerScheduleLoaded(action.competitionId, schedule);
@@ -96,7 +97,7 @@ export class Effects {
 
   loadSelectedEventFightIdsByCategoryId$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_SCHEDULE_LOADED),
-    mergeMap((action: CommonAction) => {
+    switchMap((action: CommonAction) => {
       return this.infoService.getFightIdsByCategoryId(action.competitionId).pipe(map(payload => {
         const fightIdsBycategoryId = (payload || {}) as Dictionary<string[]>;
         return fightIdsByCategoryIdLoaded({fightIdsBycategoryId});
@@ -110,7 +111,7 @@ export class Effects {
 
   eventManagerLoadCategoryState$ = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_SELECTED),
-    mergeMap((action: CommonAction) => {
+    switchMap((action: CommonAction) => {
       if (action.competitionId) {
         return this.infoService.getLatestCategoryState(action.competitionId, action.categoryId).pipe(catchError(error => observableOf(error)));
       } else {
@@ -129,30 +130,37 @@ export class Effects {
     ofType(EVENT_MANAGER_CATEGORY_STATE_LOADED),
     switchMap((a: any) => this.infoService.getCategoryStages(a.competitionId, a.categoryId)
       .pipe(
-        map(categoryStages => eventManagerCategoryStagesLoaded({competitionId: a.competitionId, categoryId: a.categoryId, categoryStages}))
+        concatMap(categoryStages => [eventManagerCategoryStagesLoaded({
+          competitionId: a.competitionId,
+          categoryId: a.categoryId,
+          categoryStages
+        }), eventManagerLoadFightersForCompetition(a.competitionId, a.categoryId, 0, 0, undefined, true)])
       ))
   ));
 
+
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED),
-    mergeMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
+    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
     map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]}))
   ));
 
 
   eventManagerLoadFightersForCompetition$ = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION),
-    concatMap((action: CommonAction) => {
-      const {pageSize, pageNumber, searchString} = action.payload;
+    switchMap((action: CommonAction) => {
+      const {pageSize, pageNumber, searchString, replace} = action.payload;
       const {competitionId, categoryId} = action;
-      return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString);
-    }),
-    map(response => {
-      if (response.total != null && response.page != null && response.competitionId) {
-        return eventManagerFightersForCompetitionLoaded(response.competitionId, response);
-      } else {
-        return errorEvent('Error occured while loading: ' + JSON.stringify(response));
-      }
+      return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString)
+        .pipe(
+          map(response => {
+            if (response.total != null && response.page != null && response.competitionId) {
+              return eventManagerFightersForCompetitionLoaded(response.competitionId, response, replace);
+            } else {
+              return errorEvent('Error occured while loading: ' + JSON.stringify(response));
+            }
+          })
+        );
     })));
 
   loadFighter$: Observable<Action> = createEffect(() => this.actions$.pipe(

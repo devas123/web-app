@@ -26,7 +26,7 @@
   [defaultFightResultOptions]="defaultFightResultOptions$ | async"
   [competitionId]="competitionId"
   [competitorsSize]="bracketsInfo?.numberOfCompetitor$ | async"
-  *ngIf="(bracketsInfo?.category$ | async) && (bracketsInfo?.stages$ | async)?.length <= 0 && !(bracketsInfo?.fightsAreLoading$ | async)"
+  *ngIf="!(bracketsInfo?.fightsAreLoading$ | async) && (bracketsInfo?.category$ | async) && (bracketsInfo?.stages$ | async)?.length <= 0"
   (generateStages)="generateBrackets($event)"></app-generate-brackets-form>
 <app-stage-display [fights]="bracketsInfo.fights$ | async"
                    [editMode]="editMode"
@@ -35,6 +35,7 @@
                    (stageSelected)="selectStage($event)"
                    [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                    [selectedStage]="bracketsInfo.stage$ | async"
+                   [competitors]="bracketsInfo.competitors$ | async"
                    [stages]="bracketsInfo.stages$ | async"
                    [category]="bracketsInfo.category$ | async"></app-stage-display>
 

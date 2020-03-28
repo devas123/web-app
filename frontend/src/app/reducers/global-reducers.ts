@@ -672,17 +672,22 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED: {
         if (action.competitionId === state.competitionProperties.id) {
-          const {data, total, page} = action.payload;
-          return {
-            ...state,
-            selectedEventCompetitors: competitorEntityAdapter.addAll(data, {
+          const {data, total, page, replace} = action.payload;
+          if (replace) {
+            state.selectedEventCompetitors = competitorEntityAdapter.addAll(data, {
+              ...competitorsInitialState,
+              total,
+              pageNumber: +page
+            });
+          } else {
+            state.selectedEventCompetitors = competitorEntityAdapter.addAll(data, {
               ...state.selectedEventCompetitors,
               total,
               pageNumber: +page
-            })
-          };
+            });
+          }
         }
-        return state;
+        break;
       }
       case EVENT_MANAGER_COMPETITOR_ADDED: {
         if (action.competitionId === state.competitionProperties.id) {

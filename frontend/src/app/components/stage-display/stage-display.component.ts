@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryBracketsStage, Fight} from '../../commons/model/competition.model';
+import {Category, CategoryBracketsStage, Competitor, Fight} from '../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 
 @Component({
@@ -37,6 +37,8 @@ export class StageDisplayComponent implements OnInit {
   editMode: boolean;
   @Input()
   changeFightIds: Dictionary<string[]> = {};
+  @Input()
+  competitors: Competitor[] = [];
 
   constructor() {
   }

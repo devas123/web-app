@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation} from '@angular/core';
 import {BracketsType, Competitor, CompScore, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 import {Dictionary} from '@ngrx/entity';
-import {defaultSelectionColor, getKeyForEntry} from '../../../modules/account/utils';
+import {collectingReducer, defaultSelectionColor, getKeyForEntry, uniqueFilter} from '../../../modules/account/utils';
 
 @Component({
   selector: 'app-group-display',
@@ -11,36 +11,17 @@ import {defaultSelectionColor, getKeyForEntry} from '../../../modules/account/ut
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class GroupDisplayComponent extends CommonFightsEditorComponent {
+export class GroupDisplayComponent extends CommonFightsEditorComponent implements OnChanges {
+  private _competitors: Competitor[];
 
   @Input()
   set fights(value: Fight[]) {
-    if (value) {
-      this._fights = value;
-      const competitors = value.map(f => f.scores.map(this.getCompetitorIdOrPlaceholder)).reduce((prev, curr) => {
-        if (!prev) {
-          return curr;
-        } else {
-          return [...prev, ...curr];
-        }
-      }).filter(((value1, index, array) => array.indexOf(value1) === index));
-      this._fightsPerCompetitor = <Dictionary<Fight[]>>{};
-      this._competitorsDictionary = <Dictionary<Competitor>>{};
-      const fightStub = <Fight>{};
-      competitors.forEach((cmp, index) => {
-        const competitorFights = value.filter(this.filterFightsByCompetitorIdOrPlaceholderId(cmp));
-        if (cmp.startsWith('placeholder')) {
-          const number = +cmp.split('-')[1];
-          this._competitorsDictionary[cmp] = <Competitor>{id: cmp, firstName: `Fighter-${number + 1}`};
-        } else {
-          this._competitorsDictionary[cmp] = value.find(f => !!f.scores.find(s => s.competitor.id === cmp))
-            .scores.find(s => s.competitor.id === cmp).competitor;
-        }
-        this._fightsPerCompetitor[cmp] = [...competitorFights.slice(0, index), fightStub, ...competitorFights.slice(index)];
-      });
-      this._competitorIds = Object.keys(this._fightsPerCompetitor);
-      this.ngStyle = {'grid-template-columns': `${this.competitorNameSize} repeat(${this._competitorIds.length}, 1fr)`};
-    }
+    this._fights = value;
+  }
+
+  @Input()
+  set competitors(value: Competitor[]) {
+    this._competitors = value && value.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   private competitorNameSize = `100px`;
@@ -49,34 +30,26 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent {
   groupName: string;
 
   _fights: Fight[] = [];
-  _competitorIds: string[];
   _fightsPerCompetitor: Dictionary<Fight[]>;
-  _competitorsDictionary: Dictionary<Competitor>;
 
   @Input()
   bracketsType: BracketsType;
   ngStyle: any = {'grid-template-columns': `${this.competitorNameSize} repeat(10, 1fr)`};
 
-  getCompetitorIdOrPlaceholder = (s: CompScore) => {
-    if (s.competitor && s.competitor.id) {
-      return s.competitor.id;
-    } else {
-      return s.placeholderId;
-    }
-  };
+  getCompetitorIdOrPlaceholder = (s: CompScore) => s.competitorId || s.placeholderId;
+
+  getCompetitorById(id: string) {
+    return this._competitors.find(c => c.id === id);
+  }
 
   filterFightsByCompetitorIdOrPlaceholderId = (cmp: string) => (f: Fight) => {
-    if (cmp.startsWith('placeholder')) {
-      return !!f.scores.find(s => s.placeholderId === cmp);
-    } else {
-      return !!f.scores.find(s => s.competitor.id === cmp);
-    }
+    return f.scores.find(s => s.competitorId === cmp) || f.scores.find(s => s.placeholderId === cmp);
   };
 
   displayFight = (f: Fight, competitorPerspective: string) => {
     if (f && f.fightResult && f.fightResult.winnerId) {
       let wol: string;
-      const score = f.scores.find(s => s.competitor.id === competitorPerspective).score;
+      const score = f.scores.find(s => s.competitorId === competitorPerspective).score;
       if (competitorPerspective === f.fightResult.winnerId) {
         wol = `<span class="green centered">W</span>`;
       } else {
@@ -92,5 +65,27 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent {
 
   getBackgroundColor(id: string) {
     return getKeyForEntry(this.changeFightsIds, id) || defaultSelectionColor;
+  }
+
+  findOpponentId(forWhom: string, fight: Fight) {
+    const opponentScore = fight.scores.find(s => s.competitorId !== forWhom && s.placeholderId !== forWhom);
+    return opponentScore && (opponentScore.competitorId || opponentScore.placeholderId);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this._fights && this._competitors) {
+      const competitorsAndPlaceholders = this._fights.map(f => f.scores.map(this.getCompetitorIdOrPlaceholder)).reduce(collectingReducer, [])
+        .filter(uniqueFilter)
+        .sort((a, b) => a.localeCompare(b));
+      this._fightsPerCompetitor = {};
+      const fightStub = <Fight>{};
+      competitorsAndPlaceholders.forEach((cmp, index) => {
+        const competitorFights = this._fights.filter(this.filterFightsByCompetitorIdOrPlaceholderId(cmp))
+          .sort((a, b) => this.findOpponentId(cmp, a).localeCompare(this.findOpponentId(cmp, b)));
+        this._fightsPerCompetitor[cmp] = [...competitorFights.slice(0, index), fightStub, ...competitorFights.slice(index)];
+      });
+      this.ngStyle = {'grid-template-columns': `${this.competitorNameSize} repeat(${this._competitors.length}, 1fr)`};
+    }
+
   }
 }

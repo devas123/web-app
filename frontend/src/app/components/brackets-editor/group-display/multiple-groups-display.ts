@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {BracketsType, Fight} from '../../../commons/model/competition.model';
+import {BracketsType, Competitor, Fight} from '../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 
@@ -12,6 +12,7 @@ import {CommonFightsEditorComponent} from '../common-fights-editor.component';
                          [stageType]="stageType"
                          [editMode]="editMode"
                          [changeFightsIds]="changeFightsIds"
+                         [competitors]="competitors"
                          [groupName]="'Group ' + (i + 1)"
                          (fightSelected)="fightSelected.next($event)"></app-group-display>
     </div>`,
@@ -25,6 +26,9 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
 
   @Input()
   bracketsType: BracketsType;
+
+  @Input()
+  competitors: Competitor[] = [];
 
 
   _fightsByGroups: Dictionary<Fight[]> = {} as Dictionary<Fight[]>;

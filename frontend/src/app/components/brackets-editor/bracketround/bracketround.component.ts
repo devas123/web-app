@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Fight} from '../../../commons/model/competition.model';
+import {Competitor, Fight} from '../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import {collectingReducer, defaultSelectionColor, getKeyForEntry} from '../../../modules/account/utils';
 
@@ -23,6 +23,8 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   public competitorsWidthPercent = 0.9;
   public pathWidthPercent = 1 - this.competitorsWidthPercent;
 
+  @Input()
+  competitors: Competitor[] = [];
 
   @Input()
   elementsSelectable = false;
@@ -53,6 +55,10 @@ export class BracketRoundComponent implements OnInit, OnChanges {
 
   @Output()
   public fightSelected = new EventEmitter<string>();
+
+  getCompetitor(id: string) {
+    return this.competitors.find(c => c.id === id);
+  }
 
   get allSelectedFights() {
     return Object.keys(this.changeFightIds).map(key => this.changeFightIds[key]).reduce(collectingReducer, []);

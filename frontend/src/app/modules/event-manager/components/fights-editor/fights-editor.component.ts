@@ -7,29 +7,29 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   {
     selector: 'app-fights-editor',
     template: `
-        <div class="fights-editor-container">
-            <div class="two-column buttons-row">
-                <button class="ui button" (click)="applyCurrentChange()" [disabled]="!(changes?.length > 0)">Apply</button>
-                <button class="ui button" (click)="discardCurrentChange()" [disabled]="!(inverseChanges?.length > 0)">Discard</button>
-                <button class="ui button" (click)="clear()" [disabled]="!(_changeFights?.length > 0)">Clear</button>
+      <div class="fights-editor-container">
+        <div class="two-column buttons-row">
+          <button class="ui button" (click)="applyCurrentChange()" [disabled]="!(changes?.length > 0)">Apply</button>
+          <button class="ui button" (click)="discardCurrentChange()" [disabled]="!(inverseChanges?.length > 0)">Discard</button>
+          <button class="ui button" (click)="clear()" [disabled]="!(_changeFights?.length > 0)">Clear</button>
+        </div>
+        <div class="two-column fight-group" *ngIf="_changeFights?.length > 0" cdkDropListGroup>
+          <div class="fight-cell" *ngFor="let fight of _changeFights; let i = index" cdkDropList (cdkDropListDropped)="drop($event, i)">
+            <div class="competitor-display" cdkDrag [cdkDragData]="{index: i}">
+              <div class="content">
+                {{getCompetitor(fight?.scores[0]?.competitorId)?.firstName}}  {{getCompetitor(fight?.scores[0]?.competitorId)?.lastName}}
+              </div>
+              <div class="sub header">{{getCompetitor(fight?.scores[0]?.competitorId)?.academy?.name}}</div>
             </div>
-            <div class="two-column fight-group" *ngIf="_changeFights?.length > 0" cdkDropListGroup>
-                <div class="fight-cell" *ngFor="let fight of _changeFights; let i = index" cdkDropList (cdkDropListDropped)="drop($event, i)">
-                    <div class="competitor-display" cdkDrag [cdkDragData]="{index: i}">
-                        <div class="content">
-                            {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
-                        </div>
-                        <div class="sub header">{{fight?.scores[0]?.competitor?.academy?.name}}</div>
-                    </div>
-                    <div class="competitor-display" cdkDrag [cdkDragData]="{index: i}">
-                        <div class="content">
-                            {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
-                        </div>
-                        <div class="sub header">{{fight?.scores[1]?.competitor?.academy?.name}}</div>
-                    </div>
-                </div>
+            <div class="competitor-display" cdkDrag [cdkDragData]="{index: i}">
+              <div class="content">
+                {{getCompetitor(fight?.scores[1]?.competitorId)?.firstName}} {{getCompetitor(fight?.scores[1]?.competitorId)?.lastName}}
+              </div>
+              <div class="sub header">{{getCompetitor(fight?.scores[1]?.competitorId)?.academy?.name}}</div>
             </div>
-        </div>`,
+          </div>
+        </div>
+      </div>`,
     styleUrls: ['fights-editor.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
   })
@@ -45,6 +45,9 @@ export class FightsEditorComponent {
 
   @Input()
   changeIds: string[] | number[];
+
+  @Input()
+  competitors: Competitor[] = [];
 
   @Input()
   set change(c: FightsEditorChange) {
@@ -76,6 +79,10 @@ export class FightsEditorComponent {
   inverseChanges = <any>[];
 
   private changeId = null;
+
+  getCompetitor(competitorId: string) {
+    return this.competitors && this.competitors.find(c => c.id === competitorId);
+  }
 
   drop(event: CdkDragDrop<{ competitor: Competitor, score: Score }[]>, containerIndex: number) {
     const {index} = event.item.data;

@@ -283,14 +283,15 @@ export const eventManagerRemoveCompetitor = (competitor: Competitor) => ({
   payload: {competitorId: competitor.id}
 });
 
-export const eventManagerLoadFightersForCompetition = (competitionId, categoryId, pageNumber, pageSize, searchString?) => ({
+export const eventManagerLoadFightersForCompetition = (competitionId, categoryId, pageNumber, pageSize, searchString?, replace?: boolean) => ({
   type: EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
   competitionId,
   categoryId,
   payload: {
     pageSize,
     pageNumber,
-    searchString
+    searchString,
+    replace
   }
 });
 
@@ -301,10 +302,10 @@ export const eventManagerCompetitionFightersPageChanged = (competitionId: string
   payload: pageNumber
 });
 
-export const eventManagerFightersForCompetitionLoaded = (competitionId, payload) => ({
+export const eventManagerFightersForCompetitionLoaded = (competitionId, payload, replace?: boolean) => ({
   type: EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   competitionId,
-  payload
+  payload: {...payload, replace}
 });
 
 export const eventManagerFighterSelected = (competitionId, categoryId, fighterId) => ({

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ComponentModalConfig, IPopup, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {Category, displayCategory, ScheduleRequirement} from '../../../../commons/model/competition.model';
@@ -58,11 +58,6 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
           </sui-select>
         </div>
       </div>
-      <!--      <a class="item" *ngFor="let category of getCategories()" (click)="selectCategory(category.id)">-->
-      <!--        <i class="icon users"></i><span>{{category | displayCategory}}</span>-->
-      <!--        <a (click)="deleteCategory(category.id)"><i class="delete icon"></i></a>-->
-      <!--        <div class="floating ui red label">{{getCategoryFightsForThisRequirement(category.id)?.length}}</div>-->
-      <!--      </a>-->
       <div class="inner-list padded-vertical">
         <div *ngFor="let cat of getCategories()" class="item schedule_page flex-container compman_clickable" (click)="selectCategory(cat.id)" [style]="getCategoryStyle(cat.id)">
           <div class="content">
@@ -84,6 +79,7 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
     </div>
     <div class="schedule_page_scrollable" *ngIf="selectedCategory && showFightsPicker">
       <app-stage-display [fights]="bracketsInfo.fights$ | async"
+                         [competitors]="bracketsInfo.competitors$ | async"
                          [editMode]="true"
                          [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
                          (fightSelected)="toggleFightSelection($event)"

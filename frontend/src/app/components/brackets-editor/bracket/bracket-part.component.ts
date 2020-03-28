@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Fight, StageType} from '../../../commons/model/competition.model';
+import {Competitor, Fight, StageType} from '../../../commons/model/competition.model';
 import {ConnectionType} from '../bracketround/bracketround.component';
 import {Dictionary} from '@ngrx/entity';
 
@@ -25,6 +25,7 @@ import {Dictionary} from '@ngrx/entity';
                             [bracketHeightInFights]="getHeightOfBucket(bucket)"
                             [fights]="getFightsForRound(round)"
                             [round]="round"
+                            [competitors]="competitors"
                             [oneFightInPercent]="getOneFightInPercent(round)"
                             [elementsSelectable]="editMode"
                             [connectionsType]="getConnectionType(isLast, round)"
@@ -68,6 +69,9 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   stageType: StageType;
+
+  @Input()
+  competitors: Competitor[] = [];
 
   rounds: number[][];
 

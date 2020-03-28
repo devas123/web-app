@@ -145,7 +145,7 @@ export interface Score {
 }
 
 export interface CompScore {
-  competitor: Competitor;
+  competitorId: string;
   score: Score;
   placeholderId?: string;
   order?: number;
