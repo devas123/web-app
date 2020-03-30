@@ -51,6 +51,12 @@ $mat_border_color: #3c3f41;
 
 .empty-container {
   border-radius: 3px;
+  .content {
+    min-height: 15px;
+    text-align: center;
+    padding: 1em;
+    background-color: $background_color;
+  }
 }
 
 .bordered {
