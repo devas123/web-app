@@ -12,7 +12,6 @@ import {collectingReducer, defaultSelectionColor, getKeyForEntry, uniqueFilter} 
   encapsulation: ViewEncapsulation.None
 })
 export class GroupDisplayComponent extends CommonFightsEditorComponent implements OnChanges {
-  private _competitors: Competitor[];
 
   @Input()
   set fights(value: Fight[]) {
@@ -23,6 +22,7 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   set competitors(value: Competitor[]) {
     this._competitors = value && value.sort((a, b) => a.id.localeCompare(b.id));
   }
+  _competitors: Competitor[];
 
   private competitorNameSize = `100px`;
 
@@ -36,10 +36,14 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   bracketsType: BracketsType;
   ngStyle: any = {'grid-template-columns': `${this.competitorNameSize} repeat(10, 1fr)`};
 
+  getCompetitorsOrPlaceholders() {
+    return Object.keys(this._fightsPerCompetitor);
+  }
+
   getCompetitorIdOrPlaceholder = (s: CompScore) => s.competitorId || s.placeholderId;
 
-  getCompetitorById(id: string) {
-    return this._competitors.find(c => c.id === id);
+  getCompetitorById(id: string, index: number) {
+    return this._competitors.find(c => c.id === id) || <Competitor>{id: id, firstName: `Competitor ${index + 1}`};
   }
 
   filterFightsByCompetitorIdOrPlaceholderId = (cmp: string) => (f: Fight) => {

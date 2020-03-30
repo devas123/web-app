@@ -7,7 +7,7 @@ import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 @Component({
   selector: `app-multiple-groups-display`,
   template: `
-    <div class="group_container" *ngFor="let id of _groupIds; index as i">
+    <div class="group_container" *ngFor="let id of getGroupIds(); index as i">
       <app-group-display [fights]="_fightsByGroups[id]" [bracketsType]="bracketsType"
                          [stageType]="stageType"
                          [editMode]="editMode"
@@ -33,6 +33,10 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
 
   _fightsByGroups: Dictionary<Fight[]> = {} as Dictionary<Fight[]>;
   _groupIds = new Set<string>();
+
+  getGroupIds() {
+    return Array.from(this._groupIds).sort((a, b) => a.localeCompare(b));
+  }
 
   @Input()
   set fights(value: Fight[]) {

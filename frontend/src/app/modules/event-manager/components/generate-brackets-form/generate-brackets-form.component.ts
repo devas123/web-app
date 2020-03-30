@@ -116,7 +116,7 @@ export class GenerateBracketsFormComponent implements OnInit {
     }),
     inputDescriptor: this.fb.group({
       selectors: this.fb.array([]),
-      numberOfCompetitors: [{value: index === 0 ? this._competitorsSize : 0, disabled: index === 0}, [Validators.max(this._competitorsSize), Validators.min(1)]]
+      numberOfCompetitors: [{value: index === 0 ? this._competitorsSize : 0, disabled: index === 0}, [Validators.max(this._competitorsSize), Validators.min(0)]]
     }),
     groupDescriptors: this.fb.array([])
   }, {validators: this.numberOfCompetitorsValidator(index)});
@@ -216,6 +216,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   getErrors() {
+    console.log(this.form);
     return (this.form.errors && Object.keys(this.form.errors)) || [];
   }
 
@@ -350,7 +351,7 @@ export class GenerateBracketsFormComponent implements OnInit {
 
   private additionalGroupSortingDescriptorsControl =
     (o?: AdditionalGroupSortingDescriptor) => this.fb.group({
-      groupSortDirection: [(o && o.groupSortDirection) || '', [Validators.required, Validators.pattern('DESC|ASC')]],
+      groupSortDirection: [(o && o.groupSortDirection) || '', [Validators.pattern('DESC|ASC')]],
       groupSortSpecifier: [(o && o.groupSortSpecifier) || '', [Validators.required, Validators.pattern('DIRECT_FIGHT_RESULT|MANUAL|POINTS_DIFFERENCE|TOTAL_POINTS')]]
     });
 

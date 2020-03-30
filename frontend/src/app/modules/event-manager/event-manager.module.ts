@@ -84,6 +84,7 @@ import {RequirementLineComponent} from './components/schedule-editor/requirement
 import {SplitCategoryFormComponent} from './components/schedule-editor/split-category-modal.component';
 import {EditRequirementModalComponent} from './components/schedule-editor/edit-requirement-modal.component';
 import {ColorChromeModule} from 'ngx-color/chrome';
+import {GroupsEditorComponent} from './components/fights-editor/groups-editor.component';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import {ColorChromeModule} from 'ngx-color/chrome';
     ColorChromeModule
   ],
   declarations: [
+    GroupsEditorComponent,
     RequirementLineComponent,
     AddSchedulePauseFormComponent,
     CategoriesListComponent,

@@ -8,6 +8,7 @@
        *ngFor="let stage of _stages; index as i"
        (click)="selectStage(stage.id)">Stage {{stage?.stageOrder + 1}}</a>
   </div>
+  <button *ngIf="unseededCompetitors?.length > 0 && selectedStage?.stageOrder === 0" class="ui button margin-vertical" (click)="unseededCompetitorsClicked.next()">{{unseededCompetitors?.length}} competitors not seeded.</button>
   <app-bracket
     [stageType]="selectedStage?.stageType"
     [fights]="fights"

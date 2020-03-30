@@ -24,7 +24,7 @@ export interface IAddInputSelectorFormContext {
     <div class="header">Add competitor selectors for stage #{{modal.context.stageNumber + 1}}</div>
     <div class="content" [formGroup]="f">
       <div class="ui form" formArrayName="form" [ngClass]="{error: form.invalid && form.touched}">
-        <ng-container *ngFor="let sel of form.controls; index as i; last as isLast">
+        <section *ngFor="let sel of form.controls; index as i; last as isLast">
           <div class="ui field">
             <div class="ui label" *ngIf="i > 0">AND</div>
           </div>
@@ -60,13 +60,13 @@ export interface IAddInputSelectorFormContext {
             <button class="ui icon button" *ngIf="isLast" (click)="addFormLine()"><i class="plus icon"></i></button>
             <button class="ui icon button" (click)="removeFormLine(i)"><i class="delete icon"></i></button>
           </div>
-        </ng-container>
+        </section>
         <button class="ui icon button" *ngIf="form.controls?.length <= 0" (click)="addFormLine()"><i class="plus icon"></i></button>
       </div>
     </div>
     <div class="actions">
       <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-      <button class="ui green button" [disabled]="form.invalid" (click)="addOptions()" autofocus>OK</button>
+      <button class="ui green button" [disabled]="f.invalid" (click)="addOptions()" autofocus>OK</button>
     </div>`,
   styleUrls: ['./generate-brackets-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -133,7 +133,7 @@ export class AddInputSelectorFormComponent implements OnInit {
       logicalOperator: ['AND'],
       classifier: ['', [Validators.required]],
       operator: [OperatorType.EQUALS],
-      selectorValue: this.fb.array([], [Validators.required])
+      selectorValue: this.fb.array([['', [Validators.required]]], [Validators.required])
     });
   }
 

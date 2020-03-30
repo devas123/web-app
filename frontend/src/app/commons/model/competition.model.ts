@@ -230,7 +230,6 @@ export interface CategoriesCollection extends EntityState<Category> {
   selectedCategoryId: string | null;
   selectedCategoryState: CategoryState;
   selectedCategoryStages: CategoryBracketsStageCollection;
-  selectedEventFightsEditorState: FightsEditorState;
   categoryStateLoading: boolean;
 }
 
@@ -242,7 +241,7 @@ export interface GroupDescriptor {
 
 export interface CategoryBracketsStage {
   id: string;
-  bracketType: BracketsType | null;
+  bracketType: BracketsType;
   stageType: StageType;
   stageStatus: string;
   waitForPrevious: boolean;
@@ -386,15 +385,6 @@ export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapte
   sortComparer: categoriesComparer
 });
 
-export const fightsEditorChangeEntityAdapter: EntityAdapter<FightsEditorChange> = createEntityAdapter(
-  {selectId: (change: FightsEditorChange) => change.id, sortComparer: false}
-);
-
-
-export const fightsEditorInitialState = fightsEditorChangeEntityAdapter.getInitialState({
-  selectedChangeId: null
-});
-
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
   selectedFightId: null
 });
@@ -423,20 +413,5 @@ export const categoriesInitialState: CategoriesCollection = categoryEntityAdapte
   selectedCategoryId: null,
   selectedCategoryState: null,
   selectedCategoryStages: stagesInitialState,
-  selectedEventFightsEditorState: fightsEditorInitialState,
   categoryStateLoading: false
 });
-
-
-export interface FightsEditorChange {
-  id: string;
-  stageId: string;
-  selectedFightIds: string[];
-  changePatches: any[];
-  changeInversePatches: any[];
-}
-
-export interface FightsEditorState extends EntityState<FightsEditorChange> {
-  selectedChangeId: string | null;
-}
-

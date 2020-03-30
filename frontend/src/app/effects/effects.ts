@@ -111,7 +111,7 @@ export class Effects {
 
   eventManagerLoadCategoryState$ = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_SELECTED),
-    switchMap((action: CommonAction) => {
+    mergeMap((action: CommonAction) => {
       if (action.competitionId) {
         return this.infoService.getLatestCategoryState(action.competitionId, action.categoryId).pipe(catchError(error => observableOf(error)));
       } else {

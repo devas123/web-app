@@ -2,25 +2,25 @@
   <div class="fights_line" [ngStyle]="ngStyle">
     <div class="fight_cell black">{{ groupName || 'Group' }}</div>
     <div class="fight_cell black centered"
-         *ngFor="let competitor of _competitors; index as i">
+         *ngFor="let competitor of getCompetitorsOrPlaceholders(); index as i">
       <a class="ui grey circular label">{{i + 1}}</a>
     </div>
   </div>
-  <div class="fights_line" [ngStyle]="ngStyle" *ngFor="let competitor of _competitors; index as i">
+  <div class="fights_line" [ngStyle]="ngStyle" *ngFor="let competitor of getCompetitorsOrPlaceholders(); index as i">
     <div class="competitor_cell">
       <div>
         <a
           class="ui grey circular label">{{i + 1}}</a>
       </div>
       <div class="competitor_cell_name">
-        <div>{{getCompetitorById(competitor?.id)?.firstName}}</div>
-        <div>{{getCompetitorById(competitor?.id)?.lastName}}</div>
-        <div class="academy">{{getCompetitorById(competitor?.id)?.academy?.name}}</div>
+        <div>{{getCompetitorById(competitor, i)?.firstName}}</div>
+        <div>{{getCompetitorById(competitor, i)?.lastName}}</div>
+        <div class="academy">{{getCompetitorById(competitor, i)?.academy?.name}}</div>
       </div>
     </div>
     <div class="fight_cell centered" (click)="fightSelected.next(fight?.id)" [ngClass]="{black: k === i, selectable_fight: k !== i}"
          [ngStyle]="{ 'background-color': getBackgroundColor(fight.id) }"
-         *ngFor="let fight of _fightsPerCompetitor[competitor?.id]; index as k"
-         [innerHTML]="k === i ? '' : displayFight(fight, competitor?.id)"></div>
+         *ngFor="let fight of _fightsPerCompetitor[competitor]; index as k"
+         [innerHTML]="k === i ? '' : displayFight(fight, competitor)"></div>
   </div>
 </div>
