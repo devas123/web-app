@@ -8,6 +8,7 @@ $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
 $item_color: #162830;
 $mat_border_color: #3c3f41;
+$error_color: lightpink;
 
 .compman_clickable {
   cursor: pointer !important;
@@ -19,6 +20,12 @@ $mat_border_color: #3c3f41;
 
 .no_margin {
   margin: 0 !important;;
+}
+
+.ui.error.message {
+  background-color: transparent !important;
+  border: 2px solid $error_color;
+  box-shadow: none !important;
 }
 
 .ui.segments {

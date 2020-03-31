@@ -259,12 +259,10 @@ export enum OperatorType {
 export enum SelectorClassifier {
   'FIRST_N_PLACES',
   'LAST_N_PLACES',
-  'WINNER_OF_FIGHT',
-  'LOSER_OF_FIGHT',
 }
 
 export interface CompetitorSelector {
-  applyToStageNumber: string;
+  applyToStageId: string;
   logicalOperator: string;
   classifier: SelectorClassifier;
   operator: OperatorType;

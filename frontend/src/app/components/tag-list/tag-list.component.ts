@@ -1,6 +1,7 @@
 import {Component, ContentChild, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
 
 type  Formatter<T> = (t: T, index: number) => string;
+type  Validator<T> = (value: T, index: number, values: T[]) => boolean;
 
 @Component({
   template: `
@@ -11,7 +12,7 @@ type  Formatter<T> = (t: T, index: number) => string;
       </ng-container>
       <ng-container *ngIf="!template">
         <div class="ui icon label"
-             *ngFor="let opt of values; index as k">{{formatter(opt, k)}}
+             *ngFor="let opt of values; index as k" [ngClass]="{red: validator && !validator(opt, k, values)}">{{formatter(opt, k)}}
           <i class="delete icon" (click)="itemRemoved.next({item: opt, index: k})"></i>
         </div>
       </ng-container>
@@ -22,8 +23,6 @@ type  Formatter<T> = (t: T, index: number) => string;
 })
 export class TagListComponent<T> {
 
-  _ngClass = 'ui labels padded';
-
   @Input()
   set vertical(value: boolean) {
     if (value) {
@@ -32,6 +31,8 @@ export class TagListComponent<T> {
       this._ngClass = 'ui labels padded';
     }
   }
+
+  _ngClass = 'ui labels padded';
 
   @ContentChild(TemplateRef)
   template: TemplateRef<any>;
@@ -44,4 +45,7 @@ export class TagListComponent<T> {
 
   @Output()
   itemRemoved = new EventEmitter<{ item: T, index: number }>();
+
+  @Input()
+  validator: Validator<T>;
 }

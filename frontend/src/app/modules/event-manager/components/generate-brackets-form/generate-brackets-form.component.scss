@@ -10,6 +10,10 @@
   margin-bottom: 5em !important;
 }
 
+.ui.card.error {
+  border: 2px solid lightpink;
+}
+
 .results_section {
   display: grid;
   grid-template-columns: 1fr 1fr;

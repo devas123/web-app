@@ -4,12 +4,8 @@
     <button class="ui button" (click)="addStageDescription()">Add stage</button>
     <button class="ui button" (click)="removeAllStages()">Clear</button>
   </div>
-  <ng-container *ngIf="form.invalid">
-    <h6 class="ui header">Errors: </h6>
-    <div class="ui message" *ngFor="let error of getErrors()">{{error}}</div>
-  </ng-container>
   <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
-    <div class="ui card" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
+    <div class="ui card" [ngClass]="{error: stage.invalid}" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
       <div class="content">
         <div class="right floated">
           <a>
@@ -17,10 +13,11 @@
           </a>
         </div>
         <div class="header">
-          Stage #{{i + 1}}
+          Stage #{{i + 1}} {{getName(stage) ? '(' + getName(stage) + ')' : ''}}
         </div>
         <div class="ui basic divider"></div>
-        <div class="ui form" [formGroupName]="i">
+        <div class="ui form" [ngClass]="{error: stage.invalid}" [formGroupName]="i" novalidate>
+          <div class="ui compact error message" *ngIf="stage.errors?.typeValidator">Double elimination is only allowed for the final stage.</div>
           <div class="ui field">
             <sui-select class="selection"
                         (selectedOptionChange)="setBracketsType(i, $event)"
@@ -34,64 +31,93 @@
               </sui-select-option>
             </sui-select>
           </div>
-          <ng-container *ngIf="getBracketsType(i) !== 'GROUP' || i > 0">
-            <div class="ui field">
-              <input class="ui input" type="text" placeholder="Stage name." formControlName="name"/>
-            </div>
-            <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP' && i > 0">
-              <div class="ui field">
-                <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
-                  stage.</label>
-                <input id="numberOfCompetitors" class="ui input" type="number" (focusout)="updateView()"
-                       [placeholder]="i === 0 ? (_competitorsSize + ' Competitors') : 'Number of competitors'"
-                       formControlName="numberOfCompetitors"/>
-              </div>
-            </div>
-            <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
-              <sui-checkbox [name]="'hasThirdPlaceFight'"
-                            (checkChange)="setHasThirdPlaceFight(i, $event)"
-              >Has fight for 3d place
-              </sui-checkbox>
-            </div>
-          </ng-container>
-          <ng-container *ngIf="getBracketsType(i) === 'GROUP'">
-            <div formArrayName="groupDescriptors">
-              <button class="ui button" (click)="addGroupDescriptor(i)">Add group descriptor</button>
-              <p></p>
-              <div class="ui fields" *ngFor="let group of groupDescriptors(i).controls; index as k"
-                   [formGroupName]="k">
-                <div class="ui field">
-                  <input class="ui input" type="text" [placeholder]="1 + k + ' name (optional)'"
-                         formControlName="name"/>
-                </div>
-                <div class="ui field">
-                  <input class="ui input" type="number"
-                         [placeholder]="1 + k + ' size'"
-                         formControlName="size"/>
-                </div>
-                <div class="ui field">
-                  <button class="ui icon button" (click)="removeGroupDescriptor(i, k)"><i class="trash icon"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-          <div class="ui field" *ngIf="i > 0">
-            <sui-checkbox [name]="'waitForPrevious'"
-                          (checkChange)="setWaitForPrevious(i, $event)">Wait for previous stage to finish
+          <div class="ui field">
+            <sui-select class="selection"
+                        (selectedOptionChange)="setStageType(i, $event)"
+                        [placeholder]="'Select stage type'"
+                        [options]="stageTypes"
+                        [isSearchable]="true"
+                        [isDisabled]="false"
+                        #stageType>
+              <sui-select-option *ngFor="let option of stageType.filteredOptions"
+                                 [value]="option">
+              </sui-select-option>
+            </sui-select>
+          </div>
+          <div class="ui field">
+            <input class="ui input" type="text" placeholder="Stage name." formControlName="name" maxlength="10"/>
+          </div>
+          <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
+            <sui-checkbox [name]="'hasThirdPlaceFight'"
+                          (checkChange)="setHasThirdPlaceFight(i, $event)"
+            >Has fight for 3d place
             </sui-checkbox>
           </div>
-          <div class="description" *ngIf="i > 0">Top {{getNumberOfCompetitors(i) || 0}} competitors from previous
-            stage will pass to this stage. You can add advanced selectors here.
+          <div class="ui field" *ngIf="i > 0">
+            <sui-checkbox [name]="'waitForPrevious'"
+                          (checkChange)="setWaitForPrevious(i, $event)">Do not start before the previous stage finishes
+            </sui-checkbox>
           </div>
-          <button *ngIf="i > 0" class="ui button" id="additionalSelectors" (click)="openAddInputSelectorModal(i)">
-            Add selectors
-          </button>
-          <app-tag-list *ngIf="i > 0" [values]=" getAdditionalCompetitorSelectorsValue(i)"
-                        [formatter]="compSelectorFormatter"
-                        (itemRemoved)="removeAdditionalCompetitorSelector(i, $event.index)"></app-tag-list>
+          <ng-container  *ngIf="i > 0 || getBracketsType(i) === 'GROUP'">
+            <div class="ui divider"></div>
+            <div class="ui card no_margin">
+              <div class="content">
+                <div class="header">Stage input</div>
+                <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP'">
+                  <div class="ui field" *ngIf="!selectorsProvidedInput(stage) || isManualDistributionType(stage)">
+                    <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
+                      stage.</label>
+                    <input id="numberOfCompetitors" class="ui input" type="number" (focusout)="updateView()"
+                           [placeholder]="i === 0 ? (_competitorsSize + ' Competitors') : 'Number of competitors'"
+                           formControlName="numberOfCompetitors"/>
+                  </div>
+                </div>
+                <ng-container *ngIf="getBracketsType(i) === 'GROUP'">
+                  <div formArrayName="groupDescriptors">
+                    <button class="ui button" (click)="addGroupDescriptor(i)">Add group descriptor</button>
+                    <p></p>
+                    <div class="ui fields" *ngFor="let group of groupDescriptors(i).controls; index as k"
+                         [formGroupName]="k">
+                      <div class="ui field">
+                        <input class="ui input" type="text" [placeholder]="1 + k + ' name (optional)'"
+                               formControlName="name"/>
+                      </div>
+                      <div class="ui field">
+                        <input class="ui input" type="number"
+                               [placeholder]="1 + k + ' size'"
+                               formControlName="size"/>
+                      </div>
+                      <div class="ui field">
+                        <button class="ui icon button" (click)="removeGroupDescriptor(i, k)"><i class="trash icon"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="i > 0">
+                  <div class="description" *ngIf="(!selectorsProvidedInput(stage) || isManualDistributionType(stage))">Top {{getDefaultNumberOfCompetitors(i) || 0}} competitors from previous
+                    stage will pass to this stage. You can add advanced selectors below.
+                  </div>
+                  <div class="ui field margin-vertical">
+                    <sui-checkbox [name]="'distributionType'"
+                                  (checkChange)="setManualDistributionType(stage, $event)">Select competitors manually.
+                    </sui-checkbox>
+                  </div>
+                  <button [disabled]="isManualDistributionType(stage)" class="ui button margin-vertical" id="additionalSelectors" (click)="openAddInputSelectorModal(stage, i)">
+                    Add selectors
+                  </button>
+                  <app-tag-list *ngIf="!isManualDistributionType(stage)" [values]="getAdditionalCompetitorSelectorsValue(stage)"
+                                [validator]="competitorSelectorValid(stage)"
+                                [formatter]="compSelectorFormatter"
+                                (itemRemoved)="removeAdditionalCompetitorSelector(stage, $event.index)"></app-tag-list>
+                  <div class="description" *ngIf="selectorsProvidedInput(stage) && !isManualDistributionType(stage)">Total of {{getStageInputNumberOfCompetitorsByAdvancedSelectors(stage) || 0}} competitors from previous
+                    stages selected.
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
           <div class="ui divider"></div>
-
           <div class="results_section" [ngStyle]="ngStyle">
             <div class="ui card">
               <div class="content">
@@ -177,8 +203,7 @@
                 <app-tag-list *ngIf="!forceManual.isChecked" [values]="getAdditionalGroupSortingDescriptorsValue(i)"
                               (itemRemoved)="removeAdditionalSortingOption(i, $event.index)"
                               [formatter]="additionalGroupSortingFormatter"></app-tag-list>
-                <div class="description">The places in groups are assigned by points, but if the points are equal,
-                  you can add additional sorting.
+                <div class="description">The places in groups are assigned by points, you can add sorting for cases when the points are equal.
                 </div>
               </div>
             </div>

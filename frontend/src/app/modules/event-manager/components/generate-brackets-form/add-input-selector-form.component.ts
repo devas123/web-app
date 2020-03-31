@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {BracketsType, CompetitorSelector, OperatorType, SelectorClassifier} from '../../../../commons/model/competition.model';
+import produce from 'immer';
 
 export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSelectorFormContext, CompetitorSelector[], void> {
-  constructor(bracketsType: BracketsType, stageNumber: number, precedingStages: number[], size = ModalSize.Small) {
+  constructor(bracketsType: BracketsType, stageNumber: number, precedingStages: string[], size = ModalSize.Small) {
     super(AddInputSelectorFormComponent, {bracketsType, stageNumber, precedingStages});
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -15,7 +16,7 @@ export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSel
 export interface IAddInputSelectorFormContext {
   stageNumber: number;
   bracketsType: BracketsType;
-  precedingStages: number[];
+  precedingStages: string[];
 }
 
 @Component({
@@ -32,12 +33,12 @@ export interface IAddInputSelectorFormContext {
             <div class="ui field">
               <sui-select
                 [isDisabled]="false"
-                formControlName="applyToStageNumber"
+                formControlName="applyToStageId"
                 [optionFormatter]="stageNumbersFormatter"
                 [options]="modal.context.precedingStages"
-                placeholder="Apply to stage"
-                #applyToStageNumber>
-                <sui-select-option *ngFor="let o of applyToStageNumber.filteredOptions"
+                placeholder="From stage"
+                #applyToStageId>
+                <sui-select-option *ngFor="let o of applyToStageId.filteredOptions"
                                    [value]="o"></sui-select-option>
               </sui-select>
             </div>
@@ -45,6 +46,7 @@ export interface IAddInputSelectorFormContext {
               <sui-select
                 formControlName="classifier"
                 [isDisabled]="false"
+                [optionFormatter]="selectorClassifiersFormatter"
                 [options]="selectorClassifiers"
                 placeholder="Selector"
                 #specifierSelect>
@@ -54,7 +56,7 @@ export interface IAddInputSelectorFormContext {
             </div>
             <div class="ui field">
               <div class="ui input">
-                <input type="text" [formControl]="getSelectorValue(i)" placeholder="Value">
+                <input type="number" [formControl]="getSelectorValue(i)" placeholder="Value">
               </div>
             </div>
             <button class="ui icon button" *ngIf="isLast" (click)="addFormLine()"><i class="plus icon"></i></button>
@@ -74,32 +76,13 @@ export interface IAddInputSelectorFormContext {
 export class AddInputSelectorFormComponent implements OnInit {
 
   f: FormGroup;
-
-  errorMessages = {
-    required: 'Required',
-    maxLength: 'Too long',
-    max: 'Too big'
-  };
-
   selectorClassifiers = Object.keys(SelectorClassifier).filter(key => !isNaN(Number(SelectorClassifier[key])));
-  stageNumbersFormatter = (opt: number) => `${opt + 1}`;
-
-  getErrorMsg(fieldName: string, errors: ValidationErrors) {
-    if (errors) {
-      return Object.keys(errors).map(error => {
-        if (this.errorMessages.hasOwnProperty(error)) {
-          return fieldName + ' is ' + this.errorMessages[error];
-        } else {
-          return fieldName + ' is invalid';
-        }
-      }).join(',');
-    }
-  }
-
+  stageNumbersFormatter = (opt: string) => `${this.modal.context.precedingStages.indexOf(opt) + 1}`;
+  selectorClassifiersFormatter = (opt: string) => opt === 'LAST_N_PLACES' ? 'Take last' : 'Take first';
   addOptions() {
     const groups = this.form.value as CompetitorSelector[];
     if (groups) {
-      this.modal.approve(groups);
+      this.modal.approve(produce(groups, draft => { draft.forEach(d => d.operator = OperatorType.EQUALS); }));
     } else {
       this.modal.deny(undefined);
     }
@@ -129,10 +112,9 @@ export class AddInputSelectorFormComponent implements OnInit {
   }
   private competitorSelectorConfig() {
     return this.fb.group({
-      applyToStageNumber: ['', [Validators.required]],
+      applyToStageId: ['', [Validators.required]],
       logicalOperator: ['AND'],
       classifier: ['', [Validators.required]],
-      operator: [OperatorType.EQUALS],
       selectorValue: this.fb.array([['', [Validators.required]]], [Validators.required])
     });
   }
