@@ -82,24 +82,41 @@ export class GenerateBracketsFormComponent implements OnInit {
     }
     return null;
   };
+  private outputSizeValidator = (index: number) => (control: FormGroup) => {
+    const stageCtrl = control?.parent?.parent;
+    if (stageCtrl) {
+      const stageType = this.getStageType(stageCtrl);
+      const inputSize = this.inputCompetitorsForStage(stageCtrl, index);
+      const selectorInput = this.selectorsProvidedInput(stageCtrl);
+      const output = control.value;
+      if (stageType === 'PRELIMINARY') {
+        if (selectorInput && selectorInput < output) {
+          return {'outputSizeValidator': true};
+        } else if (inputSize < output) {
+          return {'outputSizeValidator': true};
+        }
+      }
+    }
+    return null;
+  };
+
   private numberOfCompetitorsValidator = (index: number) => (control: FormGroup): ValidationErrors | null => {
     const errors = {};
     const selectorsInput = this.selectorsProvidedInput(control);
-    const isManual = this.isManualDistributionType(control);
-    if (!isManual && selectorsInput) {
+    if (selectorsInput) {
       const selectorsValid = Object.keys(selectorsInput).map(k => {
         const ctrl = this.stageDescriptions.controls.find(c => c.get('id').value === k);
-        const inputCmptrs = (ctrl && this.inputCompetitorsForStage(ctrl, this.stageDescriptions.controls.indexOf(ctrl))) || -1;
-        return selectorsInput[k] <= inputCmptrs;
+        const targetStageOutputSize = (ctrl && this.getOutputSize(ctrl)) || -1;
+        return selectorsInput[k] <= targetStageOutputSize;
       })
         .reduce((previousValue, currentValue) => previousValue && currentValue, true);
       if (!selectorsValid) {
         errors['selectorsValid'] = true;
       }
     } else {
-      const previousStageInput = index === 0 ? this._competitorsSize : this.getDefaultNumberOfCompetitors(index - 1);
+      const previousStageOutputSize = index === 0 ? this._competitorsSize : this.getOutputSize(this.stageDescriptions.at(index - 1));
       const currentInput = this.inputCompetitorsForStage(control, index);
-      if (currentInput > previousStageInput) {
+      if (currentInput > previousStageOutputSize) {
         errors['numberOfCompetitorsValidator'] = true;
       }
       if (currentInput <= 0 || index === 0 && currentInput !== this._competitorsSize) {
@@ -127,7 +144,7 @@ export class GenerateBracketsFormComponent implements OnInit {
 
   selectorsProvidedInput = (sd: AbstractControl) => {
     const selectors = sd.get('inputDescriptor.selectors').value as CompetitorSelector[];
-    const isManual = sd.get('inputDescriptor.distributionType').value === 'MANUAL';
+    const isManual = this.isManualDistributionType(sd);
     if (!isManual && selectors && selectors.length > 0) {
       return selectors.map(s => ({target: s.applyToStageId, number: +s.selectorValue[0] || 0})).reduce((previousValue, currentValue) => {
         if (!previousValue[currentValue.target]) {
@@ -145,6 +162,11 @@ export class GenerateBracketsFormComponent implements OnInit {
     return this.inputCompetitorsForStage(sd, i);
   }
 
+  getOutputSize(stage: AbstractControl) {
+    return stage?.get('stageResultDescriptor.outputSize')?.value;
+  }
+
+
   getStageInputNumberOfCompetitorsByAdvancedSelectors(stage: AbstractControl) {
     const byStages = this.selectorsProvidedInput(stage);
     return (byStages && Object.keys(byStages).map(k => byStages[k] || 0).reduce((a, b) => a + b, 0)) || 0;
@@ -158,8 +180,9 @@ export class GenerateBracketsFormComponent implements OnInit {
     name: [''],
     waitForPrevious: [true],
     hasThirdPlaceFight: [false],
-    resultDescriptor: this.fb.group({
+    stageResultDescriptor: this.fb.group({
       forceManualAssignment: [false],
+      outputSize: [0, [Validators.required, this.outputSizeValidator(index)]],
       fightResultOptions: this.fb.array([], [Validators.required]),
       additionalGroupSortingDescriptors: this.fb.array([])
     }),
@@ -224,6 +247,9 @@ export class GenerateBracketsFormComponent implements OnInit {
     const promise = val =>
       new Promise(resolve =>
         setTimeout(() => {
+          this.stageDescriptions.controls.forEach(c => {
+            c.get('stageResultDescriptor.outputSize')?.updateValueAndValidity({emitEvent: false});
+          });
           this.inputSelectors.forEach(s => s.updateValueAndValidity({emitEvent: false}));
           this.updateView();
           resolve(val);
@@ -231,7 +257,7 @@ export class GenerateBracketsFormComponent implements OnInit {
       );
     this.form.valueChanges.pipe(
       debounceTime(300),
-      throttle(promise),
+      throttle(promise)
     ).subscribe(() => {
       console.log(this.form);
     });
@@ -264,7 +290,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   setForceManualAssignment(i: number, $event: boolean) {
-    this.setStageControlValue(i, {'resultDescriptor.forceManualAssignment': $event});
+    this.setStageControlValue(i, {'stageResultDescriptor.forceManualAssignment': $event});
   }
 
   getName(stage: AbstractControl) {
@@ -305,20 +331,22 @@ export class GenerateBracketsFormComponent implements OnInit {
           numberOfCompetitors = (draft.groupDescriptors && draft.groupDescriptors.map(g => g.size || 0).reduce((a, b) => a + b)) || 0;
         }
         draft.inputDescriptor.numberOfCompetitors = numberOfCompetitors;
-        if (!selectorsInput) {
+        draft.inputDescriptor.id = value.id;
+        if (!selectorsInput && index > 0) {
+          const stage = formValue[index - 1];
           draft.inputDescriptor.selectors = [<CompetitorSelector>{
             classifier: SelectorClassifier.FIRST_N_PLACES,
             operator: OperatorType.EQUALS,
             selectorValue: [`${numberOfCompetitors}`],
-            applyToStageId: `${formValue[index - 1].id}`,
+            applyToStageId: `${stage.id}`,
             logicalOperator: 'AND'
           }];
         }
       }
-      draft.resultDescriptor.id = '';
-      draft.resultDescriptor.fightResultOptions = draft.resultDescriptor.fightResultOptions.filter(o => !!o);
+      draft.stageResultDescriptor.id = value.id;
+      draft.stageResultDescriptor.fightResultOptions = draft.stageResultDescriptor.fightResultOptions.filter(o => !!o);
       draft.inputDescriptor.selectors = draft.inputDescriptor.selectors.filter(o => !!o);
-      draft.resultDescriptor.additionalGroupSortingDescriptors = draft.resultDescriptor.additionalGroupSortingDescriptors.filter(o => !!o);
+      draft.stageResultDescriptor.additionalGroupSortingDescriptors = draft.stageResultDescriptor.additionalGroupSortingDescriptors.filter(o => !!o);
     }));
     this.generateStages.next(stages);
   }
@@ -365,7 +393,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   });
 
   getFightResultOptions(i) {
-    return this.stageDescriptions.at(i).get('resultDescriptor.fightResultOptions') as FormArray;
+    return this.stageDescriptions.at(i).get('stageResultDescriptor.fightResultOptions') as FormArray;
   }
 
   getFightResultOptionsValue(i) {
@@ -373,7 +401,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   getAdditionalGroupSortingDescriptors(i) {
-    return this.stageDescriptions.at(i).get('resultDescriptor.additionalGroupSortingDescriptors') as FormArray;
+    return this.stageDescriptions.at(i).get('stageResultDescriptor.additionalGroupSortingDescriptors') as FormArray;
   }
 
   getAdditionalCompetitorSelectors(stage: AbstractControl) {
@@ -431,12 +459,14 @@ export class GenerateBracketsFormComponent implements OnInit {
       groupSortSpecifier: [(o && o.groupSortSpecifier) || '', [Validators.required, Validators.pattern('DIRECT_FIGHT_RESULT|MANUAL|POINTS_DIFFERENCE|TOTAL_POINTS')]]
     });
 
+  private mapSelectors = (selectors: string[]) => selectors.map(s => this.fb.control(s, [Validators.required]));
+
   private competitorSelector = (o?: CompetitorSelector) => this.fb.group({
     applyToStageId: [(o && o.applyToStageId) || '', [Validators.required]],
     logicalOperator: [(o && o.logicalOperator) || '', [Validators.required]],
     classifier: [(o && o.classifier) || '', [Validators.required]],
     operator: [(o && o.operator) || OperatorType.EQUALS, [Validators.required]],
-    selectorValue: this.fb.array([[(o && o.selectorValue) || '', [Validators.required]]])
+    selectorValue: this.fb.array(this.mapSelectors((o && o.selectorValue) || []), [Validators.required])
   }, {validators: [this.stageInputValidator]});
 
   stageInputValidator = (control: FormGroup) => {
@@ -445,9 +475,8 @@ export class GenerateBracketsFormComponent implements OnInit {
     if (!targetStage || this.getStageType(targetStage) !== 'PRELIMINARY') {
       return {'stageInputValidator': true};
     }
-    const targetStageIndex = this.stageDescriptions.controls.indexOf(targetStage);
-    const targetStageInput = this.getDefaultNumberOfCompetitors(targetStageIndex);
-    if ((classifier === SelectorClassifier.FIRST_N_PLACES || classifier === SelectorClassifier.LAST_N_PLACES) && selectorValue <= 0 || targetStageInput < selectorValue) {
+    const targetStageOutputSize = this.getOutputSize(targetStage);
+    if ((classifier === SelectorClassifier.FIRST_N_PLACES || classifier === SelectorClassifier.LAST_N_PLACES) && selectorValue <= 0 || targetStageOutputSize < selectorValue) {
       return {'stageInputValidator': true};
     }
     return null;

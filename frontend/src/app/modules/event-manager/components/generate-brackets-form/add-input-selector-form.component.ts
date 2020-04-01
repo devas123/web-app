@@ -115,7 +115,7 @@ export class AddInputSelectorFormComponent implements OnInit {
       applyToStageId: ['', [Validators.required]],
       logicalOperator: ['AND'],
       classifier: ['', [Validators.required]],
-      selectorValue: this.fb.array([['', [Validators.required]]], [Validators.required])
+      selectorValue: this.fb.array([this.fb.control(0, [Validators.required, Validators.min(1)])], [Validators.required])
     });
   }
 

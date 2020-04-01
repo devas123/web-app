@@ -17,6 +17,7 @@
         </div>
         <div class="ui basic divider"></div>
         <div class="ui form" [ngClass]="{error: stage.invalid}" [formGroupName]="i" novalidate>
+          <div class="ui label transparent_label">Brackets type.</div>
           <div class="ui compact error message" *ngIf="stage.errors?.typeValidator">Double elimination is only allowed for the final stage.</div>
           <div class="ui field">
             <sui-select class="selection"
@@ -31,6 +32,7 @@
               </sui-select-option>
             </sui-select>
           </div>
+          <div class="ui label transparent_label">Preliminary or final?</div>
           <div class="ui field">
             <sui-select class="selection"
                         (selectedOptionChange)="setStageType(i, $event)"
@@ -44,8 +46,13 @@
               </sui-select-option>
             </sui-select>
           </div>
+          <div class="ui label transparent_label">Stage name (optional).</div>
           <div class="ui field">
             <input class="ui input" type="text" placeholder="Stage name." formControlName="name" maxlength="10"/>
+          </div>
+          <div class="ui label transparent_label" *ngIf="getStageType(stage) === 'PRELIMINARY'">How many competitors will proceed</div>
+          <div class="ui field" formGroupName="stageResultDescriptor" *ngIf="getStageType(stage) === 'PRELIMINARY'">
+            <input class="ui input" type="number" placeholder="Stage output size." formControlName="outputSize" maxlength="10"/>
           </div>
           <div class="ui field" *ngIf="isLast && bracketType.selectedOption === 'SINGLE_ELIMINATION'">
             <sui-checkbox [name]="'hasThirdPlaceFight'"

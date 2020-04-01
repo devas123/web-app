@@ -1,11 +1,4 @@
-<div class="ui container">
-  <!--<div class="ui submit button" *ngIf="!editing" (click)="editing = true">Edit</div>-->
-  <!--<div class="ui positive submit button" *ngIf="editing" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">-->
-  <!--Save-->
-  <!--</div>-->
-  <p></p>
-  <app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async"
-                       (categoryChanged)="sendChangeCategoryCommand($event)"
-                       (competitorChanged)="sendChangeCompetitorCommand($event)"
-                       [categories]="categories$ | async"></app-fighter-profile>
-</div>
+<app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async"
+                     (categoryChanged)="sendChangeCategoryCommand($event)"
+                     (competitorChanged)="sendChangeCompetitorCommand($event)"
+                     [categories]="categories$ | async"></app-fighter-profile>

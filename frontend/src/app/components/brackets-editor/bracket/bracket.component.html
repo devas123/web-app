@@ -9,6 +9,7 @@
 </ng-container>
 <ng-container *ngIf="bracketsType==='SINGLE_ELIMINATION'">
   <app-bracket-part [editMode]="editMode" [isLoserBracket]="false"
+                    [stageType]="stageType"
                     [competitors]="competitors"
                     [bucketsize]="bucketsize"
                     [changeFightsIds]="changeFightsIds" [fights]="_fights"

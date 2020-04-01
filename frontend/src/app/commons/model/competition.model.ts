@@ -247,7 +247,7 @@ export interface CategoryBracketsStage {
   waitForPrevious: boolean;
   hasThirdPlaceFight: boolean;
   stageOrder: number;
-  resultDescriptor: StageResult;
+  stageResultDescriptor: StageResult;
   inputDescriptor: StageInputDescriptor;
   groupDescriptors: GroupDescriptor[];
 }
@@ -299,6 +299,7 @@ export interface StageResult {
   competitorResults?: CompetitorResult[];
   fightResultOptions?: FightResultOption[];
   forceManualAssignment?: boolean;
+  outputSize: number;
   additionalGroupSortingDescriptors?: AdditionalGroupSortingDescriptor[];
 }
 
