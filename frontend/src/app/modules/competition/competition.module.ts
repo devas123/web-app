@@ -8,7 +8,6 @@ import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTransitionModule}
 import {CompetitionStateService} from './service/competition.state.service';
 import {StateResolver} from './state.resolver';
 import {ReactiveFormsModule} from '@angular/forms';
-import {NgxMdModule} from 'ngx-md';
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 
@@ -34,7 +33,6 @@ import {CategoryInfoContainerComponent} from './containers/category-info-contain
     SuiSidebarModule,
     ReactiveFormsModule,
     SuiTransitionModule,
-    NgxMdModule,
     SuiSelectModule,
     SuiDimmerModule
   ],

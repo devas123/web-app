@@ -47,7 +47,6 @@
     "ngx-avatar": "^3.7.0",
     "ngx-color": "^5.0.2",
     "ngx-img-cropper": "^8.0.1",
-    "ngx-md": "^8.1.6",
     "rxjs": "^6.4.0",
     "screenfull": "^3.3.3",
     "semantic-ui-dimmer": "^2.4.0",

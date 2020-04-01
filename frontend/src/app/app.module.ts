@@ -16,7 +16,6 @@ import {metaReducers, reducers} from './reducers/global-reducers';
 import {HttpAuthService} from './modules/account/service/AuthService';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
-import {NgxMdModule} from 'ngx-md';
 import {AccountService} from './modules/account/service/account.service';
 import {AccountEffects} from './modules/account/flux/effects';
 import {AvatarModule} from 'ngx-avatar';
@@ -40,7 +39,6 @@ import {CommonScheduleInfoContainerService} from './commons/classes/common-sched
     HomeComponent],
   imports: [
     CommonsModule,
-    NgxMdModule.forRoot(),
     BrowserModule,
     BrowserAnimationsModule,
     SuiModule,

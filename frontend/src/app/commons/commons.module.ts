@@ -23,6 +23,8 @@ import {TagListComponent} from '../components/tag-list/tag-list.component';
 import {CommonFightsEditorComponent} from '../components/brackets-editor/common-fights-editor.component';
 import {GroupDisplayComponent} from '../components/brackets-editor/group-display/group-display.component';
 import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/group-display/multiple-groups-display';
+import {ScheduleEntryDisplayComponent} from '../components/schedule-display/schedule-entry-display.component';
+import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedule-mat-display.component';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -34,9 +36,13 @@ import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/grou
     TagListComponent,
     CommonFightsEditorComponent,
     GroupDisplayComponent,
-    MultipleGroupsDisplayComponent],
+    MultipleGroupsDisplayComponent,
+    ScheduleMatDisplayComponent,
+    ScheduleEntryDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
+    ScheduleMatDisplayComponent,
+    ScheduleEntryDisplayComponent,
     ScheduleDisplayComponent,
     CategoryEditorComponent,
     FightersEditorComponent,

@@ -1,11 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FightStartTime, MatDescription, Schedule} from '../../reducers/global-reducers';
-import {Category, Period, ScheduleEntry} from '../../commons/model/competition.model';
+import {MatDescription, Schedule} from '../../reducers/global-reducers';
+import {Category, Period} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {InfoService} from '../../service/info.service';
-import {uniqueFilter} from '../../modules/account/utils';
 
 @Component({
   selector: 'app-schedule-display',
@@ -18,49 +17,30 @@ import {uniqueFilter} from '../../modules/account/utils';
             <div class="header">{{period?.name}}</div>
             <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
             <div class="ui toggle checkbox margin-vertical">
-              <input type="checkbox" name="public" [value]="matsView" (click)="toggleMatsView()">
-              <label>{{matsView ? 'Hide mats' : 'Show mats' }}</label>
+              <input type="checkbox" name="public" [value]="matsView[period?.id]" (click)="toggleMatsView(period.id)">
+              <label>{{matsView[period?.id] ? 'Hide mats' : 'Show mats' }}</label>
             </div>
-            <div class="ui middle aligned divided list">
-              <a class="item" *ngFor="let scheduleEntry of getPeriodEntries(period)" [style]="getEntryStyle(scheduleEntry)">
-                <i class="users icon"></i>
-                <div class="content">
-                  <div class="header" *ngIf="scheduleEntry.name && scheduleEntry.entryType !== 'RELATIVE_PAUSE'">{{scheduleEntry.name}}</div>
-                  <div class="header" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">Pause</div>
-                  <ng-container *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">
-                    <div class="category_hoverable"
-                         (mouseenter)="highlightCategory(categoryId)"
-                         (mouseleave)="clearCategoryHighLight()"
-                         (click)="goToCategoryEditor(categoryId)"
-                         [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: isCategorySelected(categoryId)}"
-                         *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{categoryNameForCategoryId(categoryId)}}</div>
-                    <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
-                  </ng-container>
-                  <div class="description">{{matName(scheduleEntry?.matId)}}</div>
-                  <div class="description" *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
-                  <div class="description" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">{{scheduleEntry.duration}} min</div>
-                </div>
-              </a>
-            </div>
-            <div class="header" *ngIf="matsView">Mats view</div>
-            <div class="inner-list list-container mat-grid margin-horizontal" *ngIf="matsView"
-                 [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
-              <div *ngFor="let mat of getPeriodMats(period.id)" class="mat-container" [ngClass]="{'single-mat': getPeriodMats(period.id)?.length === 1}">
-                <p>{{mat.name}}</p>
-                <div class="inner-list">
-                  <div class="item schedule_page flex-container clickable"
-                       (mouseenter)="highlightCategory(mfs.cat)"
-                       (mouseleave)="clearCategoryHighLight()"
-                       (click)="goToCategoryEditor(mfs.cat)"
-                       [ngClass]="{group_selected: isCategorySelected(mfs.cat)}"
-                       *ngFor="let mfs of _matCategories[mat.id]">
-                    <span>{{categoryNameForCategoryId(mfs.cat)}}</span>
-                    <span>{{mfs.fightStartTimes?.length}} fights</span>
-                  </div>
-                </div>
-                <section>{{mat.fightStartTimes?.length}} fights</section>
-              </div>
-            </div>
+            <app-schedule-entry-display
+              [timeZone]="timeZone"
+              [categoryFormat]="categoryNameForCategoryId"
+              [matFormat]="matName"
+              [scheduleEntries]="getPeriodEntries(period)"
+              [highlightedCategories]="highlightedCategories"
+              (categoryMouseEnter)="highlightCategory([$event])"
+              (categoryMouseLeave)="clearCategoryHighLight([$event])"
+              (categoryClicked)="goToCategoryEditor($event)"></app-schedule-entry-display>
+            <div class="header" *ngIf="matsView[period?.id]">Mats view</div>
+            <app-schedule-mat-display *ngIf="matsView[period?.id]"
+              [scheduleEntries]="getPeriodEntries(period)"
+              [matFormat]="matName"
+              [categoryFormat]="categoryNameForCategoryId"
+              [highlightedCategories]="highlightedCategories"
+              [timeZone]="timeZone"
+              [mats]="getPeriodMats(period.id)"
+              [period]="period"
+              (categoryMouseEnter)="highlightCategory($event)"
+              (categoryMouseLeave)="clearCategoryHighLight($event)"
+              (categoryClicked)="goToCategoryEditor($event)"></app-schedule-mat-display>
           </div>
           <div class="extra content">
             <span *ngIf="showTotalFights">Total fights: {{getFightsNumberForPeriod(period)}}</span>
@@ -73,8 +53,7 @@ import {uniqueFilter} from '../../modules/account/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleDisplayComponent implements OnInit, OnChanges {
-  @Input()
-  highlightedCategory: string;
+  highlightedCategories = new Set<string>();
 
   constructor(private cd: ChangeDetectorRef) {
   }
@@ -111,10 +90,7 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
   @Input()
   showDuration = true;
 
-  @Input()
-  matsView = false;
-
-  _matCategories = {} as Dictionary<{ cat: string, fightStartTimes: FightStartTime[] }[]>;
+  matsView = <Dictionary<boolean>>{};
 
 
   getFightsNumberForPeriod = (period: Period) => {
@@ -150,54 +126,44 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
     this.categoryClicked.next(categoryId);
   }
 
-  categoryNameForCategoryId(id: string) {
+  categoryNameForCategoryId = (id: string) => {
     const category = this.categories.find(cat => cat.id === id);
     if (category) {
       return this.categoryName(category);
     } else {
       return id;
     }
-  }
+  };
 
   ngOnInit() {
 
   }
 
-  getEntryStyle(req: ScheduleEntry) {
-    return (req.color && `border: 2px solid ${req.color}`) || '';
-  }
-
-
   getPeriodMats(id: string) {
     return this.mats.filter(mat => mat.periodId === id);
   }
 
-  getMatCategories() {
-    this._matCategories = {};
-    this.mats.forEach(mat => {
-      const categories = mat?.fightStartTimes?.map(f => f?.fightCategoryId).filter(f => !!f)?.filter(uniqueFilter) || [];
-      this._matCategories[mat.id] = categories.map(cat => ({cat, fightStartTimes: mat.fightStartTimes.filter(fs => fs.fightCategoryId === cat)}));
-    });
+  highlightCategory(categoryIds: string[]) {
+    categoryIds.forEach(cat => this.highlightedCategories.add(cat));
   }
 
-  highlightCategory(categoryId: string) {
-    this.highlightedCategory = categoryId;
+  clearCategoryHighLight(categoryIds: string[]) {
+    categoryIds.forEach(cat => this.highlightedCategories.delete(cat));
   }
 
-  clearCategoryHighLight() {
-    this.highlightedCategory = null;
+  isCategorySelected(cat: string[]) {
+    return !!cat?.find(c => this.highlightedCategories.has(c));
   }
 
-  isCategorySelected(cat: string) {
-    return cat === this.highlightedCategory;
-  }
-
-  toggleMatsView() {
-    this.matsView = !this.matsView;
+  toggleMatsView(periodId: string) {
+    this.matsView[periodId] = !this.matsView[periodId];
     this.cd.markForCheck();
   }
 
+  getMatEntries(periodId: string, matId: string) {
+    return this.schedulePeriods.find(p => p.id === periodId)?.scheduleEntries?.filter(e => e.matId === matId && e.entryType !== 'RELATIVE_PAUSE' && e.entryType !== 'FIXED_PAUSE');
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.getMatCategories();
   }
 }
