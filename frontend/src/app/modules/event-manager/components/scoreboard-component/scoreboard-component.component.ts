@@ -18,7 +18,6 @@ import {
   Score
 } from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import * as screenfull from 'screenfull';
 import produce from 'immer';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 
@@ -112,7 +111,6 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
   }
 
   goFullScreen() {
-    screenfull.request(this.el.nativeElement.querySelector('#fullscr'));
     this.fullScreen = true;
   }
 

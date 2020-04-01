@@ -8,8 +8,6 @@ import {AppState} from '../../../../reducers/global-reducers';
 import {Account} from '../../model/Account';
 import {selectAccountState} from '../../../competition/redux/reducers';
 
-declare var $: any;
-
 @Component({
   selector: 'app-account-info',
   templateUrl: './account-info.component.html',
@@ -33,26 +31,8 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    $('.basic.modal').modal('destroy');
-    $('body basic.modal').remove();
-    $('.crop').croppie('destroy');
   }
 
 
-  openModal() {
-    const modal = $('.basic.modal').modal({
-      blurring: true,
-      centered: true,
-      detachable: false,
-      observeChanges: true,
-      onShow: function () {
-        $('.basic.modal').modal('refresh');
-      }
-    });
-    modal.modal('show');
-    setTimeout(function () {
-      $('.basic.modal').modal('refresh');
-      $('basic.modal').remove();
-    }, 1000);
-  }
+  openModal() {}
 }

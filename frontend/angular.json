@@ -32,17 +32,9 @@
             ],
             "styles": [
               "src/semantic.slate.css",
-              "src/styles.scss",
-              "node_modules/semantic-ui-transition/transition.min.css",
-              "node_modules/semantic-ui-dimmer/dimmer.min.css",
-              "node_modules/croppie/croppie.css"
+              "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/semantic-ui-transition/transition.js",
-              "node_modules/semantic-ui-modal/modal.js",
-              "node_modules/semantic-ui-dimmer/dimmer.js",
-              "node_modules/croppie/croppie.js"
             ]
           },
           "configurations": {
@@ -96,18 +88,10 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/semantic-ui-transition/transition.js",
-              "node_modules/semantic-ui-modal/modal.js",
-              "node_modules/semantic-ui-dimmer/dimmer.js",
-              "node_modules/croppie/croppie.js"
             ],
             "styles": [
               "src/semantic.slate.css",
-              "src/styles.scss",
-              "node_modules/semantic-ui-transition/transition.min.css",
-              "node_modules/semantic-ui-dimmer/dimmer.min.css",
-              "node_modules/croppie/croppie.css"
+              "src/styles.scss"
             ],
             "assets": [
               {

@@ -2,19 +2,18 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import {AuthorizationComponent} from './components/authorization/authorization.component';
-import {SignInComponent} from "./components/authorization/sign-in/sign-in.component";
-import {SignUpComponent} from "./components/authorization/sign-up/sign-up.component";
-import {HttpClientModule} from "@angular/common/http";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {SignInComponent} from './components/authorization/sign-in/sign-in.component';
+import {SignUpComponent} from './components/authorization/sign-up/sign-up.component';
+import {HttpClientModule} from '@angular/common/http';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SuiModalModule, SuiTransitionModule} from '@devas123/ng2-semantic';
 import {AccountInfoComponent} from './components/account-info/account-info.component';
-import {RouterModule} from "@angular/router";
-import {accountRoutes} from "./account.routes";
-import {AvatarModule} from "ngx-avatar";
-import {ChangeAvatarModalComponent} from './components/change-avatar-modal/change-avatar-modal.component';
-import {BrowserModule} from "@angular/platform-browser";
-import {AccountRootComponent} from "./components/account-root/account-root.component";
-import {CommonsModule} from "../../commons/commons.module";
+import {RouterModule} from '@angular/router';
+import {accountRoutes} from './account.routes';
+import {AvatarModule} from 'ngx-avatar';
+import {BrowserModule} from '@angular/platform-browser';
+import {AccountRootComponent} from './components/account-root/account-root.component';
+import {CommonsModule} from '../../commons/commons.module';
 
 
 @NgModule({
@@ -35,10 +34,9 @@ import {CommonsModule} from "../../commons/commons.module";
     SignUpComponent,
     AccountRootComponent,
     AuthorizationComponent,
-    AccountInfoComponent,
-    ChangeAvatarModalComponent
+    AccountInfoComponent
   ],
-  providers: [],
+  providers: []
 })
 export class AccountModule {
 }

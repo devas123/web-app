@@ -24,7 +24,6 @@ import {AuthGuard} from './modules/account/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
-import {HotkeyModule} from 'angular2-hotkeys';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@devas123/ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
 import {MiscEffects} from './effects/misc';
@@ -55,8 +54,7 @@ import {CommonScheduleInfoContainerService} from './commons/classes/common-sched
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production // Restrict extension to log-only mode
-    }),
-    HotkeyModule.forRoot()
+    })
   ],
   providers: [HttpClient,
     InfoService,
