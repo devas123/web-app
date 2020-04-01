@@ -151,17 +151,9 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
     categoryIds.forEach(cat => this.highlightedCategories.delete(cat));
   }
 
-  isCategorySelected(cat: string[]) {
-    return !!cat?.find(c => this.highlightedCategories.has(c));
-  }
-
   toggleMatsView(periodId: string) {
     this.matsView[periodId] = !this.matsView[periodId];
     this.cd.markForCheck();
-  }
-
-  getMatEntries(periodId: string, matId: string) {
-    return this.schedulePeriods.find(p => p.id === periodId)?.scheduleEntries?.filter(e => e.matId === matId && e.entryType !== 'RELATIVE_PAUSE' && e.entryType !== 'FIXED_PAUSE');
   }
 
   ngOnChanges(changes: SimpleChanges): void {

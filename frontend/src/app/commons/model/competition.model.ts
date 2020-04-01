@@ -80,15 +80,21 @@ export interface Period {
   riskPercent: number;
 }
 
+export interface MatIdAndSomeId {
+  matId: string;
+  someId: string;
+}
+
 export interface ScheduleEntry {
   id: string;
   startTime: string;
+  endTime: string;
   color: string;
   name: string;
   numberOfFights: number;
   fightDuration: number;
   categoryIds: string[];
-  fightIds: string[];
+  fightIds: MatIdAndSomeId[];
   invalidFightIds: string[];
   matId: string;
   periodId: string;

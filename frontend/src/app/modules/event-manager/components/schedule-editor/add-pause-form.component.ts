@@ -3,12 +3,12 @@ import {FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@devas123/ng2-semantic';
 import {InfoService} from '../../../../service/info.service';
 import {ScheduleRequirement, ScheduleRequirementType} from '../../../../commons/model/competition.model';
-import {Subscription} from 'rxjs';
 import {MatDescription} from '../../../../reducers/global-reducers';
 
 export interface IAddSchedulePauseContext {
   competitionId: string;
   periodId: string;
+  periodStartTime: string;
   timeZone: string;
   mats: MatDescription[];
 }
@@ -19,8 +19,8 @@ export interface IAddSchedulePauseResult {
 }
 
 export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePauseContext, IAddSchedulePauseResult, void> {
-  constructor(competitionId: string, periodId: string, timeZone: string, mats, size = ModalSize.Small) {
-    super(AddSchedulePauseFormComponent, {periodId, competitionId, timeZone, mats});
+  constructor(competitionId: string, periodId: string, periodStartTime: string, timeZone: string, mats, size = ModalSize.Small) {
+    super(AddSchedulePauseFormComponent, {periodId, competitionId, timeZone, periodStartTime, mats});
     this.isClosable = true;
     this.transitionDuration = 200;
     this.size = size;
@@ -35,6 +35,8 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
     <div class="content">
       <div class="ui form" [formGroup]="form"
            [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
+        <div class="ui error message" *ngIf="form?.errors?.invalidDates">Invalid start or end date.</div>
+        <div class="ui error message" *ngIf="form?.errors?.startsBeforePeriod">Pause cannot start before the period starts.</div>
         <div class="field">
           <sui-checkbox (checkChange)="_all = $event">
             Add to all mats
@@ -122,6 +124,15 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
     switch (entryType) {
       case 'FIXED_PAUSE': {
         if (startTime && endTime) {
+          const periodStartTime = InfoService.parseDate(this.modal.context.periodStartTime);
+          const s = InfoService.parseDate(startTime);
+          const e = InfoService.parseDate(endTime);
+          if (s.getTime() >= e.getTime()) {
+            return {'invalidDates': true};
+          }
+          if (s.getTime() < periodStartTime.getTime()) {
+            return {'startsBeforePeriod': true};
+          }
           return null;
         }
         return {'invalidDates': true};
@@ -198,6 +209,6 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
   }
 
   get endTime() {
-    return this.form.get('startTime');
+    return this.form.get('endTime');
   }
 }

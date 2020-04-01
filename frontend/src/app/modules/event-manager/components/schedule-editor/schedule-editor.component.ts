@@ -242,7 +242,9 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       r.fightIds = [];
       r.matId = matId;
     });
-    this._requirements.push(reqWithMat);
+    this._requirements = produce(this._requirements, draft => {
+      draft.push(reqWithMat);
+    });
   }
 
 
@@ -387,8 +389,9 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  addPauseToPeriod(periodId: string) {
-    this.modalService.open(new AddSchedulePauseModal(this.competitionId, periodId, this.timeZone, this.mats.filter(m => m.periodId === periodId)))
+  addPauseToPeriod(periodId: string, periodStartTime: string) {
+    this.modalService.open(new AddSchedulePauseModal(this.competitionId, periodId, periodStartTime,
+      this.timeZone, this.mats.filter(m => m.periodId === periodId)))
       .onApprove((result: IAddSchedulePauseResult) => {
         this.mats.filter(m => !!m.id && result.toMats.indexOf(m.id) >= 0)
           .forEach(mat => this.addPauseScheduleRequirementToPeriod(periodId, mat.id, result.pauseRequirement));

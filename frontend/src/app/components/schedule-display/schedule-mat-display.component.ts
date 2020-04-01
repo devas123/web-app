@@ -10,14 +10,22 @@ import {MatDescription} from '../../reducers/global-reducers';
       <div *ngFor="let mat of mats" class="mat-container" [ngClass]="{'single-mat': mats?.length === 1}">
         <p>{{mat.name}}</p>
         <div class="inner-list">
-          <div class="item schedule_page flex-container clickable"
-               (mouseenter)="highlightCategory(mfs.categoryIds)"
-               (mouseleave)="clearCategoryHighLight(mfs.categoryIds)"
-               [ngClass]="{group_selected: isCategorySelected(mfs.categoryIds)}"
-               *ngFor="let mfs of getMatEntries(mat.id)">
-            <ng-container *ngIf="mfs.entryType !== 'RELATIVE_PAUSE'">
-              <span *ngFor="let cat of mfs.categoryIds">{{categoryFormat(cat)}}</span>
-              <span>{{mfs.fightIds?.length}} fights</span>
+          <div class="item schedule_page flex-container clickable"  [style]="getEntryStyle(entry)"
+               (mouseenter)="highlightCategory(entry.categoryIds)"
+               (mouseleave)="clearCategoryHighLight(entry.categoryIds)"
+               [ngClass]="{group_selected: isCategorySelected(entry.categoryIds), 'pause': entry.entryType === 'RELATIVE_PAUSE' || entry.entryType === 'FIXED_PAUSE'}"
+               *ngFor="let entry of getMatEntries(mat.id)">
+            <ng-container *ngIf="entry.entryType !== 'RELATIVE_PAUSE' && entry.entryType !== 'FIXED_PAUSE'">
+              <span *ngFor="let cat of entry.categoryIds">{{categoryFormat(cat)}}</span>
+              <span>{{getEntryFightsForMat(mat.id, entry)?.length}} fights</span>
+            </ng-container>
+            <ng-container *ngIf="entry.entryType === 'RELATIVE_PAUSE'">
+              <span>Pause</span>
+              <span>{{entry.duration}} minutes</span>
+            </ng-container>
+            <ng-container *ngIf="entry.entryType === 'FIXED_PAUSE'">
+              <span>Pause</span>
+              <span>From {{entry.startTime | zdate:true:timeZone:false}} till {{entry.endTime | zdate:true:timeZone:false}} </span>
             </ng-container>
           </div>
         </div>
@@ -63,9 +71,12 @@ export class ScheduleMatDisplayComponent {
   categoryClicked = new EventEmitter<string>();
 
   getMatEntries(matId) {
-    return this.scheduleEntries?.filter(e => e.matId === matId && e.entryType !== 'RELATIVE_PAUSE' && e.entryType !== 'FIXED_PAUSE');
+    return this.scheduleEntries?.filter(e => (e.matId === matId || e.fightIds.find(f => f.matId === matId)));
   }
 
+  getEntryFightsForMat(matId: string, entry: ScheduleEntry) {
+    return entry.fightIds.filter(f => f.matId === matId);
+  }
 
   getEntryStyle(req: ScheduleEntry) {
     return (req.color && `border: 2px solid ${req.color}`) || '';

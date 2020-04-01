@@ -8,20 +8,21 @@ import {ScheduleEntry} from '../../commons/model/competition.model';
       <a class="item" *ngFor="let scheduleEntry of scheduleEntries" [style]="getEntryStyle(scheduleEntry)">
         <i class="users icon"></i>
         <div class="content">
-          <div class="header" *ngIf="scheduleEntry.name && scheduleEntry.entryType !== 'RELATIVE_PAUSE'">{{scheduleEntry.name}}</div>
-          <div class="header" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">Pause</div>
-          <ng-container *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">
+          <div class="header" *ngIf="scheduleEntry.name && !isPause(scheduleEntry)">{{scheduleEntry.name}}</div>
+          <div class="header" *ngIf="isPause(scheduleEntry)">Pause</div>
+          <ng-container *ngIf="!isPause(scheduleEntry)">
             <div class="category_hoverable"
                  (mouseenter)="highlightCategory(categoryId)"
                  (mouseleave)="clearCategoryHighLight(categoryId)"
                  (click)="goToCategoryEditor(categoryId)"
-                 [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: highlightedCategories?.has(categoryId)}"
+                 [ngClass]="{pause: isPause(scheduleEntry),header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: highlightedCategories?.has(categoryId)}"
                  *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{!!categoryFormat ? categoryFormat(categoryId) : categoryId | truncate}}</div>
             <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
           </ng-container>
           <div class="description">{{!!matFormat ? matFormat(scheduleEntry?.matId) : scheduleEntry?.matId}}</div>
-          <div class="description" *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
-          <div class="description" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">{{scheduleEntry.duration}} min</div>
+          <div class="description" *ngIf="!isPause(scheduleEntry)">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
+          <div class="description" *ngIf="isRelativePause(scheduleEntry)">{{scheduleEntry.duration}} min</div>
+          <div class="description" *ngIf="isFixedPause(scheduleEntry)">{{scheduleEntry?.startTime | zdate:true:timeZone}} - {{scheduleEntry?.endTime | zdate:true:timeZone}}</div>
         </div>
       </a>
     </div>
@@ -55,6 +56,17 @@ export class ScheduleEntryDisplayComponent {
   @Output()
   categoryClicked = new EventEmitter<string>();
 
+  isPause(scheduleEntry: ScheduleEntry) {
+    return scheduleEntry.entryType === 'RELATIVE_PAUSE' || scheduleEntry.entryType === 'FIXED_PAUSE';
+  }
+
+  isRelativePause(scheduleEntry: ScheduleEntry) {
+    return scheduleEntry.entryType === 'RELATIVE_PAUSE';
+  }
+
+  isFixedPause(scheduleEntry: ScheduleEntry) {
+    return scheduleEntry.entryType === 'FIXED_PAUSE';
+  }
 
   getEntryStyle(req: ScheduleEntry) {
     return (req.color && `border: 2px solid ${req.color}`) || '';

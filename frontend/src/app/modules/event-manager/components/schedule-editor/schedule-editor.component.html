@@ -28,7 +28,7 @@
                 <span>{{getPeriodMats(period.id)?.length}} {{getPeriodMats(period.id)?.length === 1 ? 'mat' : 'mats'}}</span>
               </div>
               <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
-              <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id)">Add Pause</button>
+              <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">Add Pause</button>
               <app-requirements-display
                 *ngIf="getPeriodMats(period?.id)?.length > 1 || getPeriodMats(period?.id)?.length === 0"
                 class="padded-top"
