@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {BracketsType, Fight} from '../../../commons/model/competition.model';
+import {BracketsType, Competitor, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 
 @Component({
@@ -28,6 +28,9 @@ export class BracketComponent extends CommonFightsEditorComponent implements OnI
   public rowWidthPx = 180;
 
   showUpperBrackets = true;
+
+  @Input()
+  competitors: Competitor[] = [];
 
   ngOnDestroy(): void {
   }

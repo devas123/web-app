@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {AuthorizationComponent} from './authorization.component';
 import {SignInComponent} from './sign-in/sign-in.component';
 import {SignUpComponent} from './sign-up/sign-up.component';
-import {SuiTransitionModule} from 'ng2-semantic';
+import {SuiTransitionModule} from '@devas123/ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';

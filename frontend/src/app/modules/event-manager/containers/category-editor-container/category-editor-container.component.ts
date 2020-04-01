@@ -24,7 +24,7 @@ import {
   ComponentCommonMetadataProvider
 } from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {SuiModalService} from 'ng2-semantic';
+import {SuiModalService} from '@devas123/ng2-semantic';
 import {
   ISelectCategoriesResult,
   SelectCategoriesModal
@@ -42,18 +42,16 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
         </div>
       </div>
     </ng-template>
-    <div class="ui container">
-      <app-category-editor [categories]="categories$ | async"
-                           [searchString]="searchString$ | async"
-                           [defaultCategories]="defaultCategories$ | async"
-                           [competition]="competition$ | async"
-                           (categoryEditorClicked)="navigateToCategoryEditor($event)"
-                           (createCustomCategoryClicked)="addCategory()"
-                           (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
-                           (deleteCategoryEvent)="doDeleteCategory($event)"
-                           (generateRandomFightersEvent)="generateRandomFighters($event)"
-                           (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>
-    </div> `
+    <app-category-editor [categories]="categories$ | async"
+                         [searchString]="searchString$ | async"
+                         [defaultCategories]="defaultCategories$ | async"
+                         [competition]="competition$ | async"
+                         (categoryEditorClicked)="navigateToCategoryEditor($event)"
+                         (createCustomCategoryClicked)="addCategory()"
+                         (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
+                         (deleteCategoryEvent)="doDeleteCategory($event)"
+                         (generateRandomFightersEvent)="generateRandomFighters($event)"
+                         (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>`
 })
 export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
 

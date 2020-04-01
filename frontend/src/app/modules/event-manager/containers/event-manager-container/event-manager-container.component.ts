@@ -41,7 +41,6 @@ import {selectUser} from '../../../competition/redux/reducers';
 export class EventManagerContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   socketConnected$: Observable<boolean>;
-
   menu$: Observable<MenuItem[]>;
   header$: Observable<HeaderDescription>;
   shrinkMainContent$: Observable<boolean>;

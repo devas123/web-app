@@ -1,6 +1,6 @@
 <div class="ui massive menu">
   <div class="left menu" *ngIf="displayButton">
-    <div class="ui dropdown icon item" (click)="sidebarRef?.toggle()">
+    <div class="ui dropdown icon item" (click)="sidebarToggled()">
       <i class="sidebar icon"></i>
     </div>
   </div>
@@ -24,7 +24,7 @@
         <div class="item " (click)="accountPage()">Account</div>
         <div class="item " (click)="eventManagerPage()">Event manager</div>
         <div class="ui divider"></div>
-        <div class="item" (click)="logout()">Logout</div>
+        <div class="item" (click)="doLogout()">Logout</div>
       </div>
     </div>
   </div>

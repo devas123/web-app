@@ -19,7 +19,7 @@ export class CategorySummaryComponent implements OnInit {
   category: Category;
 
   @Input()
-  categoryStartTime: Date;
+  categoryStartTime: string;
 
   @Output()
   categoryFightersSelected = new EventEmitter<{ categoryId: string, competitionId: string }>();

@@ -1,0 +1,27 @@
+.selection {
+  width: 100%;
+}
+
+.ui.basic.segment {
+  padding-top: 0;
+}
+
+.rounded {
+  border-radius: 3px;
+}
+
+.ui.dimmer.transparent {
+  background-color: transparent;
+}
+
+.ui.dimmer.centered {
+  position: relative;
+  top: 0 !important;
+  left: 0 !important;
+  .ui.text.loader.centered {
+    top: 10% !important;
+    left: 50% !important;
+  }
+}
+
+

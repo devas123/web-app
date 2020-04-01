@@ -26,10 +26,11 @@ import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.comp
 import {HomeComponent} from './components/home/home.component';
 import {CommonsModule} from './commons/commons.module';
 import {HotkeyModule} from 'angular2-hotkeys';
-import {SuiDropdownModule, SuiModule, SuiSidebarModule} from 'ng2-semantic';
+import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@devas123/ng2-semantic';
 import {MenuService} from './components/main-menu/menu.service';
 import {MiscEffects} from './effects/misc';
-import {CommonBracketsContainer} from './commons/classes/common-brackets-container.component';
+import {CommonBracketsInfoContainer} from './commons/classes/common-brackets-container.component';
+import {CommonScheduleInfoContainerService} from './commons/classes/common-schedule-info-container.service';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import {CommonBracketsContainer} from './commons/classes/common-brackets-contain
     AccountService,
     SignUpGuard,
     AuthGuard,
-    CommonBracketsContainer
+    CommonBracketsInfoContainer,
+    CommonScheduleInfoContainerService
   ],
   bootstrap: [AppComponent]
 })

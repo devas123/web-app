@@ -28,6 +28,7 @@
   <div class="ui container" *ngIf="!((bracketsInfo?.category$ | async) && (bracketsInfo?.fights$ | async)) && !(bracketsInfo?.fightsAreLoading$ | async)">
   </div>
   <app-stage-display [fights]="bracketsInfo.fights$ | async"
+                     [competitors]="bracketsInfo.competitors$ | async"
                      [editMode]="false"
                      [bucketSize]="bucketSize$ | async"
                      (stageSelected)="selectStage($event)"

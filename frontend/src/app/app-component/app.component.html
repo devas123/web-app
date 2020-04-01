@@ -1,20 +1,19 @@
-<div class="wrapper">
-
-  <sui-sidebar-container>
-    <sui-sidebar id="mainsidebar" #sidebar [transition]="'overlay'" class="vertical mainmenu">
-      <ng-container *ngFor="let m of menu$ | async">
-        <a *ngIf="(!m.showCondition) || (m.showCondition() | async)" class="item" [ngClass]="m.class"
-           (click)="m.action(); sidebar.close()">
-          {{m.name}}
-        </a>
-      </ng-container>
-      <div #childcontainer></div>
-    </sui-sidebar>
-
-    <sui-sidebar-sibling [isDimmedWhenVisible]="true">
-      <app-main-menu [sidebarRef]="sidebar" [user]="user$ | async"
-                     [displayButton]="displayMenuButton$ | async"></app-main-menu>
-      <router-outlet></router-outlet>
-    </sui-sidebar-sibling>
-  </sui-sidebar-container>
-</div>
+<sui-sidebar-container class="wrapper">
+  <sui-sidebar id="mainsidebar" [isVisible]="sidebarVisible" [transition]="'overlay'" class="vertical mainmenu">
+    <ng-container *ngFor="let m of menu$ | async">
+      <a *ngIf="(!m.showCondition) || (m.showCondition() | async)" class="item" [ngClass]="m.class"
+         (click)="m.action(); sidebarVisible = false">
+        {{m.name}}
+      </a>
+    </ng-container>
+    <div #childcontainer></div>
+  </sui-sidebar>
+  <sui-sidebar-sibling [isDimmedWhenVisible]="true" class="flexible">
+    <app-main-menu (sidebarToggle)="sidebarVisible = !sidebarVisible"
+                   [user]="user$ | async"
+                   (logout)="doLogout()"
+                   (navigate)="navigate($event)"
+                   [displayButton]="displayMenuButton$ | async"></app-main-menu>
+    <router-outlet></router-outlet>
+  </sui-sidebar-sibling>
+</sui-sidebar-container>

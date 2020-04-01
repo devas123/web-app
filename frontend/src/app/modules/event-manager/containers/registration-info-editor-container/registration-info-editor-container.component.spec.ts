@@ -5,7 +5,7 @@ import {RegistrationInfoEditorComponent} from '../../components/registration-inf
 import {RegistrationGroupEditorComponent} from '../../components/registration-group-editor/registration-group-editor.component';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
-import {SuiDatepickerModule, SuiModalModule} from 'ng2-semantic';
+import {SuiDatepickerModule, SuiModalModule} from '@devas123/ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';

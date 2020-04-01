@@ -14,8 +14,7 @@ import {
   EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
   EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DISCONNECT_SOCKET,
-  EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-  EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
+  EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND, FIGHTS_EDITOR_APPLY_CHANGE,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
@@ -25,7 +24,7 @@ import {
   eventManagerDefaultCategoriesLoaded,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDisconnectSocket,
-  eventManagerFightsEditorChangesSubmitted,
+  eventManagerFightsEditorSubmitChangesCommand,
   myCompetitionsLoaded
 } from './event-manager-actions';
 
@@ -38,13 +37,10 @@ import {errorEvent} from '../../../actions/actions';
 
 @Injectable()
 export class EventManagerEffects {
-  sendFightEditChanges$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND),
-    map(() => eventManagerFightsEditorChangesSubmitted())
-  ));
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
+      FIGHTS_EDITOR_APPLY_CHANGE,
       EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
@@ -114,7 +110,7 @@ export class EventManagerEffects {
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
-      EVENT_MANAGER_FIGHTS_EDITOR_SUBMIT_CHANGES_COMMAND,
+      FIGHTS_EDITOR_APPLY_CHANGE,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     mergeMap((command: CommonAction) => {
       return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error))));

@@ -3,8 +3,8 @@
     <div class="content">
       <app-mat-display (competitorClicked)="openCompetitorPage($event)"
                        [mat]="mat"
-                       [title]="mat?.matDescription?.name"
-                       (detailsViewSelected)="selectMat($event?.matDescription?.id)"
+                       [title]="mat?.name"
+                       (detailsViewSelected)="selectMat($event?.id)"
       (fightMatChanged)="fightMatChanged($event)">
       </app-mat-display>
     </div>

@@ -1,16 +1,16 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
-import {Mat} from '../../redux/dashboard-reducers';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {MatDescription} from '../../../../reducers/global-reducers';
 
 @Component({
   selector: 'app-mat-display',
   template: `
     <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Mat view</button>
     <div class="header">{{title}}</div>
-    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="mat?.topFiveFights"
-         (cdkDropListDropped)="drop($event, mat?.matDescription?.id)">
-      <a class="item draggable" *ngFor="let fight of mat?.topFiveFights" cdkDrag [cdkDragData]="fight">
+    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="matFights"
+         (cdkDropListDropped)="drop($event, mat?.id)">
+      <a class="item draggable" *ngFor="let fight of matFights" cdkDrag [cdkDragData]="fight">
         <div class="content">
           <app-fight-display [fight]="fight"
                              (competitorClicked)="competitorClicked.next($event)"></app-fight-display>
@@ -27,10 +27,13 @@ export class MatDisplayComponent implements OnInit {
   title: string;
 
   @Input()
-  mat: Mat;
+  mat: MatDescription;
+
+  @Input()
+  matFights: Fight[];
 
   @Output()
-  detailsViewSelected = new EventEmitter<Mat>();
+  detailsViewSelected = new EventEmitter<MatDescription>();
 
   @Output()
   competitorClicked = new EventEmitter<Competitor>();

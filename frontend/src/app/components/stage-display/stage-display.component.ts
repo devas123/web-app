@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryBracketsStage, Fight} from '../../commons/model/competition.model';
+import {Category, CategoryBracketsStage, Competitor, Fight} from '../../commons/model/competition.model';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'app-stage-display',
@@ -10,6 +11,7 @@ import {Category, CategoryBracketsStage, Fight} from '../../commons/model/compet
 export class StageDisplayComponent implements OnInit {
   @Input()
   category: Category;
+
   @Input()
   set stages(stages: CategoryBracketsStage[]) {
     this._stages = stages;
@@ -19,6 +21,7 @@ export class StageDisplayComponent implements OnInit {
       }
     });
   }
+
   _stages: CategoryBracketsStage[];
   @Input()
   selectedStage: CategoryBracketsStage;
@@ -35,7 +38,15 @@ export class StageDisplayComponent implements OnInit {
   @Input()
   editMode: boolean;
   @Input()
-  changeFightIds: string[];
+  changeFightIds: Dictionary<string[]> = {};
+  @Input()
+  competitors: Competitor[] = [];
+  @Output()
+  unseededCompetitorsClicked = new EventEmitter();
+
+  get unseededCompetitors() {
+    return this.competitors.filter(c => !this.fights.find(f => !!f.scores.find(s => s.competitorId === c.id)));
+  }
 
   constructor() {
   }

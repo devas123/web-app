@@ -2,14 +2,16 @@
   <ng-container *ngIf="showSchedule">
     <h3 class="ui header">Schedule</h3>
     <app-schedule-display [categories]="categories$ | async"
-                          [schedule]="selectedCompetitionSchedule$ | async"
+                          [schedule]="scheduleInfo.schedule$ | async"
+                          [schedulePeriods]="scheduleInfo.periods$ | async"
+                          [scheduleEmpty]="scheduleInfo.scheduleEmpty$ | async"
                           [timeZone]="timeZone$ | async"
-                          [competitionId]="(selectedCompetitionProperties$ | async)?.id"
+                          [competitionId]="(scheduleInfo.selectedCompetitionProperties$ | async)?.id"
                           (categoryClicked)="navigateToCategory($event)"></app-schedule-display>
   </ng-container>
   <h3 class="ui header" *ngIf="showSchedule">Dashboard</h3>
   <div class="ui three stackable cards">
-    <div class="ui card" *ngFor="let period of periods$ | async">
+    <div class="ui card" *ngFor="let period of scheduleInfo.periods$ | async">
       <div class="content">
         <div class="right floated meta">
           <i class="close link icon" (click)="removePeriod(period)"></i>
@@ -17,7 +19,7 @@
         <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
         <div class="header" *ngIf="period?.isActive">ACTIVE</div>
         <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
-        <div class="meta">{{period?.mats?.length + ' mats'}}</div>
+        <div class="meta">{{(getPeriodMatsLength(period.id) | async) + ' mats'}}</div>
       </div>
     </div>
   </div>

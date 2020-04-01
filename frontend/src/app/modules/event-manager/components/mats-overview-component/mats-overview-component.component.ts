@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Mat} from '../../redux/dashboard-reducers';
 import {Competitor} from '../../../../commons/model/competition.model';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
+import {MatDescription} from '../../../../reducers/global-reducers';
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -17,7 +17,7 @@ export class MatsOverviewComponentComponent implements OnInit {
   competitionId: string;
 
   @Input()
-  mats: Mat[];
+  mats: MatDescription[];
 
   @Output()
   competitorClicked = new EventEmitter<Competitor>();

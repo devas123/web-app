@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventPropertiesEditorComponent} from './event-properties-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from 'ng2-semantic';
+import {SuiModule} from '@devas123/ng2-semantic';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';

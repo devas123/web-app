@@ -1,13 +1,16 @@
 .selectable {
-  rect.compholder {
-    stroke: #824116;
-    fill: #62ccff;
-  }
   cursor: pointer;
+}
+
+.selected {
+  rect.compholder {
+    fill: #3c5d96;
+  }
 }
 
 .compholder {
   fill: black;
+  stroke-width: 2px;
   stroke: gold;
 }
 

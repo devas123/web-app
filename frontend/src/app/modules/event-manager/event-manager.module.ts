@@ -17,7 +17,7 @@ import {
   SuiSelectModule,
   SuiSidebarModule,
   SuiTabsModule
-} from 'ng2-semantic';
+} from '@devas123/ng2-semantic';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {EventManagerEffects} from './redux/event-manager-effects';
@@ -49,7 +49,6 @@ import {ScoreboardComponentComponent} from './components/scoreboard-component/sc
 import {ScoreboardContainerComponent} from './containers/scoreboard-container/scoreboard-container.component';
 import {DashboardComponentComponent} from './components/dashboard-component/dashboard-component.component';
 import {MatManagementContainerComponent} from './containers/mat-management-container/mat-management-container.component';
-import {HotkeyModule} from 'angular2-hotkeys';
 import {PeriodManagementContainerComponent} from './containers/period-management-container/period-management-container.component';
 import {PeriodsManagementContainerComponent} from './containers/periods-management-container/periods-management-container.component';
 import {PeriodsManagementComponent} from './components/periods-management/periods-management.component';
@@ -62,7 +61,7 @@ import {RegistrationGroupEditorComponent} from './components/registration-group-
 import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
 import {FlexibleColumnDirective} from './containers/event-manager-container/flexible.column.directive';
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
-import {AddPeriodFormComponent} from './components/registration-info-editor/add-period-form.component';
+import {AddRegistrationPeriodFormComponent} from './components/registration-info-editor/add-registration-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
 import {SelectCategoriesModalComponent} from '../../components/category-editor/select-categories-modal.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -78,6 +77,14 @@ import {TimerComponent} from './components/scoreboard-component/timer-component'
 import {TimerControlsComponent} from './components/scoreboard-component/timer-controls.component';
 import {AddFightResultOptionFormComponent} from './components/generate-brackets-form/add-fight-result-option-form.component';
 import {AddInputSelectorFormComponent} from './components/generate-brackets-form/add-input-selector-form.component';
+import {RequirementsDisplayComponent} from './components/schedule-editor/requirements-display.component';
+import {CategoriesListComponent} from './components/schedule-editor/categories-list.component';
+import {AddSchedulePauseFormComponent} from './components/schedule-editor/add-pause-form.component';
+import {RequirementLineComponent} from './components/schedule-editor/requirement-line.component';
+import {SplitCategoryFormComponent} from './components/schedule-editor/split-category-modal.component';
+import {EditRequirementModalComponent} from './components/schedule-editor/edit-requirement-modal.component';
+import {ColorChromeModule} from 'ngx-color/chrome';
+import {GroupsEditorComponent} from './components/fights-editor/groups-editor.component';
 
 @NgModule({
   imports: [
@@ -100,16 +107,21 @@ import {AddInputSelectorFormComponent} from './components/generate-brackets-form
     SuiPaginationModule,
     SuiMessageModule,
     CommonsModule,
-    HotkeyModule,
-    DragDropModule
+    DragDropModule,
+    ColorChromeModule
   ],
   declarations: [
+    GroupsEditorComponent,
+    RequirementLineComponent,
+    AddSchedulePauseFormComponent,
+    CategoriesListComponent,
+    RequirementsDisplayComponent,
     FightsEditorComponent,
     FightsEditorContainerComponent,
     AddSchedulePeriodFormComponent,
     AddFightResultOptionFormComponent,
     AddGroupFormComponent,
-    AddPeriodFormComponent,
+    AddRegistrationPeriodFormComponent,
     SelectCategoriesModalComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
@@ -155,16 +167,10 @@ import {AddInputSelectorFormComponent} from './components/generate-brackets-form
     TimerComponent,
     TimerControlsComponent,
     FighterProfileComponent,
+    SplitCategoryFormComponent,
+    EditRequirementModalComponent,
     AddInputSelectorFormComponent],
-  providers: [EventManagerService],
-  entryComponents: [
-    AddInputSelectorFormComponent,
-    AddFightResultOptionFormComponent,
-    AddGroupFormComponent,
-    AddPeriodFormComponent,
-    SelectCategoriesModalComponent,
-    AddSchedulePeriodFormComponent
-  ]
+  providers: [EventManagerService]
 })
 export class EventManagerModule {
 }

@@ -1,38 +1,47 @@
-import {Component} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers/global-reducers';
-import {Observable} from 'rxjs';
-import {
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateIds,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights
-} from '../../redux/event-manager-reducers';
-import {Fight, FightsEditorChange} from '../../../../commons/model/competition.model';
-import {eventManagerFightsEditorChangeAdded, eventManagerFightsForChangeUnselected} from '../../redux/event-manager-actions';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {BracketsType, CategoryBracketsStage, Competitor, Fight} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: `app-fights-editor-container`,
   template: `
-      <app-fights-editor [changeFights]="changeFights$ | async" [change]="change$ | async" [changeIds]="changeIds$ | async"
-                         (changeSaved)="dispatchChangeSavedEvent($event)"
-      (fightSelectionCleared)="dipatchFightsSelectionClearedEvent()"></app-fights-editor>`,
+    <app-groups-editor *ngIf="bracketType === 'GROUP'"
+                       [seedFights]="seedFights"
+                       [competitors]="competitors"
+                       [selectedStage]="stage"
+                       (closeClicked)="dipatchFightsSelectionClearedEvent()"
+                       (changeSaved)="dispatchChangeSavedEvent($event)"></app-groups-editor>
+    <app-fights-editor *ngIf="bracketType !== 'GROUP'"
+                       [seedFights]="seedFights"
+                       [competitors]="competitors"
+                       (changeSaved)="dispatchChangeSavedEvent($event)"
+                       (closeClicked)="dipatchFightsSelectionClearedEvent()"></app-fights-editor>`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FightsEditorContainerComponent {
-  changeFights$: Observable<Fight[]>;
-  change$: Observable<FightsEditorChange>;
-  changeIds$: Observable<string[] | number[]>;
 
-  constructor(private store: Store<AppState>) {
-    this.change$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChange));
-    this.changeIds$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateIds));
-    this.changeFights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFights));
-  }
+  @Output()
+  closeClicked = new EventEmitter<void>();
 
-  dispatchChangeSavedEvent(change: FightsEditorChange) {
-    this.store.dispatch(eventManagerFightsEditorChangeAdded({change}));
+  @Output()
+  changeSaved = new EventEmitter<Fight[]>();
+
+  @Input()
+  bracketType: '' | BracketsType;
+
+  @Input()
+  seedFights: Fight[];
+
+  @Input()
+  stage: CategoryBracketsStage;
+
+  @Input()
+  competitors: Competitor[];
+
+  dispatchChangeSavedEvent(change: Fight[]) {
+    this.changeSaved.next(change);
   }
 
   dipatchFightsSelectionClearedEvent() {
-    this.store.dispatch(eventManagerFightsForChangeUnselected());
+    this.closeClicked.next();
   }
 }

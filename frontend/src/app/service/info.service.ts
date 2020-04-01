@@ -30,7 +30,8 @@ const {
   matFights,
   stageFights,
   categoryStages,
-  defaultFightResults
+  defaultFightResults,
+  fightIdsBycategoryId
 } = env.environment.mocks ? env.mocks : env.environment;
 
 export const genericRetryStrategy = ({
@@ -105,7 +106,7 @@ export class InfoService {
       retryWhen(genericRetryStrategy()),
       catchError(error => {
         console.log(error);
-        return observableOf(error);
+        return observableOf(undefined);
       }),
       mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`))
     );
@@ -146,6 +147,14 @@ export class InfoService {
   getSchedule(competitionId: string) {
     const params = {competitionId};
     return this.httpGet(scheduleEndpoint, {
+      params: params,
+      headers: this.headers
+    });
+  }
+
+  getFightIdsByCategoryId(competitionId: string) {
+    const params = {competitionId};
+    return this.httpGet(fightIdsBycategoryId, {
       params: params,
       headers: this.headers
     });

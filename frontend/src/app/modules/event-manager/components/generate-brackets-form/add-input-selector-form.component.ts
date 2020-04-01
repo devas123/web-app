@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {BracketsType, CompetitorSelector, OperatorType, SelectorClassifier} from '../../../../commons/model/competition.model';
+import produce from 'immer';
 
 export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSelectorFormContext, CompetitorSelector[], void> {
-  constructor(bracketsType: BracketsType, stageNumber: number, precedingStages: number[], size = ModalSize.Small) {
+  constructor(bracketsType: BracketsType, stageNumber: number, precedingStages: string[], size = ModalSize.Small) {
     super(AddInputSelectorFormComponent, {bracketsType, stageNumber, precedingStages});
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -15,7 +16,7 @@ export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSel
 export interface IAddInputSelectorFormContext {
   stageNumber: number;
   bracketsType: BracketsType;
-  precedingStages: number[];
+  precedingStages: string[];
 }
 
 @Component({
@@ -24,28 +25,20 @@ export interface IAddInputSelectorFormContext {
     <div class="header">Add competitor selectors for stage #{{modal.context.stageNumber + 1}}</div>
     <div class="content" [formGroup]="f">
       <div class="ui form" formArrayName="form" [ngClass]="{error: form.invalid && form.touched}">
-        <ng-container *ngFor="let sel of form.controls; index as i; last as isLast">
+        <section *ngFor="let sel of form.controls; index as i; last as isLast">
+          <div class="ui field">
+            <div class="ui label" *ngIf="i > 0">AND</div>
+          </div>
           <div class="ui fields" [formGroupName]="i">
-            <div class="ui field" *ngIf="i > 0">
-              <sui-select
-                formControlName="logicalOperator"
-                [isDisabled]="false"
-                [options]="logicalOperators"
-                placeholder="Logical operator"
-                #logicalOperator>
-                <sui-select-option *ngFor="let o of logicalOperator.filteredOptions"
-                                   [value]="o"></sui-select-option>
-              </sui-select>
-            </div>
             <div class="ui field">
               <sui-select
                 [isDisabled]="false"
-                formControlName="applyToStageNumber"
+                formControlName="applyToStageId"
                 [optionFormatter]="stageNumbersFormatter"
                 [options]="modal.context.precedingStages"
-                placeholder="Apply to stage"
-                #applyToStageNumber>
-                <sui-select-option *ngFor="let o of applyToStageNumber.filteredOptions"
+                placeholder="From stage"
+                #applyToStageId>
+                <sui-select-option *ngFor="let o of applyToStageId.filteredOptions"
                                    [value]="o"></sui-select-option>
               </sui-select>
             </div>
@@ -53,6 +46,7 @@ export interface IAddInputSelectorFormContext {
               <sui-select
                 formControlName="classifier"
                 [isDisabled]="false"
+                [optionFormatter]="selectorClassifiersFormatter"
                 [options]="selectorClassifiers"
                 placeholder="Selector"
                 #specifierSelect>
@@ -61,43 +55,20 @@ export interface IAddInputSelectorFormContext {
               </sui-select>
             </div>
             <div class="ui field">
-              <sui-select
-                formControlName="operator"
-                [isDisabled]="false"
-                [options]="operations"
-                placeholder="Operation"
-                #operatorTypeSelect>
-                <sui-select-option *ngFor="let o of operatorTypeSelect.filteredOptions"
-                                   [value]="o"></sui-select-option>
-              </sui-select>
-            </div>
-            <div class="ui field">
-              <div class="ui action input">
-                <input type="text" [formControl]="getLastSelectorValueControl(i)" placeholder="Add value">
-                <button class="ui icon button" (click)="addSelectorValue(i)"><i class="check icon"></i></button>
+              <div class="ui input">
+                <input type="number" [formControl]="getSelectorValue(i)" placeholder="Value">
               </div>
             </div>
-          </div>
-          <app-tag-list [values]="getSelectorValue(i).controls.slice(0, getSelectorValue(i).controls.length - 1)"
-                        [vertical]="true">
-            <ng-template let-control="$implicit" let-k="index">
-              <div>
-                <span>{{control.value}}</span>
-                <i class="delete icon" (click)="removeSelectorValue(i, k)"></i>
-              </div>
-            </ng-template>
-          </app-tag-list>
-          <div class="ui buttons padded">
             <button class="ui icon button" *ngIf="isLast" (click)="addFormLine()"><i class="plus icon"></i></button>
             <button class="ui icon button" (click)="removeFormLine(i)"><i class="delete icon"></i></button>
           </div>
-        </ng-container>
+        </section>
         <button class="ui icon button" *ngIf="form.controls?.length <= 0" (click)="addFormLine()"><i class="plus icon"></i></button>
       </div>
     </div>
     <div class="actions">
       <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-      <button class="ui green button" [disabled]="form.invalid" (click)="addOptions()" autofocus>OK</button>
+      <button class="ui green button" [disabled]="f.invalid" (click)="addOptions()" autofocus>OK</button>
     </div>`,
   styleUrls: ['./generate-brackets-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -105,44 +76,13 @@ export interface IAddInputSelectorFormContext {
 export class AddInputSelectorFormComponent implements OnInit {
 
   f: FormGroup;
-
-  errorMessages = {
-    required: 'Required',
-    maxLength: 'Too long',
-    max: 'Too big'
-  };
-
   selectorClassifiers = Object.keys(SelectorClassifier).filter(key => !isNaN(Number(SelectorClassifier[key])));
-  operations = Object.keys(OperatorType).filter(key => !isNaN(Number(OperatorType[key])));
-
-  logicalOperators = ['AND', 'OR', 'AND NOT', 'OR NOT', 'NOT'];
-
-  stageNumbersFormatter = (opt: number) => `${opt + 1}`;
-
-  getErrorMsg(fieldName: string, errors: ValidationErrors) {
-    if (errors) {
-      return Object.keys(errors).map(error => {
-        if (this.errorMessages.hasOwnProperty(error)) {
-          return fieldName + ' is ' + this.errorMessages[error];
-        } else {
-          return fieldName + ' is invalid';
-        }
-      }).join(',');
-    }
-  }
-
-  getSelectorValue(i: number) {
-    return this.form.at(i).get('selectorValue') as FormArray;
-  }
-
-  getLastSelectorValueControl(i: number) {
-    return this.getSelectorValue(i).controls[this.getSelectorValue(i).controls.length - 1] as FormControl;
-  }
-
+  stageNumbersFormatter = (opt: string) => `${this.modal.context.precedingStages.indexOf(opt) + 1}`;
+  selectorClassifiersFormatter = (opt: string) => opt === 'LAST_N_PLACES' ? 'Take last' : 'Take first';
   addOptions() {
     const groups = this.form.value as CompetitorSelector[];
     if (groups) {
-      this.modal.approve(groups);
+      this.modal.approve(produce(groups, draft => { draft.forEach(d => d.operator = OperatorType.EQUALS); }));
     } else {
       this.modal.deny(undefined);
     }
@@ -170,22 +110,20 @@ export class AddInputSelectorFormComponent implements OnInit {
   get form() {
     return this.f.get('form') as FormArray;
   }
-
   private competitorSelectorConfig() {
     return this.fb.group({
-      applyToStageNumber: ['', [Validators.required, Validators.maxLength(50)]],
-      logicalOperator: ['', [Validators.maxLength(50)]],
-      classifier: ['', [Validators.required, Validators.maxLength(50)]],
-      operator: ['', [Validators.required, Validators.maxLength(50)]],
-      selectorValue: this.fb.array([['']])
+      applyToStageId: ['', [Validators.required]],
+      logicalOperator: ['AND'],
+      classifier: ['', [Validators.required]],
+      selectorValue: this.fb.array([this.fb.control(0, [Validators.required, Validators.min(1)])], [Validators.required])
     });
   }
 
-  removeSelectorValue(i: number, k) {
-    this.getSelectorValue(i).removeAt(k);
+  getSelectorValue(i) {
+    return this.getSelectorValues(i).at(0) as FormControl;
   }
 
-  addSelectorValue(i: number) {
-    this.getSelectorValue(i).push(this.fb.control(''));
+  getSelectorValues(i: number) {
+    return this.form.at(i).get('selectorValue') as FormArray;
   }
 }

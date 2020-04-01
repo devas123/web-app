@@ -12,6 +12,17 @@
 
 div.fight_cell {
 
+  &.selectable_fight {
+    cursor: pointer;
+    &:hover {
+      background-color: #222e30;
+    }
+  }
+
+  &.selected {
+    background-color: #3c5d96;
+  }
+
   display: grid;
   grid-auto-flow: row;
 

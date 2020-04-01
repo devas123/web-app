@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BracketsEditorContainerComponent} from './brackets-editor-container.component';
-import {SuiCheckboxModule, SuiDimmerModule, SuiPopupModule, SuiSelectModule} from 'ng2-semantic';
+import {SuiCheckboxModule, SuiDimmerModule, SuiPopupModule, SuiSelectModule} from '@devas123/ng2-semantic';
 import {GetNamePipe} from '../../../../pipes/get-name.pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';

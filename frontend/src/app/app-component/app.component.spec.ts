@@ -9,7 +9,7 @@ import {competitionPropertiesEntitiesInitialState, reducers} from '../reducers/g
 import {eventManagerReducers} from '../modules/event-manager/redux/event-manager-reducers';
 import {initialAccountState} from '../modules/account/flux/account.state';
 import {periodsInitialState} from '../modules/event-manager/redux/dashboard-reducers';
-import {SuiSidebarModule} from 'ng2-semantic';
+import {SuiSidebarModule} from '@devas123/ng2-semantic';
 import {HeaderDescription} from '../commons/model/competition.model';
 import {competitionListReducer} from '../modules/competition/redux/reducers';
 

@@ -7,6 +7,197 @@ $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
 $item_color: #162830;
+$mat_border_color: #3c3f41;
+$error_color: lightpink;
+
+.compman_clickable {
+  cursor: pointer !important;
+}
+
+.category_hoverable:hover, .group_selected {
+  background-color: lighten($background_color, 10) !important;
+}
+
+.no_margin {
+  margin: 0 !important;;
+}
+
+.ui.error.message {
+  background-color: transparent !important;
+  border: 2px solid $error_color;
+  box-shadow: none !important;
+}
+
+.ui.segments {
+  border: 0;
+  box-shadow: none;
+}
+
+.list-container {
+  min-height: 60px !important;
+  overflow: hidden;
+  display: block;
+}
+
+.category-restriction {
+  background-color: #2b3e40 !important;
+}
+
+.fight-restriction {
+  background-color: #1b2a2c !important;
+}
+
+.selected {
+  background-color: #3c5d96 !important;
+}
+
+.pause {
+  width: 100%;
+  background-color: #3c4b4d !important;
+}
+
+.empty-container {
+  border-radius: 3px;
+  .content {
+    min-height: 15px;
+    text-align: center;
+    padding: 1em;
+    background-color: $background_color;
+  }
+}
+
+.bordered {
+  border: 2px dashed $mat_border_color;
+}
+
+.filler {
+  flex-grow: 1;
+}
+
+.right-floated {
+  align-self: flex-end;
+  right: 1em;
+}
+
+.handle {
+  cursor: move;
+}
+
+.inner-list {
+  min-height: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 3px;
+}
+
+.padded-top {
+  padding-top: 0.5em;
+}
+
+.schedule_page_scrollable {
+  display: block;
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
+.padded-vertical {
+  padding: 0.5em 0;
+}
+.margin-vertical {
+  margin: 3px 0 !important;
+}
+
+.margin-horizontal {
+  margin: 0 3px;
+}
+
+.cdk-drop-list {
+  overflow: hidden;
+  display: block;
+  min-height: 60px !important;
+}
+
+.mat-grid {
+  margin-top: 2px;
+  .mat-container {
+    border: 4px solid $mat_border_color;
+    border-radius: 3px;
+    padding: 2px;
+  }
+  border-radius: 3px;
+  grid-template-columns: 1fr 1fr;
+
+  &.single-mat {
+    grid-template-columns: 1fr !important;
+  }
+
+  div {
+    overflow: hidden;
+  }
+}
+
+.flex-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+}
+
+.small-line {
+  font-size: small !important;
+}
+
+.item.schedule_page {
+  padding: 0.2em;
+  background-color: #2b3e40;
+  border-radius: 3px;
+
+  > * {
+    margin-left: 1em;
+  }
+  :first-child {
+    margin-left: 2px;
+  }
+}
+
+.drag-hint-border {
+  border: #edf9f4 dotted 1px;
+}
+
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  cursor: grabbing;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  min-height: 300px;
+  height: 100%;
+}
+
+.flexible {
+  flex: 1 1 auto;
+  overflow: auto;
+}
 
 /* Animate items as they're being sorted. */
 .cdk-drop-list-dragging .cdk-drag {
@@ -91,8 +282,11 @@ input,
   color: $dialog_input_text_color !important;
 }
 
-.maincontent {
+#maincontent {
   overflow: auto;
+  &._small {
+    grid-column: 1/3;
+  }
 }
 
 .event_manager_container {
@@ -108,7 +302,7 @@ input,
   .menu_row {
     display: grid;
     grid-gap: 1em;
-    grid-template-columns: 240px minmax(800px, calc(100% - 240px));
+    grid-template-columns: 240px minmax(100px, calc(100% - 240px));
   }
   min-height: 600px;
   overflow: auto;

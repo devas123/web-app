@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,
 import {Category} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Competitor} from '../../commons/model/competition.model';
-import {SuiPagination} from 'ng2-semantic';
+import {SuiPagination} from '@devas123/ng2-semantic';
 
 @Component({
   selector: 'app-fighters-editor',
@@ -70,7 +70,7 @@ export class FightersEditorComponent implements OnInit {
   showRegistrationStatus = true;
 
 
-  @ViewChild('pagination', {static: false})
+  @ViewChild('pagination')
   set pagination(value: SuiPagination) {
     if (value) {
       this._pagination = value;

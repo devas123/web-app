@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {ItemInputDirective} from '../modules/account/components/account-info/item-input.directive';
-import {GetWinnerPipe} from '../pipes/getwinner.pipe';
 import {WordbreakPipe} from '../pipes/wordbreak.pipe';
 import {TruncatePipe} from '../pipes/truncate.pipe';
 import {GetNamePipe} from '../pipes/get-name.pipe';
@@ -13,7 +12,7 @@ import {BracketComponent} from '../components/brackets-editor/bracket/bracket.co
 import {BracketRoundComponent} from '../components/brackets-editor/bracketround/bracketround.component';
 import {ScheduleDisplayComponent} from '../components/schedule-display/schedule-display.component';
 import {CommonModule} from '@angular/common';
-import {SuiAccordionModule, SuiCheckboxModule, SuiCollapseModule, SuiPaginationModule, SuiPopupModule} from 'ng2-semantic';
+import {SuiAccordionModule, SuiCheckboxModule, SuiCollapseModule, SuiPaginationModule, SuiPopupModule} from '@devas123/ng2-semantic';
 import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
 import {RouterModule} from '@angular/router';
 import {FightersEditorComponent} from '../components/fighters-editor/fighters-editor.component';
@@ -26,7 +25,7 @@ import {GroupDisplayComponent} from '../components/brackets-editor/group-display
 import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/group-display/multiple-groups-display';
 
 @NgModule({
-  declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
+  declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
     CategoryEditorComponent,
@@ -36,7 +35,7 @@ import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/grou
     CommonFightsEditorComponent,
     GroupDisplayComponent,
     MultipleGroupsDisplayComponent],
-  exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetWinnerPipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
+  exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
     CategoryEditorComponent,

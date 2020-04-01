@@ -34,7 +34,7 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
   category$: Observable<Category>;
   competitionId$: Observable<string>;
 
-  categoryStartTime$: Observable<Date>;
+  categoryStartTime$: Observable<string>;
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{

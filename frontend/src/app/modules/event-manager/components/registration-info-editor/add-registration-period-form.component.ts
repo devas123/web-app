@@ -1,22 +1,22 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from 'ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
 import {InfoService} from '../../../../service/info.service';
 
-export interface IAddPeriodContext {
+export interface IAddRegistrationPeriodContext {
   competitionId: string;
   timeZone: string;
 }
 
-export interface IAddPeriodResult {
+export interface IAddRegistrationPeriodResult {
   competitionId: string;
   period: RegistrationPeriod;
 }
 
-export class AddPeriodModal extends ComponentModalConfig<IAddPeriodContext, IAddPeriodResult, void> {
+export class AddPeriodModal extends ComponentModalConfig<IAddRegistrationPeriodContext, IAddRegistrationPeriodResult, void> {
   constructor(competitionId: string, timeZone: string, size = ModalSize.Small) {
-    super(AddPeriodFormComponent, {timeZone, competitionId});
+    super(AddRegistrationPeriodFormComponent, {timeZone, competitionId});
 
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -26,7 +26,7 @@ export class AddPeriodModal extends ComponentModalConfig<IAddPeriodContext, IAdd
 
 
 @Component({
-  selector: 'app-add-period-form',
+  selector: 'app-add-registration-period-form',
   template: `
 
       <div class="header">Add registration period</div>
@@ -58,7 +58,7 @@ export class AddPeriodModal extends ComponentModalConfig<IAddPeriodContext, IAdd
   styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddPeriodFormComponent implements OnInit {
+export class AddRegistrationPeriodFormComponent implements OnInit {
 
   periodForm: FormGroup;
 
@@ -74,7 +74,7 @@ export class AddPeriodFormComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, public modal: SuiModal<IAddPeriodContext, IAddPeriodResult, void>) {
+  constructor(private fb: FormBuilder, public modal: SuiModal<IAddRegistrationPeriodContext, IAddRegistrationPeriodResult, void>) {
   }
 
   ngOnInit() {

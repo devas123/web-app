@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {AddFighterComponent} from './add-fighter.component';
-import {SuiModule} from 'ng2-semantic';
+import {SuiModule} from '@devas123/ng2-semantic';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpAuthService} from '../../service/AuthService';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
-import {Transition, TransitionController, TransitionDirection} from 'ng2-semantic';
+import {Transition, TransitionController, TransitionDirection} from '@devas123/ng2-semantic';
 import {AccountState} from '../../flux/account.state';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';

@@ -1,47 +1,53 @@
 import {Observable} from 'rxjs';
 import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../reducers/global-reducers';
-import {Category, CategoryBracketsStage, Fight} from '../model/competition.model';
+import {BracketsType, Category, CategoryBracketsStage, Competitor, Fight} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds,
   eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
-  eventManagerGetSelectedEventSelectedCategorySelectedStage,
-  eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
+  eventManagerGetSelectedEventSelectedCategorySelectedStage, eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType,
+  eventManagerGetSelectedEventSelectedCategorySelectedStageFights, eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStages,
-  eventManagerGetSelectedEventSelectedCategoryStateLoading
+  eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
 } from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
+import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../modules/event-manager/redux/event-manager-actions';
 
 @Injectable()
-export class CommonBracketsContainer {
+export class CommonBracketsInfoContainer {
   competition$: Observable<CompetitionProperties>;
   stages$: Observable<CategoryBracketsStage[]>;
   fights$: Observable<Fight[]>;
+  firstRoundFights$: Observable<Fight[]>;
   stage$: Observable<CategoryBracketsStage>;
+  bracketsType$: Observable<'' | BracketsType>;
   fightsAreLoading$: Observable<boolean>;
   category$: Observable<Category>;
   categories$: Observable<Category[]>;
   numberOfCompetitor$: Observable<number>;
   bucketsize$: Observable<boolean>;
-  changeFightsIds$: Observable<string[]>;
+  competitors$: Observable<Competitor[]>;
+
 
   constructor(private store: Store<AppState>, private observer: BreakpointObserver) {
     this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
+    this.bracketsType$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType));
     this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights));
-    this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStateLoading));
+    this.firstRoundFights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights));
+    this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading));
+    this.competitors$ = store.pipe(select(eventManagerGetSelectedEventCompetitors));
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.numberOfCompetitor$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));
     this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
       map(b => b.matches)
     );
-    this.changeFightsIds$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryFightsEditorStateSelectedChangeFightsIds));
   }
 
   sendCommandFromCategoryId(actionBuilder: (categoryId) => any) {
@@ -52,4 +58,26 @@ export class CommonBracketsContainer {
     }), filter(act => !!act && !!act.type)).subscribe(this.store);
   }
 
+  mapBucketSize(bigScreenSize: number, smallScreenSize: number) {
+    return this.bucketsize$.pipe(map(val => val ? smallScreenSize : bigScreenSize));
+  }
+
+  selectStage(id: string, competitionId: string) {
+    this.store.dispatch(eventManagerCategoryBracketsStageSelected({
+      competitionId: competitionId,
+      selectedStageId: id
+    }));
+  }
+
+  selectCategory(categoryId: string, competitionId: string) {
+    if (competitionId && categoryId) {
+      this.store.dispatch(eventManagerCategorySelected(competitionId, categoryId));
+    }
+  }
+
+  clearCategorySelection(competitionId: string) {
+    if (competitionId) {
+      this.store.dispatch(eventManagerCategoryUnselected(competitionId));
+    }
+  }
 }

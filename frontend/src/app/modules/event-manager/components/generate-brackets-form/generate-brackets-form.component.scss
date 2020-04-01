@@ -6,13 +6,14 @@
   padding: 1em;
 }
 
-.ui.cards {
-  margin-top: 1em !important;
-}
-
 .bottom_margin {
   margin-bottom: 5em !important;
 }
+
+.ui.card.error {
+  border: 2px solid lightpink;
+}
+
 
 .results_section {
   display: grid;
@@ -26,9 +27,39 @@
   }
 }
 
+.stage_descriptions_grid {
+
+  .ui.card {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  place-content: stretch;
+  margin-top: 1em !important;
+  grid-auto-columns: minmax(300px, auto);
+}
+
 .large_font {
   font-weight: bold;
   font-size: large;
 }
 
+.fight_options_select {
+  a {
+    align-self: center;
+  }
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-items: center;
+  align-content: center;
+}
 
+.transparent_label {
+  background-color: transparent;
+}
