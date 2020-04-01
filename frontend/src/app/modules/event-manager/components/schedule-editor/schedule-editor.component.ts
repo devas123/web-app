@@ -83,9 +83,12 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   private get periods(): Period[] {
+    const requirementsWithOrder = produce(this._requirements, draft => {
+      draft.forEach((req, index) => req.entryOrder = index);
+    });
     return produce(this._periods, draft => {
       draft.forEach(p => {
-        p.scheduleRequirements = this._requirements.filter(sr => sr.periodId === p.id);
+        p.scheduleRequirements = requirementsWithOrder.filter(sr => sr.periodId === p.id);
       });
     });
   }

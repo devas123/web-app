@@ -114,6 +114,7 @@ export interface ScheduleRequirement {
   force: boolean;
   startTime: string;
   endTime: string;
+  entryOrder: number;
 }
 
 export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';

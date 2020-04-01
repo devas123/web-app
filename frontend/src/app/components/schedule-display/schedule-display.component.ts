@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FightStartTime, MatDescription, Schedule} from '../../reducers/global-reducers';
-import {Category, Period, ScheduleEntry, ScheduleRequirement} from '../../commons/model/competition.model';
+import {Category, Period, ScheduleEntry} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
@@ -25,16 +25,20 @@ import {uniqueFilter} from '../../modules/account/utils';
               <a class="item" *ngFor="let scheduleEntry of getPeriodEntries(period)" [style]="getEntryStyle(scheduleEntry)">
                 <i class="users icon"></i>
                 <div class="content">
-                  <div class="header" *ngIf="scheduleEntry.name">{{scheduleEntry.name}}</div>
-                  <div class="category_hoverable"
-                       (mouseenter)="highlightCategory(categoryId)"
-                       (mouseleave)="clearCategoryHighLight()"
-                       (click)="goToCategoryEditor(categoryId)"
-                       [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: isCategorySelected(categoryId)}"
-                       *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{categoryNameForCategoryId(categoryId)}}</div>
-                  <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
+                  <div class="header" *ngIf="scheduleEntry.name && scheduleEntry.entryType !== 'RELATIVE_PAUSE'">{{scheduleEntry.name}}</div>
+                  <div class="header" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">Pause</div>
+                  <ng-container *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">
+                    <div class="category_hoverable"
+                         (mouseenter)="highlightCategory(categoryId)"
+                         (mouseleave)="clearCategoryHighLight()"
+                         (click)="goToCategoryEditor(categoryId)"
+                         [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: isCategorySelected(categoryId)}"
+                         *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{categoryNameForCategoryId(categoryId)}}</div>
+                    <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
+                  </ng-container>
                   <div class="description">{{matName(scheduleEntry?.matId)}}</div>
-                  <div class="description">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
+                  <div class="description" *ngIf="scheduleEntry.entryType !== 'RELATIVE_PAUSE'">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
+                  <div class="description" *ngIf="scheduleEntry.entryType === 'RELATIVE_PAUSE'">{{scheduleEntry.duration}} min</div>
                 </div>
               </a>
             </div>
@@ -122,16 +126,22 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
   categoryName = (cat: Category) => AddFighterComponent.displayCategory(cat);
 
   getPeriodEntries(period: Period) {
-    return (period.scheduleEntries && produce(period.scheduleEntries, draft => {
+    return (period.scheduleEntries.filter(e => e.entryType !== 'FIXED_PAUSE') && produce(period.scheduleEntries, draft => {
+      draft.sort((a, b) => InfoService.parseDate(a.startTime).getTime() - InfoService.parseDate(b.startTime).getTime());
+    })) || [];
+  }
+
+  getPeriodFixedPauses(period: Period) {
+    return (period.scheduleEntries.filter(e => e.entryType === 'FIXED_PAUSE') && produce(period.scheduleEntries, draft => {
       draft.sort((a, b) => InfoService.parseDate(a.startTime).getTime() - InfoService.parseDate(b.startTime).getTime());
     })) || [];
   }
 
   matName = (matId: string) => {
     if (matId) {
-      return 'Goes on ' + this.mats.find(m => m.id === matId).name;
+      return this.mats.find(m => m.id === matId).name;
     } else {
-      return 'Goes on several mats';
+      return 'Several mats.';
     }
   };
 
@@ -165,7 +175,7 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
   getMatCategories() {
     this._matCategories = {};
     this.mats.forEach(mat => {
-      const categories = mat.fightStartTimes.map(f => f.fightCategoryId).filter(uniqueFilter);
+      const categories = mat?.fightStartTimes?.map(f => f?.fightCategoryId).filter(f => !!f)?.filter(uniqueFilter) || [];
       this._matCategories[mat.id] = categories.map(cat => ({cat, fightStartTimes: mat.fightStartTimes.filter(fs => fs.fightCategoryId === cat)}));
     });
   }
