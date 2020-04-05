@@ -1,8 +1,11 @@
-import { ComponentRef, ElementRef, Type, Renderer2, OnDestroy } from "@angular/core";
+import {ComponentRef, ElementRef, Type, Renderer2, OnDestroy, Directive} from '@angular/core';
 import { SuiComponentFactory } from "../../../misc/util/internal";
 import { SuiPopupController } from "./popup-controller";
 import { PopupConfig } from "./popup-config";
 
+@Directive({
+  selector: '[suiPopupController]'
+})
 export class SuiPopupComponentController<T> extends SuiPopupController {
     // Stores reference to generated content component.
     private _contentComponentRef?:ComponentRef<T>;
