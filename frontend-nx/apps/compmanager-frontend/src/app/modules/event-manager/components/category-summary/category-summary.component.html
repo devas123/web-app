@@ -1,0 +1,63 @@
+<div class="ui basic segment">
+  <div class="ui three stackable cards">
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <div class="value">
+              {{category?.numberOfCompetitors || 0}}
+            </div>
+            <div class="label">
+              Competitors
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" (click)="navigateToCategoryFighters(category?.id)">Competitors editor</div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <ng-container *ngIf="category?.fightsNumber > 0">
+              <div class="value">
+                {{category?.fightsNumber || 0}}
+              </div>
+              <div class="label">
+                Fights
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!category?.fightsNumber || category?.fightsNumber <= 0">
+              <div class="text value">
+                Brackets not generated
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="ui bottom attached button" (click)="navigateToCategoryBrackets(category?.id)">Brackets editor</div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="center aligned header">
+          <div class="ui statistic">
+            <ng-container *ngIf="categoryStartTime">
+              <div class="label">
+                Starts at
+              </div>
+              <p></p>
+              <div class="text value">
+                {{categoryStartTime | zdate:true}}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!categoryStartTime">
+              <div class="text value">
+                Schedule is not generated
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

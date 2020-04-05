@@ -1,0 +1,253 @@
+@import url("https://fonts.googleapis.com/css?family=Oswald:400,500,600,700&subset=cyrillic");
+
+$padding_big: 40px;
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body,
+.wrapper {
+  font-size: 100%;
+  font-family: 'Oswald', sans-serif;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.participant {
+  background-color: #000;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 5fr 1fr 1fr;
+  place-items: stretch;
+  place-content: stretch;
+}
+
+.participant_blue {
+  background: -webkit-linear-gradient(45deg, #000000 0%, #000 100%);
+  background: linear-gradient(45deg, #000000 0%, #000 100%);
+}
+
+.participant_red {
+  background: -webkit-linear-gradient(45deg, #1a8629 0%, #000 100%);
+  background: linear-gradient(45deg, #1a8629 0%, #000 100%);
+}
+
+.winner_border {
+  border: 7px solid #f70018;
+}
+
+.start_time_border {
+  background-color: #f79b98;
+}
+
+.time_red {
+  color: #f70018;
+}
+
+.participant__data {
+  display: grid;
+  grid-gap: 1em;
+  justify-items: start;
+  align-items: center;
+  place-content: stretch;
+  padding-left: $padding_big;
+  position: relative;
+}
+
+.participant__data-box {
+}
+
+.participant__name {
+  text-transform: uppercase;
+  color: #fff;
+  font-size: 7vh;
+  font-weight: 500;
+  padding-bottom: 10px;
+  line-height: 1;
+}
+
+@media screen and (max-width: 1024px) {
+  .participant__name {
+    font-size: 8vh;
+  }
+}
+
+.participant__team {
+  text-transform: uppercase;
+  font-size: 5vh;
+  line-height: 1;
+  color: #99b5ec;
+  padding-top: 10px;
+  position: relative;
+}
+
+.number_controls {
+  display: flex;
+  flex-direction: row;
+  line-height: 5px;
+}
+
+.ui.small.icon.button {
+  font-size: 0.7rem;
+}
+
+.grid_controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+}
+
+.participant__score_controls {
+  position: absolute;
+  top: 0;
+}
+
+.timer_start_stop_controls {
+  position: absolute;
+  bottom: 0;
+}
+
+.winner_control_button {
+  position: absolute;
+  opacity: 0.5 !important;
+  top: 1px;
+  right: 2em;
+}
+
+.transparent {
+  opacity: 0.5;
+
+  .ui.icon {
+    opacity: 1;
+  }
+}
+
+
+.participant__extra-points {
+  font-size: 9vh;
+  line-height: 1;
+  display: grid;
+  grid-auto-flow: row;
+  place-items: stretch;
+  place-content: stretch;
+
+  .participant__extra {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+
+    &.points-item {
+      color: black;
+      background-color: #f7f100;
+    }
+
+    &.penalties-item {
+      color: #fff;
+      background-color: #f7222c;
+    }
+  }
+}
+
+
+.participant__point {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 24vh;
+  line-height: 1;
+  padding: 20px 30px;
+  position: relative;
+
+  &.red {
+    background-color: #1a8629;
+  }
+
+  &.blue {
+    background-color: #000000;
+  }
+}
+
+
+.info {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  align-items: center;
+  background: -webkit-linear-gradient(45deg, #182d67 0%, #000 100%);
+  background: linear-gradient(45deg, #182d67 0%, #000 100%);
+  padding: 20px $padding_big;
+  grid-gap: 1em;
+}
+
+@media screen and (max-width: 1024px) {
+  .info {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 100px) {
+  .info__time {
+    line-height: 1;
+  }
+}
+
+.gold {
+  color: gold;
+}
+
+.info__time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #99b5ec;
+  font-size: 20vh;
+  line-height: 1;
+  position: relative;
+}
+
+.info__round {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.info__round-box {
+  display: inline-block;
+}
+
+.info__round-name {
+  color: #f7f100;
+  font-size: 6vh;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.info__category {
+  line-height: 1;
+  font-size: 6vh;
+  color: #fff;
+}
+
+pre code {
+  color: #268bd2;
+}
+
+.fullscreen {
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+

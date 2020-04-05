@@ -1,0 +1,127 @@
+<ng-template let-popup let-context="context" #popupTemplate>
+  <div class="content">
+    <p>Mat: {{context?.mat?.name || 'N/A'}}</p>
+    <p>Fight #{{context?.numberOnMat + 1}}</p>
+  </div>
+</ng-template>
+<svg:svg
+  xmlns:svg="http://www.w3.org/2000/svg"
+  version="1.1"
+  [attr.height]="slotHeightPx * bracketHeightInFights"
+  [attr.width]="rowWidthPx">
+  <svg:mask id="mask-selected">
+    <svg:rect width="100%" height="100%" fill="gray"/>
+  </svg:mask>
+  <svg:svg
+    [attr.id]="'fight' + i"
+    [attr.height]="(100 / fights.length) + '%'"
+    [attr.y]="spaceBetween[i]"
+    [attr.width]="rowWidthPx * competitorsWidthPercent"
+    [ngClass]="{hoverable: true, selectable: canSelectFight(fight)}"
+    *ngFor="let fight of fights; trackBy: trackByFights; let i = index"
+    (click)="selectFightForEdit(fight)">
+    <svg:svg
+      [attr.id]="'fightslot' + i"
+      [attr.height]="slotHeightPx * 0.8"
+      [attr.y]="slotYOffset"
+    >
+      <svg:g>
+        <svg:rect x="0" y="0" width="100%" height="100%" rx="10" class="compholder" suiPopup
+                  [ngStyle]="{ 'fill': getColor(fight.id) }"
+                  [popupTemplate]="popupTemplate"
+                  [popupTemplateContext]="fight" popupTrigger="hover" [popupDelay]="600"/>
+        <svg:line x1="1" y1="50%" x2="100%" y2="50%" stroke="gray" stroke-width="1"/>
+      </svg:g>
+
+      <ng-container *ngFor="let _ of [2, 2]; let ci = index">
+        <svg:svg
+          height="49%"
+          [attr.id]="'fight_' + i + '_competitor_' + ci"
+          [attr.y]="ci * 50 + '%'"
+        >
+          <svg:g>
+            <!--      fighter name      -->
+            <svg:text
+              *ngIf="ci <=  fight?.scores?.length - 1"
+              fill="white"
+              class="fighter"
+              x="10"
+              y="45%">{{getCompetitor(fight?.scores[ci]?.competitorId) | getname:true}}
+            </svg:text>
+            <!--      fighter name      -->
+            <svg:text
+              *ngIf="ci <=  fight?.scores?.length - 1"
+              fill="navajowhite"
+              class="academy"
+              x="10"
+              y="80%">{{getCompetitor(fight?.scores[ci]?.competitorId)?.academy | getacademy:15}}
+            </svg:text>
+            <!--      score      -->
+            <svg:svg *ngIf="fight?.status === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
+              <svg:g>
+                <svg:rect
+                  x="33%"
+                  height="100%"
+                  width="67%"
+                  fill="#7A8288"
+                  rx="3"/>
+
+                <svg:text
+                  [attr.x]="57 - (fight.scores[ci]?.score?.points?.toString().length - 1) * 15 + '%'"
+                  y="65%"
+                  style="fill: white; stroke-width: 2; font-size: 18px;">{{fight.scores[ci]?.score?.points}}
+                </svg:text>
+              </svg:g>
+
+              <svg:g>
+                <svg:rect
+                  x="0"
+                  height="50%"
+                  width="33%"
+                  fill="lightcoral"/>
+
+                <svg:text
+                  x="8%"
+                  y="40%">{{fight.scores[ci]?.score?.penalties}}
+                </svg:text>
+              </svg:g>
+
+              <svg:g>
+                <svg:rect
+                  x="0"
+                  y="50%"
+                  height="50%"
+                  width="33%"
+                  fill="yellow"/>
+                <svg:text
+                  [attr.x]="8 - (fight.scores[ci]?.score?.advantages?.toString().length - 1) * 6 + '%'"
+                  y="90%">{{fight.scores[ci]?.score?.advantages}}
+                </svg:text>
+              </svg:g>
+            </svg:svg>
+          </svg:g>
+        </svg:svg>
+      </ng-container>
+    </svg:svg>
+  </svg:svg>
+  <ng-container *ngIf="connectionsType !== 'NONE'">
+    <svg:svg
+      *ngFor="let fight of fights; trackBy: trackByFights; let k = index"
+      [attr.id]="'path' + k"
+      [attr.height]="slotHeightPx * bracketHeightInFights / fights.length"
+      [attr.y]="k * slotHeightPx * bracketHeightInFights / fights.length - 0.1 * slotHeightPx"
+      [attr.x]="rowWidthPx * competitorsWidthPercent"
+      [attr.width]="rowWidthPx * pathWidthPercent">
+      <svg:g *ngIf="connectionsType === 'DEFAULT'">
+        <svg:path *ngIf="fights.length > 1" [attr.d]="paths[k % 2]"
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
+        <svg:path *ngIf="fights.length == 1" [attr.d]="paths[2]"
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
+      </svg:g>
+      <svg:g *ngIf="connectionsType === 'STRAIGHT'">
+        <svg:path [attr.d]="paths[3]"
+                  style="stroke: gold; fill: none; stroke-width: 2"/>
+      </svg:g>
+    </svg:svg>
+  </ng-container>
+</svg:svg>

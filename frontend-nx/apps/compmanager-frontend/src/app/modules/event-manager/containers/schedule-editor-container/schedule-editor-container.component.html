@@ -1,0 +1,26 @@
+<app-schedule-editor [categories]="scheduleInfo.categories$ | async"
+                     [timeZone]="scheduleInfo.timeZone$ | async"
+                     [schedule]="scheduleInfo.schedule$ | async"
+                     [scheduleEmpty]="scheduleInfo.scheduleEmpty$ | async"
+                     [showEditor]="showEditor"
+                     [competitionId]="scheduleInfo.competitionId$ | async"
+                     [periods]="scheduleInfo.periods$ | async"
+                     [undispatched]="scheduleInfo.undispatchedRequirements$ | async"
+                     [fightIdsByCategoryId]="scheduleInfo.fightsByCategoryId$ | async"
+                     [mats]="scheduleInfo.mats$ | async"
+                     (periodAdded)="addPeriod($event)"
+                     (periodRemoved)="removePeriod($event)"
+                     (periodsUpdated)="updatePeriods($event)"
+                     (generateSchedule)="sendGenerateSchedule($event)"
+                     (scheduleDropped)="sendDropSchedule($event)"></app-schedule-editor>
+<app-schedule-display
+  [scheduleEmpty]="scheduleInfo.scheduleEmpty$ | async"
+  [timeZone]="scheduleInfo.timeZone$ | async"
+  [competitionId]="scheduleInfo.competitionId$ | async"
+  [schedule]="scheduleInfo.schedule$ | async"
+  [schedulePeriods]="scheduleInfo.periods$ | async"
+  [categories]="scheduleInfo.categories$ | async"
+  [fightIdsByCategoryId]="scheduleInfo.fightsByCategoryId$ | async"
+  [mats]="scheduleInfo.mats$ | async"
+  (categoryClicked)="goToCategoryEditor($event)">
+</app-schedule-display>

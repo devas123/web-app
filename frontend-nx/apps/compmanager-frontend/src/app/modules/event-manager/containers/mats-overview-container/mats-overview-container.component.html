@@ -1,0 +1,5 @@
+<app-mats-overview-component [mats]="selectedPeriodMats$ | async"
+                             (matDetailsClicked)="navigateToMat($event)"
+                             [periodId]="(selectedPeriod$ | async)?.id"
+                             [competitionId]="competitionId$ | async"
+                             (fightScheduleChanged)="sendFightScheduleChanged($event)"></app-mats-overview-component>

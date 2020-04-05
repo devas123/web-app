@@ -1,0 +1,6 @@
+<app-my-events-list (eventPublished)="sendPublishCommand($event)"
+                    (eventDeleted)="sendDeleteCommand($event)"
+                    (editEventPressed)="navigateToEventPropsEditor($event)"
+                    (editCategoriesPressed)="navigateToCategoriesEditor($event)"
+                    (eventUnpublished)="sendUnpublishCommand($event)"
+                    [events]="events$ | async"></app-my-events-list>

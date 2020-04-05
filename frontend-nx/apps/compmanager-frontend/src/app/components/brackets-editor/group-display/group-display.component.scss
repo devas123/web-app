@@ -1,0 +1,69 @@
+.group_fights_container {
+  display: grid;
+  grid-auto-flow: row;
+  grid-row-gap: 2px;
+
+}
+
+.fights_line {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+div.fight_cell {
+
+  &.selectable_fight {
+    cursor: pointer;
+    &:hover {
+      background-color: #222e30;
+    }
+  }
+
+  &.selected {
+    background-color: #3c5d96;
+  }
+
+  display: grid;
+  grid-auto-flow: row;
+
+  &.black {
+    background-color: transparent;
+  }
+
+  padding: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+  background-color: #567375;
+}
+
+.centered {
+  text-align: center;
+  place-content: center;
+  place-items: center;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.score {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.competitor_cell {
+  display: flex;
+  .competitor_cell_name {
+    .academy {
+      font-size: x-small;
+    }
+    margin-left: 2px;
+    display: flex;
+    flex-direction: column;
+  }
+  font-size: small;
+}

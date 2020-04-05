@@ -1,0 +1,233 @@
+<div class="ui middle aligned large selection divided list" [formGroup]="form">
+  <div class="item" itemInput (contentEdited)="changeProperty('firstName')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">First name:<span>&nbsp;&nbsp;</span></div>
+          <input type="text" formControlName="firstName">
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content">
+        <div class="description">First name</div>
+        <div class="header">{{fighter?.firstName}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeProperty('lastName')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">Last name:<span>&nbsp;&nbsp;</span></div>
+          <input type="text" formControlName="lastName">
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Last name</div>
+        <div class="header">{{fighter?.lastName}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeProperty('email')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">Email:<span>&nbsp;&nbsp;</span></div>
+          <input type="text" formControlName="email">
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Email</div>
+        <div class="header">{{fighter?.email}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeProperty('birthDate')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent inverted right floated input">
+          <div class="description">Birth date:<span>&nbsp;&nbsp;</span></div>
+          <input suiDatepicker
+                 name="birthDate"
+                 [pickerMode]="'date'"
+                 (pickerSelectedDateChange)="setBirthDate($event)"
+                 [pickerUseNativeOnMobile]="false">
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Birth date</div>
+        <div class="header">{{fighter?.birthDate | zdate:false}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeCategory()">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content">
+        <sui-select class="selection" placeholder="Category"
+                    (selectedOptionChange)="setCategoryId($event)"
+                    [options]="categories"
+                    [isSearchable]="true"
+                    [isDisabled]="false"
+                    [optionsFilter]="optionsFilter"
+                    [optionFormatter]="formatter"
+                    #select>
+          <sui-select-option *ngFor="let option of select.filteredOptions"
+                             [value]="option">
+          </sui-select-option>
+        </sui-select>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Categories</div>
+        <ng-container *ngFor="let cat of fighter?.categories">
+          <div class="header">{{displayCategory(cat)}}</div>
+        </ng-container>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeProperty('academy')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content">
+        <sui-select class="selection" placeholder="Academy"
+                    (selectedOptionChange)="setAcademy($event)"
+                    [options]="academies"
+                    [isSearchable]="true"
+                    [isDisabled]="false"
+                    [optionsFilter]="academyOptionsFilter"
+                    [optionFormatter]="academyFormatter"
+                    #academySelect>
+          <sui-select-option *ngFor="let option of academySelect.filteredOptions"
+                             [value]="option">
+          </sui-select-option>
+        </sui-select>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Academy</div>
+        <div class="header">{{fighter?.academy?.name}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+
+  <div class="item" itemInput (contentEdited)="changeProperty('registrationStatus')">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content">
+        <sui-select class="selection" placeholder="Registration status"
+                    (selectedOptionChange)="setRegistrationStatus($event)"
+                    [options]="statuses"
+                    [isSearchable]="false"
+                    [isDisabled]="false"
+                    #selectRegistrationStatus>
+          <sui-select-option *ngFor="let option of selectRegistrationStatus.filteredOptions"
+                             [value]="option">
+          </sui-select-option>
+        </sui-select>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Registration status</div>
+        <div class="header">{{fighter?.registrationStatus}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="ui two stackable cards" cdkDropListGroup>
+  <div class="ui card" *ngFor="let mat of mats">
+    <div class="content">
+      <app-mat-display (competitorClicked)="openCompetitorPage($event)"
+                       [mat]="mat"
+                       [title]="mat?.name"
+                       (detailsViewSelected)="selectMat($event?.id)"
+      (fightMatChanged)="fightMatChanged($event)">
+      </app-mat-display>
+    </div>
+  </div>
+</div>
