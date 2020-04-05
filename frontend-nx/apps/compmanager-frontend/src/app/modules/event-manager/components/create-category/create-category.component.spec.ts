@@ -8,7 +8,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {SuiAccordionModule, SuiCheckboxModule, SuiSelectModule} from '@devas123/ng2-semantic';
+import {SuiAccordionModule, SuiCheckboxModule, SuiSelectModule} from '@frontend-nx/ng2-semantic-ui';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 

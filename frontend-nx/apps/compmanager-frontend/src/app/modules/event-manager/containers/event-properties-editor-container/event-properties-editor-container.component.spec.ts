@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {EventPropertiesEditorContainerComponent} from './event-properties-editor-container.component';
 import {EventPropertiesEditorComponent} from '../../components/event-properties-editor/event-properties-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
-import {SuiModule} from '@devas123/ng2-semantic';
+import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';

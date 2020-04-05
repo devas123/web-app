@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GenerateBracketsFormComponent } from './generate-brackets-form.component';
-import {SuiCheckboxModule, SuiSelectModule} from '@devas123/ng2-semantic';
+import {SuiCheckboxModule, SuiSelectModule} from '@frontend-nx/ng2-semantic-ui';
 import {ReactiveFormsModule} from '@angular/forms';
 
 describe('GenerateBracketsFormComponent', () => {

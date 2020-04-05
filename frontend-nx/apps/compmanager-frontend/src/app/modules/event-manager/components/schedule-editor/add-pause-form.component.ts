@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
 import {ScheduleRequirement, ScheduleRequirementType} from '../../../../commons/model/competition.model';
 import {MatDescription} from '../../../../reducers/global-reducers';

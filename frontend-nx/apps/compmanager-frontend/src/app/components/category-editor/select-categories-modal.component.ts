@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CompetitionProperties} from '../../reducers/global-reducers';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {Category, categoryFilter} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Observable} from 'rxjs';

@@ -13,7 +13,7 @@ import {
 } from '../../../../commons/model/competition.model';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import produce from 'immer';
-import {SuiModalService} from '@devas123/ng2-semantic';
+import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {AddFightResultOptionModal} from './add-fight-result-option-form.component';
 import {AddInputSelectorFormModal} from './add-input-selector-form.component';
 import {collectingReducer, generateUuid} from '../../../account/utils';

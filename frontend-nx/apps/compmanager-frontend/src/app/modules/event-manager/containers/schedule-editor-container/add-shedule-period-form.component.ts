@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
 import {Period} from '../../../../commons/model/competition.model';
 import produce from 'immer';

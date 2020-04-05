@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {BracketsType, FightResultOption} from '../../../../commons/model/competition.model';
 
 export class AddFightResultOptionModal extends ComponentModalConfig<IAddFightResultOptionContext, FightResultOption, void> {

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
 
 export interface IAddRegistrationPeriodContext {

@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventCardComponent} from './event-card.component';
-import {SuiTransitionModule} from '@devas123/ng2-semantic';
+import {SuiTransitionModule} from '@frontend-nx/ng2-semantic-ui';
 import {RouterTestingModule} from '@angular/router/testing';
 
 describe('EventCardComponent', () => {

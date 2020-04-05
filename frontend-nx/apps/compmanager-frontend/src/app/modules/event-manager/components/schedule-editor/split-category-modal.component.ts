@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';

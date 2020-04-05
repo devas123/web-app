@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {RegistrationGroup} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ComponentModalConfig, ModalSize, SuiModal} from '@devas123/ng2-semantic';
+import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 
 export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
   constructor(periodId: string, competitionId: string, existingGroups: RegistrationGroup[], size = ModalSize.Small) {

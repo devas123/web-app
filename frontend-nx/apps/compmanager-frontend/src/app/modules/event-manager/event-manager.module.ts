@@ -17,7 +17,7 @@ import {
   SuiSelectModule,
   SuiSidebarModule,
   SuiTabsModule
-} from '@devas123/ng2-semantic';
+} from '@frontend-nx/ng2-semantic-ui';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 import {EventManagerEffects} from './redux/event-manager-effects';

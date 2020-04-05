@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {flyOut} from '../../../../../animations/flyOut';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Transition, TransitionController, TransitionDirection} from '@devas123/ng2-semantic';
+import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
 import {AppState} from '../../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';

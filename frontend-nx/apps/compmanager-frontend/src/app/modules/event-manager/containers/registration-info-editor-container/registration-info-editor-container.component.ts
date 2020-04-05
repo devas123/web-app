@@ -19,7 +19,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
-import {SuiModalService} from '@devas123/ng2-semantic';
+import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {AddGroupModal, IAddRegistrationGroupResult} from '../../components/registration-info-editor/add-group-form.component';
 import {AddPeriodModal, IAddRegistrationPeriodResult} from '../../components/registration-info-editor/add-registration-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';

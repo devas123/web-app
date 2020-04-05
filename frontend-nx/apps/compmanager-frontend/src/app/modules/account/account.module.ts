@@ -6,7 +6,7 @@ import {SignInComponent} from './components/authorization/sign-in/sign-in.compon
 import {SignUpComponent} from './components/authorization/sign-up/sign-up.component';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SuiModalModule, SuiTransitionModule} from '@devas123/ng2-semantic';
+import {SuiModalModule, SuiTransitionModule} from '@frontend-nx/ng2-semantic-ui';
 import {AccountInfoComponent} from './components/account-info/account-info.component';
 import {RouterModule} from '@angular/router';
 import {accountRoutes} from './account.routes';

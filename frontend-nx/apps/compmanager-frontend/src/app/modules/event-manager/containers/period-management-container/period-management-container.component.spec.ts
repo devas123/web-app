@@ -4,7 +4,7 @@ import {PeriodManagementContainerComponent} from './period-management-container.
 import {RouterTestingModule} from '@angular/router/testing';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
-import {SuiModule} from '@devas123/ng2-semantic';
+import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';

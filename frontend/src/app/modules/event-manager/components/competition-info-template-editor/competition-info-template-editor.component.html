@@ -1,5 +1,0 @@
-<div id="editor">
-  <textarea [ngClass]="{two_columns: showEditor && !showPreview}" *ngIf="showEditor" id="textarea" [placeholder]="placeHolder"
-            (keyup)="onValueChange($event)"></textarea>
-  <div *ngIf="showPreview" [ngClass]="{two_columns: !showEditor && showPreview}" [innerHtml]="compiledMarkdown"></div>
-</div>
