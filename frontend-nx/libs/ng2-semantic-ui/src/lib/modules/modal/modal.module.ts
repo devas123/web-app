@@ -4,7 +4,7 @@ import { SuiDimmerModule } from "../dimmer/internal";
 import { SuiTransitionModule } from "../transition/internal";
 import { SuiUtilityModule } from "../../misc/util/internal";
 import { SuiModalService } from "./services/modal.service";
-import { SuiModal } from "./components/modal";
+import { SuiModalComponent } from "./components/modal";
 import { SuiModalDimmer } from "./components/dimmer";
 
 @NgModule({
@@ -15,17 +15,17 @@ import { SuiModalDimmer } from "./components/dimmer";
         SuiUtilityModule
     ],
     declarations: [
-        SuiModal,
+        SuiModalComponent,
         SuiModalDimmer
     ],
     exports: [
-        SuiModal
+        SuiModalComponent
     ],
     providers: [
         SuiModalService
     ],
     entryComponents: [
-        SuiModal
+        SuiModalComponent
     ]
 })
 export class SuiModalModule {}

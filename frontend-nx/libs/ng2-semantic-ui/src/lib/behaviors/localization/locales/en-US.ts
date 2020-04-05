@@ -4,11 +4,11 @@ const enUS:IPartialLocaleValues = {
     datepicker: {
         firstDayOfWeek: 0,
         formats: {
-            time: "h:mm A",
-            datetime: "MMMM D, YYYY h:mm A",
-            date: "MMMM D, YYYY",
-            month: "MMMM YYYY",
-            year: "YYYY"
+            time: "HH:mm",
+            datetime: "MMMM d, yyyy HH:mm",
+            date: "MMMM d, yyyy",
+            month: "MMMM yyyy",
+            year: "yyyy"
         }
     }
 };

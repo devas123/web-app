@@ -1,7 +1,7 @@
 export {
     SuiModalModule,
     SuiModalService,
-    Modal as SuiModal,
+    SuiModal,
     ModalResult,
     ModalControls,
     ActiveModal as SuiActiveModal,

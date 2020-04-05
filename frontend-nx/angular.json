@@ -25,7 +25,11 @@
               "apps/compmanager-frontend/src/favicon.ico",
               "apps/compmanager-frontend/src/assets"
             ],
-            "styles": ["apps/compmanager-frontend/src/styles.scss"],
+            "styles": [
+              "apps/compmanager-frontend/src/semantic.slate.css",
+              "apps/compmanager-frontend/src/calendar.min.css",
+              "apps/compmanager-frontend/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -161,6 +165,7 @@
           },
           "configurations": {
             "production": {
+              "project": "libs/ng2-semantic-ui/ng-package.prod.json",
               "tsConfig": "libs/ng2-semantic-ui/tsconfig.lib.prod.json"
             }
           }

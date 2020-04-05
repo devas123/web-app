@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { SuiComponentFactory } from "../../../misc/util/internal";
 import { ModalConfig, TemplateModalConfig, ComponentModalConfig } from "../classes/modal-config";
-import { SuiModal } from "../components/modal";
-import { Modal } from "../classes/modal-controls";
+import { SuiModalComponent } from "../components/modal";
+import { SuiModal } from "../classes/modal-controls";
 import { ActiveModal } from "../classes/active-modal";
 
 @Injectable()
@@ -11,7 +11,7 @@ export class SuiModalService {
 
     public open<T, U, V>(modal:ModalConfig<T, U, V>):ActiveModal<T, U, V> {
         // Generate the modal component to be shown.
-        const componentRef = this._componentFactory.createComponent<SuiModal<U, V>>(SuiModal);
+        const componentRef = this._componentFactory.createComponent<SuiModalComponent<U, V>>(SuiModalComponent);
 
         // Shorthand for the created modal component instance.
         const modalComponent = componentRef.instance;
@@ -31,8 +31,8 @@ export class SuiModalService {
                 modal.component,
                 [
                     {
-                        provide: Modal,
-                        useValue: new Modal(modalComponent.controls, modal.context)
+                        provide: SuiModal,
+                        useValue: new SuiModal(modalComponent.controls, modal.context)
                     }
                 ]
             );

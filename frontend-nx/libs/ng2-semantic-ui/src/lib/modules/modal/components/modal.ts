@@ -11,7 +11,7 @@ import { ModalConfig, ModalSize } from "../classes/modal-config";
     selector: "sui-modal",
     template: `
 <!-- Page dimmer for modal background. -->
-<sui-modal-dimmer [ngClass]="{'top aligned': !isCentered}" 
+<sui-modal-dimmer [ngClass]="{'top aligned': !isCentered}"
                   [class.inverted]="isInverted"
                   [(isDimmed)]="dimBackground"
                   [transitionDuration]="transitionDuration"
@@ -40,7 +40,7 @@ import { ModalConfig, ModalSize } from "../classes/modal-config";
 `,
     styles: [``]
 })
-export class SuiModal<T, U> implements OnInit, AfterViewInit {
+export class SuiModalComponent<T, U> implements OnInit, AfterViewInit {
     @Input()
     // Determines whether the modal can be closed with a close button, clicking outside, or the escape key.
     public isClosable:boolean;
@@ -188,7 +188,7 @@ export class SuiModal<T, U> implements OnInit, AfterViewInit {
     public ngAfterViewInit():void {
         // Move the modal to the document body to ensure correct scrolling.
         this._originalContainer = this._element.nativeElement.parentNode;
-        document.querySelector("body")!.appendChild(this._element.nativeElement);
+        document.querySelector("body").appendChild(this._element.nativeElement);
         // Remove the #templateSibling element from the DOM to fix bottom border styles.
         const templateElement = this.templateSibling.element.nativeElement as Element;
         if (templateElement.parentNode) {

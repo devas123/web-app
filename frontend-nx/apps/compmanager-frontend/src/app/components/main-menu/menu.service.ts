@@ -1,9 +1,9 @@
 import {EmbeddedViewRef, Injectable, TemplateRef, ViewContainerRef} from '@angular/core';
-import {IImplicitContext, SuiSidebar} from '@frontend-nx/ng2-semantic-ui/index';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuItem} from '../../commons/model/competition.model';
+import {IImplicitContext, SuiSidebar} from '@frontend-nx/ng2-semantic-ui';
 
 @Injectable({
   providedIn: 'root'

@@ -27,11 +27,11 @@ const enGB:ILocaleValues = {
             "am", "pm"
         ],
         formats: {
-            time: "h:mm A",
-            datetime: "D MMMM YYYY h:mm A",
-            date: "D MMMM YYYY",
-            month: "MMMM YYYY",
-            year: "YYYY"
+            time: "HH:mm",
+            datetime: "d MMMM yyyy HH:mm",
+            date: "d MMMM yyyy",
+            month: "MMMM yyyy",
+            year: "yyyy"
         },
         firstDayOfWeek: 1
     },

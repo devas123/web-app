@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from "@angular/core";
-import { ILocaleValues, IPartialLocaleValues, RecursivePartial } from "../locales/interfaces/values";
+import { ILocaleValues, IPartialLocaleValues, RecursivePartial } from '../../..';
 import enGB from "../locales/en-GB";
 import * as $extend from "extend";
 
@@ -25,8 +25,8 @@ interface ILocalizationValuesContainer {
 export class SuiLocalizationService {
     private _language:string;
 
-    private _fallbackValues:ILocaleValues;
-    private _values:ILocalizationValuesContainer;
+    private readonly _fallbackValues:ILocaleValues;
+    private readonly _values:ILocalizationValuesContainer;
 
     public get language():string {
         return this._language;
