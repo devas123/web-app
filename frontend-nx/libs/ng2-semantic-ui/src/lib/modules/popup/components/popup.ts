@@ -36,6 +36,7 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
     .ui.popup {
       /* Autofit popup to the contents. */
       right: auto;
+      margin: unset !important;
     }
 
     .ui.animating.popup {
@@ -149,15 +150,13 @@ export class SuiPopup implements IPopup {
       clearTimeout(this.closingTimeout);
 
       // Create positioning service after a brief delay.
-      setTimeout(() => {
-        this.positioningService = new PositioningService(
-          this._anchor,
-          this._container.element,
-          this.config.placement,
-          '.dynamic.arrow'
-        );
-        this.positioningService.hasArrow = !this.config.isBasic;
-      });
+      this.positioningService = new PositioningService(
+        this._anchor,
+        this._container.element,
+        this.config.placement,
+        '.dynamic.arrow'
+      );
+      this.positioningService.hasArrow = !this.config.isBasic;
 
       // Cancel all other transitions, and initiate the opening transition.
       this.transitionController.stopAll();
