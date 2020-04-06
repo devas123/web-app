@@ -31,6 +31,13 @@
     },
     "ng2-semantic-ui": {
       "tags": []
+    },
+    "sandbox": {
+      "tags": []
+    },
+    "sandbox-e2e": {
+      "tags": [],
+      "implicitDependencies": ["sandbox"]
     }
   }
 }
