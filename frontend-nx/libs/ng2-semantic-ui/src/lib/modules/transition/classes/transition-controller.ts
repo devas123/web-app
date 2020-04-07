@@ -1,14 +1,12 @@
 import {ChangeDetectorRef, ElementRef, Renderer2} from '@angular/core';
 import {Transition, TransitionDirection} from './transition';
 import {of, Subject, Subscription} from 'rxjs';
-import {pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
+import {map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
 import produce from 'immer';
 
 export class TransitionController {
   private _renderer: Renderer2;
-
   private _element: ElementRef;
-
   private _changeDetector: ChangeDetectorRef;
 
   // Used to delay animations until we have an element to animate.
@@ -69,8 +67,20 @@ export class TransitionController {
         of(tr).pipe(
           startWith(null as Transition),
           pairwise(),
-          tap(([prev, trn]) => this.performTransition(prev, trn)))),
-      switchMap(([, tr]) => this._animationStop.pipe(timeoutWith(tr.duration, of(tr))))
+          map(([previous, trn]) => {
+            return produce(trn, draft => {
+              if (previous) {
+                // If there is an transition in the queue already, set the direction to the opposite of the direction of that transition.
+                if (previous.direction === TransitionDirection.In) {
+                  draft.direction = TransitionDirection.Out;
+                } else if (previous.direction === TransitionDirection.Out) {
+                  draft.direction = TransitionDirection.In;
+                }
+              }
+            });
+          }),
+          tap(trn => this.performTransition(trn)))),
+      switchMap((tr) => this._animationStop.pipe(timeoutWith(tr.duration, of(tr))))
     ).subscribe(tr => tr && this._queueFinish.next(tr)));
 
     subs.add(this._queueFinish.pipe(
@@ -109,23 +119,14 @@ export class TransitionController {
     this._queueStart.next(transition);
   }
 
-  private performTransition(previous: Transition, transition: Transition): void {
+  private performTransition(tr: Transition): void {
     if (!this._isReady || this._isAnimating) {
       // Don't transition until we are ready, or if we are animating, or if there aren't any transitions in the queue.
       return;
     }
     this._isAnimating = true;
 
-    const tr = produce(transition, () => {});
 
-    if (previous) {
-      // If there is an transition in the queue already, set the direction to the opposite of the direction of that transition.
-      if (previous.direction === TransitionDirection.In) {
-        tr.direction = TransitionDirection.Out;
-      } else if (previous.direction === TransitionDirection.Out) {
-        tr.direction = TransitionDirection.In;
-      }
-    }
 
     // Set the Semantic UI classes for transitioning.
     tr.classes.forEach(c => this._renderer.addClass(this._element, c));
@@ -146,6 +147,9 @@ export class TransitionController {
 
   // Called when a transition has completed.
   private finishTransition(transition: Transition): void {
+    if (!this._isReady) {
+      return;
+    }
     // Unset the Semantic UI classes & styles for transitioning.
     transition.classes.forEach(c => this._renderer.removeClass(this._element, c));
     this._renderer.removeClass(this._element, `animating`);

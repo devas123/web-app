@@ -12,30 +12,24 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {IDynamicClasses, PositioningPlacement, PositioningService} from '../../../misc/util/internal';
-import {
-  Transition,
-  TransitionController, TransitionDirection
-} from '../../transition/internal';
+import {Transition, TransitionController, TransitionDirection} from '../../transition/internal';
 import {IPopup} from '../classes/popup-controller';
 import {TemplatePopupConfig} from '../classes/popup-template-controller';
-
-
 
 
 @Component({
   selector: 'sui-popup',
   template: `
-    <div class="ui popup"
-         [ngClass]="dynamicClasses"
-         [attr.direction]="direction"
-         #container>
-
-      <ng-container *ngIf="!config.template && (!!config.header || !!config.text)">
-        <div class="header" *ngIf="config.header">{{ config.header }}</div>
-        <div class="content">{{ config.text }}</div>
-      </ng-container>
-      <div #templateSibling></div>
-
+    <div  class="ui popup"
+          [ngClass]="dynamicClasses"
+          [attr.direction]="direction" #container>
+      <div [suiTransition]="transitionController">
+        <ng-container *ngIf="!config.template && (!!config.header || !!config.text)">
+          <div class="header" *ngIf="config.header">{{ config.header }}</div>
+          <div class="content">{{ config.text }}</div>
+        </ng-container>
+        <div #templateSibling></div>
+      </div>
       <sui-popup-arrow *ngIf="!config.isBasic"
                        [placement]="currentPlacement"
                        [inverted]="config.isInverted"></sui-popup-arrow>
@@ -46,7 +40,6 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
       /* Autofit popup to the contents. */
       right: auto;
       margin: unset !important;
-      display: none;
     }
 
     .ui.popup[data-show] {
@@ -178,17 +171,17 @@ export class SuiPopup implements IPopup {
       // Finally, set the popup to be open.
       // this.transitionController.stopAll();
       this.render.setAttribute(this._container.element.nativeElement, 'data-show', '');
-      // this.transitionController.animate(
-      //   new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.In, () => {
-      //     // Focus any element with [autofocus] attribute.
-      //     const autoFocus = this.elementRef.nativeElement.querySelector('[autofocus]') as HTMLElement | null;
-      //     if (autoFocus) {
-      //       // Autofocus after the browser has had time to process other event handlers.
-      //       setTimeout(() => autoFocus.focus(), 10);
-      //       // Try to focus again when the modal has opened so that autofocus works in IE11.
-      //       setTimeout(() => autoFocus.focus(), this.config.transitionDuration);
-      //     }
-      //   }));
+      this.transitionController.animate(
+        new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.In, () => {
+          // Focus any element with [autofocus] attribute.
+          const autoFocus = this.elementRef.nativeElement.querySelector('[autofocus]') as HTMLElement | null;
+          if (autoFocus) {
+            // Autofocus after the browser has had time to process other event handlers.
+            setTimeout(() => autoFocus.focus(), 10);
+            // Try to focus again when the modal has opened so that autofocus works in IE11.
+            setTimeout(() => autoFocus.focus(), this.config.transitionDuration);
+          }
+        }));
       this._isOpen = true;
       this.onOpen.emit();
     }
@@ -208,8 +201,8 @@ export class SuiPopup implements IPopup {
       // Cancel the closing timer.
       clearTimeout(this.closingTimeout);
       // Start the closing timer, that fires the `onClose` event after the transition duration number of milliseconds.
-      // this.transitionController.animate(
-      //   new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.Out));
+      this.transitionController.animate(
+        new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.Out));
       this.closingTimeout = window.setTimeout(() => {
         this.render.removeAttribute(this._container.element.nativeElement, 'data-show', '');
         this.onClose.emit();

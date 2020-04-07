@@ -1,6 +1,7 @@
 import {ElementRef, NgZone} from '@angular/core';
 import {createPopper, Instance, Modifier, Placement, State} from '@popperjs/core';
 import {Obj, Rect} from '@popperjs/core/lib/types';
+import flip from '@popperjs/core/lib/modifiers/flip';
 // import Popper, { Modifiers, PopperOptions, Placement, Data } from '@popperjs/core';
 
 type PopperModifier = Partial<Modifier<Obj>>;
@@ -112,7 +113,6 @@ export class PositioningService {
     enabled: true,
     phase: 'afterWrite',
     fn: ({state}) => {
-      console.log(state);
       this._popperState = state;
       return state;
     }
@@ -176,6 +176,12 @@ export class PositioningService {
         },
       },
       {
+        name: 'flip',
+        options: {
+          padding: 10,
+        },
+      },
+      {
         name: 'arrow',
         options: {
           element: this._arrowSelector
@@ -199,7 +205,6 @@ export class PositioningService {
           modifiers,
           onFirstUpdate: initial => this._popperState = initial
         }) as Instance;
-
     });
   }
 
