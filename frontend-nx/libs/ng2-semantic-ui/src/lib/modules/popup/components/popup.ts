@@ -20,9 +20,8 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
 @Component({
   selector: 'sui-popup',
   template: `
-    <div  class="ui popup"
-          [ngClass]="dynamicClasses"
-          [attr.direction]="direction" #container>
+    <div class="ui popup" [ngClass]="dynamicClasses"
+         [attr.direction]="direction"  #container>
       <div [suiTransition]="transitionController">
         <ng-container *ngIf="!config.template && (!!config.header || !!config.text)">
           <div class="header" *ngIf="config.header">{{ config.header }}</div>

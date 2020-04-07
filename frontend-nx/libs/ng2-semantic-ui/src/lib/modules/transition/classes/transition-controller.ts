@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, ElementRef, Renderer2} from '@angular/core';
 import {Transition, TransitionDirection} from './transition';
 import {of, Subject, Subscription} from 'rxjs';
-import {map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
+import {concatMap, map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
 import produce from 'immer';
 
 export class TransitionController {
@@ -84,7 +84,7 @@ export class TransitionController {
     ).subscribe(tr => tr && this._queueFinish.next(tr)));
 
     subs.add(this._queueFinish.pipe(
-      tap(tr => this.finishTransition(tr))
+      tap(tr => tr && this.finishTransition(tr))
     ).subscribe());
     return subs;
   }
@@ -126,8 +126,6 @@ export class TransitionController {
     }
     this._isAnimating = true;
 
-
-
     // Set the Semantic UI classes for transitioning.
     tr.classes.forEach(c => this._renderer.addClass(this._element, c));
     this._renderer.addClass(this._element, `animating`);
@@ -147,9 +145,6 @@ export class TransitionController {
 
   // Called when a transition has completed.
   private finishTransition(transition: Transition): void {
-    if (!this._isReady) {
-      return;
-    }
     // Unset the Semantic UI classes & styles for transitioning.
     transition.classes.forEach(c => this._renderer.removeClass(this._element, c));
     this._renderer.removeClass(this._element, `animating`);
