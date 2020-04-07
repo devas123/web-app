@@ -77,14 +77,16 @@ export abstract class SuiPopupController implements IPopup, OnDestroy {
       .listen('document', 'click', (e: MouseEvent) =>
         this.onDocumentClick(e));
 
+    this._componentRef.hostView.markForCheck();
     // Start popup open transition.
-    this.popup.open();
-
-    // Call lifecyle hook
-    const lifecycle = (this as IPopupLifecycle).popupOnOpen;
-    if (lifecycle) {
-      lifecycle.call(this);
-    }
+    setTimeout(() => {
+      this.popup.open();
+      // Call lifecyle hook
+      const lifecycle = (this as IPopupLifecycle).popupOnOpen;
+      if (lifecycle) {
+        lifecycle.call(this);
+      }
+    });
   }
 
   public close(): void {

@@ -1,14 +1,17 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
+  NgZone,
+  Renderer2,
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
 import {IDynamicClasses, PositioningPlacement, PositioningService} from '../../../misc/util/internal';
-import {Transition, TransitionController, TransitionDirection} from '../../transition/internal';
 import {IPopup} from '../classes/popup-controller';
 import {TemplatePopupConfig} from '../classes/popup-template-controller';
 
@@ -17,7 +20,6 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
   template: `
     <div class="ui popup"
          [ngClass]="dynamicClasses"
-         [suiTransition]="transitionController"
          [attr.direction]="direction"
          #container>
 
@@ -37,6 +39,11 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
       /* Autofit popup to the contents. */
       right: auto;
       margin: unset !important;
+      display: none;
+    }
+
+    .ui.popup[data-show] {
+      display: block;
     }
 
     .ui.animating.popup {
@@ -49,13 +56,13 @@ import {TemplatePopupConfig} from '../classes/popup-template-controller';
     .ui.popup::before {
       /* Hide the Semantic UI CSS arrow. */
       display: none;
-    }`]
+    }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SuiPopup implements IPopup {
   // Config settings for this popup.
   public config: TemplatePopupConfig<any>;
 
-  public transitionController: TransitionController;
   public positioningService: PositioningService;
   private _anchor: ElementRef;
 
@@ -86,7 +93,19 @@ export class SuiPopup implements IPopup {
 
   public set anchor(anchor: ElementRef) {
     this._anchor = anchor;
+    if (this._container && this._anchor) {
+      this.positioningService = new PositioningService(
+        this._anchor,
+        this._container.element,
+        this.config.placement,
+        this.zone,
+        '.dynamic.arrow'
+      );
+      this.positioningService.hasArrow = !this.config.isBasic;
+      this.render.setAttribute(this._container.element.nativeElement, 'data-show', '');
+    }
   }
+
 
   // Returns the direction (`top`, `left`, `right`, `bottom`) of the current placement.
   public get direction(): string | undefined {
@@ -132,8 +151,7 @@ export class SuiPopup implements IPopup {
   @HostBinding('attr.tabindex')
   public readonly tabindex: number;
 
-  constructor(public elementRef: ElementRef) {
-    this.transitionController = new TransitionController(false);
+  constructor(public elementRef: ElementRef, private cd: ChangeDetectorRef, private render: Renderer2, private zone: NgZone) {
 
     this._isOpen = false;
 
@@ -143,35 +161,12 @@ export class SuiPopup implements IPopup {
     this.tabindex = 0;
   }
 
+
   public open(): void {
     // Only attempt to open if currently closed.
     if (!this.isOpen) {
       // Cancel the closing timer.
       clearTimeout(this.closingTimeout);
-
-      // Create positioning service after a brief delay.
-      this.positioningService = new PositioningService(
-        this._anchor,
-        this._container.element,
-        this.config.placement,
-        '.dynamic.arrow'
-      );
-      this.positioningService.hasArrow = !this.config.isBasic;
-
-      // Cancel all other transitions, and initiate the opening transition.
-      this.transitionController.stopAll();
-      this.transitionController.animate(
-        new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.In, () => {
-          // Focus any element with [autofocus] attribute.
-          const autoFocus = this.elementRef.nativeElement.querySelector('[autofocus]') as HTMLElement | null;
-          if (autoFocus) {
-            // Autofocus after the browser has had time to process other event handlers.
-            setTimeout(() => autoFocus.focus(), 10);
-            // Try to focus again when the modal has opened so that autofocus works in IE11.
-            setTimeout(() => autoFocus.focus(), this.config.transitionDuration);
-          }
-        }));
-
       // Finally, set the popup to be open.
       this._isOpen = true;
       this.onOpen.emit();
@@ -189,16 +184,14 @@ export class SuiPopup implements IPopup {
   public close(): void {
     // Only attempt to close if currently open.
     if (this.isOpen) {
-      // Cancel all other transitions, and initiate the closing transition.
-      this.transitionController.stopAll();
-      this.transitionController.animate(
-        new Transition(this.config.transition, this.config.transitionDuration, TransitionDirection.Out));
-
       // Cancel the closing timer.
       clearTimeout(this.closingTimeout);
       // Start the closing timer, that fires the `onClose` event after the transition duration number of milliseconds.
-      this.closingTimeout = window.setTimeout(() => this.onClose.emit(), this.config.transitionDuration);
-
+      this.closingTimeout = window.setTimeout(() => {
+        this.render.removeAttribute(this._container.element.nativeElement, 'data-show', '');
+        this.onClose.emit();
+        this.cd.markForCheck();
+      }, this.config.transitionDuration);
       // Finally, set the popup to be closed.
       this._isOpen = false;
     }

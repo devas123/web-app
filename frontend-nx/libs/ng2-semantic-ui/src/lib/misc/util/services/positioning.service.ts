@@ -1,15 +1,9 @@
-import {ElementRef} from '@angular/core';
+import {ElementRef, NgZone} from '@angular/core';
 import {createPopper, Instance, Modifier, Placement, State} from '@popperjs/core';
 import {Obj, Rect} from '@popperjs/core/lib/types';
 // import Popper, { Modifiers, PopperOptions, Placement, Data } from '@popperjs/core';
 
 type PopperModifier = Partial<Modifier<Obj>>;
-
-export interface OffsetsArgs {
-  popper: Rect;
-  reference: Rect;
-  placement: Placement;
-}
 export type PositioningPlacement = 'auto' |
   'top left' | 'top' | 'top right' |
   'bottom left' | 'bottom' | 'bottom right' |
@@ -107,9 +101,6 @@ function popperToPlacement(popper: string): PositioningPlacement {
 }
 
 export class PositioningService {
-  public readonly anchor: ElementRef;
-  public readonly subject: ElementRef;
-
   private _popper: Instance;
   private _popperState: Partial<State>;
   private _placement: PositioningPlacement;
@@ -120,9 +111,11 @@ export class PositioningService {
     name: 'update',
     enabled: true,
     phase: 'afterWrite',
-    fn: ({ state }) => {
-      this._popperState = state
-    },
+    fn: ({state}) => {
+      console.log(state);
+      this._popperState = state;
+      return state;
+    }
   } as PopperModifier;
 
 
@@ -149,20 +142,26 @@ export class PositioningService {
     return popperToPlacement(this._popperState.placement);
   }
 
-  public get state(): Partial<State> {
-    return this._popperState;
-  }
-
-  constructor(anchor: ElementRef, subject: ElementRef, placement: PositioningPlacement, arrowSelector?: string) {
-    this.anchor = anchor;
-    this.subject = subject;
+  constructor(private anchor: ElementRef, private subject: ElementRef, placement: PositioningPlacement, private ngZone: NgZone, arrowSelector?: string) {
     this._placement = placement;
     this._arrowSelector = arrowSelector;
     this.init();
   }
 
+  offsetModifier = {
+    name: 'offset',
+    enabled: true,
+    // dependencies
+    requires: ['popperOffsets'],
+    // core logic
+    options: {
+      offset: [0, 5]
+    }
+  };
+
   public init(): void {
-    const modifiers: PopperModifier[] = [
+    const modifiers: any[] = [
+      this.offsetModifier,
       {
         name: 'computeStyle',
         options: {
@@ -172,8 +171,9 @@ export class PositioningService {
       {
         name: 'preventOverflow',
         options: {
-          boundariesElement: document.body
-        }
+          rootBoundary: 'document',
+          padding: 10,
+        },
       },
       {
         name: 'arrow',
@@ -181,25 +181,7 @@ export class PositioningService {
           element: this._arrowSelector
         }
       },
-      {
-        name: 'offset',
-        options: {
-          offsets: ({
-            popper,
-            reference,
-            placement,
-          }: OffsetsArgs) => {
-            if (this._hasArrow) {
-              const offsets = this.calculateOffsets();
-              return [offsets.x, offsets.y]
-            }
-            return [popper.x, reference.y];
-          }
-        }
-      },
-      {
-        ...this.updateModifier
-      },
+      this.updateModifier
     ];
 
     if (!this._arrowSelector) {
@@ -207,18 +189,22 @@ export class PositioningService {
       modifiers.splice(arrowInd, 1);
     }
 
-    this._popper = createPopper(
-      this.anchor.nativeElement,
-      this.subject.nativeElement,
-      {
-        placement: placementToPopper(this._placement),
-        modifiers,
-        onFirstUpdate: initial => this._popperState = initial,
-      }) as Instance;
+    this.ngZone.runOutsideAngular(() => {
+      this._popper = createPopper(
+        this.anchor.nativeElement,
+        this.subject.nativeElement,
+        {
+          strategy: 'fixed',
+          placement: placementToPopper(this._placement),
+          modifiers,
+          onFirstUpdate: initial => this._popperState = initial
+        }) as Instance;
+
+    });
   }
 
   public update(): void {
-    this._popper.forceUpdate();
+    this.ngZone.runOutsideAngular(() => this._popper.forceUpdate());
   }
 
   public destroy(): void {
