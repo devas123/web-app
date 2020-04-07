@@ -17,9 +17,6 @@
   <h4 class="ui header">{{formatter(bracketsInfo?.category$ | async)}}</h4>
   <div class="ui description">{{bracketsInfo?.numberOfCompetitor$ | async}} competitors</div>
 </div>
-<div *ngIf="(bracketsInfo?.fightsAreLoading$ | async)" class="ui active transparent dimmer centered">
-  <div class="ui text loader centered">Loading</div>
-</div>
 <app-fights-editor-container [seedFights]="bracketsInfo.firstRoundFights$ | async"
                              [competitors]="bracketsInfo.competitors$ | async"
                              [bracketType]="bracketsInfo.bracketsType$ | async"
