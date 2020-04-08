@@ -114,7 +114,7 @@
 
 /* Label */
 @labelOffset: -0.15em;
-@labelBackground: #999999;
+@labelBackground: lighten(@primaryBackground, 5);
 @labelTextColor: @white;
 
 @labelTextMargin: 1em;
@@ -165,11 +165,11 @@
 ---------------*/
 
 /* Hovered Item */
-@hoverItemBackground: @subtleTransparentBlack;
+@hoverItemBackground: @veryStrongTransparentBlack;
 @hoverItemTextColor: @selectedTextColor;
 
 /* Pressed Item */
-@pressedItemBackground: @subtleTransparentBlack;
+@pressedItemBackground: @veryStrongTransparentBlack;
 @pressedItemTextColor: @hoverItemTextColor;
 
 
@@ -189,7 +189,7 @@
 @dropdownSelectedItemColor: @selectedTextColor;
 
 /* Active Dropdown */
-@dropdownActiveItemBackground: @subtleTransparentBlack;
+@dropdownActiveItemBackground: @veryStrongTransparentBlack;
 @dropdownActiveItemColor: @selectedTextColor;
 @dropdownActiveItemFontWeight: @bold;
 
