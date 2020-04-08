@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "calendar.min.css";
-
+$primary_color: gray;
 $background_color: #2b3035;
 $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
@@ -8,6 +7,7 @@ $dialog_input_text_color: lemonchiffon;
 $item_color: #162830;
 $mat_border_color: #3c3f41;
 $error_color: lightpink;
+$text_color: #ffffe9;
 
 .compman_clickable {
   cursor: pointer !important;
@@ -15,6 +15,16 @@ $error_color: lightpink;
 
 .category_hoverable:hover, .group_selected {
   background-color: lighten($background_color, 10) !important;
+}
+
+.ui.modal {
+  top: 30%;
+}
+
+@media handheld {
+  .ui.modal {
+    top: 20%;
+  }
 }
 
 .no_margin {
@@ -57,6 +67,7 @@ $error_color: lightpink;
 
 .empty-container {
   border-radius: 3px;
+
   .content {
     min-height: 15px;
     text-align: center;
@@ -102,6 +113,7 @@ $error_color: lightpink;
 .padded-vertical {
   padding: 0.5em 0;
 }
+
 .margin-vertical {
   margin: 3px 0 !important;
 }
@@ -118,11 +130,13 @@ $error_color: lightpink;
 
 .mat-grid {
   margin-top: 2px;
+
   .mat-container {
     border: 4px solid $mat_border_color;
     border-radius: 3px;
     padding: 2px;
   }
+
   border-radius: 3px;
   grid-template-columns: 1fr 1fr;
 
@@ -156,6 +170,7 @@ $error_color: lightpink;
   > * {
     margin-left: 1em;
   }
+
   :first-child {
     margin-left: 2px;
   }
@@ -283,6 +298,7 @@ input,
 
 #maincontent {
   overflow: auto;
+
   &._small {
     grid-column: 1/3;
   }
@@ -295,18 +311,20 @@ input,
   grid-auto-flow: row;
   grid-template-rows: 100px minmax(800px, calc(100% - 100px));
   grid-gap: 1em;
+
   .event_manager_header {
     padding: 1em;
   }
+
   .menu_row {
     display: grid;
     grid-gap: 1em;
     grid-template-columns: 240px minmax(100px, calc(100% - 240px));
   }
+
   min-height: 600px;
   overflow: auto;
 }
-
 
 
 .ui.form input:not([type]),
@@ -330,6 +348,7 @@ input,
     background-color: $background_color;
     color: $dialog_input_text_color !important;
   }
+
   background-color: $background_color;
   color: $dialog_input_text_color !important;
 }
@@ -339,7 +358,7 @@ input,
 }
 
 .ui.form {
-    textarea, textarea:focus,
+  textarea, textarea:focus,
   input,
   .ui.input input:focus,
   .ui.search,

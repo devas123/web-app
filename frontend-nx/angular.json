@@ -26,8 +26,7 @@
               "apps/compmanager-frontend/src/assets"
             ],
             "styles": [
-              "apps/compmanager-frontend/src/semantic.slate.css",
-              "apps/compmanager-frontend/src/calendar.min.css",
+              "tools/fui/semantic/dist/semantic.min.css",
               "apps/compmanager-frontend/src/styles.scss"
             ],
             "scripts": []
