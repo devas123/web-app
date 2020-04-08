@@ -4,14 +4,8 @@
   <div class="ui divider"></div>
   <p></p>
   <div class="ui four column stackable grid" >
-    <ng-container *ngFor="let e of eventsList$ | async as events; let i = index">
-      <ng-container *ngIf="i % 4 === 0">
-        <div class="row" >
-          <div class="four wide column" *ngFor="let event of events | slice:i:i+4">
-              <event-card [eventInfo]="event" ></event-card>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
+    <div class="four wide column" *ngFor="let event of events">
+      <app-event-card [eventInfo]="event" ></app-event-card>
+    </div>
   </div>
 </div>

@@ -1,15 +1,15 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {CompetitionProperties} from '../../../../reducers/global-reducers';
 import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'event-card',
+  selector: 'app-event-card',
   templateUrl: './event-card.component.html',
   styleUrls: ['./event-card.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventCardComponent implements OnInit {
+export class EventCardComponent implements AfterViewInit {
 
   @Input()
   eventInfo: CompetitionProperties;
@@ -17,12 +17,9 @@ export class EventCardComponent implements OnInit {
   public transitionController;
 
   constructor(private router: Router) {
+    this.transitionController = new TransitionController(false);
   }
 
-  ngOnInit() {
-    this.transitionController = new TransitionController();
-    this.animate('scale');
-  }
 
   public animate(transitionName: string = 'scale', transitionDirection = TransitionDirection.In) {
     this.transitionController.animate(
@@ -33,4 +30,7 @@ export class EventCardComponent implements OnInit {
     this.router.navigate(['/events', this.eventInfo.id]);
   }
 
+  ngAfterViewInit(): void {
+    this.animate('scale');
+  }
 }
