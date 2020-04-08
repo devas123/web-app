@@ -57,7 +57,7 @@
 @itemHeaderColor: @textColor;
 
 /* Description */
-@itemDescriptionColor: rgba(0, 0, 0, 0.7);
+@itemDescriptionColor: darken(@textColor, 5);
 
 /* Link */
 @itemLinkColor: @linkColor;

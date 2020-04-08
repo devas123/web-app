@@ -10,7 +10,7 @@
 @verticalMargin: @medium;
 @horizontalMargin: 0;
 @margin: @verticalMargin @horizontalMargin;
-@background: #FFFFFF;
+@background: darken(@primaryBackground, 3);
 @fontFamily: @pageFont;
 @itemBackground: none;
 @fontWeight: @normal;
@@ -40,7 +40,7 @@
 @subMenuDistance: 0.5em;
 @subMenuMargin: @subMenuDistance -@itemHorizontalPadding 0;
 @subMenuFontSize: @relativeTiny;
-@subMenuTextColor: rgba(0, 0, 0, 0.5);
+@subMenuTextColor: @textColor;
 
 @subMenuIndent: 0;
 @subMenuHorizontalPadding: (@itemHorizontalPadding / @tinySize) + @subMenuIndent;
@@ -134,7 +134,7 @@
 /* Dropdown in Menu */
 @dropdownMenuBoxShadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08);
 
-@dropdownBackground: #FFFFFF;
+@dropdownBackground: darken(@primaryBackground, 5);
 @dropdownMenuDistance: 0;
 @dropdownMenuBorderRadius: @borderRadius;
 
@@ -206,7 +206,7 @@
 /* Vertical */
 @verticalBoxShadow: @boxShadow;
 @verticalPointerWidth: 2px;
-@verticalBackground: #FFFFFF;
+@verticalBackground: @primaryBackground;
 @verticalItemBackground: none;
 @verticalDividerBackground: @dividerBackground;
 
@@ -330,7 +330,7 @@
 @tabularFluidOffset: 1px;
 @tabularFluidWidth: e(%("calc(100%% + %d)", @tabularFluidOffset * 2));
 
-@tabularActiveBackground: none @white;
+@tabularActiveBackground: none darken(@primaryBackground, 5);
 @tabularActiveColor: @selectedTextColor;
 @tabularActiveBoxShadow: none;
 @tabularActiveWeight: @bold;

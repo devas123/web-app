@@ -81,7 +81,7 @@
 ---------------*/
 
 /* This adjusts the default form input across all elements */
-@inputBackground        : #2b3035;
+@inputBackground        : @primaryBackground;
 @inputVerticalPadding   : @relative11px;
 @inputHorizontalPadding : @relative14px;
 @inputPadding           : @inputVerticalPadding @inputHorizontalPadding;
@@ -131,7 +131,8 @@
 @pageOverflowX       : hidden;
 
 @lineHeight          : 1.4285em;
-@textColor           : #ffffe9;
+@textColor           : @mainTextColor;
+@mainTextColor       : #ffffe9;
 
 /*-------------------
       Paragraph
@@ -265,7 +266,7 @@
 @white            : #FFFFFF;
 
 /*--- Colored Backgrounds ---*/
-@primaryBackground   : #2b3035;
+@primaryBackground   : #1e2328;
 @secondaryBackground : darken(@primaryBackground, 5);
 @redBackground    : #FFE8E6;
 @orangeBackground : #FFEDDE;
@@ -694,15 +695,15 @@
      Neutral Text
 --------------------*/
 
-@darkTextColor               : rgba(0, 0, 0, 0.85);
-@mutedTextColor              : rgba(0, 0, 0, 0.6);
-@lightTextColor              : rgba(0, 0, 0, 0.4);
+@darkTextColor               : rgba(155, 186, 188, 0.85);
+@mutedTextColor              : @disabledTextColor;
+@lightTextColor              : @textColor;
 
-@unselectedTextColor         : rgba(0, 0, 0, 0.4);
-@hoveredTextColor            : rgba(0, 0, 0, 0.8);
-@pressedTextColor            : rgba(0, 0, 0, 0.9);
-@selectedTextColor           : rgba(0, 0, 0, 0.95);
-@disabledTextColor           : rgba(0, 0, 0, 0.2);
+@unselectedTextColor         : @textColor;
+@hoveredTextColor            : @textColor;
+@pressedTextColor            : @textColor;
+@selectedTextColor           : darken(@textColor, 5);
+@disabledTextColor           : lighten(@textColor, 5);
 
 @invertedTextColor           : rgba(255, 255, 255, 0.9);
 @invertedMutedTextColor      : rgba(255, 255, 255, 0.8);
@@ -734,16 +735,16 @@
 
 @circularRadius                : 500rem;
 
-@borderColor               : rgba(34, 36, 38, 0.15);
+@borderColor               : rgba(32, 34, 36, 0.29);
 @strongBorderColor         : rgba(34, 36, 38, 0.22);
 @internalBorderColor       : rgba(34, 36, 38, 0.1);
 @selectedBorderColor       : rgba(34, 36, 38, 0.35);
 @strongSelectedBorderColor : rgba(34, 36, 38, 0.5);
 @disabledBorderColor       : rgba(34, 36, 38, 0.5);
 
-@solidInternalBorderColor  : #FAFAFA;
-@solidBorderColor          : #D4D4D5;
-@solidSelectedBorderColor  : #BCBDBD;
+@solidInternalBorderColor  : darken(@solidBorderColor, 10);
+@solidBorderColor          : #3c3f41;
+@solidSelectedBorderColor  : darken(@solidBorderColor, 5);
 
 @whiteBorderColor              : rgba(255, 255, 255, 0.1);
 @selectedWhiteBorderColor      : rgba(255, 255, 255, 0.8);
@@ -987,7 +988,7 @@
 --------------------*/
 
 @disabledOpacity: 0.45;
-@disabledTextColor: rgba(40, 40, 40, 0.3);
+@disabledTextColor: lighten(@textColor, 10);
 @invertedDisabledTextColor: rgba(225, 225, 225, 0.3);
 
 /*-------------------

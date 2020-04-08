@@ -13,7 +13,7 @@
 /* Card */
 @fontFamily: @pageFont;
 @display: flex;
-@background: @white;
+@background: darken(@primaryBackground, 8);
 @borderRadius: @defaultBorderRadius;
 @margin: 1em 0;
 @minHeight: 0;

@@ -9,7 +9,7 @@
 /* Button */
 @verticalMargin: 0;
 @horizontalMargin: 0.25em;
-@backgroundColor: #E0E1E2;
+@backgroundColor: lighten(@primaryBackground, 3);
 @backgroundImage: none;
 @background: @backgroundColor @backgroundImage;
 @lineHeight: 1em;
@@ -23,7 +23,7 @@
 @tapColor: transparent;
 @fontFamily: @pageFont;
 @fontWeight: @bold;
-@textColor: rgba(0, 0, 0, 0.6);
+@textColor: @mainTextColor;
 @textShadow: none;
 @invertedTextShadow: @textShadow;
 @borderRadius: @defaultBorderRadius;
@@ -84,7 +84,7 @@
 --------------------*/
 
 /* Hovered */
-@hoverBackgroundColor: #CACBCD;
+@hoverBackgroundColor: lighten(@backgroundColor, 7);
 @hoverBackgroundImage: @backgroundImage;
 @hoverBoxShadow: @boxShadow;
 @hoverColor: @hoveredTextColor;
@@ -102,7 +102,7 @@
 @disabledBoxShadow: none;
 
 /* Pressed Down */
-@downBackgroundColor: #BABBBC;
+@downBackgroundColor: lighten(@hoverBackgroundColor, 2);
 @downBackgroundImage: '';
 @downPressedShadow: none;
 @downBoxShadow:
@@ -112,7 +112,7 @@
 @downColor: @pressedTextColor;
 
 /* Active */
-@activeBackgroundColor: #C0C1C2;
+@activeBackgroundColor: @backgroundColor;
 @activeBackgroundImage: none;
 @activeColor: @selectedTextColor;
 @activeBoxShadow: @borderBoxShadow;
@@ -150,7 +150,7 @@
 @orVerticalOffset: -(@orCircleSize / 2);
 @orHorizontalOffset: -(@orCircleSize / 2);
 
-@orBackgroundColor: @white;
+@orBackgroundColor: darken(@backgroundColor, 5);
 @orTextShadow: @invertedTextShadow;
 @orTextStyle: @normal;
 @orTextWeight: @bold;
@@ -205,7 +205,7 @@
 @basicTextTransform: none;
 
 /* Basic Hover */
-@basicHoverBackground: #FFFFFF;
+@basicHoverBackground: @hoverBackgroundColor;
 @basicHoverTextColor: @hoveredTextColor;
 @basicHoverBoxShadow:
   0 0 0 @basicBorderSize @selectedBorderColor inset,
@@ -217,7 +217,7 @@
 @basicFocusBoxShadow: @basicHoverBoxShadow;
 
 /* Basic Down */
-@basicDownBackground: #F8F8F8;
+@basicDownBackground: @downBackgroundColor;
 @basicDownTextColor: @pressedTextColor;
 @basicDownBoxShadow:
   0 0 0 @basicBorderSize rgba(0, 0, 0, 0.15) inset,
