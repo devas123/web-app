@@ -1,0 +1,34 @@
+<div class="margins_container">
+  <div class="ui basic segment">
+    <sui-select class="selection"
+                [placeholder]="(bracketsInfo?.category$ | async) && (formatter(bracketsInfo?.category$ | async).substring(0, 18) + '...') || 'Select Category'"
+                (selectedOptionChange)="setCategoryId($event)"
+                [options]="bracketsInfo?.categories$ | async"
+                [isSearchable]="true"
+                [isDisabled]="false"
+                [optionsFilter]="optionsFilter"
+                [optionFormatter]="formatter"
+                #select>
+      <sui-select-option *ngFor="let option of select.filteredOptions"
+                         [value]="option">
+      </sui-select-option>
+    </sui-select>
+  </div>
+  <div class="ui container" *ngIf="!(bracketsInfo?.category$ | async) && !(bracketsInfo?.fightsAreLoading$ | async)">
+    <h4 class="ui header">Select category</h4>
+  </div>
+  <div class="ui container" *ngIf="!(bracketsInfo?.fights$ | async) && !(bracketsInfo?.fightsAreLoading$ | async)">
+    <h4 class="ui header">No brackets for this category.</h4>
+  </div>
+  <div class="ui container" *ngIf="!((bracketsInfo?.category$ | async) && (bracketsInfo?.fights$ | async)) && !(bracketsInfo?.fightsAreLoading$ | async)">
+  </div>
+  <app-stage-display [fights]="bracketsInfo.fights$ | async"
+                     [competitors]="bracketsInfo.competitors$ | async"
+                     [editMode]="false"
+                     [bucketSize]="bucketSize$ | async"
+                     (stageSelected)="selectStage($event)"
+                     [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
+                     [selectedStage]="bracketsInfo.stage$ | async"
+                     [stages]="bracketsInfo.stages$ | async"
+                     [category]="bracketsInfo.category$ | async"></app-stage-display>
+</div>

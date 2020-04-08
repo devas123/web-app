@@ -1,0 +1,43 @@
+{
+  "npmScope": "frontend-nx",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
+    }
+  },
+  "projects": {
+    "compmanager-frontend": {
+      "tags": []
+    },
+    "compmanager-frontend-e2e": {
+      "tags": [],
+      "implicitDependencies": ["compmanager-frontend"]
+    },
+    "common": {
+      "tags": []
+    },
+    "ng2-semantic-ui": {
+      "tags": []
+    },
+    "sandbox": {
+      "tags": []
+    },
+    "sandbox-e2e": {
+      "tags": [],
+      "implicitDependencies": ["sandbox"]
+    }
+  }
+}

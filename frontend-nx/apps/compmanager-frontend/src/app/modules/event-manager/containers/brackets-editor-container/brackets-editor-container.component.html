@@ -1,0 +1,43 @@
+<ng-template #categorySelect>
+  <sui-select class="selection"
+              [placeholder]="(bracketsInfo?.category$ | async) && (formatter(bracketsInfo?.category$ | async).substring(0, 18) + '...') || 'Select Category'"
+              (selectedOptionChange)="setCategoryId($event)"
+              [options]="categories$ | async"
+              [isSearchable]="true"
+              [isDisabled]="false"
+              [optionsFilter]="optionsFilter"
+              [optionFormatter]="formatter"
+              #select>
+    <sui-select-option *ngFor="let option of select.filteredOptions"
+                       [value]="option">
+    </sui-select-option>
+  </sui-select>
+</ng-template>
+<div class="ui basic segment" *ngIf="bracketsInfo?.category$ | async">
+  <h4 class="ui header">{{formatter(bracketsInfo?.category$ | async)}}</h4>
+  <div class="ui description">{{bracketsInfo?.numberOfCompetitor$ | async}} competitors</div>
+</div>
+<app-fights-editor-container [seedFights]="bracketsInfo.firstRoundFights$ | async"
+                             [competitors]="bracketsInfo.competitors$ | async"
+                             [bracketType]="bracketsInfo.bracketsType$ | async"
+                             [stage]="bracketsInfo.stage$ | async"
+                             (changeSaved)="sendTheChanges($event)"
+                             *ngIf="editMode" (closeClicked)="toggleEditBrackets()"></app-fights-editor-container>
+<app-generate-brackets-form
+  [smallScreen]="bracketsInfo.bucketsize$ | async"
+  [defaultFightResultOptions]="defaultFightResultOptions$ | async"
+  [competitionId]="competitionId"
+  [competitorsSize]="bracketsInfo?.numberOfCompetitor$ | async"
+  *ngIf="!(bracketsInfo?.fightsAreLoading$ | async) && (bracketsInfo?.category$ | async) && (bracketsInfo?.stages$ | async)?.length <= 0"
+  (generateStages)="generateBrackets($event)"></app-generate-brackets-form>
+<app-stage-display (unseededCompetitorsClicked)="editMode = true"
+                   [fights]="bracketsInfo.fights$ | async"
+                   [editMode]="editMode"
+                   [bucketSize]="bracketsSize$ | async"
+                   (stageSelected)="selectStage($event)"
+                   [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
+                   [selectedStage]="bracketsInfo.stage$ | async"
+                   [competitors]="bracketsInfo.competitors$ | async"
+                   [stages]="bracketsInfo.stages$ | async"
+                   [category]="bracketsInfo.category$ | async"></app-stage-display>
+
