@@ -26,11 +26,11 @@ body {
   padding: 0;
   overflow-x: hidden;
   min-width: 320px;
-  background: #1e2328;
+  background: #042e3e;
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-size: 14px;
   line-height: 1.4285em;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 
@@ -123,37 +123,37 @@ a:hover {
 
 /* Site */
 ::-webkit-selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 ::-moz-selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 ::selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 
 /* Form */
 textarea::-webkit-selection,
 input::-webkit-selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 textarea::-moz-selection,
 input::-moz-selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 textarea::-moz-selection, input::-moz-selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 textarea::selection,
 input::selection {
-  background-color: rgba(100, 100, 100, 0.4);
-  color: #ffffe9;
+  background-color: #042e3e;
+  color: #DED797;
 }
 
 /* Force Simple Scrollbars */

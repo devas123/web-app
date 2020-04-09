@@ -9,7 +9,7 @@
 @verticalAlign: baseline;
 @verticalMargin: 0;
 @horizontalMargin: @relative2px;
-@backgroundColor: #E8E8E8;
+@backgroundColor: lighten(@primaryBackground, 5);
 @color: @mutedTextColor;
 @backgroundImage: none;
 @verticalPadding: 0.5833em; /* medium is not @emSize custom value required */
@@ -83,17 +83,17 @@
 --------------------*/
 
 /* Hover */
-@labelHoverBackgroundColor: #E0E0E0;
+@labelHoverBackgroundColor: lighten(@backgroundColor, 6);
 @labelHoverBackgroundImage: none;
 @labelHoverTextColor: @hoveredTextColor;
 
 /* Active */
-@labelActiveBackgroundColor: #D0D0D0;
+@labelActiveBackgroundColor: lighten(@labelHoverBackgroundColor, 3);
 @labelActiveBackgroundImage: none;
 @labelActiveTextColor: @selectedTextColor;
 
 /* Active Hover */
-@labelActiveHoverBackgroundColor: #C8C8C8;
+@labelActiveHoverBackgroundColor: @labelHoverBackgroundColor;
 @labelActiveHoverBackgroundImage: none;
 @labelActiveHoverTextColor: @selectedTextColor;
 
@@ -103,7 +103,7 @@
 --------------------*/
 
 /* Basic */
-@basicBackground: none @white;
+@basicBackground: none @backgroundColor;
 @basicBorderWidth: 1px;
 @basicBorderWidthOffset: -@basicBorderWidth;
 @basicBorderFullWidthOffset: e(%("calc(100%% + %d)", @basicBorderWidth));

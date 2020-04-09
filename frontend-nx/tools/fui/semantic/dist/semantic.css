@@ -64902,7 +64902,7 @@ img.ui.bordered.image {
   line-height: 1;
   vertical-align: baseline;
   margin: 0 0.14285714em;
-  background-color: #E8E8E8;
+  background-color: #293037;
   background-image: none;
   padding: 0.5833em 0.833em;
   color: #ffffff;
@@ -65071,7 +65071,7 @@ a.ui.label {
   max-width: 9999px;
   vertical-align: baseline;
   text-transform: none;
-  background: #E8E8E8;
+  background: #293037;
   padding: 0.5833em 0.833em 0.5833em 0.5em;
   border-radius: 0.28571429rem;
   -webkit-box-shadow: none;
@@ -65164,7 +65164,7 @@ a.ui.label {
   margin: 0;
   padding: 0;
   text-align: center;
-  border-color: #E8E8E8;
+  border-color: #293037;
   width: 4em;
   height: 4em;
   z-index: 1;
@@ -65425,8 +65425,8 @@ a.ui.label {
 
 .ui.labels a.label:hover,
 a.ui.label:hover {
-  background-color: #E0E0E0;
-  border-color: #E0E0E0;
+  background-color: #363f48;
+  border-color: #363f48;
   background-image: none;
   color: #ffffe9;
 }
@@ -65441,14 +65441,14 @@ a.ui.label:hover:before {
 --------------------*/
 
 .ui.active.label {
-  background-color: #D0D0D0;
-  border-color: #D0D0D0;
+  background-color: #3d4751;
+  border-color: #3d4751;
   background-image: none;
   color: #ffffcf;
 }
 
 .ui.active.label:before {
-  background-color: #D0D0D0;
+  background-color: #3d4751;
   background-image: none;
   color: #ffffcf;
 }
@@ -65459,15 +65459,15 @@ a.ui.label:hover:before {
 
 .ui.labels a.active.label:hover,
 a.ui.active.label:hover {
-  background-color: #C8C8C8;
-  border-color: #C8C8C8;
+  background-color: #363f48;
+  border-color: #363f48;
   background-image: none;
   color: #ffffcf;
 }
 
 .ui.labels a.active.label:hover:before,
 a.ui.active.label:hover:before {
-  background-color: #C8C8C8;
+  background-color: #363f48;
   background-image: none;
   color: #ffffcf;
 }
@@ -65500,7 +65500,7 @@ a.ui.active.label:hover:before {
 
 .ui.basic.labels .label,
 .ui.basic.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border: 1px solid rgba(32, 34, 36, 0.29);
   color: #ffffe9;
   -webkit-box-shadow: none;
@@ -65512,7 +65512,7 @@ a.ui.active.label:hover:before {
 .ui.basic.labels a.label:hover,
 a.ui.basic.label:hover {
   text-decoration: none;
-  background: none #FFFFFF;
+  background: none #293037;
   color: #1e70bf;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -65542,15 +65542,15 @@ a.ui.basic.label:hover {
 .ui.inverted.labels .label,
 .ui.inverted.label {
   color: rgba(255, 255, 255, 0.9);
-  background-color: #b5b5b5;
+  background-color: #000000;
 }
 
 .ui.inverted.corner.label {
-  border-color: #b5b5b5;
+  border-color: #000000;
 }
 
 .ui.inverted.corner.label:hover {
-  border-color: #E8E8E8;
+  border-color: #293037;
   -webkit-transition: none;
   transition: none;
 }
@@ -65596,14 +65596,14 @@ a.ui.ui.ui.primary.label:hover {
 
 .ui.basic.labels .primary.label,
 .ui.ui.ui.basic.primary.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #2185D0;
   color: #2185D0;
 }
 
 .ui.basic.labels a.primary.label:hover,
 a.ui.ui.ui.basic.primary.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #1678c2;
   color: #1678c2;
 }
@@ -65690,14 +65690,14 @@ a.ui.ui.ui.secondary.label:hover {
 
 .ui.basic.labels .secondary.label,
 .ui.ui.ui.basic.secondary.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #1B1C1D;
   color: #1B1C1D;
 }
 
 .ui.basic.labels a.secondary.label:hover,
 a.ui.ui.ui.basic.secondary.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #27292a;
   color: #27292a;
 }
@@ -65784,14 +65784,14 @@ a.ui.ui.ui.red.label:hover {
 
 .ui.basic.labels .red.label,
 .ui.ui.ui.basic.red.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #DB2828;
   color: #DB2828;
 }
 
 .ui.basic.labels a.red.label:hover,
 a.ui.ui.ui.basic.red.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #d01919;
   color: #d01919;
 }
@@ -65878,14 +65878,14 @@ a.ui.ui.ui.orange.label:hover {
 
 .ui.basic.labels .orange.label,
 .ui.ui.ui.basic.orange.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #F2711C;
   color: #F2711C;
 }
 
 .ui.basic.labels a.orange.label:hover,
 a.ui.ui.ui.basic.orange.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #f26202;
   color: #f26202;
 }
@@ -65972,14 +65972,14 @@ a.ui.ui.ui.yellow.label:hover {
 
 .ui.basic.labels .yellow.label,
 .ui.ui.ui.basic.yellow.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #FBBD08;
   color: #FBBD08;
 }
 
 .ui.basic.labels a.yellow.label:hover,
 a.ui.ui.ui.basic.yellow.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #eaae00;
   color: #eaae00;
 }
@@ -66066,14 +66066,14 @@ a.ui.ui.ui.olive.label:hover {
 
 .ui.basic.labels .olive.label,
 .ui.ui.ui.basic.olive.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #B5CC18;
   color: #B5CC18;
 }
 
 .ui.basic.labels a.olive.label:hover,
 a.ui.ui.ui.basic.olive.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #a7bd0d;
   color: #a7bd0d;
 }
@@ -66160,14 +66160,14 @@ a.ui.ui.ui.green.label:hover {
 
 .ui.basic.labels .green.label,
 .ui.ui.ui.basic.green.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #21BA45;
   color: #21BA45;
 }
 
 .ui.basic.labels a.green.label:hover,
 a.ui.ui.ui.basic.green.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #16ab39;
   color: #16ab39;
 }
@@ -66254,14 +66254,14 @@ a.ui.ui.ui.teal.label:hover {
 
 .ui.basic.labels .teal.label,
 .ui.ui.ui.basic.teal.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #00B5AD;
   color: #00B5AD;
 }
 
 .ui.basic.labels a.teal.label:hover,
 a.ui.ui.ui.basic.teal.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #009c95;
   color: #009c95;
 }
@@ -66348,14 +66348,14 @@ a.ui.ui.ui.blue.label:hover {
 
 .ui.basic.labels .blue.label,
 .ui.ui.ui.basic.blue.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #2185D0;
   color: #2185D0;
 }
 
 .ui.basic.labels a.blue.label:hover,
 a.ui.ui.ui.basic.blue.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #1678c2;
   color: #1678c2;
 }
@@ -66442,14 +66442,14 @@ a.ui.ui.ui.violet.label:hover {
 
 .ui.basic.labels .violet.label,
 .ui.ui.ui.basic.violet.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #6435C9;
   color: #6435C9;
 }
 
 .ui.basic.labels a.violet.label:hover,
 a.ui.ui.ui.basic.violet.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #5829bb;
   color: #5829bb;
 }
@@ -66536,14 +66536,14 @@ a.ui.ui.ui.purple.label:hover {
 
 .ui.basic.labels .purple.label,
 .ui.ui.ui.basic.purple.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #A333C8;
   color: #A333C8;
 }
 
 .ui.basic.labels a.purple.label:hover,
 a.ui.ui.ui.basic.purple.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #9627ba;
   color: #9627ba;
 }
@@ -66630,14 +66630,14 @@ a.ui.ui.ui.pink.label:hover {
 
 .ui.basic.labels .pink.label,
 .ui.ui.ui.basic.pink.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #E03997;
   color: #E03997;
 }
 
 .ui.basic.labels a.pink.label:hover,
 a.ui.ui.ui.basic.pink.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #e61a8d;
   color: #e61a8d;
 }
@@ -66724,14 +66724,14 @@ a.ui.ui.ui.brown.label:hover {
 
 .ui.basic.labels .brown.label,
 .ui.ui.ui.basic.brown.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #A5673F;
   color: #A5673F;
 }
 
 .ui.basic.labels a.brown.label:hover,
 a.ui.ui.ui.basic.brown.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #975b33;
   color: #975b33;
 }
@@ -66818,14 +66818,14 @@ a.ui.ui.ui.grey.label:hover {
 
 .ui.basic.labels .grey.label,
 .ui.ui.ui.basic.grey.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #767676;
   color: #767676;
 }
 
 .ui.basic.labels a.grey.label:hover,
 a.ui.ui.ui.basic.grey.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #838383;
   color: #838383;
 }
@@ -66911,14 +66911,14 @@ a.ui.ui.ui.black.label:hover {
 
 .ui.basic.labels .black.label,
 .ui.ui.ui.basic.black.label {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #1B1C1D;
   color: #1B1C1D;
 }
 
 .ui.basic.labels a.black.label:hover,
 a.ui.ui.ui.basic.black.label:hover {
-  background: none #FFFFFF;
+  background: none #293037;
   border-color: #27292a;
   color: #27292a;
 }

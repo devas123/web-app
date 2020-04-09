@@ -157,7 +157,7 @@
                 </div>
                 <app-tag-list [values]="getFightResultOptionsValue(i)">
                   <ng-template let-opt="$implicit" let-k="index">
-                    <div class="ui icon label">
+                    <div class="ui right icon label">
                       <span suiPopup [popupText]="opt?.description" popupBasic popupDelay="300">{{opt?.shortName}}</span>
                       <i class="delete icon" (click)="removeFightResultOpiton(i, k)"></i>
                     </div>

@@ -11,7 +11,7 @@ type  Validator<T> = (value: T, index: number, values: T[]) => boolean;
         </ng-template>
       </ng-container>
       <ng-container *ngIf="!template">
-        <div class="ui icon label"
+        <div class="ui right icon label"
              *ngFor="let opt of values; index as k" [ngClass]="{red: validator && !validator(opt, k, values)}">{{formatter(opt, k)}}
           <i class="delete icon" (click)="itemRemoved.next({item: opt, index: k})"></i>
         </div>

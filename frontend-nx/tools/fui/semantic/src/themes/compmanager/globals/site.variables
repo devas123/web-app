@@ -132,7 +132,7 @@
 
 @lineHeight          : 1.4285em;
 @textColor           : @mainTextColor;
-@mainTextColor       : #ffffe9;
+@mainTextColor       : #CFCBBC;
 
 /*-------------------
       Paragraph
@@ -179,11 +179,11 @@
   Highlighted Text
 --------------------*/
 
-@highlightBackground      : rgba(100, 100, 100, 0.4);
-@highlightColor           : @textColor;
+@highlightBackground      : @primaryBackground;
+@highlightColor           : #DED797;
 
-@inputHighlightBackground : rgba(100, 100, 100, 0.4);
-@inputHighlightColor      : @textColor;
+@inputHighlightBackground : @highlightBackground;
+@inputHighlightColor      : @highlightColor;
 
 
 /*-------------------
@@ -266,8 +266,8 @@
 @white            : #FFFFFF;
 
 /*--- Colored Backgrounds ---*/
-@primaryBackground   : #1e2328;
-@secondaryBackground : darken(@primaryBackground, 5);
+@primaryBackground   : #042e3e;
+@secondaryBackground : #001A26;
 @redBackground    : #FFE8E6;
 @orangeBackground : #FFEDDE;
 @yellowBackground : #FFF8DB;

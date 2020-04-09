@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 $primary_color: gray;
-$background_color: #2b3035;
+$background_color: #001a26;
 $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
-$item_color: #162830;
+$item_color: #042e3e;
 $mat_border_color: #3c3f41;
 $error_color: lightpink;
 $text_color: #ffffe9;
@@ -249,6 +249,7 @@ html, body {
     border-radius: 5px;
     padding: 1rem;
     margin-bottom: 0;
+    margin-top: 0;
 
     a {
       cursor: pointer;
