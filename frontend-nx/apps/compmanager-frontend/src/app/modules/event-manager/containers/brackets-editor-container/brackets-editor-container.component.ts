@@ -3,7 +3,14 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {eventManagerGetSelectedEventDefaultFightResults, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
-import {Category, CategoryBracketsStage, Fight, FightResultOption, HeaderDescription} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  CategoryBracketsStage,
+  CompetitorGroupChange,
+  Fight,
+  FightResultOption,
+  HeaderDescription
+} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
   eventManagerCategoryUnselected,
@@ -110,11 +117,11 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.editMode = !this.editMode;
   }
 
-  sendTheChanges(changes: Fight[]) {
+  sendTheChanges({fights, competitorGroupChanges}) {
     combineLatest([this.bracketsInfo.competition$, this.bracketsInfo.category$, this.bracketsInfo.stage$]).pipe(
       take(1),
       filter(([competition, category, stage]) => !!competition && !!category && !!stage),
-      map(([competition, category, stage]) => eventManagerFightsEditorSubmitChangesCommand({fights: changes, competitionId: competition.id, categoryId: category.id, stageId: stage.id}) )
+      map(([competition, category, stage]) => eventManagerFightsEditorSubmitChangesCommand({fights, competitorGroupChanges, competitionId: competition.id, categoryId: category.id, stageId: stage.id}) )
     ).subscribe(action => this.store.dispatch(action));
     this.editMode = !this.editMode;
   }
@@ -130,7 +137,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   ngOnInit() {
-    this.store.dispatch(eventManagerLoadDefaultFightResults());
+    this.bracketsInfo.sendCommandFromCompetitionId(competitionId => eventManagerLoadDefaultFightResults({competitionId}));
   }
 
   generateBrackets(stages: CategoryBracketsStage[]) {
