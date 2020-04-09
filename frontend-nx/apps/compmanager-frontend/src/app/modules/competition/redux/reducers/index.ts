@@ -4,6 +4,7 @@ import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, c
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {COMPETITION_SELECTED} from '../../../event-manager/redux/event-manager-actions';
+import {Update} from '@ngrx/entity';
 
 export const featureKey = 'events';
 
@@ -30,9 +31,7 @@ export function competitionListReducer(state: EventPropsEntities = competitionPr
   switch (action.type) {
     case COMPETITION_LIST_LOADED:
       const payload = action.payload as CompetitionProperties[];
-      const updates = payload;
-      const newState = competitionPropertiesEntitiesAdapter.removeAll(state);
-      return competitionPropertiesEntitiesAdapter.upsertMany(updates, newState);
+      return competitionPropertiesEntitiesAdapter.setAll(payload, state);
     case COMPETITION_SELECTED: {
       return {...state, selectedEventId: action.competitionId};
     }

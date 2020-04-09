@@ -1,8 +1,18 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CategoryBracketsStage, Competitor, Fight, GroupDescriptor} from '../../../../commons/model/competition.model';
-import produce, {applyPatches} from 'immer';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  CategoryBracketsStage,
+  Competitor,
+  CompetitorGroupChange,
+  Fight,
+  GroupChangeType
+} from '../../../../commons/model/competition.model';
+import produce from 'immer';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {collectingReducer} from '../../../account/utils';
+import {collectingReducer, uniqueFilter} from '../../../account/utils';
+import {Dictionary} from '@ngrx/entity';
+import * as _ from 'lodash';
+
+const changePedicate = (groupId: string, competitorId: string, changeType: GroupChangeType) => (ch: CompetitorGroupChange) => ch.groupId === groupId && ch.competitorId === competitorId && ch.changeType === changeType;
 
 @Component(
   {
@@ -10,21 +20,20 @@ import {collectingReducer} from '../../../account/utils';
     template: `
       <div class="fights-editor-container" cdkDropListGroup>
         <div class="two-column buttons-row">
-          <button class="ui button" (click)="applyCurrentChange()" [disabled]="inverseChanges.length <= 0">Apply</button>
-          <button class="ui button" (click)="discardCurrentChange()" [disabled]="inverseChanges.length <= 0">Discard</button>
-          <button class="ui button" (click)="close()" [disabled]="!(seedFights?.length > 0)">Clear</button>
+          <button class="ui button" (click)="applyCurrentChange()" [disabled]="_competitorGroupChanges.length <= 0">Apply</button>
+          <button class="ui button" (click)="discardCurrentChange()" [disabled]="_competitorGroupChanges.length <= 0">Discard</button>
+          <button class="ui button" (click)="close()" [disabled]="!(_competitorGroupChanges?.length === 0)">Clear</button>
         </div>
         <div class="item-group top-aligned">
-          <div class="item-group top-aligned" *ngFor="let group of getGroupDescriptors(); index as i" cdkDropList (cdkDropListDropped)="addCompetitorToGroup($event, group?.id)"
-               [cdkDropListEnterPredicate]="groupCanAcceptMoreFighters(group)">
-            <section>Group {{ i + 1 }}</section>
-            <div class="competitor-display" *ngFor="let competitorId of competitorIdsByGroupId(group?.id);" cdkDrag [cdkDragData]="{competitorId: competitorId, groupId: group?.id}">
+          <div class="item-group top-aligned" *ngFor="let group of getGroupDescriptors(); index as i" cdkDropList (cdkDropListDropped)="addCompetitorToGroup($event, group?.id)">
+            <section>Group {{ i + 1 }}, size: {{ group.size || 0 }}</section>
+            <div class="competitor-display" *ngFor="let competitorId of getDispatchedCompetitorsByGroup(group?.id);" cdkDrag (cdkDragStarted)="startDrag()" (cdkDragEnded)="stopDrag()" [cdkDragData]="{competitorId: competitorId, groupId: group?.id}">
               <div class="content">
                 {{getCompetitor(competitorId)?.firstName}}  {{getCompetitor(competitorId)?.lastName}}
               </div>
               <div class="sub header">{{getCompetitor(competitorId)?.academy?.name}}</div>
             </div>
-            <div class="empty-competitor empty-container bordered" *ngIf="competitorIdsByGroupId(group?.id)?.length <= 0">
+            <div class="empty-competitor empty-container bordered" *ngIf="getDispatchedCompetitorsByGroup(group?.id)?.length <= 0">
               <div class="content cursor-default">
                 <section>Drop here add competitor to this group.</section>
               </div>
@@ -32,7 +41,8 @@ import {collectingReducer} from '../../../account/utils';
           </div>
         </div>
         <div class="item-group top-aligned" cdkDropList (cdkDropListDropped)="removeCompetitorFromGroup($event)">
-          <div class="competitor-display" *ngFor="let competitor of undispatchedCompetitors;" cdkDrag [cdkDragData]="{competitorId: competitor.id}">
+          <section>Unseeded competitors</section>
+          <div class="competitor-display" *ngFor="let competitor of undispatchedCompetitors;" cdkDrag (cdkDragStarted)="startDrag()" (cdkDragEnded)="stopDrag()" [cdkDragData]="{competitorId: competitor.id}">
             <div class="content">
               {{competitor?.firstName}}  {{competitor?.lastName}}
             </div>
@@ -41,7 +51,7 @@ import {collectingReducer} from '../../../account/utils';
           <div class="empty-competitor empty-container bordered" *ngIf="undispatchedCompetitors?.length <= 0">
             <div class="content cursor-default">
               <section>All competitors are seeded.</section>
-              <section>Drop here to undispatch.</section>
+              <section>Drop here to unseed.</section>
             </div>
           </div>
         </div>
@@ -52,17 +62,31 @@ import {collectingReducer} from '../../../account/utils';
 export class GroupsEditorComponent {
 
   get undispatchedCompetitors() {
-    return this.competitors.filter(cmp => !this.seedFights.find(f => f.scores.find(s => s.competitorId === cmp.id)));
+    return this.competitors.filter( cmp => !this._competitorGroupChanges.find(ch => ch.changeType === 'ADD' && ch.competitorId === cmp.id)
+      && (this._competitorGroupChanges.find(ch => ch.changeType === 'REMOVE' && ch.competitorId === cmp.id)
+      || !this.flatCompetitors.includes(cmp.id)));
+  }
+
+  get flatCompetitors() {
+    return _.flowRight(_.uniq, _.flattenDeep, _.values)(this._competitorsByGroupsDictionary);
   }
 
   @Output()
-  changeSaved = new EventEmitter<Fight[]>();
+  changeSaved = new EventEmitter<CompetitorGroupChange[]>();
 
   @Output()
   closeClicked = new EventEmitter<void>();
 
   @Input()
-  seedFights: Fight[];
+  set seedFights(value: Fight[]) {
+    this._competitorsByGroupsDictionary = {};
+    if (value && value.length > 0) {
+      const byGroups = _.groupBy(value, f => f.groupId);
+      Object.keys(byGroups).forEach(key => {
+        this._competitorsByGroupsDictionary[key] = byGroups[key].map(f => f?.scores?.map(s => s.competitorId) || []).reduce(collectingReducer,[]).filter(f => !!f).filter(uniqueFilter);
+      });
+    }
+  }
 
   @Input()
   competitors: Competitor[] = [];
@@ -70,7 +94,8 @@ export class GroupsEditorComponent {
   @Input()
   selectedStage: CategoryBracketsStage;
 
-  inverseChanges = [];
+  _competitorGroupChanges: CompetitorGroupChange[] = [];
+  _competitorsByGroupsDictionary: Dictionary<string[]> = {};
 
   getGroupDescriptors() {
     if (this.selectedStage && this.selectedStage.groupDescriptors) {
@@ -79,10 +104,19 @@ export class GroupsEditorComponent {
     return [];
   }
 
-  private competitorIdsByGroupId = (groupId: string) => this.seedFights.filter(f => f.groupId === groupId).map(f => f.scores || []).reduce(collectingReducer).map(s => s.competitorId).filter(f => !!f);
+  getDispatchedCompetitorsByGroup(groupId: string) {
+    return _.union(
+      this._competitorsByGroupsDictionary[groupId].filter(c => !this._competitorGroupChanges.find(ch => ch.changeType === 'REMOVE' && ch.groupId === groupId && ch.competitorId === c)),
+      this._competitorGroupChanges.filter(ch => ch.changeType === 'ADD' && ch.groupId === groupId).map(ch => ch.competitorId)
+    );
+  }
+
 
   getGroupFights(groupId: string) {
     return this.seedFights.filter(f => f.groupId === groupId);
+  }
+
+  constructor(private cd: ChangeDetectorRef) {
   }
 
   getCompetitor(competitorId: string) {
@@ -90,57 +124,57 @@ export class GroupsEditorComponent {
   }
 
   addCompetitorToGroup(event: CdkDragDrop<any>, groupId: string) {
-    const fightWithPlaceholder = this.getGroupFights(groupId)?.find(f => f.scores && f.scores.find(s => !!s.placeholderId && !s.competitorId));
-    const freePlaceholder = fightWithPlaceholder?.scores.find(s => !!s.placeholderId && !s.competitorId)?.placeholderId;
-    const {competitorId} = event.item.data;
-    if (freePlaceholder && competitorId) {
-      this.seedFights = produce(this.seedFights, draft => {
-        draft.forEach(f => {
-          if (f.groupId === groupId) {
-            f.scores.forEach(sc => {
-              if (sc.placeholderId === freePlaceholder) {
-                sc.competitorId = competitorId;
-              }
-            });
+    this._competitorGroupChanges = produce(this._competitorGroupChanges, draft => {
+      const {competitorId, groupId: fromGroupId} = event.item.data;
+      if (!draft.find(changePedicate(groupId, competitorId, 'ADD')) && fromGroupId !== groupId) {
+        const removeChange = draft.find(changePedicate(groupId, competitorId, 'REMOVE'));
+        if (removeChange) {
+          draft.splice(draft.indexOf(removeChange, 1));
+        } else {
+          draft.push(<CompetitorGroupChange>{competitorId, groupId, changeType: 'ADD'});
+        }
+        if (fromGroupId) {
+          const addChange = draft.find(changePedicate(fromGroupId, competitorId, 'ADD'));
+          if (addChange) {
+            draft.splice(draft.indexOf(addChange, 1));
+          } else {
+            draft.push(<CompetitorGroupChange>{competitorId, groupId: fromGroupId, changeType: 'REMOVE'});
           }
-        });
-      }, (patches, inversePatches) => this.inverseChanges.push(inversePatches));
-    }
+        }
+      }
+    });
   }
 
   removeCompetitorFromGroup(event: CdkDragDrop<any>) {
     const {competitorId, groupId} = event.item.data;
     if (competitorId && groupId) {
-      this.seedFights = produce(this.seedFights, draft => {
-        draft.forEach(f => {
-          f.scores.forEach(sc => {
-            if (sc.competitorId === competitorId) {
-              delete sc.competitorId;
-            }
-          });
-        });
-      }, (patches, inversePatches) => this.inverseChanges.push(inversePatches));
+      this._competitorGroupChanges = produce(this._competitorGroupChanges, draft => {
+        if (!draft.find(changePedicate(groupId, competitorId, 'REMOVE'))) {
+          draft.push({changeType: 'REMOVE', competitorId, groupId});
+        }
+      });
     }
   }
 
   applyCurrentChange() {
-    this.changeSaved.next(this.seedFights);
+    if (this._competitorGroupChanges && this._competitorGroupChanges.length > 0) {
+      this.changeSaved.next(this._competitorGroupChanges);
+    }
   }
 
   discardCurrentChange() {
-    if (this.inverseChanges.length > 0) {
-      this.seedFights = produce(this.seedFights, draft => {
-        applyPatches(draft, this.inverseChanges);
-      });
-    }
-    this.inverseChanges = [];
+    this._competitorGroupChanges = [];
   }
 
   close() {
     this.closeClicked.next();
   }
 
-  groupCanAcceptMoreFighters = (group: GroupDescriptor) => () => {
-    return group && group.id && group.size && group.size > (this.competitorIdsByGroupId(group.id)?.length || 0);
-  };
+  startDrag() {
+    this.cd.detach();
+  }
+
+  stopDrag() {
+    this.cd.reattach();
+  }
 }

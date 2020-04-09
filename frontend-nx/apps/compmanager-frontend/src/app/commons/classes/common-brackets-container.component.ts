@@ -19,6 +19,7 @@ import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected,
 
 @Injectable()
 export class CommonBracketsInfoContainer {
+
   competition$: Observable<CompetitionProperties>;
   stages$: Observable<CategoryBracketsStage[]>;
   fights$: Observable<Fight[]>;
@@ -54,6 +55,14 @@ export class CommonBracketsInfoContainer {
     this.category$.pipe(take(1), map(cat => {
       if (cat) {
         return actionBuilder(cat.id);
+      }
+    }), filter(act => !!act && !!act.type)).subscribe(this.store);
+  }
+
+  sendCommandFromCompetitionId(actionBuilder: (competitionId) => any) {
+    this.competition$.pipe(take(1), map(competition => {
+      if (competition) {
+        return actionBuilder(competition.id);
       }
     }), filter(act => !!act && !!act.type)).subscribe(this.store);
   }

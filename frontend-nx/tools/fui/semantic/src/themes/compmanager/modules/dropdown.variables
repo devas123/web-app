@@ -26,7 +26,7 @@
 @textTransition: none;
 
 /* Menu */
-@menuBackground: #FFFFFF;
+@menuBackground: darken(@primaryBackground, 5);
 @menuMargin: 0;
 @menuPadding: 0 0;
 @menuTop: 100%;

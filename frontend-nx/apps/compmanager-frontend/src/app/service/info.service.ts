@@ -5,14 +5,15 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
-import {DateTime} from 'luxon';
 import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
 import {CategoryBracketsStage, Fight, FightResultOption} from '../commons/model/competition.model';
+import {parseISO} from 'date-fns';
+import {format, utcToZonedTime} from 'date-fns-tz';
 
-const format = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
+const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
 const {
   commandsSyncEndpoint,
@@ -87,15 +88,15 @@ export class InfoService {
 
   static parseDate(dateStr: string): Date {
     if (dateStr) {
-      const keepZone = DateTime.fromISO(dateStr);
-      return new Date(keepZone.toString());
+      return parseISO(dateStr);
     }
     return null;
   }
 
   static formatDate(date: Date, timeZone: string): string {
     if (date) {
-      return DateTime.fromISO(date.toISOString(), {zone: timeZone}).toFormat(format);
+      const zoned = utcToZonedTime(date, timeZone);
+      return format(zoned, isoFormat, {timeZone});
     }
     return '';
   }
@@ -216,6 +217,7 @@ export class InfoService {
       headers: this.headers
     });
   }
+
   sendCreateCompetitionCommand(command: any): Observable<any> {
     const body = JSON.stringify(command);
     return this.http.post(`${commandsEndpoint}`, body, {
