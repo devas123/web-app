@@ -110,7 +110,6 @@ export class EventManagerEffects {
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
-      FIGHTS_EDITOR_APPLY_CHANGE,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     mergeMap((command: CommonAction) => {
       return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error))));

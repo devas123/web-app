@@ -5,7 +5,7 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component(
   {
-    selector: 'app-fights-editor',
+    selector: 'app-seed-editor',
     template: `
       <div class="fights-editor-container" cdkDropListGroup>
         <div class="two-column buttons-row">

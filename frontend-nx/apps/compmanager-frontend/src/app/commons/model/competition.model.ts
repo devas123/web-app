@@ -159,6 +159,15 @@ export interface CompScore {
 }
 
 export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS' | 'GROUP';
+export type GroupChangeType = 'ADD' | 'REMOVE';
+
+
+
+export interface CompetitorGroupChange {
+  competitorId: string;
+  groupId: string;
+  changeType: GroupChangeType;
+}
 
 export interface Fight {
   fightName: string;
