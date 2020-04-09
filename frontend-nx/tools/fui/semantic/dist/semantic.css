@@ -91490,7 +91490,7 @@ a.ui.nag {
   border: 1px solid #3c3f41;
   line-height: 1.4285em;
   max-width: 250px;
-  background: #FFFFFF;
+  background: #0f1114;
   padding: 0.833em 1em;
   font-weight: normal;
   font-style: normal;
@@ -91517,7 +91517,7 @@ a.ui.nag {
   content: '';
   width: 0.71428571em;
   height: 0.71428571em;
-  background: #FFFFFF;
+  background: #0f1114;
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   z-index: 1901;
@@ -91548,7 +91548,7 @@ a.ui.nag {
   font-size: 1rem;
   width: 0.71428571em;
   height: 0.71428571em;
-  background: #FFFFFF;
+  background: #0f1114;
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   z-index: 1901;
@@ -91569,7 +91569,7 @@ a.ui.nag {
   border: 1px solid #3c3f41;
   line-height: 1.4285em;
   max-width: none;
-  background: #FFFFFF;
+  background: #0f1114;
   padding: 0.833em 1em;
   font-weight: normal;
   font-style: normal;
@@ -91587,7 +91587,7 @@ a.ui.nag {
   right: auto;
   bottom: 100%;
   left: 50%;
-  background: #FFFFFF;
+  background: #0f1114;
   margin-left: -0.07142857rem;
   margin-bottom: 0.14285714rem;
 }
@@ -91713,14 +91713,14 @@ a.ui.nag {
 /* Arrow Position */
 
 [data-tooltip][data-inverted]:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
 }
 
 /* Popup  */
 
 [data-tooltip][data-inverted]:after {
-  background: #1B1C1D;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #1B1C1D;
   border: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -91728,7 +91728,7 @@ a.ui.nag {
 
 [data-tooltip][data-inverted]:after .header {
   background: none;
-  color: #FFFFFF;
+  color: #1B1C1D;
 }
 
 /*--------------
@@ -91736,7 +91736,7 @@ a.ui.nag {
     ---------------*/
 
 [data-position~="top"][data-tooltip]:before {
-  background: #FFFFFF;
+  background: #0f1114;
 }
 
 /* Top Center */
@@ -91756,7 +91756,7 @@ a.ui.nag {
   right: auto;
   bottom: 100%;
   left: 50%;
-  background: #FFFFFF;
+  background: #0f1114;
   margin-left: -0.07142857rem;
   margin-bottom: 0.14285714rem;
 }
@@ -91800,7 +91800,7 @@ a.ui.nag {
 }
 
 [data-position~="bottom"][data-tooltip]:before {
-  background: #FFFFFF;
+  background: #0f1114;
   -webkit-box-shadow: -1px -1px 0 0 #242526;
   box-shadow: -1px -1px 0 0 #242526;
 }
@@ -91875,7 +91875,7 @@ a.ui.nag {
   top: 50%;
   margin-top: -0.14285714rem;
   margin-right: -0.07142857rem;
-  background: #FFFFFF;
+  background: #0f1114;
   -webkit-box-shadow: 1px -1px 0 0 #242526;
   box-shadow: 1px -1px 0 0 #242526;
 }
@@ -91895,7 +91895,7 @@ a.ui.nag {
   top: 50%;
   margin-top: -0.07142857rem;
   margin-left: 0.14285714rem;
-  background: #FFFFFF;
+  background: #0f1114;
   -webkit-box-shadow: -1px 1px 0 0 #242526;
   box-shadow: -1px 1px 0 0 #242526;
 }
@@ -91903,25 +91903,25 @@ a.ui.nag {
 /* Inverted Arrow Color */
 
 [data-inverted][data-position~="bottom"][data-tooltip]:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
   -webkit-box-shadow: -1px -1px 0 0 #242526;
   box-shadow: -1px -1px 0 0 #242526;
 }
 
 [data-inverted][data-position="left center"][data-tooltip]:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
   -webkit-box-shadow: 1px -1px 0 0 #242526;
   box-shadow: 1px -1px 0 0 #242526;
 }
 
 [data-inverted][data-position="right center"][data-tooltip]:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
   -webkit-box-shadow: -1px 1px 0 0 #242526;
   box-shadow: -1px 1px 0 0 #242526;
 }
 
 [data-inverted][data-position~="top"][data-tooltip]:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
 }
 
 [data-position~="bottom"][data-tooltip]:before {
@@ -92142,32 +92142,32 @@ a.ui.nag {
 
 .ui.right.center.popup:before,
 .ui.left.center.popup:before {
-  background: #FFFFFF;
+  background: #0f1114;
 }
 
 /* Arrow Color By Location */
 
 .ui.bottom.popup:before {
-  background: #FFFFFF;
+  background: #0f1114;
 }
 
 .ui.top.popup:before {
-  background: #FFFFFF;
+  background: #0f1114;
 }
 
 /* Inverted Arrow Color */
 
 .ui.inverted.bottom.popup:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
 }
 
 .ui.inverted.right.center.popup:before,
 .ui.inverted.left.center.popup:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
 }
 
 .ui.inverted.top.popup:before {
-  background: #1B1C1D;
+  background: #FFFFFF;
 }
 
 /*******************************
@@ -92267,8 +92267,8 @@ a.ui.nag {
 /* Inverted colors  */
 
 .ui.inverted.popup {
-  background: #1B1C1D;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #1B1C1D;
   border: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -92276,11 +92276,11 @@ a.ui.nag {
 
 .ui.inverted.popup .header {
   background-color: none;
-  color: #FFFFFF;
+  color: #1B1C1D;
 }
 
 .ui.inverted.popup:before {
-  background-color: #1B1C1D;
+  background-color: #FFFFFF;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }

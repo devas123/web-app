@@ -7,7 +7,7 @@
 --------------------*/
 
 @zIndex: 1900;
-@background: @white;
+@background: darken(@primaryBackground, 7);
 
 @maxWidth: 250px;
 @borderColor: @solidBorderColor;
@@ -123,13 +123,13 @@
 @veryWideWidth: 550px;
 
 /* Inverted */
-@invertedBackground: @black;
-@invertedColor: @white;
+@invertedBackground: @white;
+@invertedColor: @black;
 @invertedBorder: none;
 @invertedBoxShadow: none;
 
 @invertedHeaderBackground: none;
-@invertedHeaderColor: @white;
+@invertedHeaderColor: @black;
 @invertedArrowColor: @invertedBackground;
 
 /* Arrow color by position */
