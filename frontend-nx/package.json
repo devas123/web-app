@@ -63,6 +63,7 @@
     "extend": "^3.0.1",
     "immer": "^5.0.0",
     "is-ua-webview": "^1.0.0",
+    "lodash": "^4.17.15",
     "marked": "^0.8.0",
     "ngx-avatar": "^3.7.0",
     "ngx-color": "^5.0.2",
