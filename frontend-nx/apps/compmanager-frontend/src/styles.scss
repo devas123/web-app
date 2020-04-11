@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-$primary_color: gray;
-$background_color: #001a26;
+$secondary_color: #001A26;
+$background_color: #042e3e;
 $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
@@ -15,16 +15,6 @@ $text_color: #ffffe9;
 
 .category_hoverable:hover, .group_selected {
   background-color: lighten($background_color, 10) !important;
-}
-
-.ui.modal {
-  top: 30%;
-}
-
-@media handheld {
-  .ui.modal {
-    top: 20%;
-  }
 }
 
 .no_margin {
@@ -227,15 +217,6 @@ html, body {
   background-image: unset;
 }
 
-.ui.card {
-  background-color: $background_color;
-}
-
-.ui.cards > .card {
-  background-color: $background_color;
-}
-
-
 .customcontainer {
   margin-bottom: 1rem;
   display: grid;
@@ -245,7 +226,7 @@ html, body {
   width: 100%;
 
   .ui.basic.segment.customline {
-    background-color: $background_color;
+    background-color: $secondary_color;
     border-radius: 5px;
     padding: 1rem;
     margin-bottom: 0;
@@ -276,6 +257,25 @@ html, body {
   }
 }
 
+.selection.sidemenu {
+  width: 100%;
+}
+
+.message_line {
+  background-color: $secondary_color !important;
+}
+
+.ui.input.sidemenu {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.menublock {
+  background-color: $secondary_color;
+  margin-left: 14px;
+  border-radius: 3px;
+}
+
 .ui.pagination.menu {
   border: 0;
 }
@@ -299,6 +299,7 @@ input,
 
 #maincontent {
   overflow: auto;
+  grid-column: 2/3;
 
   &._small {
     grid-column: 1/3;

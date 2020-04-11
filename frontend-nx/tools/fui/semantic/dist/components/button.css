@@ -3817,8 +3817,8 @@
 .ui.inverted.grey.buttons .button,
 .ui.inverted.grey.button {
   background-color: transparent;
-  -webkit-box-shadow: 0 0 0 2px #3c3f41 inset;
-          box-shadow: 0 0 0 2px #3c3f41 inset;
+  -webkit-box-shadow: 0 0 0 2px #d4cb78 inset;
+          box-shadow: 0 0 0 2px #d4cb78 inset;
   color: #FFFFFF;
 }
 .ui.inverted.grey.buttons .button:hover,
@@ -4002,8 +4002,8 @@
 .ui.inverted.black.buttons .button,
 .ui.inverted.black.button {
   background-color: transparent;
-  -webkit-box-shadow: 0 0 0 2px #3c3f41 inset;
-          box-shadow: 0 0 0 2px #3c3f41 inset;
+  -webkit-box-shadow: 0 0 0 2px #d4cb78 inset;
+          box-shadow: 0 0 0 2px #d4cb78 inset;
   color: #FFFFFF;
 }
 .ui.inverted.black.buttons .button:hover,

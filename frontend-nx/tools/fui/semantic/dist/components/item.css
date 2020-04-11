@@ -112,7 +112,7 @@
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   background: none;
-  color: #ffffe9;
+  color: #CFCBBC;
   margin: 0;
   padding: 0;
   -webkit-box-shadow: none;
@@ -187,7 +187,7 @@
   max-width: auto;
   font-size: 1em;
   line-height: 1.4285em;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*--------------
@@ -247,10 +247,10 @@
 
 /* Meta */
 .ui.items > .item .meta > a:not(.ui) {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.items > .item .meta > a:not(.ui):hover {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*--------------
@@ -307,7 +307,7 @@
   padding: 0 0 0;
   top: 0;
   left: 0;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
   -webkit-transition: color 0.1s ease;
@@ -557,7 +557,7 @@
   color: #ffffff;
 }
 .ui.inverted.divided.items > .item {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #ded797;
 }
 .ui.inverted.divided.items > .item:first-child {
   border-top: none;

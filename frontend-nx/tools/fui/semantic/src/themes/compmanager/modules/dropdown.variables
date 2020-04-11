@@ -133,7 +133,7 @@
 @selectionHorizontalPadding: @inputHorizontalPadding;
 @selectionBorderEmWidth:  @relative1px;
 @selectionMinHeight: @inputLineHeight + (@selectionVerticalPadding * 2) - @selectionBorderEmWidth;
-@selectionBackground: @inputBackground;
+@selectionBackground: lighten(@inputBackground, 5);
 @selectionDisplay: inline-block;
 @selectionIconDistance: @inputHorizontalPadding + (@glyphWidth * 2);
 @selectionPadding: @selectionVerticalPadding @selectionIconDistance @selectionVerticalPadding @selectionHorizontalPadding;
@@ -283,8 +283,10 @@
        States
 --------------------*/
 
+@itemBackground: lighten(@secondaryBackground, 5);
+
 /* Hovered */
-@hoveredItemBackground: @transparentBlack;
+@hoveredItemBackground: lighten(@itemBackground, 3);
 @hoveredItemColor: @selectedTextColor;
 @hoveredZIndex: @menuZIndex + 2;
 
@@ -297,13 +299,13 @@
 
 /* Active Menu Item */
 @activeItemZIndex: @menuZIndex + 1;
-@activeItemBackground: transparent;
+@activeItemBackground: lighten(@itemBackground, 3);
 @activeItemBoxShadow: none;
 @activeItemFontWeight: @bold;
 @activeItemColor: @selectedTextColor;
 
 /* Selected */
-@selectedBackground: @subtleTransparentBlack;
+@selectedBackground: lighten(@itemBackground, 5);
 @selectedColor: @selectedTextColor;
 
 /* Clearable */

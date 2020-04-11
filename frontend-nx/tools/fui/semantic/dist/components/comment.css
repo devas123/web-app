@@ -105,7 +105,7 @@
 
 .ui.comments .comment .author {
   font-size: 1em;
-  color: #ffffe9;
+  color: #CFCBBC;
   font-weight: bold;
 }
 .ui.comments .comment a.author {
@@ -122,7 +122,7 @@
 .ui.comments .comment .metadata {
   display: inline-block;
   margin-left: 0.5em;
-  color: #ffffe9;
+  color: #CFCBBC;
   font-size: 0.875em;
 }
 .ui.comments .comment .metadata > * {
@@ -141,7 +141,7 @@
   margin: 0.25em 0 0.5em;
   font-size: 1em;
   word-wrap: break-word;
-  color: #ffffe9;
+  color: #CFCBBC;
   line-height: 1.3;
 }
 
@@ -156,14 +156,14 @@
   cursor: pointer;
   display: inline-block;
   margin: 0 0.75em 0 0;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.comments .comment .actions a:last-child {
   margin-right: 0;
 }
 .ui.comments .comment .actions a.active,
 .ui.comments .comment .actions a:hover {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*--------------------
@@ -279,8 +279,8 @@
   color: #ffffff;
 }
 .ui.inverted.threaded.comments .comment > .comments {
-  -webkit-box-shadow: -1px 0 0 #555555;
-          box-shadow: -1px 0 0 #555555;
+  -webkit-box-shadow: -1px 0 0 #ded797;
+          box-shadow: -1px 0 0 #ded797;
 }
 
 

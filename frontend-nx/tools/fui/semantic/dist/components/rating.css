@@ -82,7 +82,7 @@
 .ui.rating .icon.selected.active,
 .ui.rating .icon.selected.partial.active {
   background: transparent;
-  color: #ffffe9;
+  color: #CFCBBC;
   background-clip: unset;
 }
 

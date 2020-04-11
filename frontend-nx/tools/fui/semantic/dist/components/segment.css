@@ -485,7 +485,7 @@
 
 .ui.disabled.segment {
   opacity: 0.45;
-  color: #ffffff;
+  color: #e4e2da;
 }
 
 /*--------------
@@ -700,7 +700,7 @@
 
 /* Nested */
 .ui.inverted.segment .segment {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.inverted.segment .inverted.segment {
   color: rgba(255, 255, 255, 0.9);
@@ -708,7 +708,7 @@
 
 /* Attached */
 .ui.inverted.attached.segment {
-  border-color: #555555;
+  border-color: #ded797;
 }
 
 /* Loading */
@@ -727,7 +727,7 @@
 /* Secondary */
 .ui.secondary.segment {
   background: #F3F4F5;
-  color: #ffffff;
+  color: #e4e2da;
 }
 .ui.secondary.inverted.segment {
   background: #4c4f52 -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255, 0.2)));
@@ -739,7 +739,7 @@
 /* Tertiary */
 .ui.tertiary.segment {
   background: #DCDDDE;
-  color: #ffffff;
+  color: #e4e2da;
 }
 .ui.tertiary.inverted.segment {
   background: #717579 -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 0.35)), to(rgba(255, 255, 255, 0.35)));
@@ -763,7 +763,7 @@
   max-width: calc(100% + 2px);
   -webkit-box-shadow: none;
           box-shadow: none;
-  border: 1px solid #3c3f41;
+  border: 1px solid #d4cb78;
 }
 .ui.attached:not(.message) + .ui.attached.segment:not(.top) {
   border-top: none;

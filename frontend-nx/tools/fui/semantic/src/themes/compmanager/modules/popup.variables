@@ -7,7 +7,7 @@
 --------------------*/
 
 @zIndex: 1900;
-@background: darken(@primaryBackground, 7);
+@background: lighten(@secondaryBackground, 3);
 
 @maxWidth: 250px;
 @borderColor: @solidBorderColor;
