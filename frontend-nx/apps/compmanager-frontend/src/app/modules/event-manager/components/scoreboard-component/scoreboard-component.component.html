@@ -9,23 +9,23 @@
       <div class="participant__data ">
         <div class="ui buttons winner_control_button" *ngIf="showControls">
           <button class="ui button"
-                  (click)="setWinner(score?.competitor, 'WIN_SUBMISSION')">Win by sub
+                  (click)="setWinner(getCompetitor(score?.competitorId), 'WIN_SUBMISSION')">Win by sub
           </button>
           <button class="ui button"
-                  (click)="setWinner(score?.competitor, 'OPPONENT_DQ')">Opponent DQ
+                  (click)="setWinner(getCompetitor(score?.competitorId), 'OPPONENT_DQ')">Opponent DQ
           </button>
           <button class="ui button"
-                  (click)="setWinner(score?.competitor, 'WIN_POINTS')">Win by points
+                  (click)="setWinner(getCompetitor(score?.competitorId), 'WIN_POINTS')">Win by points
           </button>
           <button class="ui button"
-                  (click)="setWinner(score?.competitor, 'WIN_DECISION')">Win by decision
+                  (click)="setWinner(getCompetitor(score?.competitorId), 'WIN_DECISION')">Win by decision
           </button>
         </div>
         <div class="participant__data-box">
           <div class="participant__name">
-            {{score?.competitor | getname}}
+            {{getCompetitor(score?.competitorId) | getname}}
           </div>
-          <div class="participant__team">{{score?.competitor?.academy?.name | truncate:30}}</div>
+          <div class="participant__team">{{getCompetitor(score?.competitorId)?.academy?.name | truncate:30}}</div>
         </div>
       </div>
       <div class="participant__extra-points">

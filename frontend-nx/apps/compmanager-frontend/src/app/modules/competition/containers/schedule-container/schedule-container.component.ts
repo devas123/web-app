@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
+import {loadScheduleCommand} from '../../../event-manager/redux/event-manager-actions';
 
 @Component({
   selector: 'app-schedule-container',
   template: `
     <div class="ui basic segment margins_container">
       <app-schedule-display
+        [mats]="scheduleInfo.mats$ | async"
         [scheduleEmpty]="scheduleInfo.scheduleEmpty$ | async"
         [timeZone]="scheduleInfo.timeZone$ | async"
         [competitionId]="scheduleInfo.competitionId$ | async"
@@ -23,5 +25,6 @@ export class ScheduleContainerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => loadScheduleCommand({competitionId}));
   }
 }

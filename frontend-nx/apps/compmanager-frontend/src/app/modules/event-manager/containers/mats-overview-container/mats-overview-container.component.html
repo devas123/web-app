@@ -1,4 +1,6 @@
 <app-mats-overview-component [mats]="selectedPeriodMats$ | async"
+                             [competitors]="info.competitors$ | async"
+                             [matsFights]="selectedPeriodMatsFights$ | async"
                              (matDetailsClicked)="navigateToMat($event)"
                              [periodId]="(selectedPeriod$ | async)?.id"
                              [competitionId]="competitionId$ | async"

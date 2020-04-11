@@ -1,5 +1,13 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {Category, ScheduleRequirement} from '../../../../commons/model/competition.model';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation
+} from '@angular/core';
+import {Category, dragEndEvent, dragStartEvent, ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {CatReq} from './schedule-editor.component';
 
@@ -10,7 +18,8 @@ import {CatReq} from './schedule-editor.component';
          (cdkDropListDropped)="onItemDrop($event)">
       <div class="inner-list padded-vertical">
         <ng-container *ngFor="let catReq of linesToDisplay">
-          <div *ngIf="catReq.cat" class="item schedule_page flex-container" cdkDrag
+          <div *ngIf="catReq.cat" class="item schedule_page flex-container" cdkDrag (cdkDragStarted)="dragStart()"
+               (cdkDragEnded)="dragEnd()"
                [cdkDragData]="{fromPeriod: periodId, cat: catReq.cat}" [ngClass]="{'compman_clickable': categoryClickable}">
             <div *ngIf="canDrag" cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
             <div class="content">
@@ -25,7 +34,8 @@ import {CatReq} from './schedule-editor.component';
           </div>
           <app-requirement-line
             *ngIf="catReq.req && !catReq.cat"
-            cdkDrag
+            cdkDrag (cdkDragStarted)="dragStart()"
+            (cdkDragEnded)="dragEnd()"
             [cdkDragData]="{fromPeriod: periodId, req: catReq.req}"
             [matId]="null"
             [selected]="false"
@@ -91,6 +101,16 @@ export class CategoriesListComponent {
   @Output()
   itemClicked = new EventEmitter<CatReq>();
 
+  constructor(private el: ElementRef) {
+  }
+
+  dragStart() {
+    this.el.nativeElement.dispatchEvent(dragStartEvent());
+  }
+
+  dragEnd() {
+    this.el.nativeElement.dispatchEvent(dragEndEvent());
+  }
 
   getRequirementCategories(req: ScheduleRequirement) {
     if (req && req.categoryIds && this.allCategories) {

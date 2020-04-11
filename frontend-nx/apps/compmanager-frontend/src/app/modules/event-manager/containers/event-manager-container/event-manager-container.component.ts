@@ -61,8 +61,8 @@ export class EventManagerContainerComponent extends EventManagerRouterEntryCompo
     this.menu$ = menuService.menu$;
     this.header$ = this.store.pipe(select(eventManagerGetHeaderDescription));
     this.displayAsSidebar$ = menuService.displaySidebar$;
-    this.shrinkMainContent$ = combineLatest([this.menu$, this.displayAsSidebar$]).pipe(
-      map(([menu, button]) => !button && (menu && menu.length > 0))
+    this.shrinkMainContent$ = this.displayAsSidebar$.pipe(
+      map((button) => !button)
     );
   }
 

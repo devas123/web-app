@@ -1,5 +1,10 @@
 import {Observable} from 'rxjs';
-import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  getSelectedEventId,
+  getSelectedEventProperties
+} from '../../reducers/global-reducers';
 import {BracketsType, Category, CategoryBracketsStage, Competitor, Fight} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
@@ -21,6 +26,7 @@ import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected,
 export class CommonBracketsInfoContainer {
 
   competition$: Observable<CompetitionProperties>;
+  competitionId$: Observable<string>;
   stages$: Observable<CategoryBracketsStage[]>;
   fights$: Observable<Fight[]>;
   firstRoundFights$: Observable<Fight[]>;
@@ -36,6 +42,7 @@ export class CommonBracketsInfoContainer {
 
   constructor(private store: Store<AppState>, private observer: BreakpointObserver) {
     this.competition$ = store.pipe(select(getSelectedEventProperties));
+    this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
     this.bracketsType$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType));
@@ -60,10 +67,8 @@ export class CommonBracketsInfoContainer {
   }
 
   sendCommandFromCompetitionId(actionBuilder: (competitionId) => any) {
-    this.competition$.pipe(take(1), map(competition => {
-      if (competition) {
-        return actionBuilder(competition.id);
-      }
+    this.competition$.pipe(filter(com => !!com), take(1), map(competition => {
+      return actionBuilder(competition.id);
     }), filter(act => !!act && !!act.type)).subscribe(this.store);
   }
 
@@ -76,6 +81,13 @@ export class CommonBracketsInfoContainer {
       competitionId: competitionId,
       selectedStageId: id
     }));
+  }
+
+  selectStageById(id: string) {
+    this.sendCommandFromCompetitionId((competitionId => eventManagerCategoryBracketsStageSelected({
+      competitionId: competitionId,
+      selectedStageId: id
+    })));
   }
 
   selectCategory(categoryId: string, competitionId: string) {

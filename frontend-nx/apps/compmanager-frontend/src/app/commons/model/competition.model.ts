@@ -15,6 +15,14 @@ const getRestrictionName = (res: CategoryRestriction, def = '') => {
   return def;
 };
 
+export const dragStartEvent = () => new CustomEvent('app-drag-start', {
+  bubbles: true
+});
+export const dragEndEvent = () => new CustomEvent('app-drag-end', {
+  bubbles: true
+});
+
+
 export const getRestrictionNameByType = (cat: Category, type: RestrictionType, def = '') => {
   if (cat.restrictions) {
     return getRestrictionName(cat.restrictions.find(r => r.type === type, def));
@@ -72,7 +80,6 @@ export interface Period {
   startTime: string;
   endTime?: string;
   isActive: boolean;
-  mats: MatDescription[];
   scheduleEntries?: ScheduleEntry[];
   scheduleRequirements?: ScheduleRequirement[];
   duration?: number;
@@ -96,7 +103,6 @@ export interface ScheduleEntry {
   categoryIds: string[];
   fightIds: MatIdAndSomeId[];
   invalidFightIds: string[];
-  matId: string;
   periodId: string;
   description: string;
   entryType: string;
@@ -123,7 +129,14 @@ export interface ScheduleRequirement {
   entryOrder: number;
 }
 
-export type CompetitorResultType = 'WIN_POINTS' | 'WIN_SUBMISSION' | 'WIN_DECISION' | 'DRAW' | 'OPPONENT_DQ' | 'BOTH_DQ' | 'WALKOVER';
+export type CompetitorResultType =
+  'WIN_POINTS'
+  | 'WIN_SUBMISSION'
+  | 'WIN_DECISION'
+  | 'DRAW'
+  | 'OPPONENT_DQ'
+  | 'BOTH_DQ'
+  | 'WALKOVER';
 
 export interface FightResult {
   resultTypeId: String;
@@ -160,7 +173,6 @@ export interface CompScore {
 
 export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS' | 'GROUP';
 export type GroupChangeType = 'ADD' | 'REMOVE';
-
 
 
 export interface CompetitorGroupChange {

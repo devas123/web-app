@@ -214,10 +214,12 @@ export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEve
 export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && regInfo.registrationGroups);
 
 const {
-  selectAll: selectAllPeriods
+  selectAll: selectAllPeriods,
+  selectEntities: selectPeriodsDictionary
 } = periodEntityAdapter.getSelectors(eventManagerGetSelectedEventSchedulePeriodsCollection);
 
 export const getSelectedEventPeriods = selectAllPeriods;
+export const getSelectedEventPeriodsDictionary = selectPeriodsDictionary;
 export const getSelectedEventUndispatchedRequirements = createSelector(eventManagerGetSelectedEventSchedule, schedule => (schedule && schedule.undispatchedRequirements) || []);
 export const eventManagerGetSelectedEventScheduleEmpty = createSelector(selectAllPeriods, (periods) => {
   return !(!!periods && periods.length > 0 && periods.find(p => p.scheduleEntries && p.scheduleEntries.length > 0));

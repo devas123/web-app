@@ -17,6 +17,7 @@ import {Dictionary} from '@ngrx/entity';
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
+export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
 export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND';
 export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
@@ -96,6 +97,7 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
+export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{competitionId: string}>());
 export const schedulePeriodsUpdated = createAction(EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED, props<{periods: Period[], undispatchedRequirements: ScheduleRequirement[]}>());
 export const fightIdsByCategoryIdLoaded = createAction(FIGHT_IDS_BY_CATEGORY_ID_LOADED, props<{fightIdsBycategoryId: Dictionary<string[]>}>());
 export const eventManagerLoadDefaultFightResults = createAction(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS, props<{ competitionId: string }>());
@@ -248,10 +250,10 @@ export const eventManagerGenerateBrackets = (competitionId, categoryId, stageDes
   }
 });
 
-export const eventManagerGenerateSchedule = (competitionId, periods: Period[]) => ({
+export const eventManagerGenerateSchedule = (competitionId, periods: Period[], mats: MatDescription[]) => ({
   type: EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   competitionId,
-  payload: { periods }
+  payload: { periods, mats }
 });
 export const eventManagerCategorySelected = (competitionId: string, categoryId: string) => ({
   type: EVENT_MANAGER_CATEGORY_SELECTED,

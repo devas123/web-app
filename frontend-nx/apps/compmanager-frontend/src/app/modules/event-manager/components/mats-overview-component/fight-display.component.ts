@@ -14,18 +14,18 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
         <p>{{ fight?.startTime | zdate:true:undefined:false }}</p>
       </div>
       <div>
-        <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
-          {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[0]?.competitor?.academy?.name}}</div>
+        <div class="content" (click)="selectCompetitor(getCompetitor(fight?.scores[0]?.competitorId))">
+          {{getCompetitor(fight?.scores[0]?.competitorId)?.firstName}}  {{getCompetitor(fight?.scores[0]?.competitorId)?.lastName}}
+          <div class="sub header">{{getCompetitor(fight?.scores[0]?.competitorId)?.academy?.name}}</div>
         </div>
       </div>
       <div>
           <p>vs</p>
       </div>
       <div>
-        <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
-          {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[1]?.competitor?.academy?.name}}</div>
+        <div class="content" (click)="selectCompetitor(getCompetitor(fight?.scores[1]?.competitorId))">
+          {{getCompetitor(fight?.scores[1]?.competitorId)?.firstName}} {{getCompetitor(fight?.scores[1]?.competitorId)?.lastName}}
+          <div class="sub header">{{getCompetitor(fight?.scores[1]?.competitorId)?.academy?.name}}</div>
         </div>
       </div>
     </div>`,
@@ -34,8 +34,14 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 })
 export class FightDisplayComponent implements OnInit {
 
+  constructor() {
+  }
+
   @Input()
   fight: Fight;
+
+  @Input()
+  competitors: Competitor[];
 
   @Output()
   fightClicked = new EventEmitter<string>();
@@ -43,10 +49,12 @@ export class FightDisplayComponent implements OnInit {
   @Output()
   competitorClicked = new EventEmitter<Competitor>();
 
-  constructor() {
-  }
 
   displayCategory = AddFighterComponent.displayCategory;
+
+  getCompetitor(id) {
+    return this.competitors.find(comp => comp.id === id);
+  }
 
   selectFight(fightId: string) {
     this.fightClicked.next(fightId);

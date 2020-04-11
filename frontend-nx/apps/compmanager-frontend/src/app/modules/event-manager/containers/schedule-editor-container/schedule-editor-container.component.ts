@@ -5,7 +5,14 @@ import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {HeaderDescription, Period, ScheduleRequirement} from '../../../../commons/model/competition.model';
-import {eventManagerDropScheduleCommand, eventManagerGenerateSchedule, eventManagerPeriodAdded, eventManagerPeriodRemoved, schedulePeriodsUpdated} from '../../redux/event-manager-actions';
+import {
+  eventManagerDropScheduleCommand,
+  eventManagerGenerateSchedule,
+  eventManagerPeriodAdded,
+  eventManagerPeriodRemoved,
+  loadScheduleCommand,
+  schedulePeriodsUpdated
+} from '../../redux/event-manager-actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -61,6 +68,7 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
 
 
   ngOnInit() {
+    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => loadScheduleCommand({competitionId}));
   }
 
   goBack() {
@@ -81,9 +89,8 @@ export class ScheduleEditorContainerComponent extends EventManagerRouterEntryCom
   }
 
 
-  sendGenerateSchedule({competitionId, periods}) {
-
-    this.store.dispatch(eventManagerGenerateSchedule(competitionId, periods));
+  sendGenerateSchedule({competitionId, periods, mats}) {
+    this.store.dispatch(eventManagerGenerateSchedule(competitionId, periods, mats));
   }
 
   sendDropSchedule(competitionId: string) {

@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {CompetitionProperties} from '../../../../reducers/global-reducers';
 
 @Component({
@@ -7,7 +16,7 @@ import {CompetitionProperties} from '../../../../reducers/global-reducers';
   styleUrls: ['./my-events-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MyEventsListComponent implements OnInit {
+export class MyEventsListComponent implements OnInit, AfterViewInit {
 
   @Input()
   events: CompetitionProperties[];
@@ -29,10 +38,22 @@ export class MyEventsListComponent implements OnInit {
   eventUnpublished: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
 
 
-  constructor() {
+  loaded = false;
+
+  constructor(private cd: ChangeDetectorRef) {
+    this.loaded = false;
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.loaded = true;
+      this.cd.reattach();
+      this.cd.markForCheck();
+    });
   }
 
   ngOnInit() {
+    this.cd.detach();
   }
 
   deleteEvent(event: CompetitionProperties) {

@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {Category, ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Dictionary} from '@ngrx/entity';
@@ -13,21 +23,23 @@ import {Dictionary} from '@ngrx/entity';
         <a class="right-floated"><i class="ui trash icon" (click)="requirementRemoved.next(fp)"></i></a>
       </div>
     </div>
-    <div class="empty-container list-container padded-vertical" cdkDropList (cdkDropListDropped)="onItemDropped($event, periodId)"
+    <div class="empty-container list-container padded-vertical" cdkDropList
+         (cdkDropListDropped)="onItemDropped($event, periodId)"
          *ngIf="requirementsEmpty">
       <span>Drop here to add requirement</span>
     </div>
     <div class="list-container" cdkDropList (cdkDropListDropped)="onItemDropped($event, periodId)"
          *ngIf="this._requirements?.length > 0">
       <div class="inner-list">
-        <app-requirement-line cdkDrag [cdkDragData]="{fromPeriod: periodId, req: req, fromMatId: matId}"
+        <app-requirement-line cdkDrag (cdkDragStarted)="dragStart()"
+                              (cdkDragEnded)="dragEnd()" [cdkDragData]="{fromPeriod: periodId, req: req, fromMatId: matId}"
                               [req]="req"
                               [matId]="matId"
                               [selected]="isSelected(req.id)"
                               [requirementCategories]="_categoriesByRequirementId[req.id]"
                               (removed)="requirementRemoved.next(req)"
                               (selectionChanged)="changeSelection($event, req.id)"
-                              [canDelete]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES'"
+                              [canDelete]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES' || req.entryType === 'RELATIVE_PAUSE'"
                               [canSplit]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES'"
                               [canSelect]="canSelect(req)"
                               (edit)="this.splitIconCicked.next(req)"
@@ -41,14 +53,9 @@ import {Dictionary} from '@ngrx/entity';
 })
 export class RequirementsDisplayComponent implements OnInit, OnChanges {
 
-  @Input()
-  timeZone: string;
+  constructor(private el: ElementRef) {
+  }
 
-  @Input()
-  matId: string;
-
-  @Output()
-  splitIconCicked = new EventEmitter<ScheduleRequirement>();
 
   @Input()
   set requirements(srs: ScheduleRequirement[]) {
@@ -61,6 +68,20 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   set categories(val: Category[]) {
     this._categories = val || [];
   }
+
+  get requirementsEmpty() {
+    return !this._requirements
+      || this._requirements.filter(r => r.entryType !== 'RELATIVE_PAUSE').length <= 0;
+  }
+
+  @Input()
+  timeZone: string;
+
+  @Input()
+  matId: string;
+
+  @Output()
+  splitIconCicked = new EventEmitter<ScheduleRequirement>();
 
   @Input()
   periodId: string;
@@ -87,9 +108,20 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
 
   _categoriesByRequirementId: Dictionary<Category[]>;
 
-  get requirementsEmpty() {
-    return !this._requirements
-      || this._requirements.filter(r => r.entryType !== 'RELATIVE_PAUSE').length <= 0;
+  dragStart() {
+    this.el.nativeElement.dispatchEvent(
+      new CustomEvent('app-drag-start', {
+        bubbles: true
+      })
+    );
+  }
+
+  dragEnd() {
+    this.el.nativeElement.dispatchEvent(
+      new CustomEvent('app-drag-end', {
+        bubbles: true
+      })
+    );
   }
 
   isSelected(id: string) {

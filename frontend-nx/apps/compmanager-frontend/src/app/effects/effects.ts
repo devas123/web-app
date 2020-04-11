@@ -28,7 +28,7 @@ import {
   eventManagerLoadFightersForCompetition,
   eventManagerScheduleLoaded,
   fightIdsByCategoryIdLoaded,
-  LOAD_CATEGORIES_COMMAND,
+  LOAD_CATEGORIES_COMMAND, LOAD_SCHEDULE_COMMAND,
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Competitor, Fight} from '../commons/model/competition.model';
@@ -87,7 +87,7 @@ export class Effects {
     })));
 
   loadSelectedEventSchedule$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(COMPETITION_SELECTED),
+    ofType(LOAD_SCHEDULE_COMMAND),
     switchMap((action: CommonAction) => {
       return this.infoService.getSchedule(action.competitionId).pipe(map(payload => {
         const schedule = (payload || {}) as Schedule;
