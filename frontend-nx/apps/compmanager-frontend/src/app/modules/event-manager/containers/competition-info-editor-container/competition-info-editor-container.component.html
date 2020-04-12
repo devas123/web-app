@@ -1,7 +1,6 @@
-<div class="ui container">
-  <app-competition-info-contacts-editor  *ngIf="selectedTab === 'contacts'"></app-competition-info-contacts-editor>
-  <app-competition-info-template-editor
-    [showPreview]="showTemplatePreview"
-    [showEditor]="showTemplateEditor"
-    *ngIf="selectedTab === 'template'"></app-competition-info-template-editor>
-</div>
+<app-competition-info-contacts-editor  *ngIf="selectedTab === 'contacts'"></app-competition-info-contacts-editor>
+<app-competition-info-template-editor
+  [showPreview]="showTemplatePreview"
+  [showEditor]="showTemplateEditor"
+  *ngIf="selectedTab === 'template'"></app-competition-info-template-editor>
+

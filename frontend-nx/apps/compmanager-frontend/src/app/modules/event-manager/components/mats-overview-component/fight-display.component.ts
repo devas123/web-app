@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-fight-display',
@@ -13,29 +14,31 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
         {{fight?.numberOnMat + 1}}
         <p>{{ fight?.startTime | zdate:true:undefined:false }}</p>
       </div>
-      <div>
-        <div class="content" (click)="selectCompetitor(fight?.scores[0]?.competitor)">
-          {{fight?.scores[0]?.competitor?.firstName}}  {{fight?.scores[0]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[0]?.competitor?.academy?.name}}</div>
+      <ng-container *ngFor="let score of fightScores; last as isLast">
+        <div>
+          <div class="content" (click)="selectCompetitor(getCompetitor(score?.competitorId))">
+            {{getCompetitor(score?.competitorId)?.firstName}}  {{getCompetitor(score?.competitorId)?.lastName}}
+            <div class="sub header">{{getCompetitor(score?.competitorId)?.academy?.name}}</div>
+          </div>
         </div>
-      </div>
-      <div>
+        <div *ngIf="!isLast">
           <p>vs</p>
-      </div>
-      <div>
-        <div class="content" (click)="selectCompetitor(fight?.scores[1]?.competitor)">
-          {{fight?.scores[1]?.competitor?.firstName}} {{fight?.scores[1]?.competitor?.lastName}}
-          <div class="sub header">{{fight?.scores[1]?.competitor?.academy?.name}}</div>
         </div>
-      </div>
+      </ng-container>
     </div>`,
   styleUrls: ['mats-overview-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FightDisplayComponent implements OnInit {
 
+  constructor() {
+  }
+
   @Input()
   fight: Fight;
+
+  @Input()
+  competitors: Competitor[];
 
   @Output()
   fightClicked = new EventEmitter<string>();
@@ -43,10 +46,17 @@ export class FightDisplayComponent implements OnInit {
   @Output()
   competitorClicked = new EventEmitter<Competitor>();
 
-  constructor() {
-  }
 
   displayCategory = AddFighterComponent.displayCategory;
+
+  get fightScores() {
+
+    return this.fight && this.fight.scores && _.sortBy(this.fight.scores, sc => sc.order);
+  }
+
+  getCompetitor(id) {
+    return this.competitors.find(comp => comp.id === id);
+  }
 
   selectFight(fightId: string) {
     this.fightClicked.next(fightId);

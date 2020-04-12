@@ -55,7 +55,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   periodRemoved = new EventEmitter<string>();
 
   @Output()
-  generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[] }>();
+  generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[], mats: MatDescription[] }>();
 
   @Output()
   periodsUpdated = new EventEmitter<{ periods: Period[], undispatchedRequirements: ScheduleRequirement[] }>();
@@ -64,6 +64,16 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   _requirements = [] as ScheduleRequirement[];
   _selectedReqs: Set<string> = new Set<string>();
   _periods: Period[];
+
+  startDrag() {
+    console.log("test")
+    this.cd.detach();
+  }
+
+  finishDrag() {
+    this.cd.reattach();
+    this.cd.markForCheck();
+  }
 
   @Input()
   private set periods(value: Period[]) {
@@ -100,7 +110,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   getPeriodMats(periodId: string) {
-    return (this.mats && this.mats.filter(m => m.periodId === periodId)) || [];
+    return (this.mats && this.mats.filter(m => m.periodId === periodId).sort((a, b) => a.matOrder - b.matOrder)) || [];
   }
 
   getScheduleRequirementsForMat(matId: string, periodId: string) {
@@ -113,11 +123,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   sendGenerateSchedule() {
     this.generateSchedule.next({
-      competitionId: this.competitionId, periods: produce(this.periods, draft => {
-        draft.forEach(p => {
-          p.mats = this.getPeriodMats(p.id);
-        });
-      })
+      competitionId: this.competitionId, periods: this.periods, mats: this.mats
     });
   }
 

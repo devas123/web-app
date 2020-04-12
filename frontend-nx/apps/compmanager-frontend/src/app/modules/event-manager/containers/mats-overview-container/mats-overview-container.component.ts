@@ -1,14 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AppState, dashboardGetSelectedPeriodMats, getSelectedEventId, getSelectedEventSelectedPeriod, MatDescription} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  dashboardGetSelectedPeriodMats,
+  getSelectedEventDashboardPeriodFights,
+  getSelectedEventSelectedPeriod,
+  MatDescription
+} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
-import {filter, map} from 'rxjs/operators';
+import {
+  ComponentCommonMetadataProvider,
+  EventManagerRouterEntryComponent
+} from '../event-manager-container/common-classes';
+import {filter, map, take, tap} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import {HeaderDescription, Period} from '../../../../commons/model/competition.model';
+import {Fight, HeaderDescription, Period} from '../../../../commons/model/competition.model';
+import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -18,10 +28,12 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   selectedPeriod$: Observable<Period>;
   selectedPeriodMats$: Observable<MatDescription[]>;
   competitionId$: Observable<string>;
+  selectedPeriodMatsFights$: Observable<Fight[]>;
 
-  constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, menuService: MenuService) {
+  constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, private cd: ChangeDetectorRef,
+              public info: CommonBracketsInfoContainer, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
-      header: store.pipe(select(getSelectedEventSelectedPeriod), filter(p => !!p),
+      header: store.pipe(select(getSelectedEventSelectedPeriod), filter(p => !!p), tap(console.log), take(1),
         map(per => <HeaderDescription>{
           header: `Period ${per.name}`,
           subheader: 'Mats overview'
@@ -33,9 +45,10 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
         }
       ]
     }, menuService);
-    this.competitionId$ = this.store.pipe(select(getSelectedEventId));
+    this.competitionId$ = info.competitionId$;
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));
+    this.selectedPeriodMatsFights$ = this.store.pipe(select(getSelectedEventDashboardPeriodFights));
   }
 
   navigateBack() {

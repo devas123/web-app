@@ -49,6 +49,9 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
   constructor(private el: ElementRef) {
   }
 
+  @Input()
+  competitors: Competitor[];
+
   showControls = false;
 
   fight: Fight;
@@ -74,6 +77,10 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   currentFightSeconds = 20;
   currentFightMinutes = 0;
+
+  getCompetitor(id) {
+    return this.competitors.find(c => c.id === id);
+  }
 
 
   updateAdvantage(value: number, scoreIndex: number) {
@@ -104,7 +111,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   displayCategory = (cat: Category) => AddFighterComponent.displayCategory(cat);
 
-  getScore = (compScore: { competitor: Competitor, score: Score }) => compScore && compScore.score;
+  getScore = (compScore: { competitorId: string, score: Score }) => compScore && compScore.score;
 
   updateCompetitorPoints(score: any) {
     this.competitorPointsUpdated.next(score);

@@ -42,9 +42,6 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
   }
 
   selectStage(id: string) {
-    this.bracketsInfo.competition$.pipe(take(1), map(competition => eventManagerCategoryBracketsStageSelected({
-      competitionId: competition.id,
-      selectedStageId: id
-    }))).subscribe(this.store);
+    this.bracketsInfo.selectStageById(id);
   }
 }

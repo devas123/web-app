@@ -76,7 +76,7 @@
   margin: 0 0;
   padding: 1.14285714em 2em;
   background: #FFFFFF;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
   border-radius: 0;
@@ -148,7 +148,7 @@
 .ui.steps .step .description {
   font-weight: normal;
   font-size: 0.92857143em;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.steps .step > .description {
   width: 100%;
@@ -341,7 +341,7 @@
 .ui.steps a.step:hover::after,
 .ui.steps a.step:hover {
   background: #F9FAFB;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Link Down */
@@ -350,7 +350,7 @@
 .ui.steps a.step:active::after,
 .ui.steps a.step:active {
   background: #F3F4F5;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Active */
@@ -390,7 +390,7 @@
 .ui.steps a.active.step:hover {
   cursor: pointer;
   background: #DCDDDE;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Completed */
@@ -408,7 +408,7 @@
 .ui.steps .disabled.step,
 .ui.steps .disabled.step .title,
 .ui.steps .disabled.step .description {
-  color: #ffffff;
+  color: #e4e2da;
 }
 .ui.steps .disabled.step:after {
   background: #FFFFFF;
@@ -615,16 +615,16 @@
   ---------------*/
 
 .ui.inverted.steps {
-  border: 1px solid #555555;
+  border: 1px solid #ded797;
 }
 .ui.inverted.steps .step {
   color: rgba(255, 255, 255, 0.9);
   background: #1B1C1D;
-  border-color: #555555;
+  border-color: #ded797;
 }
 .ui.inverted.steps .step:after {
   background-color: #1B1C1D;
-  border-color: #555555;
+  border-color: #ded797;
 }
 .ui.inverted.steps .step .description {
   color: rgba(255, 255, 255, 0.9);

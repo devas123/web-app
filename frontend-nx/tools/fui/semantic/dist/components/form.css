@@ -56,7 +56,7 @@
 .ui.form .field > label {
   display: block;
   margin: 0 0 0.28571429rem 0;
-  color: #ffffe9;
+  color: #CFCBBC;
   font-size: 0.92857143em;
   font-weight: bold;
   text-transform: none;
@@ -108,9 +108,9 @@
   line-height: 1.21428571em;
   padding: 0.67857143em 1em;
   font-size: 1em;
-  background: #1e2328;
+  background: #064056;
   border: 1px solid rgba(32, 34, 36, 0.29);
-  color: #ffffe9;
+  color: #CFCBBC;
   border-radius: 0.28571429rem;
   -webkit-box-shadow: 0 0 0 0 transparent inset;
           box-shadow: 0 0 0 0 transparent inset;
@@ -125,10 +125,10 @@
   -webkit-appearance: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   padding: 0.78571429em 1em;
-  background: #1e2328;
+  background: #064056;
   border: 1px solid rgba(32, 34, 36, 0.29);
   outline: none;
-  color: #ffffe9;
+  color: #CFCBBC;
   border-radius: 0.28571429rem;
   -webkit-box-shadow: 0 0 0 0 transparent inset;
           box-shadow: 0 0 0 0 transparent inset;
@@ -214,7 +214,7 @@
   -webkit-box-shadow: 0 0 0 0 transparent inset;
           box-shadow: 0 0 0 0 transparent inset;
   padding: 0.62em 1em;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-transition: color 0.1s ease, border-color 0.1s ease;
   transition: color 0.1s ease, border-color 0.1s ease;
 }
@@ -399,10 +399,10 @@
 .ui.form input[type="text"]:focus,
 .ui.form input[type="file"]:focus,
 .ui.form input[type="url"]:focus {
-  color: #ffffcf;
+  color: #c4bfad;
   border-color: #85B7D9;
   border-radius: 0.28571429rem;
-  background: #1e2328;
+  background: #064056;
   -webkit-box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.35) inset;
           box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.35) inset;
 }
@@ -437,10 +437,10 @@
   border-top-left-radius: 0;
 }
 .ui.form textarea:focus {
-  color: #ffffcf;
+  color: #c4bfad;
   border-color: #85B7D9;
   border-radius: 0.28571429rem;
-  background: #1e2328;
+  background: #064056;
   -webkit-box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.35) inset;
           box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.35) inset;
   -webkit-appearance: none;
@@ -1438,9 +1438,9 @@
 .ui.inverted.form input[type="text"],
 .ui.inverted.form input[type="file"],
 .ui.inverted.form input[type="url"] {
-  background: #1e2328;
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #ffffe9;
+  background: #064056;
+  border-color: #ded797;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -1460,7 +1460,7 @@
 }
 .ui.form .grouped.fields > label {
   margin: 0 0 0.28571429rem 0;
-  color: #ffffe9;
+  color: #CFCBBC;
   font-size: 0.92857143em;
   font-weight: bold;
   text-transform: none;
@@ -1697,7 +1697,7 @@
   vertical-align: baseline;
   font-size: 0.92857143em;
   font-weight: bold;
-  color: #ffffe9;
+  color: #CFCBBC;
   text-transform: none;
 }
 

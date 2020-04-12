@@ -115,7 +115,7 @@
 .ui.feed > .event > .content .date {
   margin: -0.5rem 0 0;
   padding: 0;
-  color: #ffffe9;
+  color: #CFCBBC;
   font-weight: normal;
   font-size: 1em;
   font-style: normal;
@@ -129,7 +129,7 @@
   margin: 0;
   font-size: 1em;
   font-weight: bold;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Summary Image */
@@ -173,7 +173,7 @@
   font-style: normal;
   margin: 0 0 0 0.5em;
   padding: 0;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*--------------
@@ -184,7 +184,7 @@
   margin: 0.5em 0 0;
   background: none;
   padding: 0;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Images */
@@ -264,7 +264,7 @@
 .ui.feed > .event > .content .meta a:hover,
 .ui.feed > .event > .content .meta a:hover .icon,
 .ui.feed > .event > .content .meta > .icon:hover {
-  color: #ffffcf;
+  color: #c4bfad;
 }
 
 

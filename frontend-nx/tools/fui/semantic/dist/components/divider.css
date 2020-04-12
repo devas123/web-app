@@ -34,7 +34,7 @@
 
 .ui.divider:not(.vertical):not(.horizontal) {
   border-top: 1px solid rgba(32, 34, 36, 0.29);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #ded797;
 }
 
 /*--------------
@@ -101,7 +101,7 @@
   content: '';
   z-index: 3;
   border-left: 1px solid rgba(32, 34, 36, 0.29);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid #ded797;
   width: 0;
   height: calc(100% - 1rem);
 }

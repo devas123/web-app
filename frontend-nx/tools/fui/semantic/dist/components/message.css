@@ -20,7 +20,7 @@
   background: #F8F8F9;
   padding: 1em 1.5em;
   line-height: 1.4285em;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: opacity 0.1s ease, color 0.1s ease, background 0.1s ease, box-shadow 0.1s ease;
@@ -366,7 +366,7 @@
   color: #1A531B;
 }
 .ui.primary.message {
-  background-color: #1e2328;
+  background-color: #042e3e;
   color: rgba(255, 255, 255, 0.9);
 }
 .ui.primary.message,
@@ -382,7 +382,7 @@
   color: rgba(242, 242, 242, 0.9);
 }
 .ui.secondary.message {
-  background-color: #131619;
+  background-color: #001A26;
   color: rgba(255, 255, 255, 0.9);
 }
 .ui.secondary.message,

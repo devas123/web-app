@@ -107,10 +107,10 @@
 .ui.calendar .ui.table tr .disabled {
   pointer-events: auto;
   cursor: default;
-  color: #ffffff;
+  color: #e4e2da;
 }
 .ui.calendar .ui.table tr .adjacent:not(.disabled) {
-  color: #ffffff;
+  color: #e4e2da;
   background: rgba(0, 0, 0, 0.03);
 }
 
@@ -123,7 +123,7 @@
 }
 .ui.calendar .ui.table tr td.range {
   background: rgba(0, 0, 0, 0.05);
-  color: #ffffcf;
+  color: #c4bfad;
   -webkit-box-shadow: none;
           box-shadow: none;
 }

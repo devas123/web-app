@@ -1,4 +1,4 @@
-import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 
 
 import {Injectable} from '@angular/core';
@@ -29,6 +29,7 @@ import {
   eventManagerScheduleLoaded,
   fightIdsByCategoryIdLoaded,
   LOAD_CATEGORIES_COMMAND,
+  LOAD_SCHEDULE_COMMAND,
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Competitor, Fight} from '../commons/model/competition.model';
@@ -66,7 +67,7 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
     allActions.UNPUBLISH_COMPETITION_COMMAND),
-    concatMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId)));
+    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId)));
 
   @Effect({dispatch: false})
   createCompetition$: Observable<Action> = this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
@@ -87,7 +88,7 @@ export class Effects {
     })));
 
   loadSelectedEventSchedule$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(COMPETITION_SELECTED),
+    ofType(LOAD_SCHEDULE_COMMAND),
     switchMap((action: CommonAction) => {
       return this.infoService.getSchedule(action.competitionId).pipe(map(payload => {
         const schedule = (payload || {}) as Schedule;
@@ -130,7 +131,7 @@ export class Effects {
     ofType(EVENT_MANAGER_CATEGORY_STATE_LOADED),
     switchMap((a: any) => this.infoService.getCategoryStages(a.competitionId, a.categoryId)
       .pipe(
-        concatMap(categoryStages => [eventManagerCategoryStagesLoaded({
+        switchMap(categoryStages => [eventManagerCategoryStagesLoaded({
           competitionId: a.competitionId,
           categoryId: a.categoryId,
           categoryStages

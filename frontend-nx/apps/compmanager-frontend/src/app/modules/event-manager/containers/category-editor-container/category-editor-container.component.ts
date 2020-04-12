@@ -35,11 +35,9 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
   selector: 'app-category-editor-container',
   template: `
     <ng-template #search>
-      <div class="item">
-        <div class="ui icon search input">
-          <i class="search icon"></i>
-          <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
-        </div>
+      <div class="ui icon search input sidemenu">
+        <i class="search icon"></i>
+        <input type="text" placeholder="Search categories..." (change)="searchString$.next($event.target.value)">
       </div>
     </ng-template>
     <app-category-editor [categories]="categories$ | async"

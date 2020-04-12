@@ -140,7 +140,7 @@ ol.ui.list ol li,
 .ui.list .list > .item > .content,
 .ui.list > .item > .content {
   line-height: 1.14285714em;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.list .list > .item > .image + .content,
 .ui.list .list > .item > .icon + .content,
@@ -173,14 +173,14 @@ ol.ui.list ol li,
   margin: 0;
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: bold;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Description */
 .ui.list .list > .item .description,
 .ui.list > .item .description {
   display: block;
-  color: #ffffcf;
+  color: #c4bfad;
 }
 
 /* Child Link */
@@ -205,7 +205,7 @@ ol.ui.list ol li,
 .ui.list > a.item > i.icons,
 .ui.list .list > a.item > i.icon,
 .ui.list > a.item > i.icon {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Header Link */
@@ -339,7 +339,7 @@ ol.ui.list ol li,
 .ui.list .list > .disabled.item,
 .ui.list > .disabled.item {
   pointer-events: none;
-  color: #ffffff !important;
+  color: #e4e2da !important;
 }
 .ui.inverted.list .list > .disabled.item,
 .ui.inverted.list > .disabled.item {
@@ -354,7 +354,7 @@ ol.ui.list ol li,
 .ui.list > a.item:hover > .icons,
 .ui.list .list > a.item:hover > .icon,
 .ui.list > a.item:hover > .icon {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 
@@ -430,21 +430,21 @@ ol.ui.list ol li,
 .ui.link.list .item,
 .ui.link.list a.item,
 .ui.link.list .item a:not(.ui) {
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-transition: 0.1s color ease;
   transition: 0.1s color ease;
 }
 .ui.link.list.list a.item:hover,
 .ui.link.list.list .item a:not(.ui):hover {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.link.list.list a.item:active,
 .ui.link.list.list .item a:not(.ui):active {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.link.list.list .active.item,
 .ui.link.list.list .active.item a:not(.ui) {
-  color: #ffffcf;
+  color: #c4bfad;
 }
 
 /* Inverted */
@@ -476,7 +476,7 @@ ol.ui.list ol li,
   background: transparent;
   padding: 0.5em 0.5em;
   margin: 0;
-  color: #ffffe9;
+  color: #CFCBBC;
   border-radius: 0.5em;
   -webkit-transition: 0.1s color ease, 0.1s padding-left ease, 0.1s background-color ease;
   transition: 0.1s color ease, 0.1s padding-left ease, 0.1s background-color ease;
@@ -488,17 +488,17 @@ ol.ui.list ol li,
 .ui.selection.list .list > .item:hover,
 .ui.selection.list > .item:hover {
   background: rgba(0, 0, 0, 0.03);
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.selection.list .list > .item:active,
 .ui.selection.list > .item:active {
   background: rgba(0, 0, 0, 0.05);
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.selection.list .list > .item.active,
 .ui.selection.list > .item.active {
   background: rgba(0, 0, 0, 0.05);
-  color: #ffffcf;
+  color: #c4bfad;
 }
 
 /* Inverted */
@@ -588,7 +588,7 @@ ul.ui.list li:before,
 ul.ui.list li:before,
 .ui.bulleted.list .list > a.item:before,
 .ui.bulleted.list > a.item:before {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 ul.ui.list ul,
 .ui.bulleted.list .list:not(.icon) {
@@ -610,7 +610,7 @@ ul.ui.horizontal.bulleted.list li:first-child,
 }
 ul.ui.horizontal.bulleted.list li::before,
 .ui.horizontal.bulleted.list > .item::before {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 ul.ui.horizontal.bulleted.list li:first-child::before,
 .ui.horizontal.bulleted.list > .item:first-child::before {
@@ -650,7 +650,7 @@ ol.ui.list li:before,
   counter-increment: ordered;
   content: counters(ordered, ".") " ";
   text-align: right;
-  color: #ffffe9;
+  color: #CFCBBC;
   vertical-align: middle;
   opacity: 0.8;
 }
@@ -779,7 +779,7 @@ ol.ui.suffixed.list li:before,
 .ui.divided.inverted.list > .item,
 .ui.divided.inverted.list > .list,
 .ui.divided.inverted.horizontal.list > .item {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: #ded797;
 }
 
 /*-------------------
@@ -864,11 +864,11 @@ ol.ui.suffixed.list li:before,
 /* Inverted */
 .ui.celled.inverted.list > .item,
 .ui.celled.inverted.list > .list {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: #ded797;
 }
 .ui.celled.inverted.horizontal.list .list > .item,
 .ui.celled.inverted.horizontal.list > .item {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: #ded797;
 }
 
 /*-------------------

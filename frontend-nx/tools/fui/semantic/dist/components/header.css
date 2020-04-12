@@ -23,7 +23,7 @@
   font-weight: bold;
   line-height: 1.28571429em;
   text-transform: none;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.header:first-child {
   margin-top: -0.14285714em;
@@ -43,7 +43,7 @@
   margin: 0;
   font-size: 1rem;
   line-height: 1.2em;
-  color: #ffffff;
+  color: #e4e2da;
 }
 
 /*--------------
@@ -679,7 +679,7 @@ a.ui.inverted.black.header.header.header:hover {
   margin-bottom: 0;
 }
 .ui.inverted.dividing.header {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: #ded797;
 }
 
 /*-------------------
@@ -691,7 +691,7 @@ a.ui.inverted.black.header.header.header:hover {
   padding: 0.78571429rem 1rem;
   -webkit-box-shadow: none;
           box-shadow: none;
-  border: 1px solid #3c3f41;
+  border: 1px solid #d4cb78;
   border-radius: 0.28571429rem;
 }
 .ui.block.header:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
@@ -729,7 +729,7 @@ a.ui.inverted.black.header.header.header:hover {
   margin: 0 -1px 0 -1px;
   -webkit-box-shadow: none;
           box-shadow: none;
-  border: 1px solid #3c3f41;
+  border: 1px solid #d4cb78;
   border-radius: 0;
 }
 .ui.attached.block.header {

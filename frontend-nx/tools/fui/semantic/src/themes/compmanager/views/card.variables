@@ -102,7 +102,7 @@
 
 /* Description */
 @descriptionDistance: 0.5em;
-@descriptionColor: rgba(0, 0, 0, 0.68);
+@descriptionColor: darken(@textColor, 3);
 
 /* Content Image */
 @contentImageWidth: '';

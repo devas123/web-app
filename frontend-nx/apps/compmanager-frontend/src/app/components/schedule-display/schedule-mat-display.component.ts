@@ -29,7 +29,7 @@ import {MatDescription} from '../../reducers/global-reducers';
             </ng-container>
           </div>
         </div>
-        <section>{{mat.fightStartTimes?.length}} fights</section>
+        <section>{{mat.numberOfFights}} fights</section>
       </div>
     </div>
   `,
@@ -71,7 +71,7 @@ export class ScheduleMatDisplayComponent {
   categoryClicked = new EventEmitter<string>();
 
   getMatEntries(matId) {
-    return this.scheduleEntries?.filter(e => (e.matId === matId || e.fightIds.find(f => f.matId === matId)));
+    return this.scheduleEntries?.filter(e => e.fightIds.find(f => f.matId === matId));
   }
 
   getEntryFightsForMat(matId: string, entry: ScheduleEntry) {

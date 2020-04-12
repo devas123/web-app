@@ -25,7 +25,7 @@
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 .ui.input > input {
   margin: 0;
@@ -39,9 +39,9 @@
   line-height: 1.21428571em;
   font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   padding: 0.67857143em 1em;
-  background: #1e2328;
+  background: #064056;
   border: 1px solid rgba(32, 34, 36, 0.29);
-  color: #ffffe9;
+  color: #CFCBBC;
   border-radius: 0.28571429rem;
   -webkit-transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
   transition: border-color 0.1s ease, -webkit-box-shadow 0.1s ease;
@@ -94,7 +94,7 @@
 .ui.input.down input {
   border-color: rgba(0, 0, 0, 0.3);
   background: #FAFAFA;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -137,8 +137,8 @@
 .ui.input.focus > input,
 .ui.input > input:focus {
   border-color: #85B7D9;
-  background: #1e2328;
-  color: #ffffe9;
+  background: #064056;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
 }

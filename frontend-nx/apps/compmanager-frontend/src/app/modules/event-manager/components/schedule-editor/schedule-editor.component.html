@@ -1,4 +1,4 @@
-<div class="ui segments" id="schedule_page">
+<div class="ui segments" id="schedule_page" (app-drag-start)="startDrag()" (app-drag-end)="finishDrag()">
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment" cdkDropListGroup>
       <button class="ui tiny button" (click)="openAddSchedulePeriodModal()">Add period</button>

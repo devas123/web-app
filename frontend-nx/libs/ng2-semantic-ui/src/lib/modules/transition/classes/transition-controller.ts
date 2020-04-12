@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, ElementRef, Renderer2} from '@angular/core';
 import {Transition, TransitionDirection} from './transition';
 import {of, Subject, Subscription} from 'rxjs';
-import {concatMap, map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
+import {map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
 import produce from 'immer';
 
 export class TransitionController {

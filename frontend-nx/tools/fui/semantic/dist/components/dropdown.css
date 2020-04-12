@@ -51,7 +51,7 @@
   min-width: max-content;
   margin: 0;
   padding: 0 0;
-  background: #131619;
+  background: #021c26;
   font-size: 1em;
   text-shadow: none;
   text-align: left;
@@ -121,7 +121,7 @@
   border-top: none;
   line-height: 1em;
   font-size: 1rem;
-  color: #ffffe9;
+  color: #CFCBBC;
   padding: 0.78571429rem 1.14285714rem !important;
   text-transform: none;
   font-weight: normal;
@@ -207,7 +207,7 @@
 .ui.dropdown .menu > .item > .description {
   float: right;
   margin: 0 0 0 1em;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*-----------------
@@ -219,7 +219,7 @@
   font-weight: normal;
 }
 .ui.dropdown .menu > .message:not(.ui) {
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /*--------------
@@ -372,10 +372,10 @@ select.ui.dropdown {
           transform: rotateZ(0deg);
   min-width: 14em;
   min-height: 2.71428571em;
-  background: #1e2328;
+  background: #07526e;
   display: inline-block;
   padding: 0.78571429em 3.2em 0.78571429em 1em;
-  color: #ffffe9;
+  color: #CFCBBC;
   -webkit-box-shadow: none;
           box-shadow: none;
   border: 1px solid rgba(32, 34, 36, 0.29);
@@ -514,7 +514,7 @@ select.ui.dropdown {
 
 /* Menu Item */
 .ui.selection.dropdown .menu > .item {
-  border-top: 1px solid #242526;
+  border-top: 1px solid #c8bc51;
   padding: 0.78571429rem 1.14285714rem !important;
   white-space: normal;
   word-wrap: normal;
@@ -559,7 +559,7 @@ select.ui.dropdown {
 /* Visible */
 .ui.selection.visible.dropdown > .text:not(.default) {
   font-weight: normal;
-  color: #ffffe9;
+  color: #CFCBBC;
 }
 
 /* Visible Hover */
@@ -846,9 +846,9 @@ select.ui.dropdown {
 
 /* Menu Item Active */
 .ui.dropdown .menu .active.item {
-  background: transparent;
+  background: #00364f;
   font-weight: bold;
-  color: #ffffcf;
+  color: #c4bfad;
   -webkit-box-shadow: none;
           box-shadow: none;
   z-index: 12;
@@ -861,8 +861,8 @@ select.ui.dropdown {
 
 /* Menu Item Hover */
 .ui.dropdown .menu > .item:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #ffffcf;
+  background: #00364f;
+  color: #c4bfad;
   z-index: 13;
 }
 
@@ -949,8 +949,8 @@ select.ui.dropdown {
 /* Selected Item */
 .ui.dropdown.selected,
 .ui.dropdown .menu .selected.item {
-  background: rgba(0, 0, 0, 0.03);
-  color: #ffffcf;
+  background: #003d59;
+  color: #c4bfad;
 }
 
 /*--------------------

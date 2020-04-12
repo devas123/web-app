@@ -37,7 +37,7 @@ export class SplitCategoryModal extends ComponentModalConfig<ISplitCategoryConte
       <button class="ui button" (click)="addFightsGroup();">Add fightsGroup</button>
       <app-tag-list [values]="requirements">
         <ng-template let-opt="$implicit" let-k="index">
-          <div class="ui icon label" [ngClass]="{'large': selectedRequirement === k}">
+          <div class="ui right icon label" [ngClass]="{'large': selectedRequirement === k}">
             <a (click)="selectRequirement(k)"><span>{{opt?.fightIds?.length}} Fights</span></a>
             <i class="delete icon" (click)="removeRequirement(k)"></i>
           </div>

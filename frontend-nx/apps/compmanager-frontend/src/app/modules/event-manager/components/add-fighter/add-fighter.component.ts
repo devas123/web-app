@@ -29,6 +29,7 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   private compIdSubscription;
 
 
+
   static displayCategory(cat: Category) {
     return displayCategory(cat);
   }
