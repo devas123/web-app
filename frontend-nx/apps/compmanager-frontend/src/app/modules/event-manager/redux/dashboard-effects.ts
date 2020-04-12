@@ -1,17 +1,6 @@
 import {from, Observable, of, of as observableOf} from 'rxjs';
 
-import {
-  catchError,
-  concatMap,
-  exhaustMap,
-  filter,
-  map,
-  mergeMap,
-  switchMap,
-  tap,
-  toArray,
-  withLatestFrom
-} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, mergeMap, switchMap, tap, toArray, withLatestFrom} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -40,14 +29,12 @@ import {
   DASHBOARD_SET_FIGHT_RESULT_COMMAND,
   dashboardLoadPeriodMatsCommand,
   dashboardMatFightsUnloaded,
-  dashboardMatSelected,
   dashboardMatsLoaded,
-  dashboardPeriodSelected,
   dashboardSelectedPeriodSelectedMatFightsLoaded,
   dashboardStateLoaded,
-  loadDashboardState,
   PERIOD_SELECTED,
-  REFRESH_MATS_VIEW
+  REFRESH_MATS_VIEW,
+  refreshMatView
 } from './dashboard-actions';
 import {loadScheduleCommand} from './event-manager-actions';
 
@@ -67,7 +54,7 @@ export class DashboardEffects {
           }
         }));
     }),
-    concatMap(action => [loadScheduleCommand({competitionId: action.competitionId}), action])));
+    switchMap(action => [loadScheduleCommand({competitionId: action.competitionId}), action])));
 
   dashboardLoadAllMatsFights$ = createEffect(() => this.actions$.pipe(
     ofType(PERIOD_SELECTED, REFRESH_MATS_VIEW),
@@ -75,15 +62,15 @@ export class DashboardEffects {
       select(getSelectedEventId),
       filter(competitionId => !!competitionId))),
     switchMap(([command, competitionId]: [CommonAction, string]) =>
-      [dashboardMatFightsUnloaded, dashboardLoadPeriodMatsCommand({competitionId, periodId: command.payload})])));
+      [dashboardLoadPeriodMatsCommand({competitionId, periodId: command.payload})])));
 
   dashboardLoadAllMatsTop5Fights$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_MATS_LOADED),
     switchMap((command: any) =>
       from(command.payload as MatDescription[])
-        .pipe(filter(mat => mat.periodId === command.periodId), mergeMap(mat => {
+        .pipe(filter(mat => mat.periodId === command.periodId && !!mat.id), mergeMap(mat => {
           return this.infoService.getMatFights(command.competitionId, mat.id, 5).pipe(
-            map(f => dashboardSelectedPeriodSelectedMatFightsLoaded(f, command.payload)),
+            map(f => dashboardSelectedPeriodSelectedMatFightsLoaded(f.fights, f.competitors, mat.id)),
             catchError(error => observableOf(errorEvent(error)))
           );
         }), toArray())),
@@ -91,6 +78,7 @@ export class DashboardEffects {
 
   dashboardLoadMatFights$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_MAT_SELECTED),
+    filter((command: any) => command && !!command.payload),
     mergeMap((command: any) => {
       return this.infoService.getMatFights(command.competitionId, command.payload).pipe(
         catchError(error => observableOf(errorEvent(error))),
@@ -98,7 +86,7 @@ export class DashboardEffects {
           if (!result || result.type === ERROR_EVENT) {
             return result;
           } else {
-            return dashboardSelectedPeriodSelectedMatFightsLoaded(result, command.payload);
+            return dashboardSelectedPeriodSelectedMatFightsLoaded(result.fights, result.competitors, command.payload);
           }
         }));
     })));
@@ -128,12 +116,12 @@ export class DashboardEffects {
 
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, DASHBOARD_SET_FIGHT_RESULT_COMMAND),
-    concatMap(action => of(action).pipe(
+    exhaustMap(action => of(action).pipe(
       withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId)),
         this.store.pipe(select(getSelectedEventGetSelectedMatId)))
     )),
-    exhaustMap(([command, periodId, matId]: [CommonAction, string, string]) => this.infoService.sendCommandSync(command)
-      .pipe(exhaustMap(() => from([loadDashboardState(command.competitionId), dashboardPeriodSelected(periodId, command.competitionId), dashboardMatSelected(command.competitionId, matId)])))))
+    exhaustMap(([command, periodId]: [CommonAction, string, string]) => this.infoService.sendCommandSync(command)
+      .pipe(tap(console.log), exhaustMap(() => [refreshMatView(periodId, command.competitionId)]))))
   );
 
   constructor(private actions$: Actions,

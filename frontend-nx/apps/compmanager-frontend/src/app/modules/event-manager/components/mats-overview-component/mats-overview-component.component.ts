@@ -1,4 +1,12 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {Competitor, Fight} from '../../../../commons/model/competition.model';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 import {MatDescription} from '../../../../reducers/global-reducers';
@@ -6,7 +14,8 @@ import {MatDescription} from '../../../../reducers/global-reducers';
 @Component({
   selector: 'app-mats-overview-component',
   templateUrl: './mats-overview-component.component.html',
-  styleUrls: ['./mats-overview-component.component.scss']
+  styleUrls: ['./mats-overview-component.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatsOverviewComponentComponent implements OnInit {
 
@@ -52,7 +61,7 @@ export class MatsOverviewComponentComponent implements OnInit {
   }
 
   getMatFights(id: string) {
-    return this.matsFights.filter(f => f.mat?.id === id);
+    return this.matsFights.filter(f => f.mat?.id === id).sort((a, b) => a.numberOnMat - b.numberOnMat);
   }
 
   dragEnd() {

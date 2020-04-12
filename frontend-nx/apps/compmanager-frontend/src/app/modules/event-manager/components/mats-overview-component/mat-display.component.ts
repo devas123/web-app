@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Competitor, dragEndEvent, dragStartEvent, Fight} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {MatDescription} from '../../../../reducers/global-reducers';
@@ -21,6 +21,7 @@ import {MatDescription} from '../../../../reducers/global-reducers';
     </div>
     <div class="meta">{{(mat?.numberOfFights || 0) + ' fights'}}</div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['mats-overview-component.component.scss']
 })
 export class MatDisplayComponent implements OnInit {

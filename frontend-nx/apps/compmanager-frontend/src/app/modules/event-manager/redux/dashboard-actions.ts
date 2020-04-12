@@ -1,5 +1,5 @@
 // commands
-import {Fight} from '../../../commons/model/competition.model';
+import {Competitor, Fight} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {IScoreboardFightResultSet} from './dashboard-reducers';
 
@@ -85,10 +85,10 @@ export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId
   payload: mats
 });
 
-export const dashboardSelectedPeriodSelectedMatFightsLoaded = (fights: Fight[], matId: string) => ({
+export const dashboardSelectedPeriodSelectedMatFightsLoaded = (fights: Fight[], competitors: Competitor[], matId: string) => ({
   type: DASHBOARD_MAT_FIGHTS_LOADED,
   matId,
-  payload: fights
+  payload: { fights, competitors }
 });
 
 export const dashboardUnloadState = {type: DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND};

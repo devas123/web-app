@@ -8,7 +8,8 @@ import {dashboardMatSelected, dashboardMatUnselected} from '../../redux/dashboar
 
 @Component({
   selector: 'app-mat-management-container',
-  template: `<router-outlet></router-outlet>`,
+  template: `
+    <router-outlet></router-outlet>`,
   styleUrls: ['./mat-management-container.component.css']
 })
 export class MatManagementContainerComponent implements OnInit, OnDestroy {
@@ -17,7 +18,10 @@ export class MatManagementContainerComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
 
   constructor(private router: Router, private store: Store<AppState>, private route: ActivatedRoute) {
-    this.subs.add(combineLatest([this.route.params.pipe(map(p => p['matId']), filter(matId => matId && matId.length > 0)), this.store.pipe(select(getSelectedEventId))]).pipe(
+    this.subs.add(combineLatest([this.route.params.pipe(map(p => p['matId']),
+      filter(matId => matId && matId.length > 0)),
+      this.store.pipe(select(getSelectedEventId))]).pipe(
+      filter(([matId, competitionId]) => !!matId && !!competitionId),
       map(([matId, competitionId]) => dashboardMatSelected(competitionId, matId))).subscribe(this.store));
   }
 

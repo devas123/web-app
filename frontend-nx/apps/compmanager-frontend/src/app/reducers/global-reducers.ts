@@ -481,6 +481,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
           }
         }
+        if (!categoryStages || categoryStages.length === 0) {
+          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
+        }
         break;
       }
 
