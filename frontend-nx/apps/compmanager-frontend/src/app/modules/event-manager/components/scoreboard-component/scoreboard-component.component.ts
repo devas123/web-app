@@ -12,9 +12,9 @@ import {
 import {
   Category,
   Competitor,
-  CompetitorResultType,
   Fight,
   FightResult,
+  FightResultOption,
   Score
 } from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
@@ -31,10 +31,16 @@ import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   @Input()
+  fightResultOptions: FightResultOption[];
+
+  @Input()
   set selectedFight(f: Fight) {
-    this.fight = produce(f, () => {
-    });
     if (f) {
+      this.fight = produce(f, d => {
+        d.scores.forEach( sc => {
+          sc.score = (!!sc.score && Object.keys(sc.score).length > 0) ? sc.score : <Score>{advantages: 0, penalties: 0, points: 0};
+        });
+      });
       this.currentFightMinutes = f.duration;
       this.currentFightSeconds = 0;
       this.stageName = `Round ${f.round + 1}`;
@@ -103,7 +109,6 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event.key);
     if (event.key === 'Shift') {
       this.showControls = !this.showControls;
     }
@@ -111,7 +116,9 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   displayCategory = (cat: Category) => AddFighterComponent.displayCategory(cat);
 
-  getScore = (compScore: { competitorId: string, score: Score }) => compScore && compScore.score;
+  getScore = (compScore: { competitorId: string, score: Score }) => {
+    return compScore && compScore.score;
+  };
 
   updateCompetitorPoints(score: any) {
     this.competitorPointsUpdated.next(score);
@@ -126,15 +133,15 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
   }
 
 
-  setWinner(competitor: Competitor, resultType: CompetitorResultType) {
+  setWinner(competitor: Competitor, resultType: FightResultOption) {
     this.fightResultUpdated.next(<IScoreboardFightResultSet>{
-      categoryId: this.fight.category.id,
+      categoryId: this.fight.categoryId,
       competitionId: this.fight.competitionId,
       matId: this.fight.mat.id,
       fightId: this.fight.id,
       fightResult: <FightResult>{
         reason: '',
-        resultTypeId: `${resultType}`,
+        resultTypeId: `${resultType.id}`,
         winnerId: competitor.id
       },
       scores: this.fight.scores

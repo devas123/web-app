@@ -75,6 +75,7 @@ import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {
+  DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED,
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_FIGHT_UNSELECTED,
   DASHBOARD_MAT_FIGHTS_LOADED,
@@ -126,7 +127,7 @@ export const matEntityAdapter: EntityAdapter<MatDescription> = createEntityAdapt
 
 export const matsInitialState = matEntityAdapter.getInitialState({
   selectedMatId: null,
-  matsFights: fightsInitialState,
+  matsFights: fightsInitialState
 });
 
 
@@ -259,7 +260,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
     switch (action.type) {
       case EVENT_MANAGER_COMPETITION_UNSELECTED: {
         return initialCompetitionState;
-      }case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
+      }
+      case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         if (state.selectedEventCategories.selectedCategoryStages.selectedStageId !== action.selectedStageId) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
@@ -707,6 +709,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
+      case DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED: {
+        if (state.selectedEventMats.matsFights.selectedFightId === action.fightId) {
+          state.selectedEventMats.matsFights.selectedFightFightResultOptions = action.fightresultOptions || [];
+        }
+        break;
+      }
       case DASHBOARD_MAT_SELECTED: {
         state.selectedEventMats.selectedMatId = action.payload;
         break;
@@ -861,6 +869,7 @@ export const getSelectedEventGetSelectedMatId = createSelector(getSelectedEventM
 export const getSelectedEventGetSelectedMat = createSelector(getSelectedEventGetSelectedMatId, getSelectedEventMatsDictionary, (id, dic) => id && dic[id]);
 export const dashboardGetSelectedPeriodMatsFightsCollection = createSelector(getSelectedEventMatsCollection, state => (state && state.matsFights) || fightsInitialState);
 export const dashboardGetSelectedPeriodMatSelectedFightId = createSelector(dashboardGetSelectedPeriodMatsFightsCollection, state => state && state.selectedFightId);
+export const dashboardGetSelectedPeriodMatSelectedFightFightResultOptions = createSelector(dashboardGetSelectedPeriodMatsFightsCollection, state => state && state.selectedFightFightResultOptions);
 
 export const {
   // select the dictionary of user entities

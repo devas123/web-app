@@ -7,9 +7,10 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {Competitor, Fight} from '../../../../commons/model/competition.model';
+import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 import {MatDescription} from '../../../../reducers/global-reducers';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -30,6 +31,9 @@ export class MatsOverviewComponentComponent implements OnInit {
 
   @Input()
   mats: MatDescription[];
+
+  @Input()
+  categories: Category[];
 
   @Input()
   competitors: Competitor[];
@@ -61,7 +65,7 @@ export class MatsOverviewComponentComponent implements OnInit {
   }
 
   getMatFights(id: string) {
-    return this.matsFights.filter(f => f.mat?.id === id).sort((a, b) => a.numberOnMat - b.numberOnMat);
+    return _.take(this.matsFights.filter(f => f.mat?.id === id).sort((a, b) => a.numberOnMat - b.numberOnMat), 5);
   }
 
   dragEnd() {

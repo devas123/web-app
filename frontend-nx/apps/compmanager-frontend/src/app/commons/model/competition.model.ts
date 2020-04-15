@@ -185,7 +185,6 @@ export interface Fight {
   fightName: string;
   id: string;
   categoryId: string;
-  category?: Category;
   parentId1?: string;
   parentId2?: string;
   winFight?: string;
@@ -298,6 +297,7 @@ export interface CompetitorSelector {
 }
 
 export interface FightResultOption {
+  id: string;
   description: string;
   shortName: string;
   draw: boolean;
@@ -346,6 +346,7 @@ export interface CategoryBracketsStageCollection extends EntityState<CategoryBra
 
 export interface FightsCollection extends EntityState<Fight> {
   selectedFightId: string | null;
+  selectedFightFightResultOptions: FightResultOption[] | null;
 }
 
 export interface CompetitorsCollection extends EntityState<Competitor> {
@@ -413,7 +414,8 @@ export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapte
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
-  selectedFightId: null
+  selectedFightId: null,
+  selectedFightFightResultOptions: []
 });
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({

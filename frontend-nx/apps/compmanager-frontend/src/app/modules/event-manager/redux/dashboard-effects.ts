@@ -20,6 +20,7 @@ import {
   DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
   DASHBOARD_DELETE_PERIOD_COMMAND,
   DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND,
+  DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
   DASHBOARD_INIT_PERIOD_COMMAND,
   DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
@@ -27,8 +28,8 @@ import {
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MATS_LOADED,
   DASHBOARD_SET_FIGHT_RESULT_COMMAND,
+  dashboardFightResultOptionsLoaded,
   dashboardLoadPeriodMatsCommand,
-  dashboardMatFightsUnloaded,
   dashboardMatsLoaded,
   dashboardSelectedPeriodSelectedMatFightsLoaded,
   dashboardStateLoaded,
@@ -103,6 +104,20 @@ export class DashboardEffects {
             return dashboardMatsLoaded(result, command.competitionId, command.periodId);
           }
         }));
+    })));
+
+  dashboardLoadFightResultOptions$ = createEffect(() => this.actions$.pipe(
+    ofType(DASHBOARD_FIGHT_SELECTED),
+    withLatestFrom(this.store.pipe(select(getSelectedEventId))),
+    filter(([command, competitionId]) => !!command && !!competitionId),
+    mergeMap(([command, competitionId]: [CommonAction, string]) => {
+      return this.infoService.getFightResultOptions(competitionId, command.payload).pipe(
+        map((result: any) => dashboardFightResultOptionsLoaded({
+          competitionId: competitionId,
+          fightId: command.payload,
+          fightresultOptions: result
+        })),
+        catchError(error => observableOf(errorEvent(error))));
     })));
 
   dashboardForwardGlobalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Competitor, dragEndEvent, dragStartEvent, Fight} from '../../../../commons/model/competition.model';
+import {Category, Competitor, dragEndEvent, dragStartEvent, Fight} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {MatDescription} from '../../../../reducers/global-reducers';
 
@@ -14,6 +14,7 @@ import {MatDescription} from '../../../../reducers/global-reducers';
           (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
         <div class="content">
           <app-fight-display [fight]="fight"
+                             [categories]="categories"
                              [competitors]="competitors"
                              (competitorClicked)="competitorClicked.next($event)"></app-fight-display>
         </div>
@@ -31,6 +32,9 @@ export class MatDisplayComponent implements OnInit {
 
   @Input()
   mat: MatDescription;
+
+  @Input()
+  categories: Category[];
 
   @Input()
   matFights: Fight[];

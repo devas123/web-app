@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {Subscription} from 'rxjs';
@@ -56,7 +56,9 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
   }
 
   navigateBack() {
-    this.location.back();
+    this.store.pipe(select(getSelectedEventId), take(1)).subscribe((id) => {
+      this.router.navigateByUrl(`/eventmanager/${id}`).catch(console.error);
+    });
   }
 
   navigateToCategory(categoryId: string) {

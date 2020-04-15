@@ -1,15 +1,17 @@
 <div class="ui container">
-  <div class="ui middle aligned relaxed list" *ngIf="!(selectedFight$ | async)">
+  <div class="ui middle aligned list" *ngIf="!(selectedFight$ | async)">
     <a class="item" *ngFor="let fight of matFights$ | async">
       <div class="content cell_item">
         <app-fight-display
           [fight]="fight"
+          [categories]="info.categories$ | async"
           [competitors]="competitors$ | async"
                            (fightClicked)="selectFightForScoreboard($event)"></app-fight-display>
       </div>
     </a>
   </div>
   <app-scoreboard-component
+    [fightResultOptions]="selectedFightFightResultOptions$ | async"
     [competitors]="competitors$ | async"
     (goMatViewClicked)="selectFightForScoreboard(null)"
     [selectedFight]="selectedFight$ | async"

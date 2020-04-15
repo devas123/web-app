@@ -1,5 +1,5 @@
 // commands
-import {Competitor, Fight} from '../../../commons/model/competition.model';
+import {Competitor, Fight, FightResultOption} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {IScoreboardFightResultSet} from './dashboard-reducers';
 
@@ -25,6 +25,7 @@ export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_CO
 
 
 // events
+export const DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED = 'DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED';
 export const DASHBOARD_FIGHT_ORDER_CHANGED = 'DASHBOARD_FIGHT_ORDER_CHANGED';
 export const DASHBOARD_STATE_LOADED = 'DASHBOARD_STATE_LOADED';
 export const PERIOD_SELECTED = 'PERIOD_SELECTED';
@@ -46,6 +47,7 @@ export const refreshMatView = (periodId, competitionId) => ({
   competitionId
 });
 export const dashboardLoadPeriodMatsCommand = createAction(DASHBOARD_LOAD_MATS_COMMAND, props<{ competitionId: string, periodId: string }>());
+export const dashboardFightResultOptionsLoaded = createAction(DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED, props<{ competitionId: string, fightId: string, fightresultOptions: FightResultOption[] }>());
 export const dashboardMatFightsUnloaded = {type: DASHBOARD_MAT_FIGHTS_UNLOADED};
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};

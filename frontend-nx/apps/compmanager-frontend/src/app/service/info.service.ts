@@ -28,6 +28,7 @@ const {
   categoryState,
   dashboardState,
   mats,
+  fightResultOptions,
   matFights,
   stageFights,
   categoryStages,
@@ -275,6 +276,14 @@ export class InfoService {
   getPeriodMats(competitionId: any, periodId: any) {
     const params = {competitionId, periodId};
     return this.httpGet(mats, {
+      params: params,
+      headers: this.headers
+    });
+  }
+
+  getFightResultOptions(competitionId: string, fightId: string) {
+    const params = {competitionId, fightId};
+    return this.httpGet(fightResultOptions, {
       params: params,
       headers: this.headers
     });
