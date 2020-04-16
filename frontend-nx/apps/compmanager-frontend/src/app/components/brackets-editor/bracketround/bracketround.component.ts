@@ -136,6 +136,9 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     if (this.isSelected(id)) {
       return getKeyForEntry(this.changeFightIds, id) || defaultSelectionColor;
     } else {
+      if (this.fights.find(f => f.id === id)?.status === 'UNCOMPLETABLE') {
+        return 'pink';
+      }
       return 'black';
     }
   }

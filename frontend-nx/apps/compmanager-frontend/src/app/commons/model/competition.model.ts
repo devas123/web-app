@@ -168,6 +168,8 @@ export interface CompScore {
   competitorId: string;
   score: Score;
   placeholderId?: string;
+  parentFightId?: string;
+  parentReferenceType?: String;
   order?: number;
 }
 
@@ -180,13 +182,15 @@ export interface CompetitorGroupChange {
   groupId: string;
   changeType: GroupChangeType;
 }
+export interface FightEditorChange {
+  fightId: string;
+  competitors: string[];
+}
 
 export interface Fight {
   fightName: string;
   id: string;
   categoryId: string;
-  parentId1?: string;
-  parentId2?: string;
   winFight?: string;
   loseFight?: string;
   competitionId: string;

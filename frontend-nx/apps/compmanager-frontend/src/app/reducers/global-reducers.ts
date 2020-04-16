@@ -726,7 +726,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case DASHBOARD_MAT_FIGHTS_LOADED: {
         const {fights, competitors} = action.payload;
         if (fights && competitors) {
-          state.selectedEventMats.matsFights = fightEntityAdapter.upsertMany(fights, state.selectedEventMats.matsFights);
+          const currentMatFights = _.flow(_.curry(_.filter)(f => f.matId !== action.matId),_.values)(state.selectedEventMats.matsFights.entities);
+          state.selectedEventMats.matsFights = fightEntityAdapter.setAll([...fights,...currentMatFights], state.selectedEventMats.matsFights);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(competitors, state.selectedEventCompetitors);
         }
         break;

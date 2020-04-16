@@ -31,7 +31,7 @@ import {
   dashboardFightResultOptionsLoaded,
   dashboardLoadPeriodMatsCommand,
   dashboardMatsLoaded,
-  dashboardSelectedPeriodSelectedMatFightsLoaded,
+  dashboardMatFightsLoaded,
   dashboardStateLoaded,
   PERIOD_SELECTED,
   REFRESH_MATS_VIEW,
@@ -71,7 +71,7 @@ export class DashboardEffects {
       from(command.payload as MatDescription[])
         .pipe(filter(mat => mat.periodId === command.periodId && !!mat.id), mergeMap(mat => {
           return this.infoService.getMatFights(command.competitionId, mat.id, 5).pipe(
-            map(f => dashboardSelectedPeriodSelectedMatFightsLoaded(f.fights, f.competitors, mat.id)),
+            map(f => dashboardMatFightsLoaded(f.fights, f.competitors, mat.id)),
             catchError(error => observableOf(errorEvent(error)))
           );
         }), toArray())),
@@ -87,7 +87,7 @@ export class DashboardEffects {
           if (!result || result.type === ERROR_EVENT) {
             return result;
           } else {
-            return dashboardSelectedPeriodSelectedMatFightsLoaded(result.fights, result.competitors, command.payload);
+            return dashboardMatFightsLoaded(result.fights, result.competitors, command.payload);
           }
         }));
     })));

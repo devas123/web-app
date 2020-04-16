@@ -24,7 +24,6 @@ import {
   eventManagerDefaultCategoriesLoaded,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDisconnectSocket,
-  eventManagerFightsEditorSubmitChangesCommand,
   myCompetitionsLoaded
 } from './event-manager-actions';
 

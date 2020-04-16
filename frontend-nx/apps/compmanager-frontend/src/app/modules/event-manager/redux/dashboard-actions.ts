@@ -87,7 +87,7 @@ export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId
   payload: mats
 });
 
-export const dashboardSelectedPeriodSelectedMatFightsLoaded = (fights: Fight[], competitors: Competitor[], matId: string) => ({
+export const dashboardMatFightsLoaded = (fights: Fight[], competitors: Competitor[], matId: string) => ({
   type: DASHBOARD_MAT_FIGHTS_LOADED,
   matId,
   payload: { fights, competitors }
