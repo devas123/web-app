@@ -82,10 +82,19 @@ export class GenerateBracketsFormComponent implements OnInit {
     }
     return null;
   };
+  private finalStageExistsValidator = (control: FormGroup) => {
+    const stages = control.get('stageDescriptions') as FormArray;
+    if (!stages.controls.find(c => this.getStageType(c) === 'FINAL')) {
+      return {'finalStageExistsValidator': true};
+    }
+    console.log(control);
+    return null;
+  };
   private outputSizeValidator = (index: number) => (control: FormGroup) => {
     const stageCtrl = control?.parent?.parent;
     if (stageCtrl) {
       const stageType = this.getStageType(stageCtrl);
+      const bracketsType = this.getBracketsType(stageCtrl);
       const inputSize = this.inputCompetitorsForStage(stageCtrl, index);
       const selectorInput = this.selectorsProvidedInput(stageCtrl);
       const output = control.value;
@@ -207,7 +216,7 @@ export class GenerateBracketsFormComponent implements OnInit {
       stageDescriptions: this.fb.array([
         this.stageDescriptionConfig(0)
       ])
-    });
+    }, {validators: [this.finalStageExistsValidator]});
   }
 
   groupDescriptors(i: number) {
@@ -223,7 +232,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   openAddFightOptionsModal(i: number) {
-    this.modalService.open(new AddFightResultOptionModal(this.getBracketsType(i), i))
+    this.modalService.open(new AddFightResultOptionModal(this.getBracketsType(this.stageDescriptions.at(i)), i))
       .onApprove((result: FightResultOption) => {
         this.addFightResultOptionControl(i, result);
       })
@@ -232,7 +241,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   openAddInputSelectorModal(stage: AbstractControl, i: number) {
-    this.modalService.open(new AddInputSelectorFormModal(this.getBracketsType(i), i,
+    this.modalService.open(new AddInputSelectorFormModal(this.getBracketsType(this.stageDescriptions.at(i)), i,
       this.stageDescriptions.controls.filter((c, ind) => this.getStageType(c) === 'PRELIMINARY' && ind < i).map((control) => control.get('id').value)))
       .onApprove((result: CompetitorSelector[]) => {
         result.forEach(r => this.addAdditionalCompetitorSelector(stage, r));
@@ -251,6 +260,7 @@ export class GenerateBracketsFormComponent implements OnInit {
             c.get('stageResultDescriptor.outputSize')?.updateValueAndValidity({emitEvent: false});
           });
           this.inputSelectors.forEach(s => s.updateValueAndValidity({emitEvent: false}));
+          this.form.updateValueAndValidity({emitEvent: false});
           this.updateView();
           resolve(val);
         })
@@ -258,9 +268,7 @@ export class GenerateBracketsFormComponent implements OnInit {
     this.form.valueChanges.pipe(
       debounceTime(300),
       throttle(promise)
-    ).subscribe(() => {
-      console.log(this.form);
-    });
+    ).subscribe();
   }
 
   get inputSelectors() {
@@ -311,8 +319,8 @@ export class GenerateBracketsFormComponent implements OnInit {
     this.setStageControlValue(i, {stageType: $event});
   }
 
-  getBracketsType(i: number) {
-    return this.stageDescriptions.at(i).get('bracketType').value as BracketsType;
+  getBracketsType(ctrl: AbstractControl) {
+    return ctrl.get('bracketType').value as BracketsType;
   }
 
   removeAllStages() {
@@ -371,7 +379,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   additionalGroupSortingFormatter = (opt: AdditionalGroupSortingDescriptor) => opt.groupSortSpecifier + (opt.groupSortSpecifier == 'MANUAL' ? '' : (':' + opt.groupSortDirection));
 
   addAllFightOptions(i: number) {
-    const bracketsType = this.getBracketsType(i);
+    const bracketsType = this.getBracketsType(this.stageDescriptions.at(i));
     if (bracketsType === 'GROUP') {
       this.defaultFightResultOptions.forEach(o => this.addFightResultOptionControl(i, o));
     } else {
@@ -485,7 +493,6 @@ export class GenerateBracketsFormComponent implements OnInit {
   getStageType(stage: AbstractControl) {
     return stage.get('stageType') && stage.get('stageType').value as StageType;
   }
-
 
   addAdditionalCompetitorSelector(stage: AbstractControl, o?: CompetitorSelector) {
     this.getAdditionalCompetitorSelectors(stage).push(this.competitorSelector(o));

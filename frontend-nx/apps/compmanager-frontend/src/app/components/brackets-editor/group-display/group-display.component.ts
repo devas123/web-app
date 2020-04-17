@@ -2,7 +2,13 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, Vie
 import {BracketsType, Competitor, CompScore, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 import {Dictionary} from '@ngrx/entity';
-import {collectingReducer, defaultSelectionColor, getKeyForEntry, uniqueFilter} from '../../../modules/account/utils';
+import {
+  collectingReducer,
+  defaultSelectionColor,
+  defaultUncompletableColor,
+  getKeyForEntry,
+  uniqueFilter
+} from '../../../modules/account/utils';
 
 @Component({
   selector: 'app-group-display',
@@ -22,6 +28,7 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   set competitors(value: Competitor[]) {
     this._competitors = value && value.sort((a, b) => a.id.localeCompare(b.id));
   }
+
   _competitors: Competitor[];
 
   private competitorNameSize = `100px`;
@@ -68,7 +75,8 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   };
 
   getBackgroundColor(id: string) {
-    return getKeyForEntry(this.changeFightsIds, id) || defaultSelectionColor;
+    const defaultColor = this._fights.find(f => f.id === id)?.status === 'UNCOMPLETABLE' ? defaultUncompletableColor : defaultSelectionColor;
+    return getKeyForEntry(this.changeFightsIds, id) || defaultColor;
   }
 
   findOpponentId(forWhom: string, fight: Fight) {
