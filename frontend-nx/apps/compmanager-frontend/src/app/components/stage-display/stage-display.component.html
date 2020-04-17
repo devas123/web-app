@@ -5,6 +5,9 @@
        (click)="selectStage(stage.id)">Stage {{stage?.stageOrder + 1}}</a>
   </div>
 </ng-container>
+<app-stage-result-display *ngIf="showResults && !fightsAreLoading" [competitors]="competitors" [stage]="selectedStage">
+
+</app-stage-result-display>
 <div class="ui basic loading segment loader_segment" *ngIf="fightsAreLoading">
   <p></p>
   <p></p>

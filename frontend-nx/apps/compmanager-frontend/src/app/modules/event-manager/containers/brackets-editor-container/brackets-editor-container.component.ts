@@ -44,6 +44,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   private subs = new Subscription();
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
+  showResults = false;
 
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
@@ -74,6 +75,16 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
           name: 'Close',
           showCondition: () => of(this.editMode),
           action: () => this.toggleEditBrackets()
+        },
+        {
+          name: 'Hide Results',
+          showCondition: () => of(this.showResults),
+          action: () => this.toggleShowResults()
+        },
+        {
+          name: 'Show Results',
+          showCondition: () => of(this.showResults).pipe(map(r => !r)),
+          action: () => this.toggleShowResults()
         },
         {
           name: 'Drop selected',
@@ -122,6 +133,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
 
   toggleEditBrackets() {
     this.editMode = !this.editMode;
+  }
+
+  toggleShowResults() {
+    this.showResults = !this.showResults;
   }
 
   sendTheChanges({fights, competitorGroupChanges}: { fights: Fight[], competitorGroupChanges: CompetitorGroupChange[] }) {

@@ -311,7 +311,7 @@ export interface FightResultOption {
   loserAdditionalPoints: number;
 }
 
-interface CompetitorResult {
+export interface CompetitorResult {
   id: string;
   competitorId: string;
   points: number;

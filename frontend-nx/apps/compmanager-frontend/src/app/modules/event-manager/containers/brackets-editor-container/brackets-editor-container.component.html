@@ -31,6 +31,7 @@
   *ngIf="!(bracketsInfo?.fightsAreLoading$ | async) && (bracketsInfo?.category$ | async) && (bracketsInfo?.stages$ | async)?.length <= 0"
   (generateStages)="generateBrackets($event)"></app-generate-brackets-form>
 <app-stage-display (unseededCompetitorsClicked)="editMode = true"
+                   [showResults]="showResults"
                    [fights]="bracketsInfo.fights$ | async"
                    [editMode]="editMode"
                    [bucketSize]="bracketsSize$ | async"
