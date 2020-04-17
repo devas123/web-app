@@ -13,7 +13,8 @@ import {
   Fight,
   FightEditorChange,
   FightResultOption,
-  HeaderDescription
+  HeaderDescription,
+  StageStatus
 } from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
@@ -22,7 +23,8 @@ import {
   eventManagerDropCategoryBracketsCommand,
   eventManagerFightsEditorSubmitChangesCommand,
   eventManagerGenerateBrackets,
-  eventManagerLoadDefaultFightResults
+  eventManagerLoadDefaultFightResults,
+  updateScheduleStatusCommand
 } from '../../redux/event-manager-actions';
 import {filter, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -66,7 +68,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
           action: () => this.goBack()
         },
         {
-          name: 'Edit seed',
+          name: 'Edit stage',
           showCondition: () => combineLatest([this.bracketsInfo.stages$, this.bracketsInfo.competition$, of(this.editMode)])
             .pipe(map(([stages, competition, editMode]) => !editMode && (stages && stages.length > 0) && (!!competition && !competition.bracketsPublished))),
           action: () => this.toggleEditBrackets()
@@ -183,5 +185,11 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
 
   selectStage(id: string) {
     this.bracketsInfo.selectStage(id, this.competitionId);
+  }
+
+  updateStageStatus(event: { stageId: string; status: StageStatus }) {
+    if (this.competitionId && event.stageId && event.status) {
+      this.store.dispatch(updateScheduleStatusCommand({competitionId: this.competitionId, ...event}));
+    }
   }
 }

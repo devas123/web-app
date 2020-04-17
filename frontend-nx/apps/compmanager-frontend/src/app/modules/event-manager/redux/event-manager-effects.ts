@@ -24,7 +24,7 @@ import {
   eventManagerDefaultCategoriesLoaded,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDisconnectSocket,
-  myCompetitionsLoaded
+  myCompetitionsLoaded, UPDATE_STAGE_STATUS_COMMAND
 } from './event-manager-actions';
 
 
@@ -39,11 +39,12 @@ export class EventManagerEffects {
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
+      UPDATE_STAGE_STATUS_COMMAND,
       FIGHTS_EDITOR_APPLY_CHANGE,
       EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
-    mergeMap(command => this.infoService.sendCommandSync(command)),
+    mergeMap((command: any) => this.infoService.sendCommandSync(command)),
     catchError(error => {
       console.error(error);
       return of(errorEvent(JSON.stringify(error)));

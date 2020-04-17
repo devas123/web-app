@@ -270,11 +270,15 @@ export interface GroupDescriptor {
   size: number;
 }
 
+export type StageStatus =  'APPROVED' |  'WAITING_FOR_APPROVAL' |  'WAITING_FOR_COMPETITORS' | 'FINISHED' | 'IN_PROGRESS';
+
+export const stageStatusValues: StageStatus[] = ['APPROVED', 'WAITING_FOR_APPROVAL',  'WAITING_FOR_COMPETITORS', 'FINISHED', 'IN_PROGRESS'];
+
 export interface CategoryBracketsStage {
   id: string;
   bracketType: BracketsType;
   stageType: StageType;
-  stageStatus: string;
+  stageStatus: StageStatus;
   waitForPrevious: boolean;
   hasThirdPlaceFight: boolean;
   stageOrder: number;

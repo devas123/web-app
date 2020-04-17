@@ -22,6 +22,7 @@
                              [bracketType]="bracketsInfo.bracketsType$ | async"
                              [stage]="bracketsInfo.stage$ | async"
                              (changeSaved)="sendTheChanges($event)"
+                             (stageStatusChanged)="updateStageStatus($event)"
                              *ngIf="editMode" (closeClicked)="toggleEditBrackets()"></app-fights-editor-container>
 <app-generate-brackets-form
   [smallScreen]="bracketsInfo.bucketsize$ | async"

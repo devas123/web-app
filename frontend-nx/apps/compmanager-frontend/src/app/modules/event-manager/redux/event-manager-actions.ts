@@ -9,11 +9,12 @@ import {
   FightResultOption,
   HeaderDescription,
   Period,
-  ScheduleRequirement
+  ScheduleRequirement, StageStatus
 } from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 
+export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
@@ -98,6 +99,7 @@ export const eventManagerHeaderClear = {
 };
 
 export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{competitionId: string}>());
+export const updateScheduleStatusCommand = createAction(UPDATE_STAGE_STATUS_COMMAND, props<{competitionId: string, stageId: string, status: StageStatus}>());
 export const schedulePeriodsUpdated = createAction(EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED, props<{periods: Period[], undispatchedRequirements: ScheduleRequirement[]}>());
 export const fightIdsByCategoryIdLoaded = createAction(FIGHT_IDS_BY_CATEGORY_ID_LOADED, props<{fightIdsBycategoryId: Dictionary<string[]>}>());
 export const eventManagerLoadDefaultFightResults = createAction(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS, props<{ competitionId: string }>());
