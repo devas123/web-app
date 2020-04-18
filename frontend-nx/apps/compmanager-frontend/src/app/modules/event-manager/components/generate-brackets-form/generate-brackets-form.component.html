@@ -5,7 +5,7 @@
     <button class="ui button" (click)="removeAllStages()">Clear</button>
   </div>
   <div *ngIf="form.touched && form?.errors?.finalStageExistsValidator">
-    <div class="ui compact error message">Final stage is missing.</div>
+    <div class="ui compact error message">There should be exactly one final stage for category.</div>
   </div>
   <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
     <div class="ui card" [ngClass]="{error: stage.invalid}" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">

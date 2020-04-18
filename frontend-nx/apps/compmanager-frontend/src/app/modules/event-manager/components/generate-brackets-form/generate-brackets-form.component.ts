@@ -84,8 +84,9 @@ export class GenerateBracketsFormComponent implements OnInit {
   };
   private finalStageExistsValidator = (control: FormGroup) => {
     const stages = control.get('stageDescriptions') as FormArray;
-    if (!stages.controls.find(c => this.getStageType(c) === 'FINAL')) {
-      return {'finalStageExistsValidator': true};
+    const finalStagesCount = stages.controls.filter(c => this.getStageType(c) === 'FINAL')?.length;
+    if (finalStagesCount !== 1) {
+      return {'finalStageExistsValidator': finalStagesCount || true};
     }
     console.log(control);
     return null;
@@ -94,7 +95,6 @@ export class GenerateBracketsFormComponent implements OnInit {
     const stageCtrl = control?.parent?.parent;
     if (stageCtrl) {
       const stageType = this.getStageType(stageCtrl);
-      const bracketsType = this.getBracketsType(stageCtrl);
       const inputSize = this.inputCompetitorsForStage(stageCtrl, index);
       const selectorInput = this.selectorsProvidedInput(stageCtrl);
       const output = control.value;
