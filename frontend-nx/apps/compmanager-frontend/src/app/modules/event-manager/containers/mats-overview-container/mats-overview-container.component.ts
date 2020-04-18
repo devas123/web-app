@@ -37,7 +37,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
       header: store.pipe(select(getSelectedEventSelectedPeriod), filter(p => !!p), tap(console.log), take(1),
         map(per => <HeaderDescription>{
           header: `Period ${per.name}`,
-          subheader: 'Mats overview'
+          subheader: 'Areas overview'
         })),
       menu: [
         {

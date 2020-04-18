@@ -60,7 +60,7 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
         store.pipe(select(getSelectedEventGetSelectedMat))]).pipe(
         filter(([p, m]) => !!p && !!m && !!m),
         map(([per, mat]) => <HeaderDescription>{
-          header: 'Mat view',
+          header: 'Area view',
           subheader: `${per.name} / ${mat.name}`
         })),
       menu: [

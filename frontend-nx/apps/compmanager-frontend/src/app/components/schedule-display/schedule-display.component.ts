@@ -29,7 +29,7 @@ import {InfoService} from '../../service/info.service';
               (categoryMouseEnter)="highlightCategory([$event])"
               (categoryMouseLeave)="clearCategoryHighLight([$event])"
               (categoryClicked)="goToCategoryEditor($event)"></app-schedule-entry-display>
-            <div class="header" *ngIf="matsView[period?.id]">Mats view</div>
+            <div class="header" *ngIf="matsView[period?.id]">Areas view</div>
             <app-schedule-mat-display *ngIf="matsView[period?.id]"
               [scheduleEntries]="getPeriodEntries(period)"
               [matFormat]="matName"

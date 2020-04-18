@@ -44,7 +44,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
         </div>
         <sui-multi-select *ngIf="!_all"
                           [options]="modal.context.mats"
-                          placeholder="Mat"
+                          placeholder="Area"
                           labelField="name"
                           [optionFormatter]="matOptionFormatter"
                           [isSearchable]="false"

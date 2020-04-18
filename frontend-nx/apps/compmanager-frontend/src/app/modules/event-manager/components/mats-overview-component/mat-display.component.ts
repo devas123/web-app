@@ -6,7 +6,7 @@ import {MatDescription} from '../../../../reducers/global-reducers';
 @Component({
   selector: 'app-mat-display',
   template: `
-    <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Mat view</button>
+    <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Area view</button>
     <div class="header">{{title}}</div>
     <div class="ui middle aligned list" cdkDropList [cdkDropListData]="matFights"
          (cdkDropListDropped)="drop($event, mat?.id)">

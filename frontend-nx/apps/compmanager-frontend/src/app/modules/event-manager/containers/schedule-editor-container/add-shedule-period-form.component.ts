@@ -73,7 +73,7 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
       </div>
     </div>
     <div class="content" [formGroup]="matDescriptionsForm">
-      <div class="ui button" (click)="addMat()">Add mat</div>
+      <div class="ui button" (click)="addMat()">Add area</div>
       <div class="ui divider"></div>
       <div class="ui three stackable cards mat-container" formArrayName="mats">
         <div class="ui card" *ngFor="let matCtrl of matDescriptionsArray.controls; index as i">
