@@ -65,7 +65,7 @@
           </div>
           <div class="ui field" *ngIf="i > 0">
             <sui-checkbox [name]="'waitForPrevious'"
-                          (checkChange)="setWaitForPrevious(i, $event)">Do not start before the previous stage finishes
+                          (checkChange)="setWaitForPrevious(i, $event)">Start fights automatically
             </sui-checkbox>
           </div>
           <ng-container  *ngIf="i > 0 || getBracketsType(stage) === 'GROUP'">

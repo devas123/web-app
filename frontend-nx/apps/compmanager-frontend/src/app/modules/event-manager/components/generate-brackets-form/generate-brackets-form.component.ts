@@ -294,7 +294,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   setWaitForPrevious(i: number, $event: boolean) {
-    this.setStageControlValue(i, {waitForPrevious: $event});
+    this.setStageControlValue(i, {waitForPrevious: !$event});
   }
 
   setForceManualAssignment(i: number, $event: boolean) {

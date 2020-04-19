@@ -1,7 +1,22 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {Competitor, Fight} from '../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
-import {collectingReducer, defaultSelectionColor, getKeyForEntry} from '../../../modules/account/utils';
+import {
+  collectingReducer,
+  defaultBronzeFightColor,
+  defaultSelectionColor,
+  defaultUncompletableColor,
+  getKeyForEntry
+} from '../../../modules/account/utils';
 
 export type ConnectionType = 'DEFAULT' | 'NONE' | 'STRAIGHT';
 
@@ -36,7 +51,18 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   public round: number;
 
   @Input()
+  set roundFights(val: Fight[]) {
+    if (val) {
+      this.thirdPlaceFight = val.find(f => f.roundType === 'THIRD_PLACE_FIGHT');
+      this.fights = val.filter(f => f.roundType !== 'THIRD_PLACE_FIGHT');
+    } else {
+      this.fights = [];
+      this.thirdPlaceFight = undefined;
+    }
+  }
+
   public fights: Fight[];
+  public thirdPlaceFight: Fight;
 
   @Input()
   public rowWidthPx = 300;
@@ -137,7 +163,9 @@ export class BracketRoundComponent implements OnInit, OnChanges {
       return getKeyForEntry(this.changeFightIds, id) || defaultSelectionColor;
     } else {
       if (this.fights.find(f => f.id === id)?.status === 'UNCOMPLETABLE') {
-        return 'pink';
+        return defaultUncompletableColor;
+      } else if (this.thirdPlaceFight?.id === id) {
+        return defaultBronzeFightColor;
       }
       return 'black';
     }
