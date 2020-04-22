@@ -391,6 +391,7 @@ export class GenerateBracketsFormComponent implements OnInit {
 
   // @ts-ignore
   private fightResultOptionControl = (o?: FightResultOption) => this.fb.group({
+    id: [(o?.id)],
     description: [(o && o.description) || ''],
     shortName: [(o && o.shortName) || '', [Validators.required]],
     draw: [(o && o.draw) || false, [Validators.required]],
@@ -435,7 +436,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   mergeSelectedFightResultOptions(i: number, os: any[]) {
     const optionsControls = this.getFightResultOptions(i);
     const selectedOptions = optionsControls.value.filter(v => !!v) as FightResultOption[];
-    const optionsToAdd = os.filter(o => !selectedOptions.find(s => s.shortName === o.shortName));
+    const optionsToAdd = os.filter(o => !selectedOptions.find(s => s.id === o.id || s.shortName === o.shortName));
     const val = [...selectedOptions, ...optionsToAdd];
     optionsControls.clear();
     val.map(o => this.fightResultOptionControl(o)).forEach(c => optionsControls.push(c));
