@@ -20,7 +20,7 @@ import {
   Competitor,
   competitorEntityAdapter,
   CompetitorsCollection,
-  competitorsInitialState,
+  competitorsInitialState, Fight,
   fightEntityAdapter,
   FightResultOption,
   FightsCollection,
@@ -71,18 +71,18 @@ import {
   SCHEDULE_GENERATED
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce from 'immer';
-import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../actions/actions';
+import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED, REGISTRATION_INFO_LOADED} from '../actions/actions';
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {
-  DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED,
+  DASHBOARD_FIGHT_LOADED,
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_FIGHT_UNSELECTED,
   DASHBOARD_MAT_FIGHTS_LOADED,
   DASHBOARD_MAT_FIGHTS_UNLOADED,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MAT_UNSELECTED,
-  DASHBOARD_MATS_LOADED,
+  DASHBOARD_MATS_LOADED, DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
 
@@ -139,6 +139,7 @@ export interface CompetitionState {
   selectedEventDefaultCategories: Category[];
   selectedEventDefaultFightResultOptions: FightResultOption[];
   competitionProperties: CompetitionProperties;
+  registrationInfo: RegistrationInfo;
 }
 
 export const competitionPropertiesEntitiesAdapter: EntityAdapter<CompetitionProperties> = createEntityAdapter<CompetitionProperties>({
@@ -223,7 +224,6 @@ export interface CompetitionProperties {
   creatorId: any;
   id: string;
   competitionName: string;
-  registrationInfo: RegistrationInfo;
   startDate: string;
   schedulePublished: boolean;
   bracketsPublished: boolean;
@@ -304,38 +304,38 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
         if (state.competitionProperties.id === action.competitionId
-          && state.competitionProperties.registrationInfo
+          && state.registrationInfo
           && action.payload.periodId && action.payload.groupId) {
           const {periodId, groupId} = action.payload;
-          if (!state.competitionProperties.registrationInfo.registrationGroups) {
-            state.competitionProperties.registrationInfo.registrationGroups = [];
+          if (!state.registrationInfo.registrationGroups) {
+            state.registrationInfo.registrationGroups = [];
           }
-          const per = state.competitionProperties.registrationInfo.registrationPeriods
+          const per = state.registrationInfo.registrationPeriods
             .find(p => p.id === periodId);
           per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
           const group =
-            state.competitionProperties.registrationInfo.registrationGroups.find(gr => gr.id === groupId);
+            state.registrationInfo.registrationGroups.find(gr => gr.id === groupId);
           if (!group.registrationPeriodIds) {
             group.registrationPeriodIds = [];
           }
           group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
           if (group.registrationPeriodIds.length === 0) {
-            state.competitionProperties.registrationInfo.registrationGroups =
-              state.competitionProperties.registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
+            state.registrationInfo.registrationGroups =
+              state.registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
           }
         }
         break;
       }
       case EVENT_MANAGER_REGISTRATION_GROUP_CREATED: {
         if (state.competitionProperties.id === action.competitionId
-          && state && state.competitionProperties.registrationInfo
+          && state && state.registrationInfo
           && action.payload.periodId && action.payload.groups) {
-          if (!state.competitionProperties.registrationInfo.registrationGroups) {
-            state.competitionProperties.registrationInfo.registrationGroups = [];
+          if (!state.registrationInfo.registrationGroups) {
+            state.registrationInfo.registrationGroups = [];
           }
           action.payload.groups.forEach(group => {
-            state.competitionProperties.registrationInfo.registrationGroups.push(group);
-            state.competitionProperties.registrationInfo.registrationPeriods
+            state.registrationInfo.registrationGroups.push(group);
+            state.registrationInfo.registrationPeriods
               .find(per => per.id === action.payload.periodId)
               .registrationGroupIds.push(group.id);
           });
@@ -344,7 +344,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case REGISTRATION_INFO_UPDATED: {
         if (state === action.competitionId && state && action.payload.registrationInfo) {
-          state.competitionProperties.registrationInfo = action.payload.registrationInfo;
+          state.registrationInfo = action.payload.registrationInfo;
         }
         break;
       }
@@ -516,6 +516,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         } else if (!!action.competitionId && action.payload) {
           return {...initialCompetitionState, competitionProperties: action.payload};
         }
+        break;
+      }
+      case REGISTRATION_INFO_LOADED: {
+        state.registrationInfo = action.payload;
         break;
       }
       case COMPETITION_SELECTED: {
@@ -709,9 +713,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
-      case DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED: {
+      case DASHBOARD_FIGHT_LOADED: {
         if (state.selectedEventMats.matsFights.selectedFightId === action.fightId) {
           state.selectedEventMats.matsFights.selectedFightFightResultOptions = action.fightresultOptions || [];
+          if (action.fight) {
+            state.selectedEventMats.matsFights = fightEntityAdapter.upsertOne(action.fight, state.selectedEventMats.matsFights);
+          }
         }
         break;
       }
@@ -726,7 +733,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case DASHBOARD_MAT_FIGHTS_LOADED: {
         const {fights, competitors} = action.payload;
         if (fights && competitors) {
-          const currentMatFights = _.flow(_.curry(_.filter)(f => f.matId !== action.matId),_.values)(state.selectedEventMats.matsFights.entities);
+          const currentMatFights = _.flowRight(_.curryRight(_.filter)(f => f.matId !== action.matId), _.values)(state.selectedEventMats.matsFights.entities) as Fight[];
           state.selectedEventMats.matsFights = fightEntityAdapter.setAll([...fights,...currentMatFights], state.selectedEventMats.matsFights);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(competitors, state.selectedEventCompetitors);
         }
@@ -845,6 +852,7 @@ export const getSelectedEventProperties = createSelector(getSelectedEventState, 
 export const getSelectedEventId = createSelector(getSelectedEventProperties, props => props && props.id);
 export const getSelectedEventMatsCollection = createSelector(getSelectedEventState, state => (state && state.selectedEventMats) || matsInitialState);
 export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => state && state.selectedEventSchedule);
+
 export const eventManagerGetSelectedEventSchedulePeriodsCollection = createSelector(eventManagerGetSelectedEventSchedule, state => {
   return (state && state.periods) || periodEntityInitialState;
 });
@@ -869,20 +877,20 @@ export const dashboardGetSelectedPeriodMats = createSelector(getSelectedEventAll
 export const getSelectedEventGetSelectedMatId = createSelector(getSelectedEventMatsCollection, state => state && state.selectedMatId);
 export const getSelectedEventGetSelectedMat = createSelector(getSelectedEventGetSelectedMatId, getSelectedEventMatsDictionary, (id, dic) => id && dic[id]);
 export const dashboardGetSelectedPeriodMatsFightsCollection = createSelector(getSelectedEventMatsCollection, state => (state && state.matsFights) || fightsInitialState);
-export const dashboardGetSelectedPeriodMatSelectedFightId = createSelector(dashboardGetSelectedPeriodMatsFightsCollection, state => state && state.selectedFightId);
+export const dashboardGetSelectedPeriodSelectedFightId = createSelector(dashboardGetSelectedPeriodMatsFightsCollection, state => state && state.selectedFightId);
 export const dashboardGetSelectedPeriodMatSelectedFightFightResultOptions = createSelector(dashboardGetSelectedPeriodMatsFightsCollection, state => state && state.selectedFightFightResultOptions);
 
 export const {
   // select the dictionary of user entities
-  selectEntities: dashboardGetSelectedPeriodSelectedMatFightsEntities,
-  selectAll: dashboardGetSelectedPeriodSelectedMatAllFights
+  selectEntities: dashboardGetSelectedPeriodFightsEntities,
+  selectAll: dashboardGetSelectedPeriodAllFights
 } = fightEntityAdapter.getSelectors(dashboardGetSelectedPeriodMatsFightsCollection);
-export const getSelectedEventDashboardPeriodFights = dashboardGetSelectedPeriodSelectedMatAllFights;
-export const dashboardGetSelectedPeriodSelectedMatFights = createSelector(dashboardGetSelectedPeriodSelectedMatAllFights, getSelectedEventGetSelectedMatId,
-  (fights, matId) => fights && matId && fights.filter(f => f.mat?.id === matId));
+export const getSelectedEventDashboardPeriodFights = dashboardGetSelectedPeriodAllFights;
+export const dashboardGetSelectedPeriodSelectedMatFights = createSelector(dashboardGetSelectedPeriodAllFights, getSelectedEventGetSelectedMatId,
+  (fights, matId) => fights && matId && _.sortBy(fights.filter(f => f.mat?.id === matId), fs => fs.numberOnMat));
 
-export const dashboardGetSelectedPeriodSelectedMatSelectedFight = createSelector(dashboardGetSelectedPeriodMatSelectedFightId,
-  dashboardGetSelectedPeriodSelectedMatFightsEntities,
+export const dashboardGetSelectedPeriodSelectedFight = createSelector(dashboardGetSelectedPeriodSelectedFightId,
+  dashboardGetSelectedPeriodFightsEntities,
   (id, entities) => id && entities[id]);
 export const getSelectedEventSelectedPeriod = createSelector(getSelectedEventSelectedPeriodId,
   selectPeriodsDictionary, (periodId, entities) => periodId && entities[periodId]);

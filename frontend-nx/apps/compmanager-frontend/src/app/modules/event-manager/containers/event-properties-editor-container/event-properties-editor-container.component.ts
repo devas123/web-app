@@ -1,8 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../../../reducers/global-reducers';
+import {
+  AppState,
+  CompetitionProperties,
+  getSelectedEventProperties,
+  RegistrationInfo
+} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventRegistrationInfo
+} from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {
   ComponentCommonMetadataProvider,
@@ -16,11 +24,14 @@ import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-event-properties-editor-container',
-  template: '<app-event-properties-editor (propertiesUpdated)="updateProperties($event)" [properties]="competitionProperties$ | async"></app-event-properties-editor>'
+  template: `<app-event-properties-editor (propertiesUpdated)="updateProperties($event)"
+                                          [registrationInfo]="registrationInfo$ | async"
+                                          [properties]="competitionProperties$ | async"></app-event-properties-editor>`
 })
 export class EventPropertiesEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
 
   competitionProperties$: Observable<CompetitionProperties>;
+  registrationInfo$: Observable<RegistrationInfo>;
 
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
@@ -66,6 +77,7 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
       ]
     }, menuService);
     this.competitionProperties$ = store.pipe(select(getSelectedEventProperties));
+    this.registrationInfo$ = store.pipe(select(eventManagerGetSelectedEventRegistrationInfo));
   }
 
   ngOnInit() {

@@ -18,13 +18,15 @@ export const urls = {
   stageFights: '/competitions/api/v1/store/stagefights',
   defaultFightResults: '/competitions/api/v1/store/defaultfightresults',
   categoryStages: '/competitions/api/v1/store/stages',
+  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
+  fight: '/competitions/api/v1/store/fight',
   fightIdsBycategoryId: '/competitions/api/v1/store/fightsbycategories'
 };
 
 export const environment = {
   production: true,
   mocks: false,
-  mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
+  mapKey: '',
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
   eventQueue: `/state/events`,
@@ -54,5 +56,7 @@ export const mocks = {
   stageFights: '/jsserver/stagefights',
   defaultFightResults: '/jsserver/defaultfightresults',
   categoryStages: '/jsserver/stages',
+  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
+  fight: '/competitions/api/v1/store/fight',
   fightIdsBycategoryId: '/jsserver/fightsbycategories'
 };

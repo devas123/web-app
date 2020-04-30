@@ -28,10 +28,12 @@ import {
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MATS_LOADED,
   DASHBOARD_SET_FIGHT_RESULT_COMMAND,
-  dashboardFightResultOptionsLoaded,
+  DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND,
+  dashboardFightLoaded,
   dashboardLoadPeriodMatsCommand,
-  dashboardMatsLoaded,
   dashboardMatFightsLoaded,
+  dashboardMatFightsUnloaded,
+  dashboardMatsLoaded,
   dashboardStateLoaded,
   PERIOD_SELECTED,
   REFRESH_MATS_VIEW,
@@ -106,16 +108,22 @@ export class DashboardEffects {
         }));
     })));
 
+  dashboardUnload$ = createEffect(() => this.actions$.pipe(
+    ofType(DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND),
+    switchMap(() => of(dashboardMatFightsUnloaded))
+  ));
+
   dashboardLoadFightResultOptions$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_FIGHT_SELECTED),
     withLatestFrom(this.store.pipe(select(getSelectedEventId))),
     filter(([command, competitionId]) => !!command && !!competitionId),
     mergeMap(([command, competitionId]: [CommonAction, string]) => {
-      return this.infoService.getFightResultOptions(competitionId, command.payload).pipe(
-        map((result: any) => dashboardFightResultOptionsLoaded({
+      return this.infoService.getFight(competitionId, command.payload).pipe(
+        map((result: [any, any]) => dashboardFightLoaded({
           competitionId: competitionId,
           fightId: command.payload,
-          fightresultOptions: result
+          fightresultOptions: result[1],
+          fight: result[0]
         })),
         catchError(error => observableOf(errorEvent(error))));
     })));

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import {CompetitionProperties, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
@@ -17,6 +17,9 @@ export class EventPropertiesEditorComponent implements OnChanges {
 
   @Input()
   properties: CompetitionProperties;
+
+  @Input()
+  registrationInfo: RegistrationInfo;
 
   @Output()
   propertiesUpdated: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
@@ -83,7 +86,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
         bracketsPublished: this.properties.bracketsPublished || false,
         status: this.properties.status || 'UNKNOWN',
         endDate: InfoService.parseDate(this.properties.endDate),
-        registrationOpen: (this.properties.registrationInfo && this.properties.registrationInfo.registrationOpen) || false,
+        registrationOpen: (this.registrationInfo && this.registrationInfo.registrationOpen) || false,
       });
     }
   }

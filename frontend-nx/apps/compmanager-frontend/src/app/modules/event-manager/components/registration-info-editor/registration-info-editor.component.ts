@@ -11,12 +11,12 @@ import produce from 'immer';
 })
 export class RegistrationInfoEditorComponent implements OnInit {
 
-  ngStyle = {'grid-template-columns': 'repeat(2, 50%)'};
+  ngStyle = {'grid-template-columns': 'repeat(2, 1fr)'};
 
   @Input()
   set colunmsNumber(value: number) {
     if (value) {
-      this.ngStyle = {'grid-template-columns': `repeat(${value}, ${100 / value}%)`};
+      this.ngStyle = {'grid-template-columns': `repeat(${value}, 1fr)`};
     }
   }
 

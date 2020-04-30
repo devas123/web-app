@@ -118,7 +118,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   triggerAddSchedulePeriod() {
     if (this.name.value) {
       const properties = {
-        id: btoa(this.modal.context.competitionId + this.name.value) + generateUuid(),
+        id: this.modal.context.competitionId + generateUuid(),
         name: this.name.value,
         startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,

@@ -14,6 +14,7 @@ export interface IDashboardFightScheduleChangedPayload {
 }
 
 export const DASHBOARD_LOAD_MATS_COMMAND = 'DASHBOARD_LOAD_MATS_COMMAND';
+export const DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND = 'DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND';
 export const DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND';
 export const DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND';
 export const DASHBOARD_INIT_PERIOD_COMMAND = 'INIT_PERIOD_COMMAND';
@@ -25,7 +26,7 @@ export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_CO
 
 
 // events
-export const DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED = 'DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED';
+export const DASHBOARD_FIGHT_LOADED = 'DASHBOARD_FIGHT_LOADED';
 export const DASHBOARD_FIGHT_ORDER_CHANGED = 'DASHBOARD_FIGHT_ORDER_CHANGED';
 export const DASHBOARD_STATE_LOADED = 'DASHBOARD_STATE_LOADED';
 export const PERIOD_SELECTED = 'PERIOD_SELECTED';
@@ -46,8 +47,9 @@ export const refreshMatView = (periodId, competitionId) => ({
   payload: periodId,
   competitionId
 });
+export const dashboardLoadFightIfNeededCommand = createAction(DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND, props<{ competitionId: string, fightId: string }>());
 export const dashboardLoadPeriodMatsCommand = createAction(DASHBOARD_LOAD_MATS_COMMAND, props<{ competitionId: string, periodId: string }>());
-export const dashboardFightResultOptionsLoaded = createAction(DASHBOARD_FIGHT_RESULT_OPTIONS_LOADED, props<{ competitionId: string, fightId: string, fightresultOptions: FightResultOption[] }>());
+export const dashboardFightLoaded = createAction(DASHBOARD_FIGHT_LOADED, props<{ competitionId: string, fightId: string, fightresultOptions: FightResultOption[], fight: Fight }>());
 export const dashboardMatFightsUnloaded = {type: DASHBOARD_MAT_FIGHTS_UNLOADED};
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};

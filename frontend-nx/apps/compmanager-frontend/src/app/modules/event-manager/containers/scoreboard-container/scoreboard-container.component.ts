@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   AppState, dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
   dashboardGetSelectedPeriodSelectedMatFights,
-  dashboardGetSelectedPeriodSelectedMatSelectedFight,
+  dashboardGetSelectedPeriodSelectedFight,
   getSelectedEventGetSelectedMat,
   getSelectedEventId,
   getSelectedEventSelectedPeriod,
@@ -91,7 +91,7 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
     );
 
     this.selectedFight$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatSelectedFight)
+      select(dashboardGetSelectedPeriodSelectedFight)
     );
 
     this.selectedFightFightResultOptions$ = this.store.pipe(

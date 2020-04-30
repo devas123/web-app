@@ -85,11 +85,10 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
         props.creatorId = user.userId;
         props.competitionName = this.competitionName.value;
         // props.registrationFee = this.registrationFee.value || '1500';
-        props.registrationInfo = regInfo;
         props.id = '';
         props.schedulePublished = false;
         props.bracketsPublished = false;
-        return createCompetition(props);
+        return createCompetition(props, regInfo);
       }),
       tap(this.store))
       .subscribe(() => this.goBack()));

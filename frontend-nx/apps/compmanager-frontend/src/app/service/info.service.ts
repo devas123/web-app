@@ -1,6 +1,6 @@
 import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs';
 
-import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
+import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout, withLatestFrom} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -19,6 +19,7 @@ const {
   commandsSyncEndpoint,
   commandsEndpoint,
   competitionQueryEndpoint,
+  registrationInfoQueryEndpoint,
   competitorEdpoint,
   scheduleEndpoint,
   categoriesEndpoint,
@@ -29,6 +30,7 @@ const {
   dashboardState,
   mats,
   fightResultOptions,
+  fight,
   matFights,
   stageFights,
   categoryStages,
@@ -138,6 +140,7 @@ export class InfoService {
   }
 
 
+
   getCompetitor(competitionId: string, fighterId: string) {
     const params = {competitionId, fighterId};
     return this.httpGet(competitorEdpoint, {
@@ -205,6 +208,13 @@ export class InfoService {
   getCompetitionProperties(competitionId: string) {
     const params = {competitionId};
     return this.httpGet(compProperties, {
+      params: params,
+      headers: this.headers
+    });
+  }
+  getRegistrationInfo(competitionId: string) {
+    const params = {competitionId};
+    return this.httpGet(registrationInfoQueryEndpoint, {
       params: params,
       headers: this.headers
     });
@@ -279,6 +289,16 @@ export class InfoService {
       params: params,
       headers: this.headers
     });
+  }
+
+  getFight(competitionId: string, fightId: string) {
+    const params = {competitionId, fightId};
+    return this.httpGet(fight, {
+      params: params,
+      headers: this.headers
+    }).pipe(
+      withLatestFrom(this.getFightResultOptions(competitionId, fightId))
+    );
   }
 
   getFightResultOptions(competitionId: string, fightId: string) {

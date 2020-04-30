@@ -6,7 +6,6 @@
 export const environment = {
   production: false,
   mocks: false,
-  mapKey: 'AIzaSyDyawZhDP4qxWwvSQMNdjyerRyyoU6GfkM',
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
   eventQueue: `/state/events`,
@@ -27,10 +26,12 @@ export const environment = {
   dashboardState: '/competitions/api/v1/store/dashboardstate',
   mats: '/competitions/api/v1/store/mats',
   fightResultOptions: '/competitions/api/v1/store/fightresultoptions',
+  fight: '/competitions/api/v1/store/fight',
   matFights: '/competitions/api/v1/store/matfights',
   stageFights: '/competitions/api/v1/store/stagefights',
   defaultFightResults: '/competitions/api/v1/store/defaultfightresults',
   categoryStages: '/competitions/api/v1/store/stages',
+  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
   fightIdsBycategoryId: '/competitions/api/v1/store/fightsbycategories'
 };
 
@@ -56,6 +57,8 @@ export const mocks = {
   stageFights: '/jsserver/stagefights',
   defaultFightResults: '/jsserver/defaultfightresults',
   categoryStages: '/jsserver/stages',
+  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
+  fight: '/competitions/api/v1/store/fight',
   fightIdsBycategoryId: '/jsserver/fightsbycategories'
 };
 

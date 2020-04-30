@@ -14,7 +14,7 @@ import {
   eventManagerAddRegistrationGroup,
   eventManagerDeleteRegistrationGroup,
   eventManagerDeleteRegistrationPeriod,
-  eventManagerUpdateRegistrationInfo
+  eventManagerUpdateRegistrationInfo, eventManagerLoadRegistrationInfo
 } from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
@@ -66,7 +66,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       ]
     }, menuService);
     this.columsNumber$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
-      map(b => b.matches ? 1 : 2)
+      map(b => b.matches ? 1 : 3)
     );
     this.selectedRegistrationGroupId$ = route.queryParams.pipe(
       switchMap(params => of(params['group'])),
@@ -132,6 +132,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   }
 
   ngOnInit() {
+    this.competitionId$.pipe(filter(id => !!id), take(1), map(id => eventManagerLoadRegistrationInfo({competitionId: id}))).subscribe(this.store);
   }
 
   ngOnDestroy(): void {
