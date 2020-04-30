@@ -5,6 +5,7 @@ import {
   AppState,
   dashboardGetSelectedPeriodMats,
   getSelectedEventDashboardPeriodFights,
+  getSelectedEventId,
   getSelectedEventSelectedPeriod,
   MatDescription
 } from '../../../../reducers/global-reducers';
@@ -36,7 +37,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
       header: store.pipe(select(getSelectedEventSelectedPeriod), filter(p => !!p), tap(console.log), take(1),
         map(per => <HeaderDescription>{
           header: `Period ${per.name}`,
-          subheader: 'Mats overview'
+          subheader: 'Areas overview'
         })),
       menu: [
         {
@@ -52,7 +53,9 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   }
 
   navigateBack() {
-    this.location.back();
+    this.store.pipe(select(getSelectedEventId), take(1)).subscribe((id) => {
+      this.router.navigateByUrl(`/eventmanager/${id}/dashboard`).catch(console.error);
+    });
   }
 
   ngOnInit() {

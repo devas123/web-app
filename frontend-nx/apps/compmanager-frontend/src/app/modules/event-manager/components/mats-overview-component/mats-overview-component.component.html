@@ -3,6 +3,7 @@
     <div class="content">
       <app-mat-display (competitorClicked)="openCompetitorPage($event)"
                        [competitors]="competitors"
+                       [categories]="categories"
                        [mat]="mat"
                        [matFights]="getMatFights(mat?.id)"
                        [title]="mat?.name"

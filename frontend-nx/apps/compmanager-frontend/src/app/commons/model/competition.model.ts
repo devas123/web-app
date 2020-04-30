@@ -168,6 +168,8 @@ export interface CompScore {
   competitorId: string;
   score: Score;
   placeholderId?: string;
+  parentFightId?: string;
+  parentReferenceType?: String;
   order?: number;
 }
 
@@ -180,14 +182,15 @@ export interface CompetitorGroupChange {
   groupId: string;
   changeType: GroupChangeType;
 }
+export interface FightEditorChange {
+  fightId: string;
+  competitors: string[];
+}
 
 export interface Fight {
   fightName: string;
   id: string;
   categoryId: string;
-  category?: Category;
-  parentId1?: string;
-  parentId2?: string;
   winFight?: string;
   loseFight?: string;
   competitionId: string;
@@ -267,11 +270,15 @@ export interface GroupDescriptor {
   size: number;
 }
 
+export type StageStatus =  'APPROVED' |  'WAITING_FOR_APPROVAL' |  'WAITING_FOR_COMPETITORS' | 'FINISHED' | 'IN_PROGRESS';
+
+export const stageStatusValues: StageStatus[] = ['APPROVED', 'WAITING_FOR_APPROVAL',  'WAITING_FOR_COMPETITORS', 'FINISHED', 'IN_PROGRESS'];
+
 export interface CategoryBracketsStage {
   id: string;
   bracketType: BracketsType;
   stageType: StageType;
-  stageStatus: string;
+  stageStatus: StageStatus;
   waitForPrevious: boolean;
   hasThirdPlaceFight: boolean;
   stageOrder: number;
@@ -298,6 +305,7 @@ export interface CompetitorSelector {
 }
 
 export interface FightResultOption {
+  id: string;
   description: string;
   shortName: string;
   draw: boolean;
@@ -307,7 +315,7 @@ export interface FightResultOption {
   loserAdditionalPoints: number;
 }
 
-interface CompetitorResult {
+export interface CompetitorResult {
   id: string;
   competitorId: string;
   points: number;
@@ -346,6 +354,7 @@ export interface CategoryBracketsStageCollection extends EntityState<CategoryBra
 
 export interface FightsCollection extends EntityState<Fight> {
   selectedFightId: string | null;
+  selectedFightFightResultOptions: FightResultOption[] | null;
 }
 
 export interface CompetitorsCollection extends EntityState<Competitor> {
@@ -413,7 +422,8 @@ export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapte
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
-  selectedFightId: null
+  selectedFightId: null,
+  selectedFightFightResultOptions: []
 });
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({

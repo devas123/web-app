@@ -25,6 +25,41 @@ export interface CatReq {
 export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   @Input()
+  private set periods(value: Period[]) {
+    if (value) {
+      this._requirements = value.map(p => p.scheduleRequirements).reduce(collectingReducer, []);
+    } else {
+      this._requirements = [];
+    }
+    this._periods = value;
+  }
+
+  @Input()
+  set undispatched(value: ScheduleRequirement[]) {
+    if (value) {
+      this._requirements = [...this._requirements, ...value].filter(uniqueFilter);
+    }
+  }
+
+  private get periods(): Period[] {
+    const requirementsWithOrder = produce(this._requirements, draft => {
+      draft.forEach((req, index) => req.entryOrder = index);
+    });
+    return produce(this._periods, draft => {
+      draft.forEach(p => {
+        p.scheduleRequirements = requirementsWithOrder.filter(sr => sr.periodId === p.id);
+      });
+    });
+  }
+
+  constructor(public modalService: SuiModalService, public cd: ChangeDetectorRef) {
+  }
+
+  get undispatchedRequirements() {
+    return this._requirements.filter(sr => !sr.periodId).map(req => ({req}));
+  }
+
+  @Input()
   timeZone = 'UTC';
 
   @Input()
@@ -65,48 +100,17 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   _selectedReqs: Set<string> = new Set<string>();
   _periods: Period[];
 
+  @Input()
+  private fightIdsByCategoryId: Dictionary<string[]>;
+
   startDrag() {
-    console.log("test")
+    console.log("test");
     this.cd.detach();
   }
 
   finishDrag() {
     this.cd.reattach();
     this.cd.markForCheck();
-  }
-
-  @Input()
-  private set periods(value: Period[]) {
-    if (value) {
-      this._requirements = value.map(p => p.scheduleRequirements).reduce(collectingReducer, []);
-    } else {
-      this._requirements = [];
-    }
-    this._periods = value;
-  }
-
-  @Input()
-  set undispatched(value: ScheduleRequirement[]) {
-    if (value) {
-      this._requirements = [...this._requirements, ...value].filter(uniqueFilter);
-    }
-  }
-
-  private get periods(): Period[] {
-    const requirementsWithOrder = produce(this._requirements, draft => {
-      draft.forEach((req, index) => req.entryOrder = index);
-    });
-    return produce(this._periods, draft => {
-      draft.forEach(p => {
-        p.scheduleRequirements = requirementsWithOrder.filter(sr => sr.periodId === p.id);
-      });
-    });
-  }
-
-  @Input()
-  private fightIdsByCategoryId: Dictionary<string[]>;
-
-  constructor(public modalService: SuiModalService, public cd: ChangeDetectorRef) {
   }
 
   getPeriodMats(periodId: string) {
@@ -306,10 +310,6 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
 
     this.filteredCategories = [...this.filteredCategories, ...this.undispatchedRequirements];
-  }
-
-  get undispatchedRequirements() {
-    return this._requirements.filter(sr => !sr.periodId).map(req => ({req}));
   }
 
   onItemDrop(e: CdkDragDrop<any, any>, to: string, toMatId?: string) {

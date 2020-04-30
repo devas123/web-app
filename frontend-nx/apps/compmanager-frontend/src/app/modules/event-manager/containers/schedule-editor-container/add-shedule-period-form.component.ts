@@ -73,7 +73,7 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
       </div>
     </div>
     <div class="content" [formGroup]="matDescriptionsForm">
-      <div class="ui button" (click)="addMat()">Add mat</div>
+      <div class="ui button" (click)="addMat()">Add area</div>
       <div class="ui divider"></div>
       <div class="ui three stackable cards mat-container" formArrayName="mats">
         <div class="ui card" *ngFor="let matCtrl of matDescriptionsArray.controls; index as i">
@@ -118,7 +118,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   triggerAddSchedulePeriod() {
     if (this.name.value) {
       const properties = {
-        id: btoa(this.modal.context.competitionId + this.name.value) + generateUuid(),
+        id: this.modal.context.competitionId + generateUuid(),
         name: this.name.value,
         startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,

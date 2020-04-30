@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
-  AppState,
+  AppState, dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
   dashboardGetSelectedPeriodSelectedMatFights,
-  dashboardGetSelectedPeriodSelectedMatSelectedFight,
+  dashboardGetSelectedPeriodSelectedFight,
   getSelectedEventGetSelectedMat,
   getSelectedEventId,
   getSelectedEventSelectedPeriod,
@@ -11,7 +11,13 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {Category, Competitor, Fight, HeaderDescription} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  Competitor,
+  Fight,
+  FightResultOption,
+  HeaderDescription
+} from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {
@@ -29,6 +35,7 @@ import {
   EventManagerRouterEntryComponent
 } from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
@@ -42,17 +49,18 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   competitors$: Observable<Competitor[]>;
   selectedPeriodId$: Observable<String>;
   selectedFight$: Observable<Fight>;
+  selectedFightFightResultOptions$: Observable<FightResultOption[]>;
   fightCategory$: Observable<Category>;
 
   urlProvidedFightId$: Observable<string>;
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private info: CommonBracketsInfoContainer, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: combineLatest([store.pipe(select(getSelectedEventSelectedPeriod)),
         store.pipe(select(getSelectedEventGetSelectedMat))]).pipe(
         filter(([p, m]) => !!p && !!m && !!m),
         map(([per, mat]) => <HeaderDescription>{
-          header: 'Mat view',
+          header: 'Area view',
           subheader: `${per.name} / ${mat.name}`
         })),
       menu: [
@@ -83,7 +91,11 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
     );
 
     this.selectedFight$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatSelectedFight)
+      select(dashboardGetSelectedPeriodSelectedFight)
+    );
+
+    this.selectedFightFightResultOptions$ = this.store.pipe(
+      select(dashboardGetSelectedPeriodMatSelectedFightFightResultOptions)
     );
 
     this.competitors$ = this.store.pipe(
@@ -94,13 +106,13 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
       filter(f => !!f),
       mergeMap(fight => this.store.pipe(
         select(eventManagerGetSelectedEventCategory, {id: fight.categoryId}))
-      ));
+      ),
+      filter(cat => !!cat));
   }
 
   navigateBack() {
-    this.store.pipe(select(getSelectedEventId),
-      withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId))), take(1)).subscribe(([id, period]) => {
-      this.router.navigateByUrl(`/eventmanager/${id}/dashboard/${period}`).catch(console.error);
+    this.store.pipe(select(getSelectedEventId), take(1)).subscribe((id) => {
+      this.router.navigateByUrl(`/eventmanager/${id}/dashboard`).catch(console.error);
     });
   }
 
@@ -108,9 +120,9 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   selectFightForScoreboard(fightId: string) {
     if (fightId) {
       const queryParams = {fightId};
-      this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(error => console.log(error));
+      this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(console.error);
     } else {
-      this.router.navigate(['.'], {relativeTo: this.route}).catch(error => console.log(error));
+      this.router.navigate(['.'], {relativeTo: this.route}).catch(console.error);
     }
   }
 

@@ -43,6 +43,8 @@ export class StageDisplayComponent implements OnInit {
   competitors: Competitor[] = [];
   @Output()
   unseededCompetitorsClicked = new EventEmitter();
+  @Input()
+  showResults: boolean;
 
   get unseededCompetitors() {
     return this.competitors.filter(c => !this.fights.find(f => !!f.scores.find(s => s.competitorId === c.id)));

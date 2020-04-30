@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Competitor, Fight} from '../../../../commons/model/competition.model';
+import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import * as _ from 'lodash';
 
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
   template: `
     <div class="fight-display-container" (click)="selectFight(fight?.id)">
       <div class="category_display centered">
-        {{displayCategory(fight?.category)}}
+        {{displayCategory(fight?.categoryId)}}
       </div>
       <div class="centered">
         {{fight?.numberOnMat + 1}}
@@ -46,8 +46,14 @@ export class FightDisplayComponent implements OnInit {
   @Output()
   competitorClicked = new EventEmitter<Competitor>();
 
+  @Input()
+  categories: Category[];
 
-  displayCategory = AddFighterComponent.displayCategory;
+
+
+  displayCategory(id: string) {
+    return !!this.categories && this.categories.find(c => c.id === id) && AddFighterComponent.displayCategory(this.categories.find(c => c.id === id));
+  }
 
   get fightScores() {
 

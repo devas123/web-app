@@ -1,8 +1,11 @@
-<div class="ui basic segment bottom_margin" [formGroup]="form">
+<div class="ui basic segment bottom_margin" [formGroup]="form" [ngClass]="{error: form.invalid}">
   <div class="ui buttons">
     <button class="ui button" (click)="doGenerateStages()" [disabled]="form.invalid">Generate</button>
     <button class="ui button" (click)="addStageDescription()">Add stage</button>
     <button class="ui button" (click)="removeAllStages()">Clear</button>
+  </div>
+  <div *ngIf="form.touched && form?.errors?.finalStageExistsValidator">
+    <div class="ui compact error message">There should be exactly one final stage for category.</div>
   </div>
   <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
     <div class="ui card" [ngClass]="{error: stage.invalid}" *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
@@ -62,15 +65,15 @@
           </div>
           <div class="ui field" *ngIf="i > 0">
             <sui-checkbox [name]="'waitForPrevious'"
-                          (checkChange)="setWaitForPrevious(i, $event)">Do not start before the previous stage finishes
+                          (checkChange)="setWaitForPrevious(i, $event)">Start fights automatically
             </sui-checkbox>
           </div>
-          <ng-container  *ngIf="i > 0 || getBracketsType(i) === 'GROUP'">
+          <ng-container  *ngIf="i > 0 || getBracketsType(stage) === 'GROUP'">
             <div class="ui divider"></div>
             <div class="ui card no_margin">
               <div class="content">
                 <div class="header">Stage input</div>
-                <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(i) !== 'GROUP'">
+                <div class="ui fields" formGroupName="inputDescriptor" *ngIf="getBracketsType(stage) !== 'GROUP'">
                   <div class="ui field" *ngIf="!selectorsProvidedInput(stage) || isManualDistributionType(stage)">
                     <label for="numberOfCompetitors">Number of competitors from previous stage that pass to this
                       stage.</label>
@@ -79,7 +82,7 @@
                            formControlName="numberOfCompetitors"/>
                   </div>
                 </div>
-                <ng-container *ngIf="getBracketsType(i) === 'GROUP'">
+                <ng-container *ngIf="getBracketsType(stage) === 'GROUP'">
                   <div formArrayName="groupDescriptors">
                     <button class="ui button" (click)="addGroupDescriptor(i)">Add group descriptor</button>
                     <p></p>
@@ -173,7 +176,7 @@
                 </div>
               </div>
             </div>
-            <div class="ui card" *ngIf="getBracketsType(i) === 'GROUP'">
+            <div class="ui card" *ngIf="getBracketsType(stage) === 'GROUP'">
               <div class="content">
                 <div class="header">Additional sorting</div>
                 <div class="ui field">

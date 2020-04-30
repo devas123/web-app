@@ -25,6 +25,7 @@ import {GroupDisplayComponent} from '../components/brackets-editor/group-display
 import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/group-display/multiple-groups-display';
 import {ScheduleEntryDisplayComponent} from '../components/schedule-display/schedule-entry-display.component';
 import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedule-mat-display.component';
+import {StageResultDisplayComponent} from '../components/stage-result-display/stage-result-display.component';
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -38,7 +39,8 @@ import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedu
     GroupDisplayComponent,
     MultipleGroupsDisplayComponent,
     ScheduleMatDisplayComponent,
-    ScheduleEntryDisplayComponent],
+    ScheduleEntryDisplayComponent,
+    StageResultDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleMatDisplayComponent,
@@ -51,6 +53,7 @@ import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedu
     TagListComponent,
     CommonFightsEditorComponent,
     GroupDisplayComponent,
+    StageResultDisplayComponent,
     MultipleGroupsDisplayComponent],
   imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })

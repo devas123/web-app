@@ -9,6 +9,17 @@ $padding_big: 40px;
   box-sizing: border-box;
 }
 
+.winner_buttons_group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+
+  .button {
+    margin: 1px !important;
+  }
+}
+
 html,
 body,
 .wrapper {

@@ -1,0 +1,36 @@
+<ng-container *ngIf="!!stage">
+  <table class="ui compact table" *ngIf="stage?.bracketType !== 'GROUP'">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Place</th>
+      <th>Passed to round</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let result of getStageResults()">
+      <td>{{ getCompetitor(result?.competitorId) | getname }}</td>
+      <td>{{ result?.place }}</td>
+      <td>{{ result?.round }}</td>
+    </tr>
+    </tbody>
+  </table>
+  <ng-container *ngIf="stage?.bracketType === 'GROUP'">
+    <table class="ui compact table" *ngFor="let group of getGroupIds()">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Points</th>
+        <th>Place</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let result of getGroupResults(group.id)">
+        <td>{{ getCompetitor(result?.competitorId) | getname }}</td>
+        <td>{{ result?.points || 0 }}</td>
+        <td>{{ result?.place }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</ng-container>

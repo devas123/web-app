@@ -26,5 +26,7 @@ export const uniqueFilter = <T>(e: T, i: number, a: T[]) => a.indexOf(e) === i;
 export const getKeyForEntry = <T>(dic: Dictionary<T[]>, entry: T) => Object.keys(dic).find(key => dic[key].includes(entry));
 export const defaultSelectionColor = '#3c5d96';
 export const defaultActiveSelectionColor = '#0e5375';
+export const defaultUncompletableColor = '#754c0e';
+export const defaultBronzeFightColor = '#9c7038';
 
 export const generateUuid = () => uuidv4().toString();

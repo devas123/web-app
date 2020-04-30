@@ -23,7 +23,7 @@ import {Dictionary} from '@ngrx/entity';
           <app-bracketround [changeFightIds]="changeFightsIds"
                             [rowWidthPx]="rowWidthPx"
                             [bracketHeightInFights]="getHeightOfBucket(bucket)"
-                            [fights]="getFightsForRound(round)"
+                            [roundFights]="getActualFightsForRound(round)"
                             [round]="round"
                             [competitors]="competitors"
                             [oneFightInPercent]="getOneFightInPercent(round)"
@@ -42,7 +42,6 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   set fights(fights: Fight[]) {
-    console.log(fights);
     this.rounds = [];
     if (fights) {
       this._fights = fights;
@@ -126,13 +125,13 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     if (tmp.length > 0) {
       this.rounds.push([...tmp]);
     }
-    console.log(this.rounds);
     this._flatRoundsReversed = flatRounds.reverse();
   }
 
   getOneFightInPercent(round: number) {
-    const fightsNumber = this.getFightsForRound(round).length;
-    const totalFights = this.getFightsNumberForRound(round);
+    const roundFights = this.getActualFightsForRound(round);
+    const fightsNumber = roundFights.filter(f => f.roundType !== 'THIRD_PLACE_FIGHT').length;
+    const totalFights = this.getCalculatedFightsNumberForRound(round);
     if (this._fights) {
       return 100 * fightsNumber / totalFights;
     } else {
@@ -141,7 +140,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getExtraFights(round: number, fights: Fight[]) {
-    const totalFights = this.getFightsNumberForRound(round);
+    const totalFights = this.getCalculatedFightsNumberForRound(round);
     if (round === 0 && fights.length < totalFights) {
       const extraFights = [] as Fight[];
       fights.forEach(f => extraFights.push(f));
@@ -161,7 +160,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  getFightsForRound(round) {
+  getActualFightsForRound(round) {
     return this.getExtraFights(round, this._fights.filter(f => f.round === round));
   }
 
@@ -178,7 +177,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     }
     let result =  `Round ${round + 1}`;
     if (this._flatRoundsReversed.indexOf(round) <= 4 && !this.isLoserBracket) {
-      const fights = this.getFightsForRound(round);
+      const fights = this.getActualFightsForRound(round);
       if (fights.length === 2) {
         result =  'SEMI-FINAL';
       }
@@ -203,7 +202,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     return result;
   }
 
-  getFightsNumberForRound(round: number) {
+  getCalculatedFightsNumberForRound(round: number) {
     const bucket = this.rounds.find(b => b.indexOf(round) >= 0);
     if (bucket && bucket.length > 0) {
        return this.getHeightOfBucket(bucket);

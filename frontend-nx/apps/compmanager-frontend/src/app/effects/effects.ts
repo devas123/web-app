@@ -9,7 +9,7 @@ import * as allActions from '../actions/actions';
 import {errorEvent} from '../actions/actions';
 import * as competitionMiscActions from '../actions/misc';
 import {InfoService} from '../service/info.service';
-import {CommonAction, CompetitionProperties, Schedule} from '../reducers/global-reducers';
+import {CommonAction, CompetitionProperties, RegistrationInfo, Schedule} from '../reducers/global-reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';
 import {
   COMPETITION_SELECTED,
@@ -17,7 +17,7 @@ import {
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
-  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
+  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION, EVENT_MANAGER_LOAD_REGISTRATION_INFO,
   EVENT_MANAGER_SCHEDULE_LOADED,
   eventManagerCategoriesLoaded,
   eventManagerCategoryBracketsStageFightsLoaded,
@@ -42,15 +42,24 @@ export class Effects {
               private actions$: Actions) {
   }
 
-  @Effect()
-  getCompetitions$: Observable<Action> = this.actions$.pipe(ofType(allActions.LOAD_COMPETITIONS_LIST),
+  getCompetitions$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.LOAD_COMPETITIONS_LIST),
     switchMap(() =>
       this.infoService.getCompetitions(null, 'PUBLISHED').pipe(
         map((payload: CompetitionProperties[]) => {
           return allActions.competitionsLoaded(payload);
         }),
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
-    ));
+    )));
+
+  loadRegistrationInfo$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_LOAD_REGISTRATION_INFO),
+    switchMap((action: CommonAction) =>
+      this.infoService.getRegistrationInfo(action.competitionId).pipe(
+        map((payload: RegistrationInfo) => {
+          return allActions.registrationInfoLoaded(payload);
+        }),
+        catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
+    )));
 
   @Effect({dispatch: false})
   globalCommands$: Observable<Action> = this.actions$.pipe(ofType(

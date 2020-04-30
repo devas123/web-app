@@ -25,7 +25,7 @@
               </div>
               <div class="header">Period {{period?.name}}</div>
               <div class="meta">
-                <span>{{getPeriodMats(period.id)?.length}} {{getPeriodMats(period.id)?.length === 1 ? 'mat' : 'mats'}}</span>
+                <span>{{getPeriodMats(period.id)?.length}} {{getPeriodMats(period.id)?.length === 1 ? 'area' : 'areas'}}</span>
               </div>
               <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
               <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">Add Pause</button>

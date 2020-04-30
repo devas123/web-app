@@ -2,14 +2,19 @@ import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/cor
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
-import {eventManagerGetSelectedEventDefaultFightResults, eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
+import {
+  eventManagerGetSelectedEventDefaultFightResults,
+  eventManagerGetSelectedEventName
+} from '../../redux/event-manager-reducers';
 import {
   Category,
   CategoryBracketsStage,
   CompetitorGroupChange,
   Fight,
+  FightEditorChange,
   FightResultOption,
-  HeaderDescription
+  HeaderDescription,
+  StageStatus
 } from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
@@ -18,11 +23,15 @@ import {
   eventManagerDropCategoryBracketsCommand,
   eventManagerFightsEditorSubmitChangesCommand,
   eventManagerGenerateBrackets,
-  eventManagerLoadDefaultFightResults
+  eventManagerLoadDefaultFightResults,
+  updateScheduleStatusCommand
 } from '../../redux/event-manager-actions';
 import {filter, map, take} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {
+  BasicCompetitionInfoContainer,
+  ComponentCommonMetadataProvider
+} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
@@ -37,6 +46,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   private subs = new Subscription();
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
+  showResults = false;
 
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
@@ -58,7 +68,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
           action: () => this.goBack()
         },
         {
-          name: 'Edit seed',
+          name: 'Edit stage',
           showCondition: () => combineLatest([this.bracketsInfo.stages$, this.bracketsInfo.competition$, of(this.editMode)])
             .pipe(map(([stages, competition, editMode]) => !editMode && (stages && stages.length > 0) && (!!competition && !competition.bracketsPublished))),
           action: () => this.toggleEditBrackets()
@@ -67,6 +77,16 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
           name: 'Close',
           showCondition: () => of(this.editMode),
           action: () => this.toggleEditBrackets()
+        },
+        {
+          name: 'Hide Results',
+          showCondition: () => of(this.showResults),
+          action: () => this.toggleShowResults()
+        },
+        {
+          name: 'Show Results',
+          showCondition: () => of(this.showResults).pipe(map(r => !r)),
+          action: () => this.toggleShowResults()
         },
         {
           name: 'Drop selected',
@@ -117,11 +137,20 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.editMode = !this.editMode;
   }
 
-  sendTheChanges({fights, competitorGroupChanges}) {
+  toggleShowResults() {
+    this.showResults = !this.showResults;
+  }
+
+  sendTheChanges({fights, competitorGroupChanges}: { fights: Fight[], competitorGroupChanges: CompetitorGroupChange[] }) {
     combineLatest([this.bracketsInfo.competition$, this.bracketsInfo.category$, this.bracketsInfo.stage$]).pipe(
       take(1),
       filter(([competition, category, stage]) => !!competition && !!category && !!stage),
-      map(([competition, category, stage]) => eventManagerFightsEditorSubmitChangesCommand({fights, competitorGroupChanges, competitionId: competition.id, categoryId: category.id, stageId: stage.id}) )
+      map(([competition, category, stage]) => eventManagerFightsEditorSubmitChangesCommand({
+        bracketsChanges: fights.map(f => (<FightEditorChange>{
+          fightId: f.id,
+          competitors: f.scores && f.scores.map(s => s.competitorId).filter(c => !!c)
+        })), competitorGroupChanges, competitionId: competition.id, categoryId: category.id, stageId: stage.id
+      }))
     ).subscribe(action => this.store.dispatch(action));
     this.editMode = !this.editMode;
   }
@@ -153,7 +182,14 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.subs.unsubscribe();
     super.ngOnDestroy();
   }
+
   selectStage(id: string) {
     this.bracketsInfo.selectStage(id, this.competitionId);
+  }
+
+  updateStageStatus(event: { stageId: string; status: StageStatus }) {
+    if (this.competitionId && event.stageId && event.status) {
+      this.store.dispatch(updateScheduleStatusCommand({competitionId: this.competitionId, ...event}));
+    }
   }
 }

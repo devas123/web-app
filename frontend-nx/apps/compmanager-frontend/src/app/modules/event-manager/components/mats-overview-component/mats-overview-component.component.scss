@@ -1,16 +1,26 @@
+$secondary_color: #001A26;
+
 .fight-display-container {
+  padding: 0.3em;
+  border-radius: 3px;
+  background-color: lighten($secondary_color, 4);
   display: grid;
   grid-template-columns: 2fr 9fr 1fr 9fr;
-  grid-column-gap: 1em;
+  grid-gap: 1px;
   place-content: center;
-  place-items: center;
+  place-items: stretch;
+
+  * {
+    background-color: $secondary_color;
+    text-align: center;
+  }
 
   .category_display {
     grid-column: 1/5;
-    margin-bottom: 1em;
   }
   .centered {
     text-align: center;
+    vertical-align: center;
   }
 }
 
@@ -18,9 +28,13 @@
   background-color: #162830;
   border-radius: 3px;
   margin-bottom: 1em;
-  padding: 1em !important;
+  padding: 0.2em !important;
 
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.ui.cards {
+  margin: 0 !important;
 }
