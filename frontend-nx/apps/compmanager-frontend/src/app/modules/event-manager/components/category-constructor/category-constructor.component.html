@@ -1,0 +1,22 @@
+<section class="ui basic segment">
+  <button class="ui button" [disabled]="!canGenerateCategories()" (click)="sendGenerateCategories()">Create categories</button>
+</section>
+<div class="create-category-grid">
+  <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
+    <div class="restriction-item header">{{name}}</div>
+    <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
+                          [typeInTree]="treeInclusionType(restriction.id, i)"
+                          [inPath]="selectedPath.includes(restriction.id)"
+                          (restrictionClicked)="togglePathInclusion(restriction.id, i)"
+                          (restrictionSelected)="toggleLink(restriction.id, i)"
+                          (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
+                          [restriction]="restriction"></app-restriction-item>
+    <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add...</button>
+  </div>
+  <div class="restriction-column">
+    <div class="ui mini action input" bis_skin_checked="1">
+      <input #restrNameInput type="text" placeholder="Name...">
+      <button class="ui mini button" (click)="addRestrictionName(restrNameInput)">Add</button>
+    </div>
+  </div>
+</div>

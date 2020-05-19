@@ -29,7 +29,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
 
 
 @Component({
-  selector: 'app-add-schedule-period-form',
+  selector: 'app-add-pause-form',
   template: `
     <div class="header">Add pause</div>
     <div class="content">

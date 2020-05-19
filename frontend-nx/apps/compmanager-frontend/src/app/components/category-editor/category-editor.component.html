@@ -2,19 +2,15 @@
   <sui-accordion [closeOthers]="false">
     <sui-accordion-panel *ngFor="let category of filteredCategories">
       <div title>
-        <a class="ui small header link" (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{displayCategory(category)}}</a>
+        <a class="ui small header link"
+           (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{displayCategory(category)}}</a>
       </div>
       <div class="ui basic segment customline" content>
         <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
         <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
         <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
-        <div class="description">Age: {{getAgeMinValue(category) > 0 ?
-                getAgeMinValue(category) : 0}}{{getAgeMaxValue(category) < 100 ?
-                ' - ' + getAgeMaxValue(category) : '+'}}
-        </div>
-        <div class="description">Weight (kg): {{getWeightMinValue(category) > 0 ?
-                getWeightMinValue(category) : 0}}{{getWeightMaxValue(category) < 100 ?
-                ' - ' + getWeightMaxValue(category) : '+'}}
+        <div class="description" *ngFor="let restr of category?.restrictions">
+          {{displayRestriction(restr)}}
         </div>
         <div class="description">Registration: {{category?.registrationOpen ? 'open' : 'closed'}}</div>
         <div class="action_buttons" *ngIf="editMode">

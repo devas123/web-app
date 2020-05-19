@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {
   AppState,
   CompetitionProperties,
@@ -8,7 +8,6 @@ import {
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventDefaultCategories,
   eventManagerGetSelectedEventName,
   getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
@@ -24,11 +23,6 @@ import {
   ComponentCommonMetadataProvider
 } from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
-import {
-  ISelectCategoriesResult,
-  SelectCategoriesModal
-} from '../../../../components/category-editor/select-categories-modal.component';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 @Component({
@@ -42,7 +36,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
     </ng-template>
     <app-category-editor [categories]="categories$ | async"
                          [searchString]="searchString$ | async"
-                         [defaultCategories]="defaultCategories$ | async"
+                         [defaultCategories]="[]"
                          [competition]="competition$ | async"
                          (categoryEditorClicked)="navigateToCategoryEditor($event)"
                          (createCustomCategoryClicked)="addCategory()"
@@ -55,8 +49,6 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
 
   competition$: Observable<CompetitionProperties>;
 
-  defaultCategories$: Observable<Category[]>;
-
   catState$: Observable<CategoryState>;
 
   searchString$ = new BehaviorSubject<string>(null);
@@ -65,7 +57,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   search: TemplateRef<any>;
 
 
-  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, public modalService: SuiModalService, menuService: MenuService) {
+  constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName), filter(name => !!name), take(1), map(name => <HeaderDescription>{
         header: 'Categories',
@@ -77,11 +69,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
           action: () => this.router.navigate(['..'], {relativeTo: this.route})
         },
         {
-          name: 'Select categories',
-          action: () => this.openModal()
-        },
-        {
-          name: 'Create manually',
+          name: 'Category constructor',
           action: () => this.addCategory()
         },
         {
@@ -92,20 +80,6 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
     }, menuService);
     this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.catState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
-    this.defaultCategories$ = store.pipe(select(eventManagerGetSelectedEventDefaultCategories));
-  }
-
-  openModal() {
-    combineLatest([this.categories$, this.competition$]).pipe(filter(([cats, competition]) => !!cats && !!competition),
-      take(1),
-      map(([categories, competition]) =>
-        this.modalService
-          .open(new SelectCategoriesModal(this.defaultCategories$.pipe(map(c => c.filter(cat => {
-            return !categories.find(value => cat.id === value.id);
-          }))), competition))
-          .onApprove((result: ISelectCategoriesResult) => {
-            this.addSelectedCategories(result.categoriesToAdd, competition.id);
-          }))).subscribe();
   }
 
   addSelectedCategories(categoriesToAdd: Category[], competitionId: string) {

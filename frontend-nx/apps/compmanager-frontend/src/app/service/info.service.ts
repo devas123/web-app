@@ -193,7 +193,7 @@ export class InfoService {
   }
 
 
-  getDefaultCategories(competitionId: string) {
+  getDefaultRestrictions(competitionId: string) {
     const params = {sportsId: 'bjj', competitionId, includeKids: 'false'};
     const headers = new HttpHeaders({
       'Authorization': 'Bearer ' + HttpAuthService.getToken()

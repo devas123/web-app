@@ -21,12 +21,12 @@ import {
   EVENT_MANAGER_MOVE_COMPETITOR,
   EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
-  eventManagerDefaultCategoriesLoaded,
+  eventManagerDefaultRestrictionsLoaded,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDisconnectSocket,
-  FIGHTS_EDITOR_APPLY_CHANGE,
+  FIGHTS_EDITOR_APPLY_CHANGE, GENERATE_CATEGORIES_COMMAND,
   myCompetitionsLoaded,
-  UPDATE_STAGE_STATUS_COMMAND
+  UPDATE_STAGE_STATUS_COMMAND, EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS
 } from './event-manager-actions';
 
 
@@ -67,16 +67,16 @@ export class EventManagerEffects {
     })));
 
 
-  loadDefaultCategories$ = createEffect(() => this.actions$.pipe(
-    ofType(COMPETITION_SELECTED),
+  loadDefaultRestrictions$ = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS),
     mergeMap((action: CommonAction) => {
-      return this.infoService.getDefaultCategories(action.competitionId).pipe(catchError(error => {
+      return this.infoService.getDefaultRestrictions(action.competitionId).pipe(catchError(error => {
           console.log(error);
           return observableOf(error);
         })
         , map(response => {
           if (response && response.constructor === Array) {
-            return eventManagerDefaultCategoriesLoaded(action.competitionId, response);
+            return eventManagerDefaultRestrictionsLoaded(action.competitionId, response);
           } else {
             return errorEvent(JSON.stringify(response));
           }
@@ -112,6 +112,7 @@ export class EventManagerEffects {
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
+      GENERATE_CATEGORIES_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     mergeMap((command: CommonAction) => {
       return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error))));

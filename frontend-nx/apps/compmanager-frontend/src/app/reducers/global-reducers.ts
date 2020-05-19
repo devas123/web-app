@@ -50,7 +50,7 @@ import {
   EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
-  EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED,
+  EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -136,7 +136,6 @@ export interface CompetitionState {
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventMats: MatsCollection;
   selectedEventSchedule: Schedule;
-  selectedEventDefaultCategories: Category[];
   selectedEventDefaultFightResultOptions: FightResultOption[];
   competitionProperties: CompetitionProperties;
   registrationInfo: RegistrationInfo;
@@ -183,7 +182,6 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventCategories: categoriesInitialState,
   selectedEventCompetitors: competitorsInitialState,
   selectedEventSchedule: scheduleInitialState,
-  selectedEventDefaultCategories: [],
   selectedEventDefaultFightResultOptions: [],
   competitionProperties: {},
   selectedEventMats: matsInitialState
@@ -557,12 +555,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (action.competitionId === state.competitionProperties.id) {
           state.selectedEventCategories.selectedCategoryId = action.categoryId;
           state.selectedEventCategories.categoryStateLoading = true;
-        }
-        break;
-      }
-      case EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED: {
-        if ((action.competitionId === state.competitionProperties.id) && action.payload) {
-          state.selectedEventDefaultCategories = action.payload;
         }
         break;
       }
