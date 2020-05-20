@@ -5,7 +5,7 @@ import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reduce
 import {Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {dashboardDeleteState, dashboardInitState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
+import {dashboardDeleteState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
@@ -34,14 +34,6 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
         {
           name: 'Return',
           action: () => this.navigateBack()
-        },
-        {
-          name: 'Toggle Schedule',
-          action: () => this.toggleSchedule()
-        },
-        {
-          name: 'Auto-dispatch fights',
-          action: () => this.sendUseScheduleCommand()
         },
         {
           name: 'Reset progress',
@@ -73,18 +65,8 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
     this.router.navigate([periodId], {relativeTo: this.route}).catch(r => console.log(`Error selecting period: ${r}`));
   }
 
-  toggleSchedule() {
-    this.showSchedule = !this.showSchedule;
-  }
-
-  sendUseScheduleCommand() {
-    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardInitState(competitionId));
-    this.showSchedule = false;
-  }
-
   sendDeleteDashboardStateCommand() {
     this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardDeleteState(competitionId));
-    this.showSchedule = true;
   }
 
   ngOnInit() {

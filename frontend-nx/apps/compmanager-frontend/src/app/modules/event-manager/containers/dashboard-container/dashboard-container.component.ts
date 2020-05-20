@@ -3,8 +3,9 @@ import {Router} from '@angular/router';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {dashboardUnloadState, loadDashboardState} from '../../redux/dashboard-actions';
+import {dashboardUnloadState} from '../../redux/dashboard-actions';
 import {filter, map} from 'rxjs/operators';
+import {loadScheduleCommand} from '../../redux/event-manager-actions';
 
 @Component({
   selector: 'app-dashboard-container',
@@ -21,7 +22,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
       this.store.pipe(
         select(getSelectedEventId),
         filter((id: any) => id && id.length > 0),
-        map((id: string) => loadDashboardState(id)))
+        map((id: string) => loadScheduleCommand({competitionId: id})))
         .subscribe(this.store));
   }
 

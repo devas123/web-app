@@ -23,7 +23,7 @@ import {InfoService} from '../../service/info.service';
             <app-schedule-entry-display
               [timeZone]="timeZone"
               [categoryFormat]="categoryNameForCategoryId"
-              [matFormat]="matName"
+              [matFormat]="matName(period.id)"
               [scheduleEntries]="getPeriodEntries(period)"
               [highlightedCategories]="highlightedCategories"
               (categoryMouseEnter)="highlightCategory([$event])"
@@ -32,7 +32,7 @@ import {InfoService} from '../../service/info.service';
             <div class="header" *ngIf="matsView[period?.id]">Areas view</div>
             <app-schedule-mat-display *ngIf="matsView[period?.id]"
               [scheduleEntries]="getPeriodEntries(period)"
-              [matFormat]="matName"
+              [matFormat]="matName(period.id)"
               [categoryFormat]="categoryNameForCategoryId"
               [highlightedCategories]="highlightedCategories"
               [timeZone]="timeZone"
@@ -113,9 +113,9 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
     })) || [];
   }
 
-  matName = (matId: string) => {
+  matName = (periodId: string) => (matId: string) => {
     if (matId) {
-      return this.mats.find(m => m.id === matId).name;
+      return this.mats.find(m => m.id === matId && m.periodId === periodId).name;
     } else {
       return 'Several mats.';
     }

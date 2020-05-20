@@ -23,7 +23,6 @@ import {
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
   DASHBOARD_INIT_PERIOD_COMMAND,
-  DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
   DASHBOARD_LOAD_MATS_COMMAND,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MATS_LOADED,
@@ -34,31 +33,13 @@ import {
   dashboardMatFightsLoaded,
   dashboardMatFightsUnloaded,
   dashboardMatsLoaded,
-  dashboardStateLoaded,
   PERIOD_SELECTED,
   REFRESH_MATS_VIEW,
   refreshMatView
 } from './dashboard-actions';
-import {loadScheduleCommand} from './event-manager-actions';
 
 @Injectable()
 export class DashboardEffects {
-
-  dashboardLoadState$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND),
-    switchMap((command: any) => {
-      return this.infoService.getDashboardState(command.competitionId).pipe(
-        catchError(error => observableOf(errorEvent(error))),
-        map((state: any) => {
-          if (!state || state.type === ERROR_EVENT) {
-            return state;
-          } else {
-            return dashboardStateLoaded(state, command.competitionId);
-          }
-        }));
-    }),
-    switchMap(action => [loadScheduleCommand({competitionId: action.competitionId}), action])));
-
   dashboardLoadAllMatsFights$ = createEffect(() => this.actions$.pipe(
     ofType(PERIOD_SELECTED, REFRESH_MATS_VIEW),
     withLatestFrom(this.store.pipe(
