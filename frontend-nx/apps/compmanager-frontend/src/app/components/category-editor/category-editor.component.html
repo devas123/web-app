@@ -6,7 +6,6 @@
            (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{displayCategory(category)}}</a>
       </div>
       <div class="ui basic segment customline" content>
-        <div class="description">Fight duration (minutes): {{category?.fightDuration}}</div>
         <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
         <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
         <div class="description" *ngFor="let restr of category?.restrictions">

@@ -305,7 +305,7 @@ export const eventManagerCategoryStateLoaded = (categoryState) => ({
   payload: categoryState
 });
 
-export const eventManagerCategoryStagesLoaded = createAction(EVENT_MANAGER_CATEGORY_STAGES_LOADED, props<{ competitionId: string, categoryId: string, categoryStages: CategoryBracketsStage[] }>());
+export const eventManagerCategoryStagesLoaded = createAction(EVENT_MANAGER_CATEGORY_STAGES_LOADED, props<{ competitionId: string, categoryId: string, categoryStages: CategoryBracketsStage[], selectedStageId: string }>());
 
 export const eventManagerCategoryUnselected = (competitionId: string) => ({
   type: EVENT_MANAGER_CATEGORY_UNSELECTED,

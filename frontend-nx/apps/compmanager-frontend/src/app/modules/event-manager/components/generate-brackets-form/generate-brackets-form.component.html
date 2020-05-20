@@ -49,9 +49,9 @@
               </sui-select-option>
             </sui-select>
           </div>
-          <div class="ui label transparent_label">Stage name (optional).</div>
+          <div class="ui label transparent_label">Fight duration</div>
           <div class="ui field">
-            <input class="ui input" type="text" placeholder="Stage name." formControlName="name" maxlength="10"/>
+            <input class="ui input" type="number" placeholder="Fight duration" formControlName="fightDuration" maxlength="10"/>
           </div>
           <div class="ui label transparent_label" *ngIf="getStageType(stage) === 'PRELIMINARY'">How many competitors will proceed</div>
           <div class="ui field" formGroupName="stageResultDescriptor" *ngIf="getStageType(stage) === 'PRELIMINARY'">

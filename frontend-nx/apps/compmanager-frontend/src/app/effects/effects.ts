@@ -1,10 +1,9 @@
 import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
-
-
+import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {Observable, of as observableOf, of} from 'rxjs';
 import {Action} from '@ngrx/store';
-import {Actions, createEffect, Effect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as allActions from '../actions/actions';
 import {errorEvent} from '../actions/actions';
 import * as competitionMiscActions from '../actions/misc';
@@ -14,10 +13,11 @@ import * as eventManagerActions from '../modules/event-manager/redux/event-manag
 import {
   COMPETITION_SELECTED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
-  EVENT_MANAGER_CATEGORY_SELECTED,
+  EVENT_MANAGER_CATEGORY_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
-  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION, EVENT_MANAGER_LOAD_REGISTRATION_INFO,
+  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
+  EVENT_MANAGER_LOAD_REGISTRATION_INFO,
   EVENT_MANAGER_SCHEDULE_LOADED,
   eventManagerCategoriesLoaded,
   eventManagerCategoryBracketsStageFightsLoaded,
@@ -61,8 +61,7 @@ export class Effects {
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
     )));
 
-  @Effect({dispatch: false})
-  globalCommands$: Observable<Action> = this.actions$.pipe(ofType(
+  globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
     allActions.START_COMPETITION_COMMAND,
     allActions.DELETE_COMPETITION_COMMAND,
     eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
@@ -76,16 +75,14 @@ export class Effects {
     eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
     allActions.PUBLISH_COMPETITION_COMMAND,
     allActions.UNPUBLISH_COMPETITION_COMMAND),
-    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId)));
+    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId))), {dispatch: false});
 
-  @Effect({dispatch: false})
-  createCompetition$: Observable<Action> = this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
-    tap(command => this.infoService.sendCreateCompetitionCommand(command).subscribe()));
+  createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
+    tap(command => this.infoService.sendCreateCompetitionCommand(command).subscribe())), {dispatch: false});
 
 
-  @Effect()
-  competitionSelected$: Observable<Action> = this.actions$.pipe(ofType(COMPETITION_SELECTED),
-    map((action: CommonAction) => competitionMiscActions.loadCompetitionProperties(action.competitionId)));
+  competitionSelected$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(COMPETITION_SELECTED),
+    map((action: CommonAction) => competitionMiscActions.loadCompetitionProperties(action.competitionId))));
 
   loadMyCategories$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(LOAD_CATEGORIES_COMMAND),
@@ -140,17 +137,20 @@ export class Effects {
     ofType(EVENT_MANAGER_CATEGORY_STATE_LOADED),
     switchMap((a: any) => this.infoService.getCategoryStages(a.competitionId, a.categoryId)
       .pipe(
-        switchMap(categoryStages => [eventManagerCategoryStagesLoaded({
-          competitionId: a.competitionId,
-          categoryId: a.categoryId,
-          categoryStages
-        }), eventManagerLoadFightersForCompetition(a.competitionId, a.categoryId, 0, 0, undefined, true)])
+        mergeMap(categoryStages => [
+          eventManagerLoadFightersForCompetition(a.competitionId, a.categoryId, 0, 0, undefined, true),
+          eventManagerCategoryStagesLoaded({
+            selectedStageId: _.isEmpty(categoryStages) ? null : _.sortBy(categoryStages, 'stageOrder')[0]?.id,
+            competitionId: a.competitionId,
+            categoryId: a.categoryId,
+            categoryStages
+          })])
       ))
   ));
 
 
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED),
+    ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED),
     switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
     map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]}))
   ));
@@ -175,7 +175,7 @@ export class Effects {
 
   loadFighter$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_FIGHTER_COMMAND),
-    mergeMap((action: CommonAction) => {
+    switchMap((action: CommonAction) => {
       return this.infoService.getCompetitor(action.competitionId, action.payload).pipe(catchError(error => observableOf(error)));
     }),
     map((payload: any) => {

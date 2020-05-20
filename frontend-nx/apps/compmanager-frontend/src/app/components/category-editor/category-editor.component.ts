@@ -21,7 +21,6 @@ export class CategoryEditorComponent implements OnInit {
 
   @Input()
   set searchString(value: string) {
-      console.log(value);
     if (value) {
       const searchStr = value;
       this.filteredCategories = this.searchFilter(this._categories, searchStr);

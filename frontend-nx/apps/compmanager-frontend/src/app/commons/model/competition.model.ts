@@ -226,7 +226,6 @@ export interface Category {
   id: string;
   name: string;
   restrictions: CategoryRestriction[];
-  fightDuration: number;
   numberOfCompetitors: number;
   fightsNumber: number;
   registrationOpen: boolean;
@@ -325,6 +324,7 @@ export interface StageInputDescriptor {
   selectors?: CompetitorSelector[];
   distributionType?: string;
   numberOfCompetitors: number;
+  fightDuration: number;
   id?: string;
 }
 

@@ -83,7 +83,7 @@ export class EditRequirementModal extends ComponentModalConfig<IEditRequirementC
                          [editMode]="true"
                          [bucketSize]="bracketsInfo.mapBucketSize(4, 2) | async"
                          (fightSelected)="toggleFightSelection($event)"
-                         (stageSelected)="bracketsInfo.selectStage($event, modal.context.competitionId)"
+                         (stageSelected)="bracketsInfo.selectStageById($event)"
                          [changeFightIds]="getFightsColors()"
                          [fightsAreLoading]="bracketsInfo.fightsAreLoading$ | async"
                          [selectedStage]="bracketsInfo.stage$ | async"

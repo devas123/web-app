@@ -471,15 +471,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
 
       case EVENT_MANAGER_CATEGORY_STAGES_LOADED: {
-        const {competitionId, categoryId, categoryStages} = action;
+        const {competitionId, categoryId, categoryStages, selectedStageId} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && categoryStages) {
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(categoryStages, state.selectedEventCategories.selectedCategoryStages);
-          const selectedStage = categoryStages.find(s => s.id === state.selectedEventCategories.selectedCategoryStages.selectedStageId);
-          if (selectedStage) {
-            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.setAll(selectedStage.fights, fightsInitialState);
-          } else {
-            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
-          }
+          state.selectedEventCategories.selectedCategoryStages.selectedStageId = selectedStageId;
         }
         if (!categoryStages || categoryStages.length === 0) {
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;

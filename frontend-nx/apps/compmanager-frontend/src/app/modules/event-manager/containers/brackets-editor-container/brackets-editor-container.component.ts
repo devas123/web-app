@@ -42,7 +42,7 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
 })
 export class BracketsEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
-  private competitionId: string;
+  public competitionId: string;
   private subs = new Subscription();
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
@@ -184,7 +184,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   selectStage(id: string) {
-    this.bracketsInfo.selectStage(id, this.competitionId);
+    this.bracketsInfo.selectStageById(id);
   }
 
   updateStageStatus(event: { stageId: string; status: StageStatus }) {
