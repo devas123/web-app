@@ -87,6 +87,10 @@ import {GroupsEditorComponent} from './components/fights-editor/groups-editor.co
 import {CategoryConstructorComponent} from './components/category-constructor/category-constructor.component';
 import {RestrictionItem} from './components/category-constructor/restriction-item';
 import {AddCategoryRestrictionFormComponent} from './components/category-constructor/add-category-restriction-form.component';
+import {OptionComponent} from './components/category-constructor/option.component';
+import {FilterPipe} from './components/category-constructor/fiter.pipe';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {AppAutocompleteDirective} from './components/category-constructor/autocomplete.directive';
 
 @NgModule({
   imports: [
@@ -110,9 +114,11 @@ import {AddCategoryRestrictionFormComponent} from './components/category-constru
     SuiMessageModule,
     CommonsModule,
     DragDropModule,
+    OverlayModule,
     ColorChromeModule
   ],
   declarations: [
+    FilterPipe,
     AddCategoryRestrictionFormComponent,
     RestrictionItem,
     CategoryConstructorComponent,
@@ -122,9 +128,11 @@ import {AddCategoryRestrictionFormComponent} from './components/category-constru
     CategoriesListComponent,
     RequirementsDisplayComponent,
     FightsEditorComponent,
+    OptionComponent,
     FightsEditorContainerComponent,
     AddSchedulePeriodFormComponent,
     AddFightResultOptionFormComponent,
+    AppAutocompleteDirective,
     AddGroupFormComponent,
     AddRegistrationPeriodFormComponent,
     DynamicHeaderDirective,

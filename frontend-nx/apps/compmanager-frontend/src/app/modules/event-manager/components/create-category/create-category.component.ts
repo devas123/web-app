@@ -38,7 +38,7 @@ import {
   AddCategoryRestrictionModal,
   IAddCategoryRestrictionResult
 } from '../category-constructor/add-category-restriction-form.component';
-import {generateUuid} from '../../../account/utils';
+import {generateUuid, uniqueFilter} from '../../../account/utils';
 import {Observable} from 'rxjs';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
@@ -49,6 +49,7 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
       [competitionId]="infoProvicer.competitionId$ | async"
       [restrictions]="restrictions$ | async"
       [adjacencyLists]="adjacencyLists$ | async"
+      [options]="defaultRestrictionsNames$ | async"
       [restrictionNames]="restrictionNames$ | async"
       (restrictionGroupRemoved)="removeRestrictionGroup($event)"
       (restrictionGroupAdded)="addRestrictionGroup($event)"
@@ -65,12 +66,12 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
 export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
 
   defaultRestrictions$: Observable<CategoryRestriction[]>;
+  defaultRestrictionsNames$: Observable<string[]>;
 
   restrictions$: Observable<CategoryRestriction[]>;
 
   adjacencyLists$: Observable<AdjacencyList<string>[]>;
   restrictionNames$: Observable<string[]>;
-
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute,
               public infoProvicer: CommonBracketsInfoContainer,
@@ -90,13 +91,17 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     this.adjacencyLists$ = this.store.pipe(select(eventManagerCategoryConstructorAdjacentLists));
     this.restrictionNames$ = this.store.pipe(select(eventManagerCategoryConstructorRestrictionNames));
     this.defaultRestrictions$ = this.store.pipe(select(eventManagerDefaultCategoryRestrictions));
+    this.defaultRestrictionsNames$ =     this.defaultRestrictions$.pipe(
+      map(r => r.map(cr => cr.name).filter(uniqueFilter)),
+      tap(console.log)
+    );
     this.restrictions$ = this.store.pipe(select(eventManagerCategoryRestrictions));
   }
 
   openAddRestrictionModal(event: { name: string, existing: string[] }) {
     const {name, existing} = event;
     const ex = existing || [];
-    this.defaultRestrictions$.pipe(tap(console.log), take(1), filter(r => !!r), tap(defaultRestr => {
+    this.defaultRestrictions$.pipe(take(1), filter(r => !!r), tap(defaultRestr => {
         this.modalService.open(new AddCategoryRestrictionModal(name,
           defaultRestr.filter(dr => dr.name === name && !ex.includes(dr.id))))
           .onApprove((result: IAddCategoryRestrictionResult) => {

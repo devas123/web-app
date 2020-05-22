@@ -9,7 +9,7 @@ export type TypeInTree = 'fully-connected' | 'partially-connected' | 'not-connec
     <div class="restriction-item selectable" [class]="typeInTree" [ngClass]="{'in-path': inPath}">
       <span (click)="restrictionClicked.next()">{{defaultRestrictionFmt(restriction)}}</span>
       <div (click)="restrictionClicked.next()" class="filler"></div>
-      <a class="right-floated-close" (click)="restrictionSelected.next()">
+      <a class="right-floated-close" *ngIf="canSelect" (click)="restrictionSelected.next()">
         <i *ngIf="typeInTree !== 'not-connected'" class="ui minus icon"></i>
         <i *ngIf="typeInTree === 'not-connected'" class="ui plus icon"></i>
       </a>
@@ -28,6 +28,9 @@ export class RestrictionItem {
 
   @Input()
   public typeInTree: TypeInTree = 'not-connected';
+
+  @Input()
+  public canSelect = true;
 
   @Input()
   restriction: CategoryRestriction;

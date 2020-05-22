@@ -1,8 +1,19 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {AdjacencyList, CategoryRestriction} from '../../../../commons/model/competition.model';
 import * as _ from 'lodash';
 import {Dictionary} from '@ngrx/entity';
 import {TypeInTree} from './restriction-item';
+import {BehaviorSubject} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {AppAutocompleteDirective} from './autocomplete.directive';
 
 @Component({
   selector: 'app-category-constructor',
@@ -11,19 +22,9 @@ import {TypeInTree} from './restriction-item';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryConstructorComponent {
+
   constructor(private cd: ChangeDetectorRef) {
-
   }
-
-  @Input()
-  competitionId: string;
-
-  restrictionGroups: Dictionary<CategoryRestriction[]>;
-
-  @Input()
-  adjacencyLists: AdjacencyList<string>[];
-
-  _restrictions: CategoryRestriction[];
 
   @Input()
   set restrictions(value: CategoryRestriction[]) {
@@ -34,11 +35,6 @@ export class CategoryConstructorComponent {
       this.restrictionGroups = {};
     }
   }
-
-  @Input()
-  restrictionNames: string[];
-
-  selectedPath: string[] = [];
 
   get root() {
     return this.selectedPath[0];
@@ -51,6 +47,24 @@ export class CategoryConstructorComponent {
       this.selectedPath = [];
     }
   }
+
+  @ViewChild('restrNameInput')
+  restrictionNameInput: HTMLInputElement;
+
+  @Input()
+  competitionId: string;
+
+  restrictionGroups: Dictionary<CategoryRestriction[]>;
+
+  @Input()
+  adjacencyLists: AdjacencyList<string>[];
+
+  _restrictions: CategoryRestriction[];
+
+  @Input()
+  restrictionNames: string[];
+
+  selectedPath: string[] = [];
 
   @Output()
   restrictionGroupAdded = new EventEmitter<string>();
@@ -78,6 +92,20 @@ export class CategoryConstructorComponent {
 
   @Output()
   generateCategories = new EventEmitter<{ restrictions: CategoryRestriction[], idTrees: AdjacencyList<string>[], restrictionNames: string[] }>();
+
+  @Input()
+  set options(value: string[]) {
+    this._options = value;
+    this.options$.next(value);
+  }
+
+  _options: string[];
+
+  options$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+
+  get opts$() {
+    return this.options$.pipe(map(o => o.filter(v => !this.restrictionNames.includes(v))));
+  }
 
   private selectRootAndAddAdjacencyList(id: string) {
     this.selectedPath = this.selectedPath[0] === id ? [] : [id];
@@ -120,13 +148,14 @@ export class CategoryConstructorComponent {
 
   addRestrictionName(element: HTMLInputElement) {
     const value = element.value;
-    if (!value || value.length === 0) {
+    if (_.isEmpty(value)) {
       return;
     }
     if (!this.restrictionNames.includes(value)) {
       this.restrictionGroupAdded.next(value);
     }
     element.value = '';
+    this.options$.next(this._options);
   }
 
   addRestriction(name: string) {
@@ -213,7 +242,38 @@ export class CategoryConstructorComponent {
   sendGenerateCategories() {
     if (this.canGenerateCategories()) {
       const restrictions = this._restrictions;
-      this.generateCategories.next({idTrees: this.adjacencyLists, restrictionNames: this.restrictionNames, restrictions});
+      this.generateCategories.next({
+        idTrees: this.adjacencyLists,
+        restrictionNames: this.restrictionNames,
+        restrictions
+      });
     }
+  }
+
+  transform(items: any[], searchTerm: string) {
+    if (!items || !searchTerm) {
+      return items;
+    }
+
+    return items.filter(
+      item =>
+        item
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) === true
+    );
+  }
+
+  handleInputChange(searchStr: string) {
+    this.options$.next(this.transform(this._options, searchStr));
+  }
+
+  handleOptionSelected(restrNameInput: HTMLInputElement, value: string, autocmplt: AppAutocompleteDirective) {
+    restrNameInput.value = value;
+    autocmplt.close();
+    this.options$.next(this._options);
+  }
+
+  deleteColumn(name: string) {
+    console.log(name);
   }
 }
