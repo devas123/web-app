@@ -96,7 +96,6 @@ export const EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED = 'EVENT_MANAGER_CATEGOR
 export const EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED = 'EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED';
 export const EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED = 'EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED';
 export const EVENT_MANAGER_CATEGORY_ROOT_ADDED = 'EVENT_MANAGER_CATEGORY_ROOT_ADDED';
-export const EVENT_MANAGER_CATEGORY_ROOT_REMOVED = 'EVENT_MANAGER_CATEGORY_ROOT_REMOVED';
 
 export const COMPETITION_CREATED = 'COMPETITION_CREATED';
 export const CATEGORY_ADDED = 'CATEGORY_ADDED';
@@ -130,7 +129,6 @@ export const eventManagerCategoryRestrictionGroupAdded = createAction(EVENT_MANA
 export const eventManagerCategoryRestrictionGroupRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_GROUP_REMOVED,
   props<{ name: string }>());
 export const eventManagerCategoryRestrictionRootAdded = createAction(EVENT_MANAGER_CATEGORY_ROOT_ADDED, props<{ root: string }>());
-export const eventManagerCategoryRestrictionRootRemoved = createAction(EVENT_MANAGER_CATEGORY_ROOT_REMOVED, props<{ root: string }>());
 export const eventManagerCategoryRestrictionRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED, props<{ restrictionId: string }>());
 export const eventManagerLoadCategoryRestrictionsCommand = createAction(EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS);
 export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{ competitionId: string }>());

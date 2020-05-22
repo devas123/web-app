@@ -160,7 +160,7 @@ export class CategoryConstructorComponent {
 
   addRestriction(name: string) {
     if (name) {
-      this.addRestrictionClicked.next({name, existing: this.restrictionGroups[name]?.map(r => r.id) || []});
+      this.addRestrictionClicked.emit({name, existing: this.restrictionGroups[name]?.map(r => r.id) || []});
     }
   }
 
@@ -274,6 +274,8 @@ export class CategoryConstructorComponent {
   }
 
   deleteColumn(name: string) {
-    console.log(name);
+    if (name) {
+      this.restrictionGroupRemoved.emit(name);
+    }
   }
 }

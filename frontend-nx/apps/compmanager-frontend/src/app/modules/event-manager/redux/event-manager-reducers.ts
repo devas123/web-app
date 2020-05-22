@@ -20,7 +20,6 @@ import {
   EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED,
   EVENT_MANAGER_CATEGORY_ROOT_ADDED,
-  EVENT_MANAGER_CATEGORY_ROOT_REMOVED,
   EVENT_MANAGER_COMPETITION_UNSELECTED,
   EVENT_MANAGER_COMPETITIONS_LOADED,
   EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
@@ -207,6 +206,11 @@ function categoryConstructorStateReducer(st: CategoryConstructorState = initialC
           const restrictionsFromGroup = state.restrictions.filter(r => r.name === action.name)
             .map(r => r.id);
           restrictionsFromGroup.forEach(id => removeRestriction(state, id));
+          _.remove(state.adjacentLists, list => restrictionsFromGroup.includes(list.root));
+          state.adjacentLists.forEach(list => {
+            list.vertices.forEach(v => _.remove(v.children, c => restrictionsFromGroup.includes(c)));
+            _.remove(list.vertices, v => restrictionsFromGroup.includes(v.id));
+          });
         }
         break;
       }
@@ -218,13 +222,6 @@ function categoryConstructorStateReducer(st: CategoryConstructorState = initialC
         const {root} = action;
         if (root && !state.adjacentLists.find(l => l.root === root)) {
           state.adjacentLists.push(<AdjacencyList<string>>{root, vertices: [{id: root, children: []}]});
-        }
-        break;
-      }
-      case EVENT_MANAGER_CATEGORY_ROOT_REMOVED: {
-        const {root} = action;
-        if (root && state.adjacentLists.find(l => l.root === root)) {
-          _.remove(state.adjacentLists, l => l.root === root);
         }
         break;
       }
