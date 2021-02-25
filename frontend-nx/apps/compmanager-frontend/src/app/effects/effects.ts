@@ -151,7 +151,7 @@ export class Effects {
 
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED),
-    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
+    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.categoryId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
     map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]}))
   ));
 

@@ -333,7 +333,7 @@ export class InfoService {
       filter(events => events && events.length > 0),
       mergeMap(events => from(events)),
       map((ev: CommonAction) => produce(ev, draft => {
-        draft.payload = JSON.parse(ev.payload);
+        draft.payload = ev.payload;
       })),
       catchError(error => {
         console.error(error);
@@ -341,8 +341,11 @@ export class InfoService {
       }));
   }
 
-  getCategoryStageFights(competitionId: string, stageId: string): Observable<Fight[]> {
-    const params = {competitionId, stageId};
+  getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<Fight[]> {
+    if (!competitionId || !categoryId || !stageId) {
+      return of([]);
+    }
+    const params = {competitionId, categoryId, stageId};
     return this.httpGet(stageFights, {
       params: params,
       headers: this.headers

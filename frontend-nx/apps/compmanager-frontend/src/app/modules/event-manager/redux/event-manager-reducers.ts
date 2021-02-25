@@ -173,6 +173,9 @@ function addConnections(state: CategoryConstructorState, root: string, parent: a
 function categoryConstructorStateReducer(st: CategoryConstructorState = initialCategoryConstructorState, action: any): CategoryConstructorState {
   return produce(st, state => {
     switch (action.type) {
+      case EVENT_MANAGER_COMPETITION_UNSELECTED: {
+        return initialCategoryConstructorState;
+      }
       case EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED: {
         const {restrictionId, root, parent} = action;
         if (restrictionId && root && parent) {
