@@ -70,6 +70,7 @@ export class MatDisplayComponent implements OnInit {
     if (fight && !(fight.mat?.id === matId && event.previousIndex === event.currentIndex)) {
       const newOrderOnMat = event.container.data[event.currentIndex].numberOnMat;
       this.fightMatChanged.next({
+        categoryId: fight.categoryId,
         currentMatId: fight.mat.id,
         currentOrderOnMat: fight.numberOnMat,
         fightId: fight.id,

@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Category, CategoryBracketsStage, Competitor, Fight} from '../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-stage-display',
@@ -14,12 +15,11 @@ export class StageDisplayComponent implements OnInit {
 
   @Input()
   set stages(stages: CategoryBracketsStage[]) {
-    this._stages = stages;
-    setTimeout(() => {
-      if (stages && stages.length > 0 && !this.selectedStage) {
-        this.selectStage(stages.sort((a, b) => a.stageOrder - b.stageOrder)[0].id);
-      }
-    });
+    if (!_.isEmpty(stages)) {
+      this._stages = _.sortBy(stages, 'stageOrder');
+    } else {
+      this._stages = [];
+    }
   }
 
   _stages: CategoryBracketsStage[];

@@ -187,6 +187,7 @@ export class GenerateBracketsFormComponent implements OnInit {
     stageType: ['', [Validators.required]],
     bracketType: ['', [Validators.required]],
     name: [''],
+    fightDuration: [5, [Validators.required]],
     waitForPrevious: [true],
     hasThirdPlaceFight: [false],
     stageResultDescriptor: this.fb.group({

@@ -3,17 +3,7 @@ import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
 import {EventPropsEntities, MatDescription} from '../../reducers/global-reducers';
-
-const getRestrictionName = (res: CategoryRestriction, def = '') => {
-  if (res) {
-    if (res.name) {
-      return res.name;
-    } else {
-      return `${res.type}:${res.minValue}-${res.maxValue} (${res.unit || ''})`;
-    }
-  }
-  return def;
-};
+import * as _ from 'lodash';
 
 export const dragStartEvent = () => new CustomEvent('app-drag-start', {
   bubbles: true
@@ -22,53 +12,31 @@ export const dragEndEvent = () => new CustomEvent('app-drag-end', {
   bubbles: true
 });
 
-
-export const getRestrictionNameByType = (cat: Category, type: RestrictionType, def = '') => {
-  if (cat.restrictions) {
-    return getRestrictionName(cat.restrictions.find(r => r.type === type, def));
-  } else {
-    return def;
-  }
-};
-
-export const getMinValueInt = (type: RestrictionType) => (category: Category) => {
-  const rest = getRestrictionByType(category, type);
-  return rest && rest.minValue && parseInt(rest.minValue, 10);
-};
-
-export const getMaxValueInt = (type: RestrictionType) => (category: Category) => {
-  const rest = getRestrictionByType(category, type);
-  return rest && rest.maxValue && parseInt(rest.maxValue, 10);
-};
-
-export const getRestrictionByType = (cat: Category, type: RestrictionType) => {
+export const getRestrictionByType = (cat: Category, type: string) => {
   if (cat && cat.restrictions) {
-    return cat.restrictions.find(r => r.type === type);
+    return cat.restrictions.find(r => r.name === type);
   }
 };
-
-export const getAgeDivisionName = (cat: Category) => getRestrictionNameByType(cat, 'AGE', 'ALL AGES');
-export const getWeightId = (cat: Category) => getRestrictionNameByType(cat, 'WEIGHT', 'ALL WEIGHTS');
-export const getGender = (cat: Category) => getRestrictionNameByType(cat, 'GENDER', 'ALL');
-export const getBeltType = (cat: Category) => getRestrictionNameByType(cat, 'SKILL', 'ALL BELTS');
 
 export const displayCategory = (cat: Category, maxLength: number = -1) => {
   if (!cat) {
     return '';
   }
-  const name = cat.name;
-  const fullName = `${getGender(cat)}/${getAgeDivisionName(cat)}/${getBeltType(cat)}/${getWeightId(cat)}`;
-  if (maxLength <= 0) {
-    return name || fullName;
+  if (!_.isEmpty(cat.name)) {
+    return cat.name;
   }
-  return name || (fullName.length < maxLength ? fullName : `${getGender(cat)} / ${getAgeDivisionName(cat)} / ${getBeltType(cat)} / ${getWeightId(cat)}`);
+  if (_.isEmpty(cat.restrictions)) {
+    return cat.name || cat.id;
+  }
+  return cat.restrictions.map(r => defaultRestrictionFormatter(false)(r)).join("/");
 };
 
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
 export const categoryFilter = value => cat => {
   return !value || value.length <= 0 || (cat.id
-    && (hasAny(getWeightId(cat), value) || hasAny(getAgeDivisionName(cat), value) || hasAny(getBeltType(cat), value) || hasAny(getGender(cat), value)));
+    && cat.restrictions && cat.restrictions.map(r => hasAny(r.name, value) || hasAny(r.alias, value) ||
+       hasAny(r.value, value) || hasAny(r.minValue, value) || hasAny(r.maxValue, value)));
 };
 
 export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
@@ -128,15 +96,6 @@ export interface ScheduleRequirement {
   endTime: string;
   entryOrder: number;
 }
-
-export type CompetitorResultType =
-  'WIN_POINTS'
-  | 'WIN_SUBMISSION'
-  | 'WIN_DECISION'
-  | 'DRAW'
-  | 'OPPONENT_DQ'
-  | 'BOTH_DQ'
-  | 'WALKOVER';
 
 export interface FightResult {
   resultTypeId: String;
@@ -225,11 +184,22 @@ export enum GroupSortDirection {'DESC', 'ASC'}
 
 export type StageType = 'PRELIMINARY' | 'FINAL';
 
-export type RestrictionType = 'AGE' | 'SKILL' | 'WEIGHT' | 'GENDER' | 'SPORTS';
+export type RestrictionType = 'Value' | 'Range';
 
 export const restrictionTypes: RestrictionType[] = [
-  'AGE', 'SKILL', 'WEIGHT', 'GENDER', 'SPORTS'
+  'Value', 'Range'
 ];
+
+export const  defaultRestrictionFormatter = (showName: boolean = true) => (restr: CategoryRestriction) => {
+  if (restr.alias) {
+    return restr.alias;
+  }
+  const name = showName ? `${restr.name}: ` : '';
+  if (restr.type === 'Range') {
+    return `${name}${restr.minValue} - ${restr.maxValue}`;
+  }
+  return `${name}${restr.value}`;
+};
 
 export interface CategoryRestriction {
   id: string;
@@ -237,14 +207,25 @@ export interface CategoryRestriction {
   type: RestrictionType;
   minValue: string;
   maxValue: string;
+  value: string;
+  alias: string;
   unit: string;
+}
+
+export interface AdjacencyListEntry<Type> {
+  id: Type;
+  children: Type[];
+}
+
+export interface AdjacencyList<Type> {
+  root: Type;
+  vertices: AdjacencyListEntry<Type>[];
 }
 
 export interface Category {
   id: string;
   name: string;
   restrictions: CategoryRestriction[];
-  fightDuration: number;
   numberOfCompetitors: number;
   fightsNumber: number;
   registrationOpen: boolean;
@@ -343,6 +324,7 @@ export interface StageInputDescriptor {
   selectors?: CompetitorSelector[];
   distributionType?: string;
   numberOfCompetitors: number;
+  fightDuration: number;
   id?: string;
 }
 
@@ -387,9 +369,17 @@ export interface HeaderDescription {
   headerHtml: string | null;
 }
 
+export interface CategoryConstructorState {
+  restrictions: CategoryRestriction[];
+  orderedNames: string[];
+  adjacentLists: AdjacencyList<string>[];
+  defaultRestrictions: CategoryRestriction[];
+}
+
 export interface EventManagerState {
   myEvents: EventPropsEntities;
   dashboardState: DashboardState;
+  categoryConstructorState: CategoryConstructorState;
   socketConnected: boolean;
   header: HeaderDescription;
 }
@@ -438,6 +428,13 @@ export const academiesInitialState: AcademiesCollection = academyEntityAdapter.g
   pageSize: 15,
   pageNumber: 1
 });
+
+export const initialCategoryConstructorState: CategoryConstructorState = {
+  restrictions: [],
+  defaultRestrictions: [],
+  adjacentLists: [],
+  orderedNames: []
+};
 
 export const competitorsInitialState: CompetitorsCollection = competitorEntityAdapter.getInitialState({
   selectedCompetitorId: null,

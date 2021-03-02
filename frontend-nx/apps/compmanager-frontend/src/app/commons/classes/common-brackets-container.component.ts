@@ -76,13 +76,6 @@ export class CommonBracketsInfoContainer {
     return this.bucketsize$.pipe(map(val => val ? smallScreenSize : bigScreenSize));
   }
 
-  selectStage(id: string, competitionId: string) {
-    this.store.dispatch(eventManagerCategoryBracketsStageSelected({
-      competitionId: competitionId,
-      selectedStageId: id
-    }));
-  }
-
   selectStageById(id: string) {
     this.sendCommandFromCompetitionId((competitionId => eventManagerCategoryBracketsStageSelected({
       competitionId: competitionId,

@@ -63,7 +63,6 @@ import {FlexibleColumnDirective} from './containers/event-manager-container/flex
 import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
 import {AddRegistrationPeriodFormComponent} from './components/registration-info-editor/add-registration-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
-import {SelectCategoriesModalComponent} from '../../components/category-editor/select-categories-modal.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {AddSchedulePeriodFormComponent} from './containers/schedule-editor-container/add-shedule-period-form.component';
 import {FightsEditorContainerComponent} from './containers/brackets-editor-container/fights-editor-container.component';
@@ -85,6 +84,13 @@ import {SplitCategoryFormComponent} from './components/schedule-editor/split-cat
 import {EditRequirementModalComponent} from './components/schedule-editor/edit-requirement-modal.component';
 import {ColorChromeModule} from 'ngx-color/chrome';
 import {GroupsEditorComponent} from './components/fights-editor/groups-editor.component';
+import {CategoryConstructorComponent} from './components/category-constructor/category-constructor.component';
+import {RestrictionItem} from './components/category-constructor/restriction-item';
+import {AddCategoryRestrictionFormComponent} from './components/category-constructor/add-category-restriction-form.component';
+import {OptionComponent} from './components/category-constructor/option.component';
+import {FilterPipe} from './components/category-constructor/fiter.pipe';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {AppAutocompleteDirective} from './components/category-constructor/autocomplete.directive';
 
 @NgModule({
   imports: [
@@ -108,21 +114,27 @@ import {GroupsEditorComponent} from './components/fights-editor/groups-editor.co
     SuiMessageModule,
     CommonsModule,
     DragDropModule,
+    OverlayModule,
     ColorChromeModule
   ],
   declarations: [
+    FilterPipe,
+    AddCategoryRestrictionFormComponent,
+    RestrictionItem,
+    CategoryConstructorComponent,
     GroupsEditorComponent,
     RequirementLineComponent,
     AddSchedulePauseFormComponent,
     CategoriesListComponent,
     RequirementsDisplayComponent,
     FightsEditorComponent,
+    OptionComponent,
     FightsEditorContainerComponent,
     AddSchedulePeriodFormComponent,
     AddFightResultOptionFormComponent,
+    AppAutocompleteDirective,
     AddGroupFormComponent,
     AddRegistrationPeriodFormComponent,
-    SelectCategoriesModalComponent,
     DynamicHeaderDirective,
     FlexibleColumnDirective,
     EventManagerMenuComponent,

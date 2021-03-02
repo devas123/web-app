@@ -13,6 +13,7 @@ export interface IResultContext<T> extends ITemplateRefContext<T> {
 }
 
 @Component({
+  // tslint:disable-next-line:component-selector
     selector: "sui-search",
     template: `
 <div class="ui input" [class.icon]="hasIcon" (click)="onClick($event)">
@@ -177,6 +178,7 @@ export class SuiSearch<T> implements AfterViewInit {
     public selectedResult?:T;
 
     // Emits whenever a new result is selected.
+  // tslint:disable-next-line:no-output-rename no-output-on-prefix
     @Output("resultSelected")
     public onResultSelected:EventEmitter<T>;
 

@@ -42,7 +42,8 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
 })
 export class BracketsEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
-  private competitionId: string;
+  public competitionId: string;
+  private categoryId: string;
   private subs = new Subscription();
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
@@ -111,6 +112,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.defaultFightResultOptions$ = this.store.pipe(select(eventManagerGetSelectedEventDefaultFightResults));
     this.bracketsSize$ = this.bracketsInfo.mapBucketSize(5, 2);
     this.subs.add(competitionId$.subscribe(id => this.competitionId = id));
+    this.subs.add(categoryId$.subscribe(id => this.categoryId = id));
     this.subs.add(combineLatest([competitionId$, categoryId$]).subscribe(([competitionId, categoryId]) => {
       this.bracketsInfo.selectCategory(categoryId, competitionId);
     }));
@@ -184,12 +186,12 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   selectStage(id: string) {
-    this.bracketsInfo.selectStage(id, this.competitionId);
+    this.bracketsInfo.selectStageById(id);
   }
 
   updateStageStatus(event: { stageId: string; status: StageStatus }) {
-    if (this.competitionId && event.stageId && event.status) {
-      this.store.dispatch(updateScheduleStatusCommand({competitionId: this.competitionId, ...event}));
+    if (this.competitionId && event.stageId && event.status && this.categoryId) {
+      this.store.dispatch(updateScheduleStatusCommand({competitionId: this.competitionId, categoryId: this.categoryId, ...event}));
     }
   }
 }

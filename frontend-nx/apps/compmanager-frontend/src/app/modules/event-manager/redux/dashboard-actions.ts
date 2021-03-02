@@ -5,6 +5,7 @@ import {IScoreboardFightResultSet} from './dashboard-reducers';
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
+  categoryId: string;
   fightId: string;
   currentMatId: string;
   newMatId: string;
@@ -15,7 +16,6 @@ export interface IDashboardFightScheduleChangedPayload {
 
 export const DASHBOARD_LOAD_MATS_COMMAND = 'DASHBOARD_LOAD_MATS_COMMAND';
 export const DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND = 'DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND';
-export const DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND';
 export const DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND';
 export const DASHBOARD_INIT_PERIOD_COMMAND = 'INIT_PERIOD_COMMAND';
 export const DASHBOARD_DELETE_PERIOD_COMMAND = 'DELETE_PERIOD_COMMAND';
@@ -27,8 +27,6 @@ export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_CO
 
 // events
 export const DASHBOARD_FIGHT_LOADED = 'DASHBOARD_FIGHT_LOADED';
-export const DASHBOARD_FIGHT_ORDER_CHANGED = 'DASHBOARD_FIGHT_ORDER_CHANGED';
-export const DASHBOARD_STATE_LOADED = 'DASHBOARD_STATE_LOADED';
 export const PERIOD_SELECTED = 'PERIOD_SELECTED';
 export const REFRESH_MATS_VIEW = 'REFRESH_MATS_VIEW';
 export const DASHBOARD_PERIOD_UNSELECTED = 'DASHBOARD_PERIOD_UNSELECTED';
@@ -67,19 +65,6 @@ export const dashboardPeriodSelected = (periodId, competitionId) => ({
   type: PERIOD_SELECTED,
   payload: periodId,
   competitionId
-});
-
-export const loadDashboardState = (competitionId: string) => (
-  {
-    type: DASHBOARD_LOAD_DASHBOARD_STATE_COMMAND,
-    competitionId
-  }
-);
-
-export const dashboardStateLoaded = (state: any, competitionId: string) => ({
-  type: DASHBOARD_STATE_LOADED,
-  competitionId,
-  payload: state
 });
 
 export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId: string) => ({

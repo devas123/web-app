@@ -50,7 +50,7 @@ import {
   EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
-  EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED,
+  EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -136,7 +136,6 @@ export interface CompetitionState {
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventMats: MatsCollection;
   selectedEventSchedule: Schedule;
-  selectedEventDefaultCategories: Category[];
   selectedEventDefaultFightResultOptions: FightResultOption[];
   competitionProperties: CompetitionProperties;
   registrationInfo: RegistrationInfo;
@@ -183,7 +182,6 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventCategories: categoriesInitialState,
   selectedEventCompetitors: competitorsInitialState,
   selectedEventSchedule: scheduleInitialState,
-  selectedEventDefaultCategories: [],
   selectedEventDefaultFightResultOptions: [],
   competitionProperties: {},
   selectedEventMats: matsInitialState
@@ -330,15 +328,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (state.competitionProperties.id === action.competitionId
           && state && state.registrationInfo
           && action.payload.periodId && action.payload.groups) {
-          if (!state.registrationInfo.registrationGroups) {
-            state.registrationInfo.registrationGroups = [];
-          }
+          const registrationGroups = state.registrationInfo.registrationGroups || [];
           action.payload.groups.forEach(group => {
-            state.registrationInfo.registrationGroups.push(group);
-            state.registrationInfo.registrationPeriods
-              .find(per => per.id === action.payload.periodId)
-              .registrationGroupIds.push(group.id);
+            registrationGroups.push(group);
+            if (state.registrationInfo.registrationPeriods) {
+              state.registrationInfo.registrationPeriods
+                .find(per => per.id === action.payload.periodId)?.registrationGroupIds?.push(group.id);
+            }
           });
+          state.registrationInfo.registrationGroups = registrationGroups;
         }
         break;
       }
@@ -473,15 +471,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
 
       case EVENT_MANAGER_CATEGORY_STAGES_LOADED: {
-        const {competitionId, categoryId, categoryStages} = action;
+        const {competitionId, categoryId, categoryStages, selectedStageId} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && categoryStages) {
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(categoryStages, state.selectedEventCategories.selectedCategoryStages);
-          const selectedStage = categoryStages.find(s => s.id === state.selectedEventCategories.selectedCategoryStages.selectedStageId);
-          if (selectedStage) {
-            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.setAll(selectedStage.fights, fightsInitialState);
-          } else {
-            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
-          }
+          state.selectedEventCategories.selectedCategoryStages.selectedStageId = selectedStageId;
         }
         if (!categoryStages || categoryStages.length === 0) {
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
@@ -557,12 +550,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (action.competitionId === state.competitionProperties.id) {
           state.selectedEventCategories.selectedCategoryId = action.categoryId;
           state.selectedEventCategories.categoryStateLoading = true;
-        }
-        break;
-      }
-      case EVENT_MANAGER_DEFAULT_CATEGORIES_LOADED: {
-        if ((action.competitionId === state.competitionProperties.id) && action.payload) {
-          state.selectedEventDefaultCategories = action.payload;
         }
         break;
       }
