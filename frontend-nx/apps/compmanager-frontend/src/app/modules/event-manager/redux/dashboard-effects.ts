@@ -1,6 +1,6 @@
 import {from, Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, exhaustMap, filter, map, mergeMap, switchMap, tap, toArray, withLatestFrom} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, mergeMap, switchMap, tap, toArray, withLatestFrom, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -125,7 +125,7 @@ export class DashboardEffects {
         this.store.pipe(select(getSelectedEventGetSelectedMatId)))
     )),
     exhaustMap(([command, periodId]: [CommonAction, string, string]) => this.infoService.sendCommandSync(command)
-      .pipe(tap(console.log), exhaustMap(() => [refreshMatView(periodId, command.competitionId)]))))
+      .pipe(tap(console.log), take(1), exhaustMap(() => [refreshMatView(periodId, command.competitionId)]))))
   );
 
   constructor(private actions$: Actions,

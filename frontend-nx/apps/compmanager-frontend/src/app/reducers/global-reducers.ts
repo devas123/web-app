@@ -328,15 +328,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (state.competitionProperties.id === action.competitionId
           && state && state.registrationInfo
           && action.payload.periodId && action.payload.groups) {
-          if (!state.registrationInfo.registrationGroups) {
-            state.registrationInfo.registrationGroups = [];
-          }
+          const registrationGroups = state.registrationInfo.registrationGroups || [];
           action.payload.groups.forEach(group => {
-            state.registrationInfo.registrationGroups.push(group);
-            state.registrationInfo.registrationPeriods
-              .find(per => per.id === action.payload.periodId)
-              .registrationGroupIds.push(group.id);
+            registrationGroups.push(group);
+            if (state.registrationInfo.registrationPeriods) {
+              state.registrationInfo.registrationPeriods
+                .find(per => per.id === action.payload.periodId)?.registrationGroupIds?.push(group.id);
+            }
           });
+          state.registrationInfo.registrationGroups = registrationGroups;
         }
         break;
       }

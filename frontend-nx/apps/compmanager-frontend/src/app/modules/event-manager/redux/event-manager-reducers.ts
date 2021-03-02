@@ -324,7 +324,7 @@ export const eventManagerGetSelectedEventCategory = createSelector(eventManagerG
   (dict, props) => props.id && dict[props.id]);
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
 
-export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && regInfo.registrationGroups);
+export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && (regInfo.registrationGroups || []));
 
 const {
   selectAll: selectAllPeriods,

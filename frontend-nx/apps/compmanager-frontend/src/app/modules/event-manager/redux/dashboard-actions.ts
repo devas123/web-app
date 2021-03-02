@@ -5,6 +5,7 @@ import {IScoreboardFightResultSet} from './dashboard-reducers';
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
+  categoryId: string;
   fightId: string;
   currentMatId: string;
   newMatId: string;
@@ -26,7 +27,6 @@ export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_CO
 
 // events
 export const DASHBOARD_FIGHT_LOADED = 'DASHBOARD_FIGHT_LOADED';
-export const DASHBOARD_FIGHT_ORDER_CHANGED = 'DASHBOARD_FIGHT_ORDER_CHANGED';
 export const PERIOD_SELECTED = 'PERIOD_SELECTED';
 export const REFRESH_MATS_VIEW = 'REFRESH_MATS_VIEW';
 export const DASHBOARD_PERIOD_UNSELECTED = 'DASHBOARD_PERIOD_UNSELECTED';

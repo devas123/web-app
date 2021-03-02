@@ -67,7 +67,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
 
 
   getRegistrationGroupsForPeriod(period: RegistrationPeriod, info: RegistrationInfo) {
-    if (period && info) {
+    if (period && info && period.registrationGroupIds && info.registrationGroups) {
       return period.registrationGroupIds.map(id => info.registrationGroups.find(gr => gr.id === id)).filter(gr => !!gr);
     } else {
       return [];
@@ -97,7 +97,9 @@ export class RegistrationInfoEditorComponent implements OnInit {
       const regInfo = produce(this.registrationInfo, draft => {
         const defaultGroup = draft.registrationGroups.find(gr => gr.defaultGroup);
         if (defaultGroup) {
-          defaultGroup.categories.push(...this.unassignedCategoies.map(cat => cat.id).filter(id => !defaultGroup.categories.includes(id)));
+          const categories = defaultGroup.categories || [];
+          categories.push(...this.unassignedCategoies.map(cat => cat.id).filter(id => !categories.includes(id)));
+          defaultGroup.categories = categories;
         }
       });
       this.registrationInfoUpdated.next(regInfo);
