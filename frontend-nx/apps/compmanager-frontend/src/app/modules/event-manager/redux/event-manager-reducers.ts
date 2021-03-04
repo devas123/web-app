@@ -267,8 +267,10 @@ export const eventManagerGetSelectedEventName = createSelector(getSelectedEventP
 export const getSelectedEventCategoriesCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventCategories) || categoriesInitialState;
 });
+export const getSelectedEventPreviewCategoriesCollection = createSelector(getSelectedEventState, state => {
+  return (state && state.selectedEventPreviewCategories) || categoriesInitialState;
+});
 export const getSelectedEventSelectedCategoryState = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryState);
-export const getSelectedEventSelectedCategoryNumberOfCompetitors = createSelector(getSelectedEventSelectedCategoryState, state => state && state.numberOfCompetitors);
 export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryId);
 export const eventManagerGetSelectedEventSelectedCategoryStagesCollection = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryStages);
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageId = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stages => stages.selectedStageId);
@@ -297,14 +299,12 @@ export const eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsTy
 
 
 export const {
-  // select the dictionary of user entities
   selectEntities: eventManagerGetSelectedEventCategoriesDictionary,
-
-  // select the array of users
   selectAll: eventManagerGetSelectedEventAllCategories
-
-  // select the total user count
 } = categoryEntityAdapter.getSelectors(getSelectedEventCategoriesCollection);
+export const {
+  selectAll: eventManagerGetSelectedEventAllPreviewCategories
+} = categoryEntityAdapter.getSelectors(getSelectedEventPreviewCategoriesCollection);
 
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights,
@@ -323,6 +323,7 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
 export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
   (dict, props) => props.id && dict[props.id]);
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
+export const eventManagerGetSelectedEventPreviewCategories = eventManagerGetSelectedEventAllPreviewCategories;
 
 export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSelector(eventManagerGetSelectedEventRegistrationInfo, regInfo => regInfo && (regInfo.registrationGroups || []));
 

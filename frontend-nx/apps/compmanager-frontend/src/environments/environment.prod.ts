@@ -3,6 +3,7 @@ export const urls = {
   commandsSyncEndpoint: '/competitions/api/v1/commandsync',
   competitionQueryEndpoint: '/query/api/v1/competition',
   competitorQueryEndpoint: '/query/api/v1/competitor',
+  generateCategoriesEndpoint: '/competitions/api/v1/store/generatecategories',
   competitorEdpoint: '/competitions/api/v1/store/competitor',
   scheduleEndpoint: '/competitions/api/v1/store/schedule',
   categoriesEndpoint: '/competitions/api/v1/store/categories',

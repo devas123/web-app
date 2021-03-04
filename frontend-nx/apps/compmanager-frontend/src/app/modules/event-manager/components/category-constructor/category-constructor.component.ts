@@ -4,7 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {AdjacencyList, CategoryRestriction} from '../../../../commons/model/competition.model';
@@ -21,10 +23,9 @@ import {AppAutocompleteDirective} from './autocomplete.directive';
   styleUrls: ['category-constructor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryConstructorComponent {
+export class CategoryConstructorComponent implements OnChanges {
 
-  constructor(private cd: ChangeDetectorRef) {
-  }
+  constructor(private cd: ChangeDetectorRef) {}
 
   @Input()
   set restrictions(value: CategoryRestriction[]) {
@@ -93,6 +94,12 @@ export class CategoryConstructorComponent {
   @Output()
   generateCategories = new EventEmitter<{ restrictions: CategoryRestriction[], idTrees: AdjacencyList<string>[], restrictionNames: string[] }>();
 
+  @Output()
+  generatePreviewCategories = new EventEmitter<{ restrictions: CategoryRestriction[], idTrees: AdjacencyList<string>[], restrictionNames: string[] }>();
+
+  @Output()
+  clearPreviewCategories = new EventEmitter<void>();
+
   @Input()
   set options(value: string[]) {
     this._options = value;
@@ -144,6 +151,7 @@ export class CategoryConstructorComponent {
         }
       }
     }
+    this.sendGeneratePreviewCategories();
   }
 
   addRestrictionName(element: HTMLInputElement) {
@@ -236,7 +244,7 @@ export class CategoryConstructorComponent {
   }
 
   canGenerateCategories() {
-    return !_.isEmpty(this.adjacencyLists) && !_.isEmpty(this._restrictions) && !_.isEmpty(this.restrictionNames);
+    return !_.isEmpty(this.adjacencyLists) && !_.isEmpty(this._restrictions) && !_.isEmpty(this.restrictionNames) && this.restrictionNames?.length > 1;
   }
 
   sendGenerateCategories() {
@@ -248,6 +256,14 @@ export class CategoryConstructorComponent {
         restrictions
       });
     }
+  }
+
+  sendGeneratePreviewCategories() {
+    this.generatePreviewCategories.next({
+      idTrees: this.adjacencyLists,
+      restrictionNames: this.restrictionNames,
+      restrictions: this._restrictions
+    });
   }
 
   transform(items: any[], searchTerm: string) {
@@ -273,9 +289,25 @@ export class CategoryConstructorComponent {
     this.options$.next(this._options);
   }
 
+  isRootColumn(name: string): boolean {
+    return this.restrictionNames && this.restrictionNames[0] === name;
+  }
+
   deleteColumn(name: string) {
     if (name) {
+      if (this.isRootColumn(name)) {
+        this.root = undefined;
+      }
       this.restrictionGroupRemoved.emit(name);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if ((changes.adjacencyLists || changes.restrictionNames) && this.canGenerateCategories()) {
+      this.sendGeneratePreviewCategories();
+    } else {
+      this.clearPreviewCategories.next();
     }
   }
 }

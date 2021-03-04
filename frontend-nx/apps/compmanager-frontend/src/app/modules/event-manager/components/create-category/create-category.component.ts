@@ -9,11 +9,13 @@ import {
   eventManagerCategoryConstructorRestrictionNames,
   eventManagerCategoryRestrictions,
   eventManagerDefaultCategoryRestrictions,
-  eventManagerGetSelectedEventName
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventPreviewCategories
 } from '../../redux/event-manager-reducers';
 import {
   AdjacencyList,
   AdjacencyListEntry,
+  Category,
   CategoryRestriction,
   HeaderDescription
 } from '../../../../commons/model/competition.model';
@@ -23,6 +25,7 @@ import {
 } from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {
+  eventManagerCategoriesCleared,
   eventManagerCategoryRestrictionAdded,
   eventManagerCategoryRestrictionGroupAdded,
   eventManagerCategoryRestrictionGroupRemoved,
@@ -31,7 +34,8 @@ import {
   eventManagerCategoryRestrictionRootAdded,
   eventManagerCategoryRestrictionUnlinked,
   eventManagerLoadCategoryRestrictionsCommand,
-  generateCategoriesCommand
+  generateCategoriesCommand,
+  generatePreviewCategoriesCommand
 } from '../../redux/event-manager-actions';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {
@@ -45,21 +49,34 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
 @Component({
   selector: 'app-create-category',
   template: `
-    <app-category-constructor
-      [competitionId]="infoProvicer.competitionId$ | async"
-      [restrictions]="restrictions$ | async"
-      [adjacencyLists]="adjacencyLists$ | async"
-      [options]="defaultRestrictionsNames$ | async"
-      [restrictionNames]="restrictionNames$ | async"
-      (restrictionGroupRemoved)="removeRestrictionGroup($event)"
-      (restrictionGroupAdded)="addRestrictionGroup($event)"
-      (rootAdded)="rootAdded($event)"
-      (restrictionLinked)="linkRestriction($event)"
-      (restrictionUnLinked)="unlinkRestriction($event)"
-      (removeRestrictionClicked)="removeRestriction($event)"
-      (generateCategories)="generateCategories($event)"
-      (addRestrictionClicked)="openAddRestrictionModal($event)"
-    ></app-category-constructor>`,
+    <section class="ui segments">
+      <section class="ui segment">
+        <app-category-constructor
+          [competitionId]="infoProvicer.competitionId$ | async"
+          [restrictions]="restrictions$ | async"
+          [adjacencyLists]="adjacencyLists$ | async"
+          [options]="defaultRestrictionsNames$ | async"
+          [restrictionNames]="restrictionNames$ | async"
+          (restrictionGroupRemoved)="removeRestrictionGroup($event)"
+          (restrictionGroupAdded)="addRestrictionGroup($event)"
+          (rootAdded)="rootAdded($event)"
+          (restrictionLinked)="linkRestriction($event)"
+          (restrictionUnLinked)="unlinkRestriction($event)"
+          (removeRestrictionClicked)="removeRestriction($event)"
+          (generateCategories)="generateCategories($event)"
+          (generatePreviewCategories)="generatePreviewCategories($event)"
+          (clearPreviewCategories)="clearPreviewCategories()"
+          (addRestrictionClicked)="openAddRestrictionModal($event)"
+        ></app-category-constructor>
+      </section>
+      <section class="ui segment">
+        <h4>Categories preview</h4>
+        <app-category-editor [categories]="previewCategories$ | async"
+                             [defaultCategories]="[]"
+                             [detailedView]="false"
+                             [competition]="infoProvicer.competition$ | async"></app-category-editor>
+      </section>
+    </section>`,
   styleUrls: ['./create-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -69,6 +86,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
   defaultRestrictionsNames$: Observable<string[]>;
 
   restrictions$: Observable<CategoryRestriction[]>;
+  previewCategories$: Observable<Category[]>;
 
   adjacencyLists$: Observable<AdjacencyList<string>[]>;
   restrictionNames$: Observable<string[]>;
@@ -91,11 +109,12 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     this.adjacencyLists$ = this.store.pipe(select(eventManagerCategoryConstructorAdjacentLists));
     this.restrictionNames$ = this.store.pipe(select(eventManagerCategoryConstructorRestrictionNames));
     this.defaultRestrictions$ = this.store.pipe(select(eventManagerDefaultCategoryRestrictions));
-    this.defaultRestrictionsNames$ =     this.defaultRestrictions$.pipe(
+    this.defaultRestrictionsNames$ = this.defaultRestrictions$.pipe(
       map(r => r.map(cr => cr.name).filter(uniqueFilter)),
       tap(console.log)
     );
     this.restrictions$ = this.store.pipe(select(eventManagerCategoryRestrictions));
+    this.previewCategories$ = this.store.pipe(select(eventManagerGetSelectedEventPreviewCategories));
   }
 
   openAddRestrictionModal(event: { name: string, existing: string[] }) {
@@ -120,7 +139,8 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     this.store.dispatch(eventManagerLoadCategoryRestrictionsCommand());
   }
 
-  generateCategories(event: { restrictions: CategoryRestriction[]; idTrees: AdjacencyList<string>[]; restrictionNames: string[] }) {
+  sendGenerateCommand(event: { restrictions: CategoryRestriction[]; idTrees: AdjacencyList<string>[]; restrictionNames: string[] },
+                      comandBuilder: (competitionId: string, intAdjacencyLists: AdjacencyList<number>[]) => any) {
     if (!_.isEmpty(event)
       && !_.isEmpty(event.restrictions)
       && !_.isEmpty(event.idTrees) && !_.isEmpty(event.restrictionNames)) {
@@ -132,13 +152,31 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
           children: v.children.map(c => ids.indexOf(c))
         }))
       }));
-      this.infoProvicer.sendCommandFromCompetitionId(competitionId => generateCategoriesCommand({
-        idTrees: intAdjacencyLists,
-        restrictions: event.restrictions,
-        restrictionNames: event.restrictionNames,
-        competitionId
-      }));
+      this.infoProvicer.sendCommandFromCompetitionId(competitionId => comandBuilder(competitionId, intAdjacencyLists));
     }
+  }
+
+  generatePreviewCategories(event: { restrictions: CategoryRestriction[]; idTrees: AdjacencyList<string>[]; restrictionNames: string[] }) {
+    this.sendGenerateCommand(event, (competitionId, intAdjacencyLists) => generatePreviewCategoriesCommand({
+      idTrees: intAdjacencyLists,
+      restrictions: event.restrictions,
+      restrictionNames: event.restrictionNames,
+      competitionId
+    }));
+  }
+
+
+  generateCategories(event: { restrictions: CategoryRestriction[]; idTrees: AdjacencyList<string>[]; restrictionNames: string[] }) {
+    this.sendGenerateCommand(event, (competitionId, intAdjacencyLists) => generateCategoriesCommand({
+      idTrees: intAdjacencyLists,
+      restrictions: event.restrictions,
+      restrictionNames: event.restrictionNames,
+      competitionId
+    }));
+  }
+
+  clearPreviewCategories() {
+    this.store.dispatch(eventManagerCategoriesCleared());
   }
 
   linkRestriction(event: { restrictionId: string; root: string; parent: string[] }) {

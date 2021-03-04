@@ -20,7 +20,8 @@ import {
   Competitor,
   competitorEntityAdapter,
   CompetitorsCollection,
-  competitorsInitialState, Fight,
+  competitorsInitialState,
+  Fight,
   fightEntityAdapter,
   FightResultOption,
   FightsCollection,
@@ -50,7 +51,6 @@ import {
   EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
-  EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -59,7 +59,8 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_PERIOD_REMOVED, EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED,
+  EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED,
   EVENT_MANAGER_REGISTRATION_GROUP_CREATED,
   EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
   EVENT_MANAGER_SCHEDULE_DROPPED,
@@ -82,7 +83,7 @@ import {
   DASHBOARD_MAT_FIGHTS_UNLOADED,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MAT_UNSELECTED,
-  DASHBOARD_MATS_LOADED, DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND,
+  DASHBOARD_MATS_LOADED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
 
@@ -95,16 +96,6 @@ export interface CommonAction extends Action {
   payload: any;
   categoryId: string | null;
   competitionId: string | null;
-}
-
-export interface FightStartTime {
-  fightId: string;
-  matId: string;
-  numberOnMat: number;
-  startTime: Date;
-  periodId: string;
-  fightCategoryId: string;
-  invalid?: boolean;
 }
 
 export interface MatDescription {
@@ -133,6 +124,7 @@ export const matsInitialState = matEntityAdapter.getInitialState({
 
 export interface CompetitionState {
   selectedEventCategories: CategoriesCollection;
+  selectedEventPreviewCategories: CategoriesCollection;
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventMats: MatsCollection;
   selectedEventSchedule: Schedule;
@@ -180,12 +172,14 @@ export const scheduleInitialState: Schedule = {
 
 export const initialCompetitionState: CompetitionState = {
   selectedEventCategories: categoriesInitialState,
+  selectedEventPreviewCategories: categoriesInitialState,
+  registrationInfo: <RegistrationInfo>{},
   selectedEventCompetitors: competitorsInitialState,
   selectedEventSchedule: scheduleInitialState,
   selectedEventDefaultFightResultOptions: [],
-  competitionProperties: {},
+  competitionProperties: <CompetitionProperties>{},
   selectedEventMats: matsInitialState
-} as CompetitionState;
+};
 
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
   selectedEventId: null
@@ -492,16 +486,30 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             fightsNumber: rwc.fightsNumber,
             numberOfCompetitors: rwc.numberOfCompetitors
           } as Category));
-          if (competitionId === state.competitionProperties.id) {
-            return {
-              ...state,
-              selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
-            };
-          } else {
-            return state;
-          }
+          return {
+            ...state,
+            selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
+          };
         }
         return state;
+      }
+
+      case EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED: {
+        const competitionId = action.competitionId;
+        const categories = (action.categories || []) as Category[];
+        if (competitionId === state.competitionProperties.id) {
+          return {
+            ...state,
+            selectedEventPreviewCategories: categoryEntityAdapter.setAll(categories, state.selectedEventPreviewCategories)
+          };
+        }
+        return state;
+      }
+      case EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED: {
+        return {
+          ...state,
+          selectedEventPreviewCategories: categoriesInitialState
+        };
       }
       case COMPETITION_PROPERTIES_LOADED: {
         if (action.competitionId === state.competitionProperties.id) {
@@ -721,7 +729,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const {fights, competitors} = action.payload;
         if (fights && competitors) {
           const currentMatFights = _.flowRight(_.curryRight(_.filter)(f => f.matId !== action.matId), _.values)(state.selectedEventMats.matsFights.entities) as Fight[];
-          state.selectedEventMats.matsFights = fightEntityAdapter.setAll([...fights,...currentMatFights], state.selectedEventMats.matsFights);
+          state.selectedEventMats.matsFights = fightEntityAdapter.setAll([...fights, ...currentMatFights], state.selectedEventMats.matsFights);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(competitors, state.selectedEventCompetitors);
         }
         break;

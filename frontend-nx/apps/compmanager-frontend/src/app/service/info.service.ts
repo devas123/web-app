@@ -18,6 +18,7 @@ const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 const {
   commandsSyncEndpoint,
   commandsEndpoint,
+  generateCategoriesEndpoint,
   competitionQueryEndpoint,
   registrationInfoQueryEndpoint,
   competitorEdpoint,
@@ -253,12 +254,10 @@ export class InfoService {
     });
   };
 
-  sendCommand(command: any, competitionId: string): Observable<any> {
-    const normalizedCommand = this.normalizeCommand(command);
-    const body = JSON.stringify(normalizedCommand);
+  sendPayloadToEndpoint(payload: any, endpoint: string): Observable<any> {
+    const body = JSON.stringify(payload);
     const tmt = 15000;
-    const url = `${commandsEndpoint}/${competitionId}`;
-    return this.http.post(url, body, {
+    return this.http.post(endpoint, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'
@@ -268,9 +267,19 @@ export class InfoService {
       retryWhen(genericRetryStrategy()),
       catchError(error => {
         console.log(error);
-        return observableOf(error);
+        return throwError(error);
       })
     );
+  }
+
+
+  sendCommand(command: any, competitionId: string): Observable<any> {
+    const normalizedCommand = this.normalizeCommand(command);
+    return this.sendPayloadToEndpoint(normalizedCommand, `${commandsEndpoint}/${competitionId}`);
+  }
+
+  generatePreliminaryCategories(payload: any, competitionId: string): Observable<any> {
+    return this.sendPayloadToEndpoint(payload, `${generateCategoriesEndpoint}/${competitionId}`);
   }
 
 
@@ -337,7 +346,7 @@ export class InfoService {
       })),
       catchError(error => {
         console.error(error);
-        return of(errorEvent(JSON.stringify(error)));
+        return throwError(errorEvent(JSON.stringify(error)));
       }));
   }
 

@@ -1,12 +1,11 @@
 import {Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {
   CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
-  COMPETITION_SELECTED,
   EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_CONNECT_SOCKET,
   EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
@@ -17,16 +16,19 @@ import {
   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
+  EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
   EVENT_MANAGER_MOVE_COMPETITOR,
   EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
-  eventManagerDefaultRestrictionsLoaded,
   eventManagerDefaultFightResultsLoaded,
-  eventManagerDisconnectSocket,
-  FIGHTS_EDITOR_APPLY_CHANGE, GENERATE_CATEGORIES_COMMAND,
+  eventManagerDefaultRestrictionsLoaded,
+  eventManagerDisconnectSocket, eventManagerPreviewCategoriesGenerated,
+  FIGHTS_EDITOR_APPLY_CHANGE,
+  GENERATE_CATEGORIES_COMMAND,
   myCompetitionsLoaded,
-  UPDATE_STAGE_STATUS_COMMAND, EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS
+  GENERATE_PREVIEW_CATEGORIES_COMMAND,
+  UPDATE_STAGE_STATUS_COMMAND
 } from './event-manager-actions';
 
 
@@ -114,9 +116,15 @@ export class EventManagerEffects {
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
       GENERATE_CATEGORIES_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
-    mergeMap((command: CommonAction) => {
-      return this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error))));
-    })), {dispatch: false});
+    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error)))))),
+    {dispatch: false});
+
+  loadGeneratedCategories$ = createEffect(() => this.actions$.pipe(
+    ofType(GENERATE_PREVIEW_CATEGORIES_COMMAND),
+    switchMap((command: CommonAction) => this.infoService.generatePreliminaryCategories(command, command.competitionId).pipe(
+      map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response }))
+    )),
+  ));
 
   connectSocket$ = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CONNECT_SOCKET),

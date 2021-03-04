@@ -6,27 +6,29 @@
            (click)="handleCategoryHeaderClicked(getCategoryId(category))">{{displayCategory(category)}}</a>
       </div>
       <div class="ui basic segment customline" content>
-        <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
-        <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
         <div class="description" *ngFor="let restr of category?.restrictions">
           {{displayRestriction(restr)}}
         </div>
-        <div class="description">Registration: {{category?.registrationOpen ? 'open' : 'closed'}}</div>
-        <div class="action_buttons" *ngIf="editMode">
-          <div class="ui icon button" (click)="handleCategoryEditorClicked(getCategoryId(category))">
-            <i class="edit icon"></i>
+        <ng-container *ngIf="detailedView">
+          <div class="description">Competitors: {{category?.numberOfCompetitors || 0}}</div>
+          <div class="description">Fights: {{category?.fightsNumber || 0}}</div>
+          <div class="description">Registration: {{category?.registrationOpen ? 'open' : 'closed'}}</div>
+          <div class="action_buttons" *ngIf="editMode">
+            <div class="ui icon button" (click)="handleCategoryEditorClicked(getCategoryId(category))">
+              <i class="edit icon"></i>
+            </div>
+            <div class="ui icon button" (click)="deleteCategory(category)">
+              <i class="trash icon"></i>
+            </div>
+            <div class="ui icon button" (click)="toggleRegistrationOpen(category)">
+              <i *ngIf="category?.registrationOpen" class="lock icon"></i>
+              <i *ngIf="!category?.registrationOpen" class="fas fa-lock-open"></i>
+            </div>
+            <div class="ui icon button" (click)="generateRandomFighters(category)">
+              <i class="fas fa-user-plus"></i>
+            </div>
           </div>
-          <div class="ui icon button" (click)="deleteCategory(category)">
-            <i class="trash icon"></i>
-          </div>
-          <div class="ui icon button" (click)="toggleRegistrationOpen(category)">
-            <i *ngIf="category?.registrationOpen" class="lock icon"></i>
-            <i *ngIf="!category?.registrationOpen" class="fas fa-lock-open"></i>
-          </div>
-          <div class="ui icon button" (click)="generateRandomFighters(category)">
-            <i class="fas fa-user-plus"></i>
-          </div>
-        </div>
+        </ng-container>
       </div>
     </sui-accordion-panel>
   </sui-accordion>

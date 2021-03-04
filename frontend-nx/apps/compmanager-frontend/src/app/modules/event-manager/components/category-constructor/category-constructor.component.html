@@ -10,38 +10,35 @@
     <div class="item no-result" *ngIf="!result.length && !restrNameInput.value">No default names...</div>
   </div>
 </ng-template>
-
-<section class="ui basic segment">
-  <button class="ui button" [disabled]="!canGenerateCategories()" (click)="sendGenerateCategories()">Generate</button>
-  <p></p>
-  <p>Please select restrictions</p>
-  <div class="create-category-grid">
-    <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
-      <div class="restriction-item header">
-        <span>{{name}}</span>
-        <div class="filler"></div>
-        <a class="right-floated-close" (click)="deleteColumn(name)"><i class="ui close icon"></i></a>
-      </div>
-      <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
-                            [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
-                            [typeInTree]="treeInclusionType(restriction.id, i)"
-                            [inPath]="selectedPath.includes(restriction.id)"
-                            (restrictionClicked)="togglePathInclusion(restriction.id, i)"
-                            (restrictionSelected)="toggleLink(restriction.id, i)"
-                            (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
-                            [restriction]="restriction"></app-restriction-item>
-      <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add options</button>
+<h4>Please select restrictions</h4>
+<div class="create-category-grid">
+  <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
+    <div class="restriction-item header">
+      <span>{{name}}</span>
+      <div class="filler"></div>
+      <a class="right-floated-close" (click)="deleteColumn(name)"><i class="ui close icon"></i></a>
     </div>
-    <div class="restriction-column">
-      <div class="ui small action input" #inputElement>
-        <input #restrNameInput type="text" placeholder="Select item or add new"
-               [appAutocomplete]="autocomplete"
-               [origin]="inputElement"
-               (inputValueChange)="handleInputChange($event)"
-               #autocmplt="appAutoComplete">
-        <button class="ui small button" (click)="addRestrictionName(restrNameInput)">Add</button>
-      </div>
+    <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
+                          [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
+                          [typeInTree]="treeInclusionType(restriction.id, i)"
+                          [inPath]="selectedPath.includes(restriction.id)"
+                          (restrictionClicked)="togglePathInclusion(restriction.id, i)"
+                          (restrictionSelected)="toggleLink(restriction.id, i)"
+                          (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
+                          [restriction]="restriction"></app-restriction-item>
+    <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add options</button>
+  </div>
+  <div class="restriction-column">
+    <div class="ui small action input" #inputElement>
+      <input #restrNameInput type="text" placeholder="Select item or add new"
+             [appAutocomplete]="autocomplete"
+             [origin]="inputElement"
+             (inputValueChange)="handleInputChange($event)"
+             #autocmplt="appAutoComplete">
+      <button class="ui small button" (click)="addRestrictionName(restrNameInput)">Add</button>
     </div>
   </div>
-</section>
-
+</div>
+<p></p>
+<button class="ui button" [disabled]="!canGenerateCategories()" (click)="sendGenerateCategories()">Generate</button>
+<p></p>

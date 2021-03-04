@@ -6,7 +6,7 @@
        Element
 --------------------*/
 
-@background: @white;
+@background: @primaryBackground;
 @borderWidth: 1px;
 @border: @borderWidth solid @borderColor;
 
@@ -49,7 +49,7 @@
 *******************************/
 
 /* Placeholder */
-@placeholderBackground: @offWhite;
+@placeholderBackground: @secondaryBackground;
 @placeholderPadding: @padding;
 @placeholderBorderColor: @borderColor;
 @placeholderBoxShadow: 0 2px 25px 0 rgba(34, 36, 38, 0.05) inset;

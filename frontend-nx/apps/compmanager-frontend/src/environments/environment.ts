@@ -12,6 +12,7 @@ export const environment = {
   errorQueue: `/state/errors`,
   webSocketUrl: `/query/sockjs`,
   commandsEndpoint: '/competitions/api/v1/command',
+  generateCategoriesEndpoint: '/competitions/api/v1/store/generatecategories',
   commandsSyncEndpoint: '/competitions/api/v1/commandsync',
   competitionQueryEndpoint: '/query/api/v1/competition',
   competitorQueryEndpoint: '/query/api/v1/competitor',
@@ -38,6 +39,7 @@ export const environment = {
 const comprops = '/jsserver/competition';
 
 export const mocks = {
+  generateCategoriesEndpoint: '/competitions/api/store/generatecategories',
   commandsEndpoint: '/jsserver/command',
   commandsSyncEndpoint: '/jsserver/commandsync',
   competitionQueryEndpoint: comprops,

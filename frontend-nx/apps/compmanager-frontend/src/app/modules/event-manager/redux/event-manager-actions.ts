@@ -32,6 +32,7 @@ export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
 export const GENERATE_CATEGORIES_COMMAND = 'GENERATE_CATEGORIES_COMMAND';
+export const GENERATE_PREVIEW_CATEGORIES_COMMAND = 'GENERATE_PREVIEW_CATEGORIES_COMMAND';
 export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND';
 export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
 export const EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND = 'DELETE_REGISTRATION_PERIOD_COMMAND';
@@ -82,6 +83,9 @@ export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const EVENT_MANAGER_FIGHTER_SELECTED = 'EVENT_MANAGER_FIGHTER_SELECTED';
 export const EVENT_MANAGER_FIGHTER_UNSELECTED = 'EVENT_MANAGER_FIGHTER_UNSELECTED';
 export const EVENT_MANAGER_CATEGORY_SELECTED = 'EVENT_MANAGER_CATEGORY_SELECTED';
+export const EVENT_MANAGER_CATEGORIES_GENERATED = 'EVENT_MANAGER_CATEGORIES_GENERATED';
+export const EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED = 'EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED';
+export const EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED = 'EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED';
 export const EVENT_MANAGER_CATEGORY_UNSELECTED = 'EVENT_MANAGER_CATEGORY_UNSELECTED';
@@ -119,7 +123,11 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
+export const eventManagerCategoriesCleared = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED);
+export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: Category[] }>());
 export const generateCategoriesCommand = createAction(GENERATE_CATEGORIES_COMMAND, props<{
+  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[] }>());
+export const generatePreviewCategoriesCommand = createAction(GENERATE_PREVIEW_CATEGORIES_COMMAND, props<{
   competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[] }>());
 export const eventManagerCategoryRestrictionUnlinked = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED, props<{ restrictionId: string, root: string, parent: string }>());
 export const eventManagerCategoryRestrictionLinked = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED, props<{ restrictionId: string, root: string, parent: string[] }>());
