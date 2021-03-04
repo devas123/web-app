@@ -31,11 +31,12 @@ export class AddCategoryRestrictionModal extends ComponentModalConfig<IAddCatego
 @Component({
   selector: 'app-add-category-restriction',
   template: `
-    <div class="header">Add new restriction</div>
+    <div class="header">Add option</div>
     <div class="content">
       <sui-multi-select
+        class="selection"
         [options]="defaultRestrictions"
-        placeholder="Default restriction"
+        placeholder="Select from defaults"
         [optionFormatter]="defaultRestrictionFmt"
         [isSearchable]="false"
         [isDisabled]="false"

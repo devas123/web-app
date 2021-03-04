@@ -343,7 +343,7 @@ export class InfoService {
 
   getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<Fight[]> {
     if (!competitionId || !categoryId || !stageId) {
-      return of([]);
+      return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     const params = {competitionId, categoryId, stageId};
     return this.httpGet(stageFights, {

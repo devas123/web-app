@@ -13,7 +13,8 @@ import * as eventManagerActions from '../modules/event-manager/redux/event-manag
 import {
   COMPETITION_SELECTED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
-  EVENT_MANAGER_CATEGORY_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED,
+  EVENT_MANAGER_CATEGORY_SELECTED,
+  EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
   EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
@@ -151,8 +152,9 @@ export class Effects {
 
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED),
-    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.categoryId, a.selectedStageId).pipe(catchError(error => observableOf(errorEvent(error))))),
-    map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]}))
+    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.categoryId, a.selectedStageId)),
+    map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]})),
+    catchError(error => observableOf(errorEvent(error)))
   ));
 
 

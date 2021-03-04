@@ -1,43 +1,47 @@
 <ng-template #autocomplete>
   <div class="ui animated list" *ngIf="(opts$ | async) as result">
     <div appOption class="item" *ngFor="let option of result"
-                [value]="option"
-                (optionSelected)="handleOptionSelected(restrNameInput, $event, autocmplt)"></div>
+         [value]="option"
+         (optionSelected)="handleOptionSelected(restrNameInput, $event, autocmplt)"></div>
     <div class="item" appOption
-                [value]="restrNameInput.value"
-                (optionSelected)="handleOptionSelected(restrNameInput, $event, autocmplt)"
-                *ngIf="!result.length && restrNameInput.value && !result.includes(restrNameInput.value)"></div>
-    <div  class="item no-result" *ngIf="!result.length && !restrNameInput.value">No default names...</div>
+         [value]="restrNameInput.value"
+         (optionSelected)="handleOptionSelected(restrNameInput, $event, autocmplt)"
+         *ngIf="!result.length && restrNameInput.value && !result.includes(restrNameInput.value)"></div>
+    <div class="item no-result" *ngIf="!result.length && !restrNameInput.value">No default names...</div>
   </div>
 </ng-template>
 
 <section class="ui basic segment">
   <button class="ui button" [disabled]="!canGenerateCategories()" (click)="sendGenerateCategories()">Generate</button>
+  <p></p>
+  <p>Please select restrictions</p>
+  <div class="create-category-grid">
+    <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
+      <div class="restriction-item header">
+        <span>{{name}}</span>
+        <div class="filler"></div>
+        <a class="right-floated-close" (click)="deleteColumn(name)"><i class="ui close icon"></i></a>
+      </div>
+      <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
+                            [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
+                            [typeInTree]="treeInclusionType(restriction.id, i)"
+                            [inPath]="selectedPath.includes(restriction.id)"
+                            (restrictionClicked)="togglePathInclusion(restriction.id, i)"
+                            (restrictionSelected)="toggleLink(restriction.id, i)"
+                            (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
+                            [restriction]="restriction"></app-restriction-item>
+      <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add options</button>
+    </div>
+    <div class="restriction-column">
+      <div class="ui small action input" #inputElement>
+        <input #restrNameInput type="text" placeholder="Select item or add new"
+               [appAutocomplete]="autocomplete"
+               [origin]="inputElement"
+               (inputValueChange)="handleInputChange($event)"
+               #autocmplt="appAutoComplete">
+        <button class="ui small button" (click)="addRestrictionName(restrNameInput)">Add</button>
+      </div>
+    </div>
+  </div>
 </section>
-<div class="create-category-grid">
-  <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
-    <div class="restriction-item header">
-      <span>{{name}}</span>
-      <div class="filler"></div>
-      <a class="right-floated-close" (click)="deleteColumn(name)"><i class="ui close icon"></i></a>
-    </div>
-    <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
-                          [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
-                          [typeInTree]="treeInclusionType(restriction.id, i)"
-                          [inPath]="selectedPath.includes(restriction.id)"
-                          (restrictionClicked)="togglePathInclusion(restriction.id, i)"
-                          (restrictionSelected)="toggleLink(restriction.id, i)"
-                          (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
-                          [restriction]="restriction"></app-restriction-item>
-    <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add...</button>
-  </div>
-  <div class="restriction-column">
-    <div class="ui mini action input">
-      <input #restrNameInput type="text" placeholder="Name..."
-             [appAutocomplete]="autocomplete"
-             (inputValueChange)="handleInputChange($event)"
-             #autocmplt="appAutoComplete">
-      <button class="ui mini button" (click)="addRestrictionName(restrNameInput)">Add</button>
-    </div>
-  </div>
-</div>
+

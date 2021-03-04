@@ -12,15 +12,21 @@ import {
   eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
-  eventManagerGetSelectedEventSelectedCategorySelectedStage, eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType,
-  eventManagerGetSelectedEventSelectedCategorySelectedStageFights, eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights,
+  eventManagerGetSelectedEventSelectedCategorySelectedStage,
+  eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType,
+  eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
+  eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStages,
   eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
 } from '../../modules/event-manager/redux/event-manager-reducers';
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {Injectable} from '@angular/core';
-import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../modules/event-manager/redux/event-manager-actions';
+import {
+  eventManagerCategoryBracketsStageSelected,
+  eventManagerCategorySelected,
+  eventManagerCategoryUnselected
+} from '../../modules/event-manager/redux/event-manager-actions';
 
 @Injectable()
 export class CommonBracketsInfoContainer {
@@ -66,6 +72,14 @@ export class CommonBracketsInfoContainer {
     }), filter(act => !!act && !!act.type)).subscribe(this.store);
   }
 
+  sendCommandFromCategoryIdAndCompetitionId(actionBuilder: (categoryId, competitionId) => any) {
+    this.category$.pipe(withLatestFrom(this.competitionId$), take(1), map(([cat, compId]) => {
+      if (cat) {
+        return actionBuilder(cat.id, compId);
+      }
+    }), filter(act => !!act && !!act.type)).subscribe(this.store);
+  }
+
   sendCommandFromCompetitionId(actionBuilder: (competitionId) => any) {
     this.competition$.pipe(filter(com => !!com), take(1), map(competition => {
       return actionBuilder(competition.id);
@@ -77,8 +91,9 @@ export class CommonBracketsInfoContainer {
   }
 
   selectStageById(id: string) {
-    this.sendCommandFromCompetitionId((competitionId => eventManagerCategoryBracketsStageSelected({
-      competitionId: competitionId,
+    this.sendCommandFromCategoryIdAndCompetitionId(((categoryId, competitionId) => eventManagerCategoryBracketsStageSelected({
+      competitionId,
+      categoryId,
       selectedStageId: id
     })));
   }

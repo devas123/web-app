@@ -1,4 +1,4 @@
-import {fromEvent, race} from 'rxjs';
+import {fromEvent, race, Subject, Subscription} from 'rxjs';
 import {
   AfterViewInit,
   Directive,
@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import {ConnectionPositionPair, Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {filter, takeUntil} from 'rxjs/operators';
+import {debounceTime, filter, takeUntil} from 'rxjs/operators';
 
 export function overlayClickOutside(overlayRef: OverlayRef, origin: HTMLElement) {
   return fromEvent<MouseEvent>(document, 'mousedown')
@@ -37,27 +37,34 @@ export class AppAutocompleteDirective implements OnInit, AfterViewInit {
   @Input()
   appAutocomplete: TemplateRef<any>;
 
+  @Input()
+  origin: HTMLElement;
+
   @Output()
   inputValueChange = new EventEmitter<string>();
 
+  private scrollEvents = new Subject<void>();
+
   private overlayRef: OverlayRef;
+
+  private subs;
 
   constructor(
     private host: ElementRef<HTMLInputElement>,
     private vcr: ViewContainerRef,
-    private overlay: Overlay,
+    private overlay: Overlay
   ) {
-  }
-
-  get origin() {
-    return this.host.nativeElement;
   }
 
   ngOnInit() {
   }
 
+  handleScroll = () => {
+    this.scrollEvents.next();
+  };
+
   ngAfterViewInit() {
-    fromEvent(this.origin, 'focus')
+    fromEvent(this.host.nativeElement, 'focus')
       .pipe(
         filter(() => !this.overlayRef)
       )
@@ -69,17 +76,23 @@ export class AppAutocompleteDirective implements OnInit, AfterViewInit {
   openDropdown() {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create({
-        width: this.origin.offsetWidth,
+        width: this.host.nativeElement.offsetWidth,
         maxHeight: 40 * 3,
         backdropClass: '',
         scrollStrategy: this.overlay.scrollStrategies.reposition(),
         positionStrategy: this.getOverlayPosition()
       });
-
+      this.subs = new Subscription();
       const template = new TemplatePortal(this.appAutocomplete, this.vcr);
       this.overlayRef.attach(template);
-      race([overlayClickOutside(this.overlayRef, this.origin)])
+      race([overlayClickOutside(this.overlayRef, this.host.nativeElement)])
         .subscribe(() => this.close());
+      window.addEventListener('scroll', this.handleScroll, true);
+      this.subs.add(this.scrollEvents.pipe(
+        debounceTime(10)
+      ).subscribe(() => {
+        this.overlayRef?.updatePosition();
+      }));
     }
   }
 
@@ -88,11 +101,18 @@ export class AppAutocompleteDirective implements OnInit, AfterViewInit {
     setTimeout(() => this.inputValueChange.emit(e.target.value));
   }
 
+  @HostListener('window:resize')
+  public onResize() {
+    this.overlayRef?.updatePosition();
+  }
+
   close() {
     if (this.overlayRef) {
       this.overlayRef.detach();
       this.overlayRef.dispose();
       this.overlayRef = null;
+      this.subs.unsubscribe();
+      window.removeEventListener('scroll', this.handleScroll, true);
     }
   }
 
@@ -108,7 +128,8 @@ export class AppAutocompleteDirective implements OnInit, AfterViewInit {
       .position()
       .flexibleConnectedTo(this.origin)
       .withPositions(positions)
-      .withFlexibleDimensions(false)
-      .withPush(false);
+      .withFlexibleDimensions(true)
+      .withPush(false)
+      .withLockedPosition(false);
   }
 }

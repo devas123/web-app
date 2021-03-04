@@ -47,7 +47,7 @@ export class StageDisplayComponent implements OnInit {
   showResults: boolean;
 
   get unseededCompetitors() {
-    return this.competitors.filter(c => !this.fights.find(f => !!f.scores.find(s => s.competitorId === c.id)));
+    return this.competitors.filter(c => !this.fights?.find(f => !!f.scores?.find(s => s.competitorId === c.id)));
   }
 
   constructor() {
@@ -57,6 +57,7 @@ export class StageDisplayComponent implements OnInit {
   }
 
   selectStage(id: string) {
+    console.log("stage selected ", id);
     this.stageSelected.next(id);
   }
 

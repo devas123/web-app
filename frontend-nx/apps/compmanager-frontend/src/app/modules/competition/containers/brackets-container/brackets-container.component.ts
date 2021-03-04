@@ -4,7 +4,7 @@ import {select, Store} from '@ngrx/store';
 import {Observable, of, Subscription} from 'rxjs';
 import {map, take, withLatestFrom} from 'rxjs/operators';
 import {Category} from '../../../../commons/model/competition.model';
-import {eventManagerCategoryBracketsStageSelected, eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../../event-manager/redux/event-manager-actions';
+import {eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../../event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
