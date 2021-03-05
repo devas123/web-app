@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Period, ScheduleEntry} from '../../commons/model/competition.model';
 import {MatDescription} from '../../reducers/global-reducers';
+import {format, parseISO} from 'date-fns';
 
 @Component({
   selector: 'app-schedule-mat-display',
@@ -16,8 +17,10 @@ import {MatDescription} from '../../reducers/global-reducers';
                [ngClass]="{group_selected: isCategorySelected(entry.categoryIds), 'pause': entry.entryType === 'RELATIVE_PAUSE' || entry.entryType === 'FIXED_PAUSE'}"
                *ngFor="let entry of getMatEntries(mat.id)">
             <ng-container *ngIf="entry.entryType !== 'RELATIVE_PAUSE' && entry.entryType !== 'FIXED_PAUSE'">
-              <span *ngFor="let cat of entry.categoryIds">{{categoryFormat(cat)}}</span>
-              <span>{{getEntryFightsForMat(mat.id, entry)?.length}} fights</span>
+              <span class="break_word" *ngFor="let cat of entry.categoryIds">{{categoryFormat(cat)}}</span>
+              <span class="flexible"></span>
+              <span>{{getEntryStartTimeForMat(mat.id, entry)}}</span>
+              <span class="break_word">{{getEntryFightsForMat(mat.id, entry)?.length}} fights</span>
             </ng-container>
             <ng-container *ngIf="entry.entryType === 'RELATIVE_PAUSE'">
               <span>Pause</span>
@@ -76,6 +79,14 @@ export class ScheduleMatDisplayComponent {
 
   getEntryFightsForMat(matId: string, entry: ScheduleEntry) {
     return entry.fightIds.filter(f => f.matId === matId);
+  }
+
+  getEntryStartTimeForMat(matId: string, entry: ScheduleEntry) {
+    const st = entry.fightIds.filter(f => f.matId === matId && !!f.startTime)
+      .sort((a, b) => Date.parse(a.startTime) - Date.parse(b.startTime))[0]?.startTime;
+    if (st) {
+      return format(parseISO(st), 'HH:mm');
+    }
   }
 
   getEntryStyle(req: ScheduleEntry) {

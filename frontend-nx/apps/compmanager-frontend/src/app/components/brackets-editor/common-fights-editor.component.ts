@@ -14,7 +14,16 @@ export class CommonFightsEditorComponent {
   editMode = false;
 
   @Input()
-  changeFightsIds: Dictionary<string[]> = {};
+  set changeFightsIds(value: Dictionary<string[]>) {
+    this._changeFightsIds = value || {};
+  }
+
+  get changeFightsIds() {
+    return this._changeFightsIds;
+  }
+
+
+  _changeFightsIds: Dictionary<string[]>;
 
   @Output()
   fightSelected = new EventEmitter<string>();

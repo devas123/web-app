@@ -268,7 +268,7 @@ export const addCompetitor = (competitionId: string, categoryId, competitor: Com
   type: EVENT_MANAGER_ADD_COMPETITOR,
   competitionId: competitionId,
   categoryId,
-  payload: competitor
+  payload: { competitor }
 });
 
 export const eventManagerCreateFakeCompetitorsCommand = (competitionId: string, categoryId: string, numberOfCompetitors: number, numberOfAcademies: number) => ({

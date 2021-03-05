@@ -1,3 +1,13 @@
 .clickable {
   cursor: pointer;
 }
+
+div.header {
+  margin-top: 0.5em;
+}
+
+.item.schedule_page {
+  .break_word {
+    word-break: break-word;
+  }
+}

@@ -2,11 +2,11 @@
   <div class="fights_line" [ngStyle]="ngStyle">
     <div class="fight_cell black">{{ groupName || 'Group' }}</div>
     <div class="fight_cell black centered"
-         *ngFor="let competitor of getCompetitorsOrPlaceholders(); index as i">
+         *ngFor="let competitor of competitorsOrPlaceholders; index as i">
       <a class="ui grey circular label">{{i + 1}}</a>
     </div>
   </div>
-  <div class="fights_line" [ngStyle]="ngStyle" *ngFor="let competitor of getCompetitorsOrPlaceholders(); index as i">
+  <div class="fights_line" [ngStyle]="ngStyle" *ngFor="let competitor of competitorsOrPlaceholders; index as i">
     <div class="competitor_cell">
       <div>
         <a

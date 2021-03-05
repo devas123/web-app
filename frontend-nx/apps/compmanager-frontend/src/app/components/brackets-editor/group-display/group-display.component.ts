@@ -6,9 +6,11 @@ import {
   collectingReducer,
   defaultSelectionColor,
   defaultUncompletableColor,
-  getKeyForEntry,
   uniqueFilter
 } from '../../../modules/account/utils';
+
+const W = `<span class="green centered">W</span>`;
+const L = `<span class="red centered">L</span>`;
 
 @Component({
   selector: 'app-group-display',
@@ -22,14 +24,24 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   @Input()
   set fights(value: Fight[]) {
     this._fights = value;
+    this._fightsMap = new Map<string, Fight>();
+    if (this._fights) {
+      this._fights.forEach(fight => this._fightsMap.set(fight.id, fight));
+    }
   }
 
   @Input()
   set competitors(value: Competitor[]) {
     this._competitors = value && value.sort((a, b) => a.id.localeCompare(b.id));
+    this._competitorsMap = new Map<string, Competitor>();
+    if (this._competitors) {
+      this._competitors.forEach(c => this._competitorsMap.set(c.id, c));
+    }
   }
 
   _competitors: Competitor[];
+  _competitorsMap: Map<string, Competitor>;
+  changeIdByFightId: Map<string, string>;
 
   private competitorNameSize = `100px`;
 
@@ -37,20 +49,19 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   groupName: string;
 
   _fights: Fight[] = [];
+  _fightsMap: Map<string, Fight>;
   _fightsPerCompetitor: Dictionary<Fight[]>;
 
   @Input()
   bracketsType: BracketsType;
   ngStyle: any = {'grid-template-columns': `${this.competitorNameSize} repeat(10, 1fr)`};
 
-  getCompetitorsOrPlaceholders() {
-    return Object.keys(this._fightsPerCompetitor);
-  }
+  competitorsOrPlaceholders = [];
 
   getCompetitorIdOrPlaceholder = (s: CompScore) => s.competitorId || s.placeholderId;
 
   getCompetitorById(id: string, index: number) {
-    return this._competitors.find(c => c.id === id) || <Competitor>{id: id, firstName: `Competitor ${index + 1}`};
+    return this._competitorsMap.get(id) || <Competitor>{id: id, firstName: `Competitor ${index + 1}`};
   }
 
   filterFightsByCompetitorIdOrPlaceholderId = (cmp: string) => (f: Fight) => {
@@ -62,9 +73,9 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
       let wol: string;
       const score = f.scores.find(s => s.competitorId === competitorPerspective).score;
       if (competitorPerspective === f.fightResult.winnerId) {
-        wol = `<span class="green centered">W</span>`;
+        wol = W;
       } else {
-        wol = `<span class="red centered">L</span>`;
+        wol = L;
       }
       return `<div class="score"><div>${wol}</div><div><span>${score.points}/${score.advantages}/${score.penalties}</span></div></div>`;
     } else if (f.mat && f.mat.id) {
@@ -75,8 +86,8 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   };
 
   getBackgroundColor(id: string) {
-    const defaultColor = this._fights.find(f => f.id === id)?.status === 'UNCOMPLETABLE' ? defaultUncompletableColor : defaultSelectionColor;
-    return getKeyForEntry(this.changeFightsIds, id) || defaultColor;
+    const defaultColor = this._fightsMap.get(id)?.status === 'UNCOMPLETABLE' ? defaultUncompletableColor : defaultSelectionColor;
+    return this.changeIdByFightId.get(id) || defaultColor;
   }
 
   findOpponentId(forWhom: string, fight: Fight) {
@@ -96,8 +107,10 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
           .sort((a, b) => this.findOpponentId(cmp, a).localeCompare(this.findOpponentId(cmp, b)));
         this._fightsPerCompetitor[cmp] = [...competitorFights.slice(0, index), fightStub, ...competitorFights.slice(index)];
       });
+      this.competitorsOrPlaceholders = Object.keys(this._fightsPerCompetitor);
       this.ngStyle = {'grid-template-columns': `${this.competitorNameSize} repeat(${this._competitors.length}, 1fr)`};
+      this.changeIdByFightId = new Map<string, string>();
+      Object.keys(this.changeFightsIds).forEach(changeId => this._changeFightsIds[changeId].forEach(fightId => this.changeIdByFightId.set(fightId, changeId)));
     }
-
   }
 }

@@ -99,7 +99,7 @@ export class DashboardEffects {
     withLatestFrom(this.store.pipe(select(getSelectedEventId))),
     filter(([command, competitionId]) => !!command && !!competitionId),
     mergeMap(([command, competitionId]: [CommonAction, string]) => {
-      return this.infoService.getFight(competitionId, command.payload).pipe(
+      return this.infoService.getFight(competitionId, command.payload, command.categoryId).pipe(
         map((result: [any, any]) => dashboardFightLoaded({
           competitionId: competitionId,
           fightId: command.payload,

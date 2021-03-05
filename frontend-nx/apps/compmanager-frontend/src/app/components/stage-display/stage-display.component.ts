@@ -57,7 +57,6 @@ export class StageDisplayComponent implements OnInit {
   }
 
   selectStage(id: string) {
-    console.log("stage selected ", id);
     this.stageSelected.next(id);
   }
 

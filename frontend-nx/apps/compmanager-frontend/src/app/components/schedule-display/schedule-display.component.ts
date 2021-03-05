@@ -11,7 +11,7 @@ import {InfoService} from '../../service/info.service';
   styleUrls: ['schedule-display.component.scss'],
   template: `
     <div [suiCollapse]="scheduleEmpty">
-      <div class="ui three stackable cards no_margin">
+      <div class="ui two stackable cards no_margin">
         <div class="card" *ngFor="let period of schedulePeriods">
           <div class="content">
             <div class="header">{{period?.name}}</div>

@@ -20,8 +20,6 @@
   <div class="ui container" *ngIf="!(bracketsInfo?.fights$ | async) && !(bracketsInfo?.fightsAreLoading$ | async)">
     <h4 class="ui header">No brackets for this category.</h4>
   </div>
-  <div class="ui container" *ngIf="!((bracketsInfo?.category$ | async) && (bracketsInfo?.fights$ | async)) && !(bracketsInfo?.fightsAreLoading$ | async)">
-  </div>
   <app-stage-display [fights]="bracketsInfo.fights$ | async"
                      [competitors]="bracketsInfo.competitors$ | async"
                      [editMode]="false"

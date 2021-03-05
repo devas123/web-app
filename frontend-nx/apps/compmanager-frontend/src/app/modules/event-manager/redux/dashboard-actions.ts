@@ -97,8 +97,9 @@ export const dashboardMatUnselected = {
   payload: ''
 };
 
-export const dashboardFightSelected = (fightId: string) => ({
+export const dashboardFightSelected = (fightId: string, categoryId: string) => ({
   type: DASHBOARD_FIGHT_SELECTED,
+  categoryId,
   payload: fightId
 });
 

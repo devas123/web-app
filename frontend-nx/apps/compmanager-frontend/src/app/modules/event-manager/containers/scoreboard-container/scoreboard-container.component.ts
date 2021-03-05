@@ -1,8 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
-  AppState, dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
-  dashboardGetSelectedPeriodSelectedMatFights,
+  AppState,
+  dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
   dashboardGetSelectedPeriodSelectedFight,
+  dashboardGetSelectedPeriodSelectedMatFights,
   getSelectedEventGetSelectedMat,
   getSelectedEventId,
   getSelectedEventSelectedPeriod,
@@ -19,7 +20,7 @@ import {
   HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
-import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {
   dashboardFightSelected,
   dashboardFightUnselected,
@@ -27,6 +28,7 @@ import {
   refreshMatView
 } from '../../redux/dashboard-actions';
 import {
+  eventManagerGetCategoryIdForFightId,
   eventManagerGetSelectedEventCategory,
   eventManagerGetSelectedEventCompetitors
 } from '../../redux/event-manager-reducers';
@@ -54,7 +56,7 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
 
   urlProvidedFightId$: Observable<string>;
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private info: CommonBracketsInfoContainer, menuService: MenuService) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, public info: CommonBracketsInfoContainer, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: combineLatest([store.pipe(select(getSelectedEventSelectedPeriod)),
         store.pipe(select(getSelectedEventGetSelectedMat))]).pipe(
@@ -73,14 +75,19 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
     this.urlProvidedFightId$ = this.route.queryParams.pipe(
       map(params => params['fightId'])
     );
+
+
     this.subs.add(this.urlProvidedFightId$.pipe(
-      map(fightId => {
-        if (fightId) {
-          return dashboardFightSelected(fightId);
-        } else {
-          return dashboardFightUnselected;
-        }
-      })
+      concatMap(fightId => this.store.pipe(
+        select(eventManagerGetCategoryIdForFightId, {id: fightId}),
+        map(categoryId => {
+            if (fightId && categoryId) {
+              return dashboardFightSelected(fightId, categoryId);
+            } else {
+              return dashboardFightUnselected;
+            }
+          }
+        )))
     ).subscribe(this.store));
 
     this.matFights$ = this.store.pipe(

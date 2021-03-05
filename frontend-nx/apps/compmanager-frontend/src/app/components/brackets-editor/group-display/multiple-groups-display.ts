@@ -32,20 +32,21 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
 
 
   _fightsByGroups: Dictionary<Fight[]> = {} as Dictionary<Fight[]>;
-  _groupIds = new Set<string>();
+  _groupIds: string[] = [];
 
   getGroupIds() {
-    return Array.from(this._groupIds).sort((a, b) => a.localeCompare(b));
+    return this._groupIds;
   }
 
   @Input()
   set fights(value: Fight[]) {
     this._fightsByGroups = {} as Dictionary<Fight[]>;
-    this._groupIds = new Set<string>();
+    const groupIdsSet = new Set<string>();
+    this._groupIds = [];
     if (value) {
       value.forEach(f => {
         if (f.groupId) {
-          this._groupIds.add(f.groupId);
+          groupIdsSet.add(f.groupId);
           if (this._fightsByGroups[f.groupId]) {
             this._fightsByGroups[f.groupId].push(f);
           } else {
@@ -54,5 +55,6 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
         }
       });
     }
+    this._groupIds = Array.from(groupIdsSet).sort((a, b) => a.localeCompare(b));
   }
 }

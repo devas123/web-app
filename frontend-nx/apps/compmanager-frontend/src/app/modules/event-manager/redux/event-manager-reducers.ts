@@ -6,7 +6,7 @@ import {
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventSchedulePeriodsCollection,
   EventPropsEntities,
-  getSelectedEventProperties,
+  getSelectedEventProperties, getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventState,
   periodEntityAdapter
 } from '../../../reducers/global-reducers';
@@ -322,6 +322,10 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
 );
 export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
   (dict, props) => props.id && dict[props.id]);
+
+export const eventManagerGetCategoryIdForFightId = createSelector(getSelectedEventScheduleFightsByCategoryId,
+  (dict, props) => props.id && _.findKey(dict, o => !!o.find(id => id === props.id)));
+
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
 export const eventManagerGetSelectedEventPreviewCategories = eventManagerGetSelectedEventAllPreviewCategories;
 

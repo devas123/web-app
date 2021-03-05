@@ -1,6 +1,6 @@
-import {from, Observable, of, of as observableOf, throwError, timer} from 'rxjs';
+import {from, Observable, of, throwError, timer} from 'rxjs';
 
-import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, finalize, map, mergeMap, retryWhen, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -105,15 +105,15 @@ export class InfoService {
     return '';
   }
 
-  private httpGet(url: string, options: any, tmt = 15000) {
-    return this.http.get(url, options).pipe(
+  private httpGet<T>(url: string, options: any, tmt = 15000) {
+    return this.http.get<T>(url, {...options, responseType: 'json'}).pipe(
       timeout(tmt),
       retryWhen(genericRetryStrategy()),
       catchError(error => {
         console.log(error);
-        return observableOf(undefined);
+        return throwError(error);
       }),
-      mergeMap(value => value && !(value instanceof HttpErrorResponse) ? of(value) : throwError(value || `Call to ${url} returned null.`))
+      mergeMap(r => !(r instanceof HttpErrorResponse) ? of(r as any) : throwError(r))
     );
   }
 
@@ -139,7 +139,6 @@ export class InfoService {
       params: params
     });
   }
-
 
 
   getCompetitor(competitionId: string, fighterId: string) {
@@ -213,6 +212,7 @@ export class InfoService {
       headers: this.headers
     });
   }
+
   getRegistrationInfo(competitionId: string) {
     const params = {competitionId};
     return this.httpGet(registrationInfoQueryEndpoint, {
@@ -300,18 +300,20 @@ export class InfoService {
     });
   }
 
-  getFight(competitionId: string, fightId: string) {
-    const params = {competitionId, fightId};
-    return this.httpGet(fight, {
+  getFight(competitionId: string, fightId: string, categoryId: string) {
+    const params = {competitionId, fightId, categoryId};
+    return this.httpGet<Fight>(fight, {
       params: params,
       headers: this.headers
     }).pipe(
-      withLatestFrom(this.getFightResultOptions(competitionId, fightId))
+      mergeMap(result => this.getFightResultOptions(competitionId, fightId, categoryId).pipe(
+        map(options => [result, options])
+      ))
     );
   }
 
-  getFightResultOptions(competitionId: string, fightId: string) {
-    const params = {competitionId, fightId};
+  getFightResultOptions(competitionId: string, fightId: string, categoryId: string) {
+    const params = {competitionId, fightId, categoryId};
     return this.httpGet(fightResultOptions, {
       params: params,
       headers: this.headers
@@ -355,7 +357,7 @@ export class InfoService {
       return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     const params = {competitionId, categoryId, stageId};
-    return this.httpGet(stageFights, {
+    return this.httpGet<Fight[]>(stageFights, {
       params: params,
       headers: this.headers
     });
@@ -363,7 +365,7 @@ export class InfoService {
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
     const params = {competitionId, categoryId};
-    return this.httpGet(categoryStages, {
+    return this.httpGet<CategoryBracketsStage[]>(categoryStages, {
       params: params,
       headers: this.headers
     });
@@ -371,7 +373,7 @@ export class InfoService {
 
   getDefaultFightResults(competitionId: string): Observable<FightResultOption[]> {
     const params = {competitionId};
-    return this.httpGet(defaultFightResults, {
+    return this.httpGet<FightResultOption[]>(defaultFightResults, {
       params: params,
       headers: this.headers
     });

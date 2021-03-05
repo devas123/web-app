@@ -58,6 +58,7 @@ export interface Period {
 export interface MatIdAndSomeId {
   matId: string;
   someId: string;
+  startTime: string;
 }
 
 export interface ScheduleEntry {
