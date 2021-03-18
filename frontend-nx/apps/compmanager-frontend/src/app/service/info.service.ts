@@ -105,7 +105,7 @@ export class InfoService {
     return '';
   }
 
-  private httpGet<T>(url: string, options: any, tmt = 15000) {
+  private httpGet<T>(url: string, options: any, tmt = 60000) {
     return this.http.get<T>(url, {...options, responseType: 'json'}).pipe(
       timeout(tmt),
       retryWhen(genericRetryStrategy()),

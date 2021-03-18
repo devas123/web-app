@@ -46,8 +46,6 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (localStorage.getItem('token')) {
-      this.store.dispatch(authorizeToken(localStorage.getItem('token')));
-    }
+    this.store.dispatch(authorizeToken('asdasdasdasdasdasd'));
   }
 }

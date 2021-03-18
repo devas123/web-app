@@ -71,7 +71,6 @@ export interface ScheduleEntry {
   fightDuration: number;
   categoryIds: string[];
   fightIds: MatIdAndSomeId[];
-  invalidFightIds: string[];
   periodId: string;
   description: string;
   entryType: string;
