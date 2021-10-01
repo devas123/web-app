@@ -1,4 +1,4 @@
-import {OnDestroy} from '@angular/core';
+import {Directive, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
@@ -12,7 +12,7 @@ import {filter, take} from 'rxjs/operators';
 import {Category, HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
-// TODO: Add Angular decorator.
+@Directive({})
 export abstract class EventManagerRouterEntryComponent implements OnDestroy {
 
   protected constructor(protected store: Store<AppState>, protected metadataProvider: ComponentCommonMetadataProvider, protected menuService: MenuService) {

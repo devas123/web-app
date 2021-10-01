@@ -15,6 +15,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash", "uuid/v4", "sockjs-client", "is-ua-webview", "marked"
+            ],
+            "sourceMap": {
+              "scripts": true,
+              "styles": true,
+              "vendor": true
+            },
             "outputPath": "dist/apps/compmanager-frontend",
             "index": "apps/compmanager-frontend/src/index.html",
             "main": "apps/compmanager-frontend/src/main.ts",
@@ -27,7 +35,8 @@
             ],
             "styles": [
               "tools/fui/semantic/dist/semantic.min.css",
-              "apps/compmanager-frontend/src/styles.scss"
+              "apps/compmanager-frontend/src/styles.scss",
+              "node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": []
           },

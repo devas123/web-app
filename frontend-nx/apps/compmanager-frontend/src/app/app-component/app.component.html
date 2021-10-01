@@ -1,9 +1,9 @@
 <sui-sidebar-container class="wrapper">
   <sui-sidebar id="mainsidebar" [isVisible]="sidebarVisible" [transition]="'overlay'" class="vertical mainmenu">
     <ng-container *ngFor="let m of menu$ | async">
-      <a *ngIf="(!m.showCondition) || (m.showCondition() | async)" class="item" [ngClass]="m.class"
-         (click)="m.action(); sidebarVisible = false">
-        {{m.name}}
+      <a *ngIf="(!m?.showCondition) || (m?.showCondition() | async)" class="item" [ngClass]="m?.class"
+         (click)="m?.action(); sidebarVisible = false">
+        {{m?.name}}
       </a>
     </ng-container>
     <div #childcontainer></div>

@@ -1,5 +1,4 @@
 import { ViewChild, HostBinding, ElementRef, HostListener, Input, ContentChildren, QueryList, AfterContentInit, TemplateRef, ViewContainerRef, ContentChild, EventEmitter, Output, OnDestroy, Directive } from "@angular/core";
-import { Subscription } from "rxjs";
 import { DropdownService, SuiDropdownMenu } from "../../dropdown/internal";
 import { SearchService, LookupFn, FilterFn } from "../../search/internal";
 import { Util, ITemplateRefContext, HandledEvent, KeyCode, IFocusEvent } from "../../../misc/util/internal";
@@ -26,7 +25,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
     protected _renderedOptions:QueryList<SuiSelectOption<T>>;
 
     // Keep track of all of the subscriptions to the selected events on the rendered options.
-    private _renderedSubscriptions:Subscription[];
+    private _renderedSubscriptions:any[];
 
     // Sets the Semantic UI classes on the host element.
     @HostBinding("class.ui")
@@ -68,6 +67,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
         return this._manualSearch || this._internalSearch;
     }
 
+  // tslint:disable-next-line:no-input-rename
     @Input("tabindex")
     private _tabIndex?:number;
 
@@ -81,7 +81,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
             // If open & in menu search, remove from tabindex (as input always autofocusses).
             return -1;
         }
-        if (this._tabIndex != undefined) {
+        if (this._tabIndex !== undefined) {
             // If custom tabindex, default to that.
             return this._tabIndex;
         }
@@ -144,7 +144,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
     }
 
     public set query(query:string | undefined) {
-        if (query != undefined) {
+        if (query !== undefined) {
             this.queryUpdateHook();
             this.updateQuery(query);
             // Update the rendered text as query has changed.
@@ -169,7 +169,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
         // Helper function to retrieve the label from an item.
         return (obj:T) => {
             const label = Util.Object.readValue<T, string>(obj, this.labelField);
-            if (label != undefined) {
+            if (label !== undefined) {
                 return label.toString();
             }
             return "";
@@ -191,6 +191,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
 
     public get configuredFormatter():(option:T) => string {
         if (this._optionFormatter) {
+          // tslint:disable-next-line:no-non-null-assertion
             return o => this._optionFormatter!(o, this.isSearchable ? this.query : undefined);
         } else if (this.searchService.optionsLookup) {
             return o => this.labelGetter(o);
@@ -220,6 +221,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
     @Input()
     public transitionDuration:number;
 
+  // tslint:disable-next-line:no-output-on-prefix
     @Output("touched")
     public onTouched:EventEmitter<void>;
 

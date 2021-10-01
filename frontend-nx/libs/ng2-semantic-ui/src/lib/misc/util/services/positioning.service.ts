@@ -4,7 +4,6 @@ import {Obj, Rect} from '@popperjs/core/lib/types';
 import flip from '@popperjs/core/lib/modifiers/flip';
 // import Popper, { Modifiers, PopperOptions, Placement, Data } from '@popperjs/core';
 
-type PopperModifier = Partial<Modifier<Obj>>;
 export type PositioningPlacement = 'auto' |
   'top left' | 'top' | 'top right' |
   'bottom left' | 'bottom' | 'bottom right' |
@@ -116,7 +115,7 @@ export class PositioningService {
       this._popperState = state;
       return state;
     }
-  } as PopperModifier;
+  }
 
 
   public get placement(): PositioningPlacement {

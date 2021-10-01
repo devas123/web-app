@@ -365,8 +365,8 @@ export interface MenuItem {
 
 export interface HeaderDescription {
   header: string;
-  subheader: string | null;
-  headerHtml: string | null;
+  subheader?: string;
+  headerHtml?: string;
 }
 
 export interface CategoryConstructorState {

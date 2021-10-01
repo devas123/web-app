@@ -1,6 +1,6 @@
 import { Directive, AfterContentInit, ContentChildren, QueryList, ElementRef } from "@angular/core";
 import { SuiRadio } from "../components/radio";
-import { Subscription } from "rxjs";
+
 import { Util } from "../../../misc/util/internal";
 
 @Directive({
@@ -16,7 +16,7 @@ export class SuiRadioManager<T> implements AfterContentInit {
     @ContentChildren(SuiRadio, { descendants: true })
     private _renderedRadios:QueryList<SuiRadio<T>>;
 
-    private _radioSubs:Subscription[];
+    private _radioSubs:any[];
 
     constructor(public element:ElementRef) {
         this.isNested = false;

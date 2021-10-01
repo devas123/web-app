@@ -18,7 +18,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {AccountService} from './modules/account/service/account.service';
 import {AccountEffects} from './modules/account/flux/effects';
-import {AvatarModule} from 'ngx-avatar';
+// import {AvatarModule} from 'ngx-avatar';
 import {SignUpGuard} from './modules/account/components/authorization/sign-up.guard';
 import {AuthGuard} from './modules/account/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
@@ -44,7 +44,7 @@ import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-s
     SuiDropdownModule,
     SuiSidebarModule,
     AccountModule,
-    AvatarModule,
+    // AvatarModule,
     RouterModule.forRoot(
       appRoutes
     ),

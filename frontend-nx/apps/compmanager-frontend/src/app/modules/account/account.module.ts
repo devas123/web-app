@@ -10,10 +10,10 @@ import {SuiModalModule, SuiTransitionModule} from '@frontend-nx/ng2-semantic-ui'
 import {AccountInfoComponent} from './components/account-info/account-info.component';
 import {RouterModule} from '@angular/router';
 import {accountRoutes} from './account.routes';
-import {AvatarModule} from 'ngx-avatar';
 import {BrowserModule} from '@angular/platform-browser';
 import {AccountRootComponent} from './components/account-root/account-root.component';
 import {CommonsModule} from '../../commons/commons.module';
+// import {AvatarModule} from 'ngx-avatar';
 
 
 @NgModule({
@@ -25,7 +25,7 @@ import {CommonsModule} from '../../commons/commons.module';
     HttpClientModule,
     SuiTransitionModule,
     RouterModule.forChild(accountRoutes),
-    AvatarModule,
+    // AvatarModule,
     SuiModalModule,
     CommonsModule
   ],
