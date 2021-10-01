@@ -19,7 +19,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'eventmanager',
-    loadChildren: () => import('./modules/event-manager/event-manager.module').then(mod => mod.EventManagerModule),
+    loadChildren: () => import('./modules/event-manager/event-manager.module').then(mod => mod?.EventManagerModule),
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
     canActivateChild: [AuthGuard]

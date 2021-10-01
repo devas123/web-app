@@ -22,14 +22,14 @@ export class AccountEffects {
       if (params['returnUrl']) {
         this.router.navigateByUrl(params['returnUrl']);
       } else if (this.router.routerState.snapshot.url === '/login') {
-        this.router.navigate(['/user', action.payload.userId]);
+        this.router.navigate(['/user', action?.payload?.userId]);
       }
     }));
   }));
 
   @Effect()
   authorizeUser: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_USER), mergeMap((action: CommonAction) => {
-    return this.authService.requestToken(action.payload.email, action.payload.password).pipe(tap(token => {
+    return this.authService.requestToken(action?.payload?.email, action?.payload?.password).pipe(tap(token => {
       HttpAuthService.setToken(token.access_token);
     }), switchMap(token => {
       return this.authService.getCurrentUser(token.access_token);

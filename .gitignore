@@ -1,8 +1,9 @@
 .idea/
 *.iml
 target/
+.vscode
 
 node_modules
 yarn.lock
 /frontend-nx/package-lock.json
-/package-lock.json
+package-lock.json

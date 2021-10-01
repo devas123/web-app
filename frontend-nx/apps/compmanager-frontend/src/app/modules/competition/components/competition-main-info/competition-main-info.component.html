@@ -25,8 +25,8 @@
             <img class="ui bordered  image " src="/assets/images/doc.jpg">
         </div>
         <div class="ui secondary center stackable menu full_line">
-            <a class="item" *ngFor="let menuItem of menu" [routerLink]="menuItem.link"
-               [ngClass]="{active: (url$ | async)?.endsWith(menuItem.link)}">{{menuItem.name}}</a>
+            <a class="item" *ngFor="let menuItem of menu" [routerLink]="menuItem?.link"
+               [ngClass]="{active: (url$ | async)?.endsWith(menuItem?.link)}">{{menuItem?.name}}</a>
         </div>
         <div class="ui clearing divider full_line"></div>
     </div>

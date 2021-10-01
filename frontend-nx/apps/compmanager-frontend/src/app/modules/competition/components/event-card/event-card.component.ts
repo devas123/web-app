@@ -27,7 +27,7 @@ export class EventCardComponent implements AfterViewInit {
   }
 
   navigateToEvent() {
-    this.router.navigate(['/events', this.eventInfo.id]);
+    this.router.navigate(['/events', this.eventInfo?.id]);
   }
 
   ngAfterViewInit(): void {
