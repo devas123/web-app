@@ -12,6 +12,7 @@ import {filter, take} from 'rxjs/operators';
 import {Category, HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
+// TODO: Add Angular decorator.
 export abstract class EventManagerRouterEntryComponent implements OnDestroy {
 
   protected constructor(protected store: Store<AppState>, protected metadataProvider: ComponentCommonMetadataProvider, protected menuService: MenuService) {

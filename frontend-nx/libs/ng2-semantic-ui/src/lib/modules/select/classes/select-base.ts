@@ -1,7 +1,4 @@
-import {
-    ViewChild, HostBinding, ElementRef, HostListener, Input, ContentChildren, QueryList,
-    AfterContentInit, TemplateRef, ViewContainerRef, ContentChild, EventEmitter, Output, OnDestroy
-} from "@angular/core";
+import { ViewChild, HostBinding, ElementRef, HostListener, Input, ContentChildren, QueryList, AfterContentInit, TemplateRef, ViewContainerRef, ContentChild, EventEmitter, Output, OnDestroy, Directive } from "@angular/core";
 import { Subscription } from "rxjs";
 import { DropdownService, SuiDropdownMenu } from "../../dropdown/internal";
 import { SearchService, LookupFn, FilterFn } from "../../search/internal";
@@ -16,6 +13,7 @@ export interface IOptionContext<T> extends ITemplateRefContext<T> {
 
 // We use generic type T to specify the type of the options we are working with,
 // and U to specify the type of the property of the option used as the value.
+@Directive()
 export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy {
     public dropdownService:DropdownService;
     public searchService:SearchService<T, U>;
