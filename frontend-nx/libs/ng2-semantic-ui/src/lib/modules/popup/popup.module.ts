@@ -27,9 +27,6 @@ import {SuiPopupComponentController} from './classes/popup-component-controller'
   ],
   providers: [
     SuiPopupConfig
-  ],
-  entryComponents: [
-    SuiPopup
   ]
 })
 

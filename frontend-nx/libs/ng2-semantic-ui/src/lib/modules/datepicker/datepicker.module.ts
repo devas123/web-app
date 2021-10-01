@@ -47,9 +47,6 @@ import {
         SuiDatepickerDirectiveValueAccessor,
         SuiDatepickerDirectiveValidator,
         SuiDatepickerInputDirective
-    ],
-    entryComponents: [
-        SuiDatepicker
     ]
 })
 export class SuiDatepickerModule {}

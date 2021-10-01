@@ -4,3 +4,5 @@ target/
 
 node_modules
 yarn.lock
+/frontend-nx/package-lock.json
+/package-lock.json
