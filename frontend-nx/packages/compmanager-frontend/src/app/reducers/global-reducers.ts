@@ -9,7 +9,6 @@ import {storeFreeze} from 'ngrx-store-freeze';
 import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
-import * as uuidv4 from 'uuid/v4';
 import * as _ from 'lodash';
 
 import {
@@ -59,7 +58,8 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_PERIOD_ADDED,
-  EVENT_MANAGER_PERIOD_REMOVED, EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED,
+  EVENT_MANAGER_PERIOD_REMOVED,
+  EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED,
   EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED,
   EVENT_MANAGER_REGISTRATION_GROUP_CREATED,
   EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
@@ -86,6 +86,7 @@ import {
   DASHBOARD_MATS_LOADED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
+import {generateUuid} from "../modules/account/utils";
 
 export interface AppState {
   accountState: AccountState;
@@ -402,7 +403,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
               if (updatedPeriod) {
                 const periodRequirements = updatedPeriod.scheduleRequirements || [];
                 const newRequirement = <ScheduleRequirement>{
-                  id: competitionId + updatedPeriod.id + uuidv4().toString(),
+                  id: competitionId + updatedPeriod.id + generateUuid(),
                   categoryIds: [category],
                   entryType: 'CATEGORIES',
                   periodId: updatedPeriod.id

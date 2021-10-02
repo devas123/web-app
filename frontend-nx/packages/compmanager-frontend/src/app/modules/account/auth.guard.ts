@@ -36,10 +36,11 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
   checkLogin(url: string): boolean {
     if (HttpAuthService.getToken() && HttpAuthService.getToken().length > 0) {
+      console.log("Checklogin success")
       // logged in so return true
       return true;
     }
-
+    console.log("Checklogin fail")
     // not logged in so redirect to login page with the return url
     this.router.navigate(['/login'], { queryParams: { returnUrl: url }});
     return false;

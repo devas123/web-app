@@ -12,6 +12,7 @@ import {Action} from '@ngrx/store';
 import {CategoryBracketsStage, Fight, FightResultOption} from '../commons/model/competition.model';
 import {parseISO} from 'date-fns';
 import {format, utcToZonedTime} from 'date-fns-tz';
+import {generateUuid} from "../modules/account/utils";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -37,7 +38,7 @@ const {
   categoryStages,
   defaultFightResults,
   fightIdsBycategoryId
-} = env.environment.mocks ? env.mocks : env.environment;
+} = env.environment;
 
 export const genericRetryStrategy = ({
                                        maxRetryAttempts = 3,
@@ -231,8 +232,11 @@ export class InfoService {
   }
 
   sendCreateCompetitionCommand(command: any): Observable<any> {
-    const body = JSON.stringify(command);
-    return this.http.post(`${commandsEndpoint}`, body, {
+    let competitionId = generateUuid();
+    const body = JSON.stringify({
+      ...command
+    });
+    return this.http.post(`${commandsEndpoint}?competitionId=${competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'
@@ -275,7 +279,7 @@ export class InfoService {
 
   sendCommand(command: any, competitionId: string): Observable<any> {
     const normalizedCommand = this.normalizeCommand(command);
-    return this.sendPayloadToEndpoint(normalizedCommand, `${commandsEndpoint}/${competitionId}`);
+    return this.sendPayloadToEndpoint(normalizedCommand, `${commandsEndpoint}?competitionId=${competitionId}`);
   }
 
   generatePreliminaryCategories(payload: any, competitionId: string): Observable<any> {
@@ -333,7 +337,7 @@ export class InfoService {
     const competitionId = command.competitionId;
     const normalizedCommand = this.normalizeCommand(command);
     const body = JSON.stringify(normalizedCommand);
-    return this.http.post<Action[]>(`${commandsSyncEndpoint}/${competitionId}`, body, {
+    return this.http.post<Action[]>(`${commandsSyncEndpoint}?competitionId=${competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'

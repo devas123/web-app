@@ -1,12 +1,8 @@
-const PROXY_CONFIG = [
+PROXY_CONFIG = [
   {
     context: [
       "/accounts",
-      "/admin",
-      "/api",
-      "/uaa",
-      "/competitions",
-      "/compman-ws",
+      "/competition/command",
     ],
     target: "http://localhost:8080",
     secure: false,
@@ -14,29 +10,20 @@ const PROXY_CONFIG = [
   },
   {
     context: [
-      "/jsserver",
+      "/query"
     ],
-    target: "http://localhost:3000",
+    target: "http://localhost:9000",
     secure: false,
-    logLevel: "debug",
-    pathRewrite: {
-      "^/jsserver": ""
-    },
+    logLevel: "debug"
   },
   {
     context: [
-      "/query/api"
+      "/ws"
     ],
-    target: "http://localhost:9000/",
-    secure: false
-  },
-  {
-    context: [
-      "/query/api"
-    ],
-    target: "http://localhost:9000/",
+    target: "http://localhost:9000/query",
     secure: false,
-    ws: true
+    ws: true,
+    logLevel: "debug"
   }
 ];
 

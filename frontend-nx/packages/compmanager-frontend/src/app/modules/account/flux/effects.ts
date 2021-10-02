@@ -39,6 +39,7 @@ export class AccountEffects {
   @Effect()
   authorizeToken: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_TOKEN),
     mergeMap((action: CommonAction) => {
+      HttpAuthService.setToken(action.payload)
       return this.authService.getCurrentUser(action.payload).pipe(map(user => userAuthorized(user)));
     }));
 

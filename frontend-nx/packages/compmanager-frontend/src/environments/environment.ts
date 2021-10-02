@@ -3,65 +3,39 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
+const commands = "/competition/command"
+
 export const environment = {
   production: false,
-  mocks: false,
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
   eventQueue: `/state/events`,
   errorQueue: `/state/errors`,
-  webSocketUrl: `/query/sockjs`,
-  commandsEndpoint: '/competitions/api/v1/command',
-  generateCategoriesEndpoint: '/competitions/api/v1/store/generatecategories',
-  commandsSyncEndpoint: '/competitions/api/v1/commandsync',
-  competitionQueryEndpoint: '/query/api/v1/competition',
-  competitorQueryEndpoint: '/query/api/v1/competitor',
-  competitorEdpoint: '/competitions/api/v1/store/competitor',
-  scheduleEndpoint: '/competitions/api/v1/store/schedule',
-  categoriesEndpoint: '/competitions/api/v1/store/categories',
-  competitorsEndpoint: '/competitions/api/v1/store/competitors',
-  defaultCategories: '/competitions/api/v1/store/defaultrestrictions',
-  compProperties: '/competitions/api/v1/store/comprops',
-  compInfoTemplate: '/competitions/api/v1/store/infotemplate',
-  categoryState: '/competitions/api/v1/store/categorystate',
-  dashboardState: '/competitions/api/v1/store/dashboardstate',
-  mats: '/competitions/api/v1/store/mats',
-  fightResultOptions: '/competitions/api/v1/store/fightresultoptions',
-  fight: '/competitions/api/v1/store/fight',
-  matFights: '/competitions/api/v1/store/matfights',
-  stageFights: '/competitions/api/v1/store/stagefights',
-  defaultFightResults: '/competitions/api/v1/store/defaultfightresults',
-  categoryStages: '/competitions/api/v1/store/stages',
-  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
-  fightIdsBycategoryId: '/competitions/api/v1/store/fightsbycategories'
+  webSocketUrl: `/query/v1/ws`,
+  commandsEndpoint: commands,
+  generateCategoriesEndpoint: '/query/v1/store/generatecategories',
+  commandsSyncEndpoint: commands,
+  competitionQueryEndpoint: '/query/v1/competition',
+  competitorQueryEndpoint: '/query/v1/competitor',
+  competitorEdpoint: '/query/v1/store/competitor',
+  scheduleEndpoint: '/query/v1/store/schedule',
+  categoriesEndpoint: '/query/v1/store/categories',
+  competitorsEndpoint: '/query/v1/store/competitors',
+  defaultCategories: '/query/v1/store/defaultrestrictions',
+  compProperties: '/query/v1/store/comprops',
+  compInfoTemplate: '/query/v1/store/infotemplate',
+  categoryState: '/query/v1/store/categorystate',
+  dashboardState: '/query/v1/store/dashboardstate',
+  mats: '/query/v1/store/mats',
+  fightResultOptions: '/query/v1/store/fightresultoptions',
+  fight: '/query/v1/store/fight',
+  matFights: '/query/v1/store/matfights',
+  stageFights: '/query/v1/store/stagefights',
+  defaultFightResults: '/query/v1/store/defaultfightresults',
+  categoryStages: '/query/v1/store/stages',
+  registrationInfoQueryEndpoint: '/query/v1/store/reginfo',
+  fightIdsBycategoryId: '/query/v1/store/fightsbycategories'
 };
 
-const comprops = '/jsserver/competition';
-
-export const mocks = {
-  generateCategoriesEndpoint: '/competitions/api/store/generatecategories',
-  commandsEndpoint: '/jsserver/command',
-  commandsSyncEndpoint: '/jsserver/commandsync',
-  competitionQueryEndpoint: comprops,
-  competitorQueryEndpoint: '/jsserver/competitor',
-  competitorEdpoint: '/jsserver/competitor',
-  scheduleEndpoint: '/jsserver/schedule',
-  categoriesEndpoint: '/jsserver/categories',
-  competitorsEndpoint: '/jsserver/competitors',
-  defaultCategories: '/jsserver/defaultrestrictions',
-  compProperties: comprops,
-  compInfoTemplate: '/jsserver/infotemplate',
-  categoryState: '/jsserver/categorystate',
-  dashboardState: '/jsserver/dashboardstate',
-  mats: '/jsserver/mats',
-  fightResultOptions: '/jsserver/fightresultoptions',
-  matFights: '/jsserver/matfights',
-  stageFights: '/jsserver/stagefights',
-  defaultFightResults: '/jsserver/defaultfightresults',
-  categoryStages: '/jsserver/stages',
-  registrationInfoQueryEndpoint: '/competitions/api/v1/store/reginfo',
-  fight: '/competitions/api/v1/store/fight',
-  fightIdsBycategoryId: '/jsserver/fightsbycategories'
-};
 
 
