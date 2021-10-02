@@ -22,9 +22,9 @@
               "marked"
             ],
             "sourceMap": {
-              "scripts": false,
-              "styles": false,
-              "vendor": false
+              "scripts": true,
+              "styles": true,
+              "vendor": true
             },
             "index": "packages/compmanager-frontend/src/index.html",
             "main": "packages/compmanager-frontend/src/main.ts",

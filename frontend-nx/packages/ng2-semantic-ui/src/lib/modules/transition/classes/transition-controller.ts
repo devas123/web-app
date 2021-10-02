@@ -2,7 +2,6 @@ import {ChangeDetectorRef, ElementRef, Renderer2} from '@angular/core';
 import {Transition, TransitionDirection} from './transition';
 import {of, Subject, Subscription} from 'rxjs';
 import {map, pairwise, startWith, switchMap, tap, timeoutWith} from 'rxjs/operators';
-import produce from 'immer';
 
 export class TransitionController {
   private _renderer: Renderer2;
@@ -68,16 +67,15 @@ export class TransitionController {
           startWith(null as Transition),
           pairwise(),
           map(([previous, trn]) => {
-            return produce(trn, draft => {
-              if (previous) {
-                // If there is an transition in the queue already, set the direction to the opposite of the direction of that transition.
-                if (previous.direction === TransitionDirection.In) {
-                  draft.direction = TransitionDirection.Out;
-                } else if (previous.direction === TransitionDirection.Out) {
-                  draft.direction = TransitionDirection.In;
-                }
+            if (previous) {
+              // If there is an transition in the queue already, set the direction to the opposite of the direction of that transition.
+              if (previous.direction === TransitionDirection.In) {
+                trn.direction = TransitionDirection.Out;
+              } else if (previous.direction === TransitionDirection.Out) {
+                trn.direction = TransitionDirection.In;
               }
-            });
+            }
+            return trn
           }),
           tap(trn => this.performTransition(trn)))),
       switchMap((tr) => this._animationStop.pipe(timeoutWith(tr.duration, of(tr))))
