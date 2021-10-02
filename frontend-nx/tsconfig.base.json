@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
+    "preserveSymlinks": true,
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -16,8 +17,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend-nx/common": ["libs/common/src/index.ts"],
-      "@frontend-nx/ng2-semantic-ui": ["libs/ng2-semantic-ui/src/index.ts"]
+      "@frontend-nx/ng2-semantic-ui": [
+        "packages/ng2-semantic-ui/dist"
+      ],
+      "@frontend-nx/ng2-semantic-ui/*": [
+        "packages/ng2-semantic-ui/dist/*"
+      ]
     }
   },
   "angularCompilerOptions": {
