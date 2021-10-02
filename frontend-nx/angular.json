@@ -19,9 +19,9 @@
               "lodash", "uuid/v4", "sockjs-client", "is-ua-webview", "marked"
             ],
             "sourceMap": {
-              "scripts": true,
-              "styles": true,
-              "vendor": true
+              "scripts": false,
+              "styles": false,
+              "vendor": false
             },
             "outputPath": "dist/apps/compmanager-frontend",
             "index": "apps/compmanager-frontend/src/index.html",

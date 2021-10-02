@@ -1,5 +1,10 @@
 export {
-    SuiSelectModule,
-    SuiMultiSelect,
-    IOptionContext
+  SuiSelectModule,
+  SuiMultiSelect,
+  IOptionContext,
+  SuiSelectOption,
+  SuiSelectSearch,
+  SuiMultiSelectValueAccessor,
+  SuiSelect,
+  SuiSelectValueAccessor
 } from "./internal";

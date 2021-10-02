@@ -20,5 +20,8 @@
       "@frontend-nx/ng2-semantic-ui": ["libs/ng2-semantic-ui/src/index.ts"]
     }
   },
+  "angularCompilerOptions": {
+    "enableIvy": true
+  },
   "exclude": ["node_modules", "tmp"]
 }

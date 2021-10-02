@@ -1,4 +1,7 @@
 export {
-    SuiDropdownModule,
-    DropdownAutoCloseType
+  SuiDropdownModule,
+  DropdownAutoCloseType,
+  SuiDropdownMenu,
+  SuiDropdownMenuItem,
+  SuiDropdown
 } from "./internal";
