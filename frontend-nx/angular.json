@@ -200,7 +200,7 @@
       },
       "schematics": {
         "@nrwl/angular:component": {
-          "style": "scss"
+          "style": "css"
         }
       }
     }
