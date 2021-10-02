@@ -184,9 +184,9 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     this._requirements = produce(this._requirements, draft => {
       const ids = draft.map(pr => pr.id);
 
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       const toPeriodRequirements = draft.filter(sr => sr.periodId == to && sr.matId == toMatId && sr.entryType !== 'FIXED_PAUSE');
-      // tslint:disable-next-line:triple-equals
+      // eslint-disable-next-line eqeqeq
       const fromPeriodRequirements = draft.filter(sr => sr.periodId == fromPeriod && sr.matId == fromMatId && sr.entryType !== 'FIXED_PAUSE');
       const reqAtCurrentIndex = toPeriodRequirements[e.currentIndex];
       let reqAtPreviousIndex;

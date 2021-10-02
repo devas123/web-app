@@ -361,7 +361,7 @@ export class GenerateBracketsFormComponent implements OnInit {
   }
 
   addAdditionalSortingOption(i, specifier: any, direction: any) {
-    // tslint:disable-next-line:triple-equals
+    // eslint-disable-next-line eqeqeq
     if (((specifier && direction) || specifier == 'MANUAL') && this.getAdditionalGroupSortingDescriptors(i).value
       && !this.getAdditionalGroupSortingDescriptorsValue(i).find(a => a.groupSortSpecifier === specifier)) {
       this.addAdditionalGroupSortingDescriptor(i, <AdditionalGroupSortingDescriptor>{groupSortSpecifier: specifier, groupSortDirection: direction});
@@ -374,9 +374,9 @@ export class GenerateBracketsFormComponent implements OnInit {
     return `From ${name}: ${opt.classifier} ${opt.selectorValue.join()}`;
   };
 
-  // tslint:disable-next-line:triple-equals
+  // eslint-disable-next-line eqeqeq
   // @ts-ignore
-  // tslint:disable-next-line:triple-equals
+  // eslint-disable-next-line eqeqeq
   additionalGroupSortingFormatter = (opt: AdditionalGroupSortingDescriptor) => opt.groupSortSpecifier + (opt.groupSortSpecifier == 'MANUAL' ? '' : (':' + opt.groupSortDirection));
 
   addAllFightOptions(i: number) {

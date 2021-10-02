@@ -176,7 +176,7 @@ export class SuiDatepickerDirective
         }
 
         // Angular expects null
-        // tslint:disable-next-line:no-null-keyword
+        // eslint-disable-next-line no-null/no-null
         return null;
     }
 
@@ -198,7 +198,8 @@ export class SuiDatepickerDirective
 
 @Directive({
     selector: "[suiDatepicker]",
-    host: { "(pickerSelectedDateChange)": "onChange($event)" },
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
+    host: { "(pickerSelectedDateChange)": "onChange()" },
     providers: [customValueAccessorFactory(SuiDatepickerDirectiveValueAccessor)]
 })
 export class SuiDatepickerDirectiveValueAccessor extends CustomValueAccessor<Date, SuiDatepickerDirective> {
@@ -207,6 +208,7 @@ export class SuiDatepickerDirectiveValueAccessor extends CustomValueAccessor<Dat
 
 @Directive({
     selector: "[suiDatepicker]",
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: { "(pickerValidatorChange)": "onValidatorChange()" },
     providers: [customValidatorFactory(SuiDatepickerDirectiveValidator)]
 })

@@ -44,7 +44,7 @@ export class SuiRating implements ICustomValueAccessorHost<number> {
     public isReadonly:boolean;
 
     public get icons():undefined[] {
-        // tslint:disable-next-line:prefer-literal
+        // eslint-disable-next-line
         return new Array(this.maximum);
     }
 

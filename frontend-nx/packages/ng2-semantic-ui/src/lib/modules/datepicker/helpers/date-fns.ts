@@ -37,7 +37,7 @@ interface IDateFnsCustomLocale {
   };
 }
 
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 function buildLocalizeFn(args: {formattingValues?: any, defaultWidth?: any, values?: IDateFnsLocaleValues, defaultFormattingWidth?: any, argumentCallback?: any}): DateFnsHelper<number, string> {
   return (dirtyIndex, dirtyOptions) => {
     const options = dirtyOptions || {} as any;
@@ -68,12 +68,12 @@ function buildLocalizeFn(args: {formattingValues?: any, defaultWidth?: any, valu
   * */
 }
 
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 function buildLocalizeArrayFn(values: IDateFnsLocaleValues, defaultType: string): DateFnsHelper<IDateFnsHelperOptions, string[]> {
   return ({type}: any = {type: defaultType}) => values[type];
 }
 
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 function buildMatchFn(patterns: IDateFnsLocaleValues, defaultType: string): DateFnsHelper<string, RegExpMatchArray | null> {
   return (dirtyString, {type}: any = {type: defaultType}) =>
     dirtyString.match(`^(${patterns[type].join("|")})`);
@@ -130,7 +130,7 @@ export class DateFnsParser {
         weekdays: buildLocalizeArrayFn(weekdayValues, "long"),
         month: buildLocalizeFn({values: monthValues, defaultWidth: "long"}),
         months: buildLocalizeArrayFn(monthValues, "long"),
-        // tslint:disable-next-line:max-line-length
+        // eslint-disable-next-line max-len
         timeOfDay: buildLocalizeFn({values: timeOfDayValues, defaultWidth: "long", argumentCallback: (hours: number) => {
             return hours / 12 >= 1 ? 1 : 0;
           }}),

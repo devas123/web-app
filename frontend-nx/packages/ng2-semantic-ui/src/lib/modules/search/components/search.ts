@@ -13,7 +13,7 @@ export interface IResultContext<T> extends ITemplateRefContext<T> {
 }
 
 @Component({
-  // tslint:disable-next-line:component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
     selector: "sui-search",
     template: `
 <div class="ui input" [class.icon]="hasIcon" (click)="onClick($event)">
@@ -34,7 +34,7 @@ export interface IResultContext<T> extends ITemplateRefContext<T> {
                        [template]="resultTemplate"
                        (click)="select(r)"></sui-search-result>
 
-    <div *ngIf="results.length == 0" class="message empty">
+    <div *ngIf="results.length === 0" class="message empty">
         <div class="header">{{ localeValues.noResults.header }}</div>
         <div class="description">{{ localeValues.noResults.message }}</div>
     </div>
@@ -53,6 +53,7 @@ export interface IResultContext<T> extends ITemplateRefContext<T> {
 }
 `]
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export class SuiSearch<T> implements AfterViewInit {
     public dropdownService:DropdownService;
     public searchService:SearchService<T, T>;
@@ -178,7 +179,7 @@ export class SuiSearch<T> implements AfterViewInit {
     public selectedResult?:T;
 
     // Emits whenever a new result is selected.
-  // tslint:disable-next-line:no-output-rename no-output-on-prefix
+  // eslint-disable-next-line @angular-eslint/no-output-rename, @angular-eslint/no-output-on-prefix
     @Output("resultSelected")
     public onResultSelected:EventEmitter<T>;
 

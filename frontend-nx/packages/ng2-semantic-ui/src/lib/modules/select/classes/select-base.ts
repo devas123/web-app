@@ -67,7 +67,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
         return this._manualSearch || this._internalSearch;
     }
 
-  // tslint:disable-next-line:no-input-rename
+  // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input("tabindex")
     private _tabIndex?:number;
 
@@ -191,7 +191,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
 
     public get configuredFormatter():(option:T) => string {
         if (this._optionFormatter) {
-          // tslint:disable-next-line:no-non-null-assertion
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return o => this._optionFormatter!(o, this.isSearchable ? this.query : undefined);
         } else if (this.searchService.optionsLookup) {
             return o => this.labelGetter(o);
@@ -221,7 +221,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
     @Input()
     public transitionDuration:number;
 
-  // tslint:disable-next-line:no-output-on-prefix
+  // eslint-disable-next-line @angular-eslint/no-output-on-prefix
     @Output("touched")
     public onTouched:EventEmitter<void>;
 

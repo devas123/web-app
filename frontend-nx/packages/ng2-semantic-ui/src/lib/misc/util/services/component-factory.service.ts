@@ -11,7 +11,6 @@ import {
   Type,
   ViewContainerRef
 } from '@angular/core';
-import {first} from 'rxjs/operators';
 
 export interface IImplicitContext<T> {
   $implicit?: T;
@@ -36,9 +35,7 @@ export class SuiComponentFactory {
     );
 
     // Create a component using the previously resolved factory & injector.
-    const componentRef = factory.create(injector);
-
-    return componentRef;
+    return factory.create(injector);
   }
 
   public createView<T, U extends IImplicitContext<T>>(viewContainer: ViewContainerRef, template: TemplateRef<U>, context: U): void {
@@ -67,7 +64,7 @@ export class SuiComponentFactory {
 
   // Moves the component to the document body.
   public moveToDocumentBody<T>(componentRef: ComponentRef<T>): void {
-    // tslint:disable-next-line:no-non-null-assertion
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.moveToElement(componentRef, document.querySelector('body')!);
   }
 
