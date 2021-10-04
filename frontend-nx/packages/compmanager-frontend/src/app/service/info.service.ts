@@ -233,8 +233,11 @@ export class InfoService {
 
   sendCreateCompetitionCommand(command: any): Observable<any> {
     let competitionId = generateUuid();
+    let id = generateUuid();
     const body = JSON.stringify({
-      ...command
+      ...command,
+      competitionId,
+      id
     });
     return this.http.post(`${commandsEndpoint}?competitionId=${competitionId}`, body, {
       headers: new HttpHeaders({
@@ -278,7 +281,8 @@ export class InfoService {
 
 
   sendCommand(command: any, competitionId: string): Observable<any> {
-    const normalizedCommand = this.normalizeCommand(command);
+    const id = generateUuid();
+    const normalizedCommand = this.normalizeCommand({...command, id});
     return this.sendPayloadToEndpoint(normalizedCommand, `${commandsEndpoint}?competitionId=${competitionId}`);
   }
 
