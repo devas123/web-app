@@ -1,0 +1,36 @@
+<div class="ui container margins_container">
+    <div class="hat_grid">
+        <div class="reg_info_grid">
+          <div class="ui  basic segment margins_container">
+            <a class="ui green big left ribbon label"> Starts </a>
+            <div class="ui huge header">{{(properties$ | async)?.startDate | zdate:false:null:true}}</div>
+          </div>
+          <div class="ui  basic segment">
+            <ng-container
+                    *ngFor="let period of (registrationPeriod$ | async)?.slice(0,3) as periods; index as i; last as isLast; first as isFirst">
+              <section>
+                <a class="ui right small ribbon label"
+                   [ngClass]="{blue: isFirst, red: (!isFirst && isLast), yellow: (!isFirst && !isLast)}">{{(periods?.length < 2) ? 'Registration start' : period?.name}}</a>
+                <p>{{period?.start | zdate:false:null:true}}</p>
+              </section>
+              <div class="ui divider" *ngIf="!isLast || periods?.length < 2"></div>
+              <section *ngIf="periods?.length < 2">
+                <a class="ui red right small ribbon  label">{{'Registration end'}}</a>
+                <p>{{period?.end | zdate:false:null:true}}</p>
+              </section>
+            </ng-container>
+          </div>
+        </div>
+        <div class="ui basic segment">
+            <img class="ui bordered  image " src="/packages-frontend/src/assets/images/doc.jpg">
+        </div>
+        <div class="ui secondary center stackable menu full_line">
+            <a class="item" *ngFor="let menuItem of menu" [routerLink]="menuItem?.link"
+               [ngClass]="{active: (url$ | async)?.endsWith(menuItem?.link)}">{{menuItem?.name}}</a>
+        </div>
+        <div class="ui clearing divider full_line"></div>
+    </div>
+    <div class="ui container margins_container no_side_margins">
+        <router-outlet></router-outlet>
+    </div>
+</div>
