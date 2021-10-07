@@ -1,14 +1,17 @@
 {
   "version": 2,
-  "packageManager": "yarn",
-  "projects": {
-    "compmanager-frontend": {
-      "root": "packages/compmanager-frontend",
-      "type": "application"
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
     },
-    "@frontend-nx/ng2-semantic-ui": {
-      "root": "packages/ng2-semantic-ui",
-      "type": "library"
-    }
+    "packageManager": "yarn",
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false
+  },
+  "defaultProject": "compmanager-frontend",
+  "generators": {},
+  "projects": {
+    "compmanager-frontend": "apps/compmanager-frontend",
+    "ng2-semantic-ui": "libs/ng2-semantic-ui"
   }
 }

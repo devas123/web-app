@@ -1,16 +1,15 @@
 {
-  "npmScope": "frontend-nx",
-  "affected": {
-    "defaultBase": "master"
-  },
   "implicitDependencies": {
-    "workspace.json": "*",
     "package.json": {
       "dependencies": "*",
       "devDependencies": "*"
     },
-    "nx.json": "*"
+    ".eslintrc.json": "*"
   },
+  "affected": {
+    "defaultBase": "master"
+  },
+  "npmScope": "frontend-nx",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
@@ -19,6 +18,7 @@
       }
     }
   },
+  "projects": {},
   "targetDependencies": {
     "build": [
       {
@@ -32,15 +32,5 @@
         "projects": "dependencies"
       }
     ]
-  },
-  "projects": {
-    "compmanager-frontend": {
-      "implicitDependencies": [
-        "@frontend-nx/ng2-semantic-ui"
-      ]
-    },
-    "@frontend-nx/ng2-semantic-ui": {
-      "implicitDependencies": []
-    }
   }
 }

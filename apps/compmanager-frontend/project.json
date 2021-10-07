@@ -1,0 +1,107 @@
+{
+  "projectType": "application",
+  "generators": {
+    "@nrwl/workspace:component": {
+      "style": "scss"
+    }
+  },
+  "root": "apps/compmanager-frontend",
+  "sourceRoot": "apps/compmanager-frontend/src",
+  "prefix": "frontend-nx",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/compmanager-frontend",
+        "preserveSymlinks": true,
+        "allowedCommonJsDependencies": [
+          "lodash",
+          "uuid/v4",
+          "sockjs-client",
+          "is-ua-webview",
+          "marked"
+        ],
+        "sourceMap": {
+          "scripts": true,
+          "styles": true,
+          "vendor": true
+        },
+        "index": "apps/compmanager-frontend/src/index.html",
+        "main": "apps/compmanager-frontend/src/main.ts",
+        "polyfills": "apps/compmanager-frontend/src/polyfills.ts",
+        "tsConfig": "apps/compmanager-frontend/tsconfig.app.json",
+        "aot": true,
+        "assets": [
+          "apps/compmanager-frontend/src/favicon.ico",
+          "apps/compmanager-frontend/src/assets"
+        ],
+        "styles": [
+          "tools/fui/semantic/dist/semantic.min.css",
+          "apps/compmanager-frontend/src/styles.scss",
+          "node_modules/font-awesome/css/font-awesome.css"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/compmanager-frontend/src/environments/environment.ts",
+              "with": "apps/compmanager-frontend/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "extractCss": true,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "compmanager-frontend:build"
+      },
+      "configurations": {
+        "production": {
+          "browserTarget": "compmanager-frontend:build:production"
+        }
+      }
+    },
+    "lint": {
+      "builder": "@angular-eslint/builder:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/compmanager-frontend/**/*.ts",
+          "apps/compmanager-frontend/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "builder": "@angular-devkit/build-angular:jest",
+      "options": {
+        "jestConfig": "apps/compmanager-frontend/jest.config.js",
+        "tsConfig": "apps/compmanager-frontend/tsconfig.spec.json",
+        "passWithNoTests": true,
+        "setupFile": "apps/compmanager-frontend/src/test-setup.ts"
+      }
+    }
+  },
+  "implicitDependencies": ["ng2-semantic-ui"]
+}
