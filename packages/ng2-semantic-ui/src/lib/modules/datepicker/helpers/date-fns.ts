@@ -1,8 +1,8 @@
-import {format, parse} from "packages/ng2-semantic-ui/src/lib/modules/datepicker/helpers/date-fns";
+import {format, parse} from "date-fns";
 import defaultLocale from "date-fns/locale/en-US";
 import {IDatepickerLocaleValues} from "../../../index";
 
-export {format, parse} from "packages/ng2-semantic-ui/src/lib/modules/datepicker/helpers/date-fns";
+export {format, parse} from "date-fns";
 
 interface IDateFnsLocaleValues {
   [name: string]: string[];

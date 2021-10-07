@@ -4,11 +4,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "date-fns": "^2.24.0",
-    "date-fns-tz": "^1.1.6",
-    "font-awesome": "^4.7.0"
-  },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.2.7",
     "@angular-devkit/build-ng-packagr": "^0.1002.0",
@@ -27,6 +22,10 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.28.2",
     "@typescript-eslint/parser": "4.28.2",
+    "@nrwl/cli": "12.6.3",
+    "@nrwl/tao": "12.6.3",
+    "@nrwl/workspace": "12.6.3",
+    "@nrwl/angular": "12.6.3",
     "codelyzer": "^6.0.2",
     "cypress": "^4.1.0",
     "dotenv": "^10.0.0",
@@ -41,7 +40,6 @@
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-jasmine": "^4.0.1",
     "karma-jasmine-html-reporter": "^1.7.0",
-    "lerna": "^4.0.0",
     "ng-packagr": "^12.2.2",
     "ngrx-store-freeze": "^0.2.4",
     "prettier": "^2.0.4",
@@ -52,6 +50,16 @@
     "zone.js": "~0.11.4"
   },
   "scripts": {
-    "lint": "ng lint"
+    "packages:build": "nx run-many --target=build --projects=@frontend-nx/ng2-semantic-ui",
+    "lint": "ng lint",
+    "compmanager-frontend:start": "ng serve compmanager-frontend --proxy-config proxy.conf.js",
+    "compmanager-frontend:build-prod": "nx run compmanager-frontend:build-prod",
+    "compmanager-frontend:build": "nx run compmanager-frontend:build",
+    "test": "ng test",
+    "update": "ng update @nrwl/workspace",
+    "workspace-schematic": "nx workspace-schematic",
+    "dep-graph": "nx dep-graph",
+    "help": "nx help",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points --tsconfig ./tsconfig.json"
   }
 }

@@ -110,7 +110,7 @@
         }
       }
     },
-    "ng2-semantic-ui": {
+    "@frontend-nx/ng2-semantic-ui": {
       "projectType": "library",
       "root": "packages/ng2-semantic-ui",
       "sourceRoot": "packages/ng2-semantic-ui/src",

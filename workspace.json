@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "packageManager": "yarn",
+  "projects": {
+    "compmanager-frontend": {
+      "root": "packages/compmanager-frontend",
+      "type": "application"
+    },
+    "@frontend-nx/ng2-semantic-ui": {
+      "root": "packages/ng2-semantic-ui",
+      "type": "library"
+    }
+  }
+}

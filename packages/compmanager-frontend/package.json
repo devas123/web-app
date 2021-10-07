@@ -2,31 +2,14 @@
   "name": "compmanager-frontend",
   "version": "0.0.0",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "nx": "nx",
     "start": "ng serve compmanager-frontend --proxy-config proxy.conf.js",
     "start-aot": "ng serve compmanager-frontend --proxy-config proxy.conf.js --aot",
     "build-prod": "ng build compmanager-frontend --prod",
-    "build": "ng build compmanager-frontend",
-    "test": "ng test",
-    "lint": "nx workspace-lint && ng lint",
-    "e2e": "ng e2e",
-    "affected:apps": "nx affected:apps",
-    "affected:libs": "nx affected:libs",
-    "affected:build": "nx affected:build",
-    "affected:e2e": "nx affected:e2e",
-    "affected:test": "nx affected:test",
-    "affected:lint": "nx affected:lint",
-    "affected:dep-graph": "nx affected:dep-graph",
-    "affected": "nx affected",
-    "format": "nx format:write",
-    "format:write": "nx format:write",
-    "format:check": "nx format:check",
-    "update": "ng update @nrwl/workspace",
-    "workspace-schematic": "nx workspace-schematic",
-    "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "build": "ng build compmanager-frontend"
   },
   "dependencies": {
     "@angular/animations": "^12.2.8",
@@ -39,7 +22,6 @@
     "@angular/platform-browser-dynamic": "^12.2.8",
     "@angular/platform-server": "^12.2.8",
     "@angular/router": "^12.2.8",
-    "@frontend-nx/ng2-semantic-ui": "*",
     "@ngrx/effects": "^12.4.0",
     "@ngrx/entity": "^12.4.0",
     "@ngrx/store": "^12.4.0",
@@ -60,6 +42,8 @@
     "tslib": "^2.3.1",
     "util": "^0.12.4",
     "uuid": "^7.0.3",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "date-fns": "^2.24.0",
+    "date-fns-tz": "^1.1.6"
   }
 }
