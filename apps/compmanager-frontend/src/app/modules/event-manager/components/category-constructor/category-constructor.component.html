@@ -20,11 +20,11 @@
     </div>
     <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
                           [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
-                          [typeInTree]="treeInclusionType(restriction.id, i)"
-                          [inPath]="selectedPath.includes(restriction.id)"
-                          (restrictionClicked)="togglePathInclusion(restriction.id, i)"
-                          (restrictionSelected)="toggleLink(restriction.id, i)"
-                          (restrictionDeleted)="removeRestrictionClicked.next(restriction.id)"
+                          [typeInTree]="treeInclusionType(restriction.restrictionId, i)"
+                          [inPath]="selectedPath.includes(restriction.restrictionId)"
+                          (restrictionClicked)="togglePathInclusion(restriction.restrictionId, i)"
+                          (restrictionSelected)="toggleLink(restriction.restrictionId, i)"
+                          (restrictionDeleted)="removeRestrictionClicked.next(restriction.restrictionId)"
                           [restriction]="restriction"></app-restriction-item>
     <button class="ui fluid mini button no_margin" (click)="addRestriction(name)">Add options</button>
   </div>

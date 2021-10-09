@@ -16,7 +16,7 @@
         "preserveSymlinks": true,
         "allowedCommonJsDependencies": [
           "lodash",
-          "uuid/v4",
+          "uuid",
           "sockjs-client",
           "is-ua-webview",
           "marked"
@@ -38,7 +38,7 @@
         "styles": [
           "tools/fui/semantic/dist/semantic.min.css",
           "apps/compmanager-frontend/src/styles.scss",
-          "node_modules/font-awesome/css/font-awesome.css"
+          "node_modules/@fortawesome/fontawesome-free/css/all.css"
         ],
         "scripts": []
       },

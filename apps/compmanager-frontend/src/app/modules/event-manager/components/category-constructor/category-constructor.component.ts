@@ -139,7 +139,7 @@ export class CategoryConstructorComponent implements OnChanges {
               this.restrictionUnLinked.next({restrictionId: id, root: root, parent: p.id});
             });
           } else {
-            const parentColumnIds = this.restrictionGroups[this.restrictionNames[index - 1]].map(r => r.id);
+            const parentColumnIds = this.restrictionGroups[this.restrictionNames[index - 1]].map(r => r.restrictionId);
             let parentIds = parentColumnIds.filter(pid => this.selectedPath.includes(pid));
             if (index === 1) {
               parentIds = [root];
@@ -168,7 +168,7 @@ export class CategoryConstructorComponent implements OnChanges {
 
   addRestriction(name: string) {
     if (name) {
-      this.addRestrictionClicked.emit({name, existing: this.restrictionGroups[name]?.map(r => r.id) || []});
+      this.addRestrictionClicked.emit({name, existing: this.restrictionGroups[name]?.map(r => r.restrictionId) || []});
     }
   }
 
@@ -194,7 +194,7 @@ export class CategoryConstructorComponent implements OnChanges {
       return true;
     }
     const childrenName = this.restrictionNames[index + 1];
-    const childrenIds = this.restrictionGroups[childrenName]?.map(r => r.id) || [];
+    const childrenIds = this.restrictionGroups[childrenName]?.map(r => r.restrictionId) || [];
     const root = this.selectedPath[0];
     const adjacencyList = this.adjacencyLists.find(l => l.root === root);
     if (!adjacencyList) {

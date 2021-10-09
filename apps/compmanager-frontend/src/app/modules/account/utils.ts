@@ -1,5 +1,5 @@
 import {Dictionary} from '@ngrx/entity';
-import * as uuidv4 from 'uuid/v4';
+import * as uuidv4 from 'uuid';
 
 
 export function  b64toBlob(b64Data, contentType, sliceSize?) {
@@ -29,4 +29,4 @@ export const defaultActiveSelectionColor = '#0e5375';
 export const defaultUncompletableColor = '#754c0e';
 export const defaultBronzeFightColor = '#9c7038';
 
-export const generateUuid = () => uuidv4().toString();
+export const generateUuid = () => uuidv4.v4().toString();

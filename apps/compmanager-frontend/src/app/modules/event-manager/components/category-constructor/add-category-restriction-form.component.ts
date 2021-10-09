@@ -126,8 +126,8 @@ export class AddCategoryRestrictionFormComponent implements OnInit, OnDestroy {
       this.modal.approve({restrictions: this.multiSelect.selectedOptions});
     } else {
       const restriction = this.form.value as CategoryRestriction;
-      if (!restriction.id) {
-        restriction.id = generateUuid();
+      if (!restriction.restrictionId) {
+        restriction.restrictionId = generateUuid();
       }
       restriction.name = this.modal.context.name;
       this.modal.approve({restrictions: [restriction]});

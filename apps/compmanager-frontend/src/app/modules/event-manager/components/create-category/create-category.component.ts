@@ -122,11 +122,11 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     const ex = existing || [];
     this.defaultRestrictions$.pipe(take(1), filter(r => !!r), tap(defaultRestr => {
         this.modalService.open(new AddCategoryRestrictionModal(name,
-          defaultRestr.filter(dr => dr.name === name && !ex.includes(dr.id))))
+          defaultRestr.filter(dr => dr.name === name && !ex.includes(dr.restrictionId))))
           .onApprove((result: IAddCategoryRestrictionResult) => {
             result.restrictions.forEach(r => {
-              if (!r.id) {
-                r.id = generateUuid();
+              if (!r.restrictionId) {
+                r.restrictionId = generateUuid();
               }
               this.store.dispatch(eventManagerCategoryRestrictionAdded({payload: r}));
             });
@@ -144,7 +144,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
     if (!_.isEmpty(event)
       && !_.isEmpty(event.restrictions)
       && !_.isEmpty(event.idTrees) && !_.isEmpty(event.restrictionNames)) {
-      const ids = event.restrictions.map(r => r.id);
+      const ids = event.restrictions.map(r => r.restrictionId);
       const intAdjacencyLists = event.idTrees.map(l => (<AdjacencyList<number>>{
         root: ids.indexOf(l.root),
         vertices: l.vertices?.map(v => (<AdjacencyListEntry<number>>{

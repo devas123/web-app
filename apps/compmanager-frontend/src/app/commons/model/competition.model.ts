@@ -202,7 +202,7 @@ export const  defaultRestrictionFormatter = (showName: boolean = true) => (restr
 };
 
 export interface CategoryRestriction {
-  id: string;
+  restrictionId: string;
   name: string;
   type: RestrictionType;
   minValue: string;

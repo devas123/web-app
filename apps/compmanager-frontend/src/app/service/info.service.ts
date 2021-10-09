@@ -168,9 +168,7 @@ export class InfoService {
 
 
   getCategories(competitionId: string) {
-    const params = {competitionId};
-    return this.httpGet(categoriesEndpoint, {
-      params: params,
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category`, {
       headers: this.headers
     });
   }
@@ -207,9 +205,7 @@ export class InfoService {
 
 
   getCompetitionProperties(competitionId: string) {
-    const params = {competitionId};
-    return this.httpGet(compProperties, {
-      params: params,
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}`, {
       headers: this.headers
     });
   }

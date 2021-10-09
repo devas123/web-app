@@ -207,7 +207,7 @@ function categoryConstructorStateReducer(st: CategoryConstructorState = initialC
         if (action.name && state.orderedNames.includes(action.name)) {
           _.remove(state.orderedNames, name => name === action.name);
           const restrictionsFromGroup = state.restrictions.filter(r => r.name === action.name)
-            .map(r => r.id);
+            .map(r => r.restrictionId);
           restrictionsFromGroup.forEach(id => removeRestriction(state, id));
           _.remove(state.adjacentLists, list => restrictionsFromGroup.includes(list.root));
           state.adjacentLists.forEach(list => {
