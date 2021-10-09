@@ -1,4 +1,4 @@
-<sui-sidebar-container class="wrapper">
+<sui-sidebar-container class="wrapper" id="event-manager-main-content">
   <sui-sidebar id="mainsidebar" [isVisible]="sidebarVisible" [transition]="'overlay'" class="vertical mainmenu">
     <ng-container *ngFor="let m of menu$ | async">
       <a *ngIf="(!m?.showCondition) || (m?.showCondition() | async)" class="item" [ngClass]="m?.class"

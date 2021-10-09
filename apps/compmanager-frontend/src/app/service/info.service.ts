@@ -175,10 +175,13 @@ export class InfoService {
 
 
   getCompetitorsForCompetition(competitionId: string, categoryId: string, pageNumber: string, pageSize: string, searchString?: string) {
+    const pn = +pageNumber || 1
+    const ps = +pageSize || 0
+    const startAt = (pn - 1) * ps
+    const limit = ps
     let params: any = {
-      competitionId,
-      pageNumber,
-      pageSize
+      startAt,
+      limit
     };
     if (categoryId && categoryId.length > 0) {
       params = {...params, categoryId};
@@ -186,7 +189,7 @@ export class InfoService {
     if (searchString && searchString.length > 0) {
       params = {...params, searchString};
     }
-    return this.httpGet(competitorsEndpoint, {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/competitor`, {
       params: params
     });
   }
@@ -220,9 +223,7 @@ export class InfoService {
 
 
   getLatestCategoryState(competitionId, categoryId) {
-    const params = {categoryId, competitionId};
-    return this.httpGet(categoryState, {
-      params: params,
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}`, {
       headers: this.headers
     });
   }
@@ -361,15 +362,14 @@ export class InfoService {
       return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     const params = {competitionId, categoryId, stageId};
-    return this.httpGet<Fight[]>(stageFights, {
-      params: params,
+    return this.httpGet<Fight[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage/${stageId}/fight`, {
       headers: this.headers
     });
   }
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
     const params = {competitionId, categoryId};
-    return this.httpGet<CategoryBracketsStage[]>(categoryStages, {
+    return this.httpGet<CategoryBracketsStage[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage`, {
       params: params,
       headers: this.headers
     });
