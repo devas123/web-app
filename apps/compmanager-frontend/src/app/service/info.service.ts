@@ -361,16 +361,13 @@ export class InfoService {
     if (!competitionId || !categoryId || !stageId) {
       return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
-    const params = {competitionId, categoryId, stageId};
     return this.httpGet<Fight[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage/${stageId}/fight`, {
       headers: this.headers
     });
   }
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
-    const params = {competitionId, categoryId};
     return this.httpGet<CategoryBracketsStage[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage`, {
-      params: params,
       headers: this.headers
     });
   }
