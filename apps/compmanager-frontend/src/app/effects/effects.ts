@@ -63,19 +63,19 @@ export class Effects {
     )));
 
   globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
-    allActions.START_COMPETITION_COMMAND,
-    allActions.DELETE_COMPETITION_COMMAND,
-    eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
-    eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
-    eventManagerActions.ADD_CATEGORY_COMMAND,
-    eventManagerActions.DELETE_CATEGORY_COMMAND,
-    eventManagerActions.EVENT_MANAGER_ADD_COMPETITOR,
-    eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR,
-    eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
-    eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
-    eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
-    allActions.PUBLISH_COMPETITION_COMMAND,
-    allActions.UNPUBLISH_COMPETITION_COMMAND),
+      allActions.START_COMPETITION_COMMAND,
+      allActions.DELETE_COMPETITION_COMMAND,
+      eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
+      eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
+      eventManagerActions.ADD_CATEGORY_COMMAND,
+      eventManagerActions.DELETE_CATEGORY_COMMAND,
+      eventManagerActions.EVENT_MANAGER_ADD_COMPETITOR,
+      eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR,
+      eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
+      eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
+      eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
+      allActions.PUBLISH_COMPETITION_COMMAND,
+      allActions.UNPUBLISH_COMPETITION_COMMAND),
     mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId))), {dispatch: false});
 
   createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
@@ -152,7 +152,12 @@ export class Effects {
 
   loadStageFights$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, EVENT_MANAGER_CATEGORY_STAGES_LOADED),
-    switchMap((a: any) => this.infoService.getCategoryStageFights(a.competitionId, a.categoryId, a.selectedStageId)),
+    switchMap((a: any) => {
+      if (a.competitionId && a.categoryId && a.selectedStageId)
+        return this.infoService.getCategoryStageFights(a.competitionId, a.categoryId, a.selectedStageId)
+      else
+        return of([])
+    }),
     map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]})),
     catchError(error => observableOf(errorEvent(error)))
   ));
