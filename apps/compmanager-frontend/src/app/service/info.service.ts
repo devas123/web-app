@@ -335,9 +335,10 @@ export class InfoService {
   }
 
   sendCommandSync(command: CommonAction): Observable<Action> {
+    const id = generateUuid()
     const competitionId = command.competitionId;
     const normalizedCommand = this.normalizeCommand(command);
-    const body = JSON.stringify(normalizedCommand);
+    const body = JSON.stringify({...normalizedCommand, id});
     return this.http.post<Action[]>(`${commandsSyncEndpoint}?competitionId=${competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),

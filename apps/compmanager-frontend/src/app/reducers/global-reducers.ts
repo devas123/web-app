@@ -585,13 +585,13 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             state.selectedEventCompetitors = competitorEntityAdapter.setAll(data, {
               ...competitorsInitialState,
               total,
-              pageNumber: +page
+              pageNumber: +page + 1
             });
           } else {
             state.selectedEventCompetitors = competitorEntityAdapter.setAll(data, {
               ...state.selectedEventCompetitors,
               total,
-              pageNumber: +page
+              pageNumber: +page + 1
             });
           }
         }
