@@ -46,7 +46,7 @@ export class GetAcademyPipe implements PipeTransform {
     if (academy && academy.name) {
       return GetNamePipe.fullOrShort(academy.name, maxLength);
     } else {
-      return 'No academy';
+      return '';
     }
   }
 }

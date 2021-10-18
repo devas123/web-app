@@ -202,7 +202,7 @@
       <svg:g *ngIf="connectionsType === 'DEFAULT'">
         <svg:path *ngIf="fights.length > 1" [attr.d]="paths[k % 2]"
                   style="stroke: gold; fill: none; stroke-width: 2"/>
-        <svg:path *ngIf="fights.length == 1" [attr.d]="paths[2]"
+        <svg:path *ngIf="fights.length === 1" [attr.d]="paths[2]"
                   style="stroke: gold; fill: none; stroke-width: 2"/>
       </svg:g>
       <svg:g *ngIf="connectionsType === 'STRAIGHT'">
