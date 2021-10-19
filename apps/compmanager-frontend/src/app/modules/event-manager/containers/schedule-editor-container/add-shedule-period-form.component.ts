@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
@@ -60,10 +68,11 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
           <div class="field">
             <label>Start time</label>
             <div class="ui input">
-              <input suiDatepicker
+              <input #startDate
+                     (focusout)="updateStartTime()"
+                     suiDatepicker
                      name="startTime"
                      placeholder="Start time"
-                     formControlName="startTime"
                      [pickerMode]="'datetime'"
                      [pickerUseNativeOnMobile]="false"
                      autocomplete="off">
@@ -94,16 +103,20 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
     </div>
     <div class="actions">
       <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-      <button class="ui green button" [disabled]="periodForm.invalid || matDescriptionsForm.invalid" (click)="triggerAddSchedulePeriod()" autofocus>OK
+      <button class="ui green button" [disabled]="periodForm.invalid || matDescriptionsForm.invalid"
+              (click)="triggerAddSchedulePeriod()" autofocus>OK
       </button>
     </div>
   `,
   styleUrls: ['./schedule-editor-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddSchedulePeriodFormComponent implements OnInit {
+export class AddSchedulePeriodFormComponent implements OnInit, OnChanges {
 
   periodForm: FormGroup;
+
+  @ViewChild("startDate", {static: false})
+  private _startDate: ElementRef;
 
   matDescriptionsForm: FormGroup;
 
@@ -120,7 +133,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
       const properties = {
         id: this.modal.context.competitionId + generateUuid(),
         name: this.name.value,
-        startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
+        startTime: InfoService.formatDate(this.startTime, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,
         riskPercent: this.riskPercent.value,
         categories: [] as string[],
@@ -150,12 +163,15 @@ export class AddSchedulePeriodFormComponent implements OnInit {
       name: ['', [Validators.required]],
       startTime: ['', [Validators.required]],
       timeBetweenFights: [1, [Validators.required, Validators.min(0), Validators.max(99)]],
-      riskPercent: [0.1, [Validators.min(0), Validators.max(1)]],
+      riskPercent: [10, [Validators.min(0), Validators.max(300)]],
       id: [''],
       endTime: [''],
       isActive: [''],
       duration: ['']
     });
+
+    this.periodForm.statusChanges.subscribe(console.log)
+    this.periodForm.valueChanges.subscribe(console.log)
 
     this.matDescriptionsForm = this.fb.group({
       mats: this.fb.array([this.createMatDescrControl()])
@@ -175,7 +191,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   }
 
   get startTime() {
-    return this.periodForm.get('startTime');
+    return this._startDate.nativeElement.value;
   }
 
   private createMatDescrControl() {
@@ -191,5 +207,16 @@ export class AddSchedulePeriodFormComponent implements OnInit {
 
   addMat() {
     this.matDescriptionsArray.push(this.createMatDescrControl());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.startTime)
+  }
+
+  updateStartTime() {
+    console.log(this.startTime)
+    if (this.startTime) {
+      this.periodForm.patchValue({"startTime": this.startTime}, {emitEvent: true})
+    }
   }
 }

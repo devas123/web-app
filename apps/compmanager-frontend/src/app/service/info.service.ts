@@ -151,16 +151,14 @@ export class InfoService {
 
 
   getSchedule(competitionId: string) {
-    const params = {competitionId};
-    return this.httpGet(scheduleEndpoint, {
-      params: params,
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/schedule`, {
       headers: this.headers
     });
   }
 
   getFightIdsByCategoryId(competitionId: string) {
     const params = {competitionId};
-    return this.httpGet(fightIdsBycategoryId, {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/fight`, {
       params: params,
       headers: this.headers
     });
