@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnChanges,
   OnInit,
   SimpleChanges,
   ViewChild
@@ -69,7 +68,7 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
             <label>Start time</label>
             <div class="ui input">
               <input #startDate
-                     (focusout)="updateStartTime()"
+                     (pickerSelectedDateChange)="updateStartTime($event)"
                      suiDatepicker
                      name="startTime"
                      placeholder="Start time"
@@ -111,7 +110,7 @@ export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePer
   styleUrls: ['./schedule-editor-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddSchedulePeriodFormComponent implements OnInit, OnChanges {
+export class AddSchedulePeriodFormComponent implements OnInit {
 
   periodForm: FormGroup;
 
@@ -133,7 +132,7 @@ export class AddSchedulePeriodFormComponent implements OnInit, OnChanges {
       const properties = {
         id: this.modal.context.competitionId + generateUuid(),
         name: this.name.value,
-        startTime: InfoService.formatDate(this.startTime, this.modal.context.timeZone),
+        startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
         timeBetweenFights: this.timeBetweenFights.value,
         riskPercent: this.riskPercent.value,
         categories: [] as string[],
@@ -191,7 +190,7 @@ export class AddSchedulePeriodFormComponent implements OnInit, OnChanges {
   }
 
   get startTime() {
-    return this._startDate.nativeElement.value;
+    return this.periodForm.get('startTime')
   }
 
   private createMatDescrControl() {
@@ -209,14 +208,9 @@ export class AddSchedulePeriodFormComponent implements OnInit, OnChanges {
     this.matDescriptionsArray.push(this.createMatDescrControl());
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.startTime)
-  }
 
-  updateStartTime() {
-    console.log(this.startTime)
-    if (this.startTime) {
-      this.periodForm.patchValue({"startTime": this.startTime}, {emitEvent: true})
-    }
+
+  updateStartTime(date: Date) {
+    this.periodForm.patchValue({"startTime": date}, {emitEvent: true})
   }
 }

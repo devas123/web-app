@@ -2,7 +2,7 @@
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment" cdkDropListGroup>
       <button class="ui tiny button" (click)="openAddSchedulePeriodModal()">Add period</button>
-      <button class="ui tiny button" (click)="sendDropSchedule()" [disabled]="scheduleEmpty">Drop schedule</button>
+      <button class="ui tiny button" (click)="sendDropSchedule()">Drop schedule</button>
       <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size > 1"
               (click)="mergeSelectedReqs()">Merge selected
       </button>
