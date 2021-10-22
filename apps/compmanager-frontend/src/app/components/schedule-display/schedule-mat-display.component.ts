@@ -107,6 +107,6 @@ export class ScheduleMatDisplayComponent {
   }
 
   isCategorySelected(categoryIds: string[]) {
-    categoryIds?.find(cat => this.highlightedCategories.has(cat));
+    return categoryIds?.find(cat => this.highlightedCategories.has(cat));
   }
 }
