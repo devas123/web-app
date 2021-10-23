@@ -1,8 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {CompetitionProperties, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Location} from '@angular/common';
-import {Router} from '@angular/router';
 import {InfoService} from '../../../../service/info.service';
 
 @Component({
@@ -36,8 +34,19 @@ export class EventPropertiesEditorComponent implements OnChanges {
     return this.form.get('competitionName');
   }
 
+  set startDate(value: Date) {
+    this.form.patchValue({
+      'startDate': value
+    })
+  }
+  set endDate(value: Date) {
+    this.form.patchValue({
+      'endDate': value
+    })
+  }
+
   get startDate() {
-    return this.form.get('startDate');
+    return this.form.get('startDate').value;
   }
 
   get schedulePublished() {
@@ -53,7 +62,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
   }
 
   get endDate() {
-    return this.form.get('endDate');
+    return this.form.get('endDate').value;
   }
 
   get registrationOpen() {
@@ -75,6 +84,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
   }
 
   updateForm() {
+    console.log("Updating form ", this.properties, this.form)
     if (this.properties) {
       this.form.patchValue({
         competitionId: this.properties.id,
@@ -100,13 +110,13 @@ export class EventPropertiesEditorComponent implements OnChanges {
   }
 
   submitForm() {
-    const sd = new Date(this.startDate.value);
-    const ed = new Date(this.endDate.value);
+    const sd = this.startDate;
+    const ed = this.endDate;
     const properties = {
       ...this.properties,
       competitionName: this.competitionName.value,
-      startDate: sd.toISOString(),
-      endDate: ed.toISOString(),
+      startDate: sd?.toISOString(),
+      endDate: ed?.toISOString(),
       registrationOpen: this.registrationOpen.value,
     } as CompetitionProperties;
     this.propertiesUpdated.next(properties);

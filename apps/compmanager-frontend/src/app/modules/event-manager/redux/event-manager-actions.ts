@@ -261,7 +261,9 @@ export const eventManagerDefaultRestrictionsLoaded = (competitionId, restriction
 export const updateCompetitionProperties = (compprops: CompetitionProperties) => ({
   type: UPDATE_COMPETITION_PROPERTIES_COMMAND,
   competitionId: compprops.id,
-  payload: compprops
+  payload: {
+    competitionProperties: compprops
+  }
 });
 
 export const addCompetitor = (competitionId: string, categoryId, competitor: Competitor) => ({

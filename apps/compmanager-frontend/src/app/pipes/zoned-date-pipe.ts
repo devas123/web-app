@@ -13,9 +13,9 @@ export class ZonedDatePipe implements PipeTransform {
       const dateWithZone = value instanceof Date ? value as Date : zonedTimeToUtc(value, z);
       if (showtime) {
         if (showDate) {
-          return format(dateWithZone, 'dd.MM.yyyy\'T\'HH:mm:ss') + (zone ? `, ${zone}` : '');
+          return format(dateWithZone, 'dd.MM.yyyy\', \'HH:mm') + (zone ? `, ${zone}` : '');
         } else {
-          return format(dateWithZone, 'HH:mm:ss') + (zone ? `, ${zone}` : '');
+          return format(dateWithZone, 'HH:mm') + (zone ? `, ${zone}` : '');
         }
       } else {
         return format(dateWithZone, 'dd.MM.yyyy') + (zone ? `, ${zone}` : '');

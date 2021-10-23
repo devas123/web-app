@@ -36,8 +36,8 @@
           <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
           <input suiDatepicker
                  name="startDate"
-                 formControlName="startDate"
-                 [pickerMode]="'date'"
+                 (pickerSelectedDateChange)="startDate = $event"
+                 [pickerMode]="'datetime'"
                  [pickerUseNativeOnMobile]="false">
         </div>
       </div>
@@ -69,7 +69,7 @@
           <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
           <input suiDatepicker
                  name="endDate"
-                 formControlName="endDate"
+                 (pickerSelectedDateChange)="endDate = $event"
                  [pickerMode]="'date'"
                  [pickerUseNativeOnMobile]="false">
         </div>
@@ -91,14 +91,6 @@
       </div>
     </div>
     <!---------->
-  </div>
-  <div class="item">
-    <div class="left floated content">
-      <div class="description">Competition ID</div>
-      <div class="header">
-        {{properties?.id | truncate:25}}
-      </div>
-    </div>
   </div>
   <div class="item">
     <div class="left floated content">

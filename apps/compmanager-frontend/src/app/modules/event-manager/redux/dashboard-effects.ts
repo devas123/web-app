@@ -25,7 +25,6 @@ import {
   DASHBOARD_INIT_PERIOD_COMMAND,
   DASHBOARD_LOAD_MATS_COMMAND,
   DASHBOARD_MAT_SELECTED,
-  DASHBOARD_MATS_LOADED,
   DASHBOARD_SET_FIGHT_RESULT_COMMAND,
   DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND,
   dashboardFightLoaded,
@@ -47,18 +46,6 @@ export class DashboardEffects {
       filter(competitionId => !!competitionId))),
     switchMap(([command, competitionId]: [CommonAction, string]) =>
       [dashboardLoadPeriodMatsCommand({competitionId, periodId: command.payload})])));
-
-  dashboardLoadAllMatsTop5Fights$ = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_MATS_LOADED),
-    switchMap((command: any) =>
-      from(command.payload as MatDescription[])
-        .pipe(filter(mat => mat.periodId === command.periodId && !!mat.id), mergeMap(mat => {
-          return this.infoService.getMatFights(command.competitionId, mat.id, 5).pipe(
-            map(f => dashboardMatFightsLoaded(f.fights, f.competitors, mat.id)),
-            catchError(error => observableOf(errorEvent(error)))
-          );
-        }), toArray())),
-    switchMap(acts => [...acts])));
 
   dashboardLoadMatFights$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_MAT_SELECTED),

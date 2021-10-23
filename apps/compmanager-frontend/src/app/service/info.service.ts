@@ -297,7 +297,7 @@ export class InfoService {
 
   getPeriodMats(competitionId: any, periodId: any) {
     const params = {competitionId, periodId};
-    return this.httpGet(mats, {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/period/${periodId}/mat`, {
       params: params,
       headers: this.headers
     });
@@ -326,7 +326,7 @@ export class InfoService {
 
   getMatFights(competitionId: string, matId: string, maxResults: number = 10, queryString?: any) {
     const params = {competitionId, matId, queryString: queryString || null, maxResults: `${maxResults}`};
-    return this.httpGet(matFights, {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/mat/${matId}/fight`, {
       params: params,
       headers: this.headers
     });
