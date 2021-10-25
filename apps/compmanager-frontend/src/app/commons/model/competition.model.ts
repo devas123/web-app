@@ -88,7 +88,7 @@ export interface ScheduleRequirement {
   matId: string;
   periodId: string;
   entryType: ScheduleRequirementType;
-  durationMinutes: number;
+  durationSeconds: number;
   name: string;
   color: string;
   force: boolean;

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
@@ -93,10 +93,10 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
         </div>
         <div class="fields" *ngIf="entryType === 'RELATIVE_PAUSE'">
           <div class="three wide field"
-               [ngClass]="{error: durationMunutes.invalid && (durationMunutes.touched || durationMunutes.dirty)}">
+               [ngClass]="{error: durationSeconds.invalid && (durationSeconds.touched || durationSeconds.dirty)}">
             <label>Duration</label>
             <div class="ui input">
-              <input type="number" name="durationMinutes" placeholder="Minutes" formControlName="durationMinutes">
+              <input type="number" name="durationSeconds" placeholder="Minutes" formControlName="durationMinutes">
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
   styleUrls: ['./schedule-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
+export class AddSchedulePauseFormComponent implements OnInit {
   @ViewChild('multiSelect')
   select: SuiMultiSelect<MatDescription, MatDescription>;
   _all = false;
@@ -120,7 +120,7 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
     const entryType = control.get('entryType').value as ScheduleRequirementType;
     const startTime = control.get('startTime').value;
     const endTime = control.get('endTime').value;
-    const durationMinutes = control.get('durationMinutes').value;
+    const durationSeconds = control.get('durationSeconds').value;
     switch (entryType) {
       case 'FIXED_PAUSE': {
         if (startTime && endTime) {
@@ -138,7 +138,7 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
         return {'invalidDates': true};
       }
       case 'RELATIVE_PAUSE': {
-        if (durationMinutes) {
+        if (durationSeconds) {
           return null;
         }
         return {'invalidDuration': true};
@@ -189,7 +189,7 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.pauseForm = this.fb.group({
-      durationMinutes: [''],
+      durationSeconds: [''],
       startTime: [''],
       endTime: [''],
       matId: [''],
@@ -197,11 +197,10 @@ export class AddSchedulePauseFormComponent implements OnInit, OnDestroy {
     }, {validators: [this.formValidator]});
   }
 
-  ngOnDestroy(): void {
-  }
 
-  get durationMunutes() {
-    return this.form.get('durationMinutes');
+
+  get durationSeconds() {
+    return this.form.get('durationSeconds');
   }
 
   get startTime() {

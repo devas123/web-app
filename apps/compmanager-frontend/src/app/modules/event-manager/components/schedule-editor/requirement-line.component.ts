@@ -71,7 +71,7 @@ export class RequirementLineComponent {
       return req.fightIds && req.fightIds.length + ' Fights';
     }
     if (req.entryType === 'RELATIVE_PAUSE') {
-      return `Pause ${req.durationMinutes} min`;
+      return `Pause ${req.durationSeconds} min`;
     }
   }
 
