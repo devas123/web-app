@@ -68,7 +68,6 @@ export interface ScheduleEntry {
   color: string;
   name: string;
   numberOfFights: number;
-  fightDuration: number;
   categoryIds: string[];
   fightIds: MatIdAndSomeId[];
   periodId: string;
