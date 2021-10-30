@@ -304,21 +304,17 @@ export class InfoService {
   }
 
   getFight(competitionId: string, fightId: string, categoryId: string) {
-    const params = {competitionId, fightId, categoryId};
-    return this.httpGet<Fight>(fight, {
-      params: params,
+    return this.httpGet<Fight>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/fight/${fightId}`, {
       headers: this.headers
     }).pipe(
-      mergeMap(result => this.getFightResultOptions(competitionId, fightId, categoryId).pipe(
+      mergeMap(result => this.getFightResultOptions(competitionId, categoryId, result?.stageId).pipe(
         map(options => [result, options])
       ))
     );
   }
 
-  getFightResultOptions(competitionId: string, fightId: string, categoryId: string) {
-    const params = {competitionId, fightId, categoryId};
-    return this.httpGet(fightResultOptions, {
-      params: params,
+  getFightResultOptions(competitionId: string, categoryId: string, stageId: string) {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage/${stageId}/resultoptions`, {
       headers: this.headers
     });
   }

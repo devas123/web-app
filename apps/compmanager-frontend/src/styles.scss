@@ -1,14 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/cdk/overlay-prebuilt.css';
-$secondary_color: #001A26;
-$background_color: #042e3e;
+$secondary_color: #3cc6fc;
+$background_color: #79bad4;
 $header_color: rgba(255, 255, 255, 1);
 $description_color: #7A8288;
 $dialog_input_text_color: lemonchiffon;
-$item_color: #042e3e;
+$item_color: #2cb7ec;
 $mat_border_color: #3c3f41;
-$error_color: lightpink;
-$text_color: #ffffe9;
+$error_color: #ffb6b6;
+$text_color: #ff0000;
 
 .compman_clickable {
   cursor: pointer !important;
