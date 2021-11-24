@@ -1,0 +1,69 @@
+{
+  "root": "apps/registration",
+  "sourceRoot": "apps/registration/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nxext/svelte:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/registration",
+        "entryFile": "apps/registration/src/main.ts",
+        "tsConfig": "apps/registration/tsconfig.app.json",
+        "svelteConfig": "apps/registration/svelte.config.cjs",
+        "assets": [
+          {
+            "glob": "/*",
+            "input": "apps/registration/public/**",
+            "output": "./"
+          }
+        ]
+      },
+      "configurations": {
+        "production": {
+          "dev": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nxext/svelte:build",
+      "options": {
+        "outputPath": "dist/apps/registration",
+        "entryFile": "apps/registration/src/main.ts",
+        "tsConfig": "apps/registration/tsconfig.app.json",
+        "svelteConfig": "apps/registration/svelte.config.cjs",
+        "assets": [
+          {
+            "glob": "/*",
+            "input": "apps/registration/public/**",
+            "output": "./"
+          }
+        ],
+        "watch": true,
+        "serve": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/registration/**/*.{ts,svelte,spec.ts}"]
+      }
+    },
+    "check": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "command": "svelte-check",
+        "cwd": "apps/registration"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/registration"],
+      "options": {
+        "jestConfig": "apps/registration/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

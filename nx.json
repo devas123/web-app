@@ -32,5 +32,15 @@
         "projects": "dependencies"
       }
     ]
-  }
+  },
+  "cli": {
+    "warnings": {
+      "versionMismatch": false
+    },
+    "packageManager": "yarn",
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false
+  },
+  "generators": {},
+  "defaultProject": "compmanager-frontend"
 }

@@ -1,0 +1,28 @@
+{
+  "root": "apps/registration-e2e",
+  "sourceRoot": "apps/registration-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/registration-e2e/cypress.json",
+        "tsConfig": "apps/registration-e2e/tsconfig.e2e.json",
+        "devServerTarget": "registration:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "registration:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/registration-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["registration"]
+}

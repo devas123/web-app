@@ -1,17 +1,9 @@
 {
   "version": 2,
-  "cli": {
-    "warnings": {
-      "versionMismatch": false
-    },
-    "packageManager": "yarn",
-    "defaultCollection": "@nrwl/angular",
-    "analytics": false
-  },
-  "defaultProject": "compmanager-frontend",
-  "generators": {},
   "projects": {
     "compmanager-frontend": "apps/compmanager-frontend",
-    "ng2-semantic-ui": "libs/ng2-semantic-ui"
+    "ng2-semantic-ui": "libs/ng2-semantic-ui",
+    "registration": "apps/registration",
+    "registration-e2e": "apps/registration-e2e"
   }
 }
