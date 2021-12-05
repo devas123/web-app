@@ -704,11 +704,14 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case DASHBOARD_MATS_LOADED: {
         if (action.payload) {
-          const payload = action.payload as {mats: {matDescription: MatDescription, numberOfFights: number, topFiveFights: Fight[]}[], competitors: Competitor[]};
-          state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats.map(m => m.matDescription), state.selectedEventMats);
+          const payload = action.payload as { mats: { matDescription: MatDescription, numberOfFights: number, topFiveFights: Fight[] }[], competitors: Competitor[] };
+          state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats.map(m => (<MatDescription>{
+            ...m.matDescription,
+            numberOfFights: m.numberOfFights
+          })), state.selectedEventMats);
           const fights = _.flatten(payload.mats.map(m => m.topFiveFights))
           state.selectedEventMats.matsFights = fightEntityAdapter.upsertMany(fights, fightsInitialState)
-          state.selectedEventCompetitors  = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
+          state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
         }
         break;
       }

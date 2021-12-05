@@ -17,27 +17,14 @@ import {generateUuid} from "../modules/account/utils";
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
 const {
-  commandsSyncEndpoint,
   commandsEndpoint,
   generateCategoriesEndpoint,
   competitionQueryEndpoint,
   registrationInfoQueryEndpoint,
   competitorEdpoint,
-  scheduleEndpoint,
-  categoriesEndpoint,
-  competitorsEndpoint,
   defaultCategories,
-  compProperties,
-  categoryState,
   dashboardState,
-  mats,
-  fightResultOptions,
-  fight,
-  matFights,
-  stageFights,
-  categoryStages,
   defaultFightResults,
-  fightIdsBycategoryId
 } = env.environment;
 
 export const genericRetryStrategy = ({
@@ -157,9 +144,7 @@ export class InfoService {
   }
 
   getFightIdsByCategoryId(competitionId: string) {
-    const params = {competitionId};
     return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/fight`, {
-      params: params,
       headers: this.headers
     });
   }
@@ -296,9 +281,7 @@ export class InfoService {
 
 
   getPeriodMats(competitionId: any, periodId: any) {
-    const params = {competitionId, periodId};
     return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/period/${periodId}/mat`, {
-      params: params,
       headers: this.headers
     });
   }
@@ -321,7 +304,7 @@ export class InfoService {
 
 
   getMatFights(competitionId: string, matId: string, maxResults: number = 10, queryString?: any) {
-    const params = {competitionId, matId, queryString: queryString || null, maxResults: `${maxResults}`};
+    const params = {matId, queryString: queryString || null, maxResults: `${maxResults}`};
     return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/mat/${matId}/fight`, {
       params: params,
       headers: this.headers
@@ -333,7 +316,7 @@ export class InfoService {
     const competitionId = command.competitionId;
     const normalizedCommand = this.normalizeCommand(command);
     const body = JSON.stringify({...normalizedCommand, id});
-    return this.http.post<Action[]>(`${commandsSyncEndpoint}?competitionId=${competitionId}`, body, {
+    return this.http.post<Action[]>(`${commandsEndpoint}?competitionId=${competitionId}`, body, {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/json'
