@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {
   AppState,
   dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
@@ -20,7 +20,7 @@ import {
   HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
-import {concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {
   dashboardFightSelected,
   dashboardFightUnselected,
@@ -43,7 +43,7 @@ import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-br
   templateUrl: './scoreboard-container.component.html',
   styleUrls: ['./scoreboard-container.component.scss']
 })
-export class ScoreboardContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class ScoreboardContainerComponent extends EventManagerRouterEntryComponent implements OnDestroy {
 
   subs = new Subscription();
 
@@ -53,7 +53,6 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   selectedFight$: Observable<Fight>;
   selectedFightFightResultOptions$: Observable<FightResultOption[]>;
   fightCategory$: Observable<Category>;
-
   urlProvidedFightId$: Observable<string>;
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, public info: CommonBracketsInfoContainer, menuService: MenuService) {
@@ -78,8 +77,8 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
 
 
     this.subs.add(this.urlProvidedFightId$.pipe(
-      concatMap(fightId => this.store.pipe(
-        select(eventManagerGetCategoryIdForFightId, {id: fightId}),
+      mergeMap(fightId => this.store.pipe(
+        select(eventManagerGetCategoryIdForFightId({id: fightId})),
         map(categoryId => {
             if (fightId && categoryId) {
               return dashboardFightSelected(fightId, categoryId);
@@ -112,7 +111,7 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
     this.fightCategory$ = this.selectedFight$.pipe(
       filter(f => !!f),
       mergeMap(fight => this.store.pipe(
-        select(eventManagerGetSelectedEventCategory, {id: fight.categoryId}))
+        select(eventManagerGetSelectedEventCategory({id: fight.categoryId})))
       ),
       filter(cat => !!cat));
   }
@@ -127,14 +126,13 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
   selectFightForScoreboard(fightId: string) {
     if (fightId) {
       const queryParams = {fightId};
-      this.router.navigate(['.'], {queryParams, relativeTo: this.route}).catch(console.error);
+      this.router.navigate([], {
+        queryParams,
+        relativeTo: this.route
+      }).catch(console.error);
     } else {
-      this.router.navigate(['.'], {relativeTo: this.route}).catch(console.error);
+      this.router.navigate([], {relativeTo: this.route, queryParams: {}}).catch(console.error);
     }
-  }
-
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

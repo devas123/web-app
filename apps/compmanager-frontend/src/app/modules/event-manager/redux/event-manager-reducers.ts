@@ -320,11 +320,11 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
     return selectedId && entities[selectedId];
   }
 );
-export const eventManagerGetSelectedEventCategory = createSelector(eventManagerGetSelectedEventCategoriesDictionary,
-  (dict, props) => props.id && dict[props.id]);
+export const eventManagerGetSelectedEventCategory = props =>  createSelector(eventManagerGetSelectedEventCategoriesDictionary,
+  (dict) => props.id && dict[props.id]);
 
-export const eventManagerGetCategoryIdForFightId = createSelector(getSelectedEventScheduleFightsByCategoryId,
-  (dict, props) => props.id && _.findKey(dict, o => !!o.find(id => id === props.id)));
+export const eventManagerGetCategoryIdForFightId = props => createSelector(getSelectedEventScheduleFightsByCategoryId,
+  (dict) => props.id && _.findKey(dict, o => !!o.find(id => id === props.id)));
 
 export const eventManagerGetSelectedEventCategories = eventManagerGetSelectedEventAllCategories;
 export const eventManagerGetSelectedEventPreviewCategories = eventManagerGetSelectedEventAllPreviewCategories;

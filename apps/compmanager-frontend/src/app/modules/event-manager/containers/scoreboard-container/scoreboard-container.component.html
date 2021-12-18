@@ -1,5 +1,5 @@
 <div class="ui container">
-  <div class="ui middle aligned list" *ngIf="!(selectedFight$ | async)">
+  <div class="ui middle aligned list" *ngIf="(selectedFight$ | async) === null">
     <a class="item" *ngFor="let fight of matFights$ | async">
       <div class="content cell_item">
         <app-fight-display

@@ -97,7 +97,7 @@
   "scripts": {
     "nx": "nx",
     "lint": "ng lint",
-    "start": "nx serve",
+    "start": "nx serve compmanager-frontend",
     "build-prod": "nx run compmanager-frontend:build-prod",
     "build": "nx run compmanager-frontend:build",
     "test": "ng test",
