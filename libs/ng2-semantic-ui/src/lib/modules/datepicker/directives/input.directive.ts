@@ -1,15 +1,12 @@
 
 import { Directive, Host, Input, ElementRef, HostBinding, HostListener, Renderer2 } from "@angular/core";
-import { DateUtil, DatePrecision } from "../../../misc/util/internal";
+import { DateUtil } from "../../../misc/util/internal";
 import { SuiLocalizationService } from "../../../behaviors/localization/internal";
 import { PopupTrigger } from "../../popup/internal";
 import { SuiDatepickerDirective, SuiDatepickerDirectiveValueAccessor } from "./datepicker.directive";
 import { InternalDateParser, DateParser } from "../classes/date-parser";
-import * as bowser from "bowser";
-
-import "../helpers/is-webview";
-import * as isUAWebView from "is-ua-webview";
-const isWebView = isUAWebView["default"] || isUAWebView;
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {map} from "rxjs/operators";
 
 @Directive({
     selector: "input[suiDatepicker]"
@@ -24,9 +21,10 @@ export class SuiDatepickerInputDirective {
 
     public set useNativeOnMobile(fallback:boolean) {
         this._useNativeOnMobile = fallback;
-        const browser = bowser.getParser(navigator.userAgent);
-        const bowserIsOnMobile = browser.getPlatformType(true) === 'mobile' || browser.getPlatformType(true) === 'tablet';
-        const isOnMobile = bowserIsOnMobile || isWebView(navigator.userAgent);
+      let isOnMobile = false;
+      this.observer.observe([Breakpoints.Handset, Breakpoints.Tablet]).pipe(
+        map(b => b.matches)
+      ).subscribe(next => isOnMobile = next)
         this.fallbackActive = this.useNativeOnMobile && isOnMobile;
     }
 
@@ -94,7 +92,8 @@ export class SuiDatepickerInputDirective {
                 @Host() public valueAccessor:SuiDatepickerDirectiveValueAccessor,
                 private _renderer:Renderer2,
                 private _element:ElementRef,
-                localizationService:SuiLocalizationService) {
+                localizationService:SuiLocalizationService,
+                private observer: BreakpointObserver) {
 
         this.useNativeOnMobile = true;
         this.fallbackActive = false;

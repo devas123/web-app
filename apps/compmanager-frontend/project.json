@@ -18,8 +18,8 @@
           "lodash",
           "uuid",
           "sockjs-client",
-          "is-ua-webview",
-          "marked"
+          "marked",
+          "date-fns-tz"
         ],
         "sourceMap": {
           "scripts": true,
