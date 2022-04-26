@@ -34,8 +34,9 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+.angular
+.angular/**
 
 # System Files
 .DS_Store
 Thumbs.db
-/yarn.lock
