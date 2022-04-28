@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import * as marked from 'marked';
+import {marked} from 'marked';
 
 
 @Component({
