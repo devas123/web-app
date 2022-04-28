@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {MatDescription, Schedule} from '../../reducers/global-reducers';
 import {Category, Period} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
@@ -52,7 +52,7 @@ import {InfoService} from '../../service/info.service';
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScheduleDisplayComponent implements OnInit, OnChanges {
+export class ScheduleDisplayComponent  {
   highlightedCategories = new Set<string>();
 
   constructor(private cd: ChangeDetectorRef) {
@@ -117,7 +117,7 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
     if (matId) {
       return this.mats.find(m => m.id === matId && m.periodId === periodId).name;
     } else {
-      return 'Several mats.';
+      return `Unknown ${matId}`;
     }
   };
 
@@ -135,9 +135,7 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
     }
   };
 
-  ngOnInit() {
 
-  }
 
   getPeriodMats(id: string) {
     return this.mats.filter(mat => mat.periodId === id);
@@ -154,8 +152,5 @@ export class ScheduleDisplayComponent implements OnInit, OnChanges {
   toggleMatsView(periodId: string) {
     this.matsView[periodId] = !this.matsView[periodId];
     this.cd.markForCheck();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
   }
 }

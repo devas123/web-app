@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ScheduleEntry} from '../../commons/model/competition.model';
 import * as _ from 'lodash';
+import {uniqueFilter} from "../../modules/account/utils";
 
 @Component({
   selector: 'app-schedule-entry-display',
@@ -88,7 +89,7 @@ export class ScheduleEntryDisplayComponent {
 
   getEntryMatId(scheduleEntry: ScheduleEntry) {
     if (!_.isEmpty(scheduleEntry.fightIds)) {
-      const matIds = scheduleEntry.fightIds.map(f => f.matId);
+      const matIds = scheduleEntry.fightIds.map(f => f.matId).filter(uniqueFilter);
       if (matIds.length === 1) {
         return this.matFormat(matIds[0]);
       } else {
