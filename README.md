@@ -8,13 +8,21 @@ $ yarn install
 ```
 
 You also need to compile the Fomantic UI:
-
-1. Go to tools/fui/semantic
-2. run 
+1. Go to tools/fui and run 
+```shell
+yarn install
+```
+2. Go to tools/fui/semantic and run 
 ```shell
 npx gulp install
 ```
-and then
+Answer the questions during installation as follows: 
+```shell
+? It looks like you have a semantic.json file already. > Skip install
+? Should we remove set-up files? > No Thanks
+? Do you want to build Semantic now? > Yes
+```
+3. and then from the same folder run
 ```shell
 npx gulp build
 ```
