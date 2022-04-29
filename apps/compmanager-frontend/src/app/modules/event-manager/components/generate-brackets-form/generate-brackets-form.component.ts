@@ -88,7 +88,6 @@ export class GenerateBracketsFormComponent implements OnInit {
     if (finalStagesCount !== 1) {
       return {'finalStageExistsValidator': finalStagesCount || true};
     }
-    console.log(control);
     return null;
   };
   private outputSizeValidator = (index: number) => (control: FormGroup) => {
