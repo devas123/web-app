@@ -4,7 +4,7 @@
     <!--input  hidden field-->
     <div class="input-content">
       <div class="left floated content">
-        <div class="ui transparent inverted right floated input">
+        <div class="ui transparent right floated input">
           <div class="description">Competition Name:<span>&nbsp;&nbsp;</span></div>
           <input type="text" formControlName="competitionName">
         </div>
@@ -32,7 +32,7 @@
     <!--input  hidden field-->
     <div class="input-content">
       <div class="left floated content  ">
-        <div class="ui transparent inverted right floated input">
+        <div class="ui transparent  right floated input">
           <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
           <input suiDatepicker
                  name="startDate"
@@ -65,12 +65,12 @@
     <!--input  hidden field-->
     <div class="input-content">
       <div class="left floated content  ">
-        <div class="ui transparent inverted right floated input">
+        <div class="ui transparent  right floated input">
           <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
           <input suiDatepicker
                  name="endDate"
                  (pickerSelectedDateChange)="endDate = $event"
-                 [pickerMode]="'date'"
+                 [pickerMode]="'datetime'"
                  [pickerUseNativeOnMobile]="false">
         </div>
       </div>
