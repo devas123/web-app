@@ -7,7 +7,7 @@
           </div>
           <div class="ui  basic segment">
             <ng-container
-                    *ngFor="let period of (registrationPeriod$ | async)?.slice(0,3) as periods; index as i; last as isLast; first as isFirst">
+                    *ngFor="let period of (registrationPeriod$ | async) as periods; index as i; last as isLast; first as isFirst">
               <section>
                 <a class="ui right small ribbon label"
                    [ngClass]="{blue: isFirst, red: (!isFirst && isLast), yellow: (!isFirst && !isLast)}">{{(periods?.length < 2) ? 'Registration start' : period?.name}}</a>
