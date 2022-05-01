@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import produce from 'immer';
@@ -9,7 +9,7 @@ import produce from 'immer';
   styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegistrationInfoEditorComponent implements OnInit {
+export class RegistrationInfoEditorComponent  {
 
   ngStyle = {'grid-template-columns': 'repeat(2, 1fr)'};
 
@@ -53,12 +53,9 @@ export class RegistrationInfoEditorComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
-  }
-
   get assignedCategoryIds(): string[] {
     return (this.registrationInfo && this.registrationInfo.registrationGroups
-      && this.registrationInfo.registrationGroups.reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
+      && Array.from(this.registrationInfo.registrationGroups.values()).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
   get unassignedCategoies(): Category[] {
@@ -66,9 +63,9 @@ export class RegistrationInfoEditorComponent implements OnInit {
   }
 
 
-  getRegistrationGroupsForPeriod(period: RegistrationPeriod, info: RegistrationInfo) {
+  getRegistrationGroupsForPeriod(period: RegistrationPeriod, info: RegistrationInfo): RegistrationGroup[] {
     if (period && info && period.registrationGroupIds && info.registrationGroups) {
-      return period.registrationGroupIds.map(id => info.registrationGroups.find(gr => gr.id === id)).filter(gr => !!gr);
+      return period.registrationGroupIds.map(id => info.registrationGroups.get(id)).filter(gr => !!gr);
     } else {
       return [];
     }
@@ -95,7 +92,7 @@ export class RegistrationInfoEditorComponent implements OnInit {
   moveUnassignedCategoriesToDefault() {
     if (this.unassignedCategoies) {
       const regInfo = produce(this.registrationInfo, draft => {
-        const defaultGroup = draft.registrationGroups.find(gr => gr.defaultGroup);
+        const defaultGroup = Array.from(draft.registrationGroups.values()).find(gr => gr.defaultGroup);
         if (defaultGroup) {
           const categories = defaultGroup.categories || [];
           categories.push(...this.unassignedCategoies.map(cat => cat.id).filter(id => !categories.includes(id)));

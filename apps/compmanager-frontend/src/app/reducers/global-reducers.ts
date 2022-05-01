@@ -86,7 +86,7 @@ import {
   DASHBOARD_MATS_LOADED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
-import {generateUuid} from "../modules/account/utils";
+import {generateUuid, objectToMap} from "../modules/account/utils";
 
 export interface AppState {
   accountState: AccountState;
@@ -190,10 +190,16 @@ export interface RegistrationGroup {
   id: string;
   displayName: string;
   defaultGroup: boolean;
-  registrationFee: number;
+  registrationFee: RegistrationFee;
   registrationPeriodIds: string[];
   registrationInfoId: string;
   categories: string[];
+}
+
+export interface RegistrationFee {
+  currency: string,
+  amount: number,
+  remainder: number
 }
 
 export interface RegistrationPeriod {
@@ -206,8 +212,8 @@ export interface RegistrationPeriod {
 }
 
 export interface RegistrationInfo {
-  registrationPeriods: RegistrationPeriod[];
-  registrationGroups: RegistrationGroup[];
+  registrationPeriods: Map<string, RegistrationPeriod>;
+  registrationGroups: Map<string, RegistrationGroup>;
   registrationOpen: boolean;
   id: string;
 }
@@ -301,20 +307,20 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           && action.payload.periodId && action.payload.groupId) {
           const {periodId, groupId} = action.payload;
           if (!state.registrationInfo.registrationGroups) {
-            state.registrationInfo.registrationGroups = [];
+            state.registrationInfo.registrationGroups = new Map();
           }
-          const per = state.registrationInfo.registrationPeriods
-            .find(p => p.id === periodId);
+          const per = state.registrationInfo.registrationPeriods.get(periodId)
           per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
           const group =
-            state.registrationInfo.registrationGroups.find(gr => gr.id === groupId);
+            state.registrationInfo.registrationGroups.get(groupId);
           if (!group.registrationPeriodIds) {
             group.registrationPeriodIds = [];
           }
           group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
           if (group.registrationPeriodIds.length === 0) {
-            state.registrationInfo.registrationGroups =
-              state.registrationInfo.registrationGroups.filter(gr => gr.id !== groupId);
+            const newGroups = {...state.registrationInfo.registrationGroups}
+            delete newGroups[groupId];
+            state.registrationInfo.registrationGroups = newGroups
           }
         }
         break;
@@ -323,12 +329,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (state.competitionProperties.id === action.competitionId
           && state && state.registrationInfo
           && action.payload.periodId && action.payload.groups) {
-          const registrationGroups = state.registrationInfo.registrationGroups || [];
+          const registrationGroups = state.registrationInfo.registrationGroups || new Map();
           action.payload.groups.forEach(group => {
-            registrationGroups.push(group);
+            registrationGroups.set(group.id, group);
             if (state.registrationInfo.registrationPeriods) {
-              state.registrationInfo.registrationPeriods
-                .find(per => per.id === action.payload.periodId)?.registrationGroupIds?.push(group.id);
+              state.registrationInfo.registrationPeriods.get(action.payload.periodId)?.registrationGroupIds?.push(group.id);
             }
           });
           state.registrationInfo.registrationGroups = registrationGroups;
@@ -521,7 +526,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case REGISTRATION_INFO_LOADED: {
-        state.registrationInfo = action.payload;
+        const newRegInfo = <RegistrationInfo>{};
+        newRegInfo.id = action.payload;
+        newRegInfo.registrationOpen = action.payload.registrationOpen || false;
+        newRegInfo.registrationPeriods = objectToMap(action.payload.registrationPeriods);
+        newRegInfo.registrationGroups = objectToMap(action.payload.registrationGroups);
+        state.registrationInfo = newRegInfo;
         break;
       }
       case COMPETITION_SELECTED: {

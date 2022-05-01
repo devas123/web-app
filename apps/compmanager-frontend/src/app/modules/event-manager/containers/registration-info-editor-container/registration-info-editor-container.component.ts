@@ -17,11 +17,20 @@ import {
   eventManagerUpdateRegistrationInfo, eventManagerLoadRegistrationInfo
 } from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
+import {
+  ComponentCommonMetadataProvider,
+  EventManagerRouterEntryComponent
+} from '../event-manager-container/common-classes';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
-import {AddGroupModal, IAddRegistrationGroupResult} from '../../components/registration-info-editor/add-group-form.component';
-import {AddPeriodModal, IAddRegistrationPeriodResult} from '../../components/registration-info-editor/add-registration-period-form.component';
+import {
+  AddGroupModal,
+  IAddRegistrationGroupResult
+} from '../../components/registration-info-editor/add-group-form.component';
+import {
+  AddPeriodModal,
+  IAddRegistrationPeriodResult
+} from '../../components/registration-info-editor/add-registration-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
@@ -37,6 +46,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   competitionId$: Observable<string>;
   timeZone$: Observable<string>;
   selectedRegistrationGroupId$: Observable<string | boolean>;
+  hasRegistrationGroupSelected$: Observable<boolean>;
   columsNumber$: Observable<number>;
   categories$: Observable<Category[]>;
 
@@ -72,6 +82,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       switchMap(params => of(params['group'])),
       startWith(false)
     );
+    this.hasRegistrationGroupSelected$ = this.selectedRegistrationGroupId$.pipe(map(val => !!val))
     this.registrationInfo$ = store.select(eventManagerGetSelectedEventRegistrationInfo);
     this.competitionId$ = store.select(getSelectedEventId);
     this.timeZone$ = store.select(eventManagerGetSelectedEventTimeZone);
@@ -91,7 +102,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   public openGroupModal({competitionId, periodId, periodRegistrationGroups}) {
     if (periodId) {
       this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
-        this.modalService.open(new AddGroupModal(periodId, competitionId, groups.filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
+        this.modalService.open(new AddGroupModal(periodId, competitionId, Array.from(groups.values()).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
           .onApprove((result: IAddRegistrationGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {
           });
@@ -108,7 +119,10 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
 
   addRegistrationInfoGroups(data: IAddRegistrationGroupResult) {
     if (data && data.groups && data.registrationInfoId) {
-      this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.groups.map(gr => ({...gr, registrationInfoId: data.registrationInfoId}))));
+      this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.groups.map(gr => ({
+        ...gr,
+        registrationInfoId: data.registrationInfoId
+      }))));
     }
   }
 
@@ -127,7 +141,11 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
 
   selectRegistrationGroup(groupId: string) {
     if (groupId) {
-      this.router.navigate(['.'], {queryParams: {group: groupId}, queryParamsHandling: 'merge', relativeTo: this.route}).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
+      this.router.navigate(['.'], {
+        queryParams: {group: groupId},
+        queryParamsHandling: 'merge',
+        relativeTo: this.route
+      }).catch(reason => console.error('Navigation failed: ' + JSON.stringify(reason)));
     }
   }
 
@@ -153,9 +171,9 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       map(competitionId => eventManagerUpdateRegistrationInfo({
         registrationInfo: <RegistrationInfo>{
           id: competitionId,
-          registrationGroups: [],
+          registrationGroups: new Map(),
           registrationOpen: false,
-          registrationPeriods: []
+          registrationPeriods: new Map()
         },
         competitionId
       }))).subscribe(this.store);

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
   AppState,
   CompetitionProperties,
@@ -22,7 +22,7 @@ import {filter, map, startWith} from 'rxjs/operators';
     styleUrls: ['./competition-main-info.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CompetitionMainInfoComponent implements OnInit {
+export class CompetitionMainInfoComponent  {
 
     menu: { name: string, link: string }[] = [
         {
@@ -35,7 +35,7 @@ export class CompetitionMainInfoComponent implements OnInit {
         {name: 'Schedule', link: 'schedule'}];
 
     properties$: Observable<CompetitionProperties>;
-    registrationPeriod$: Observable<RegistrationPeriod[]>;
+    registrationPeriod$: Observable<Map<string, RegistrationPeriod>>;
     timezone$: Observable<string>;
     categories$: Observable<Category[]>;
     url$: Observable<string>;
@@ -55,8 +55,7 @@ export class CompetitionMainInfoComponent implements OnInit {
         }), startWith(this.router.routerState.snapshot.url));
     }
 
-    ngOnInit() {
-    }
+
 
 
     public changeActiveMenuItem(menuItem) {

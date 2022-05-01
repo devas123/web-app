@@ -39,13 +39,15 @@ export class AddPeriodModal extends ComponentModalConfig<IAddRegistrationPeriodC
               <label>
                   Period start:
                   <input class="ui input" suiDatepicker
-                         formControlName="start"
+                         name="start"
+                         (pickerSelectedDateChange)="periodStart = $event"
                          [pickerFirstDayOfWeek]="1">
               </label>
               <label>
                   Period end:
                   <input class="ui input" suiDatepicker
-                         formControlName="end"
+                         name="end"
+                         (pickerSelectedDateChange)="periodEnd = $event"
                          [pickerFirstDayOfWeek]="1">
               </label>
           </form>
@@ -64,8 +66,8 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
 
   triggerAddPeriod() {
     const period = {} as RegistrationPeriod;
-    period.end = InfoService.formatDate(this.periodStart.value, this.modal.context.timeZone);
-    period.start = InfoService.formatDate(this.periodEnd.value, this.modal.context.timeZone);
+    period.end = InfoService.formatDate(this.periodStart, this.modal.context.timeZone);
+    period.start = InfoService.formatDate(this.periodEnd, this.modal.context.timeZone);
     period.name = this.periodName.value;
     period.competitionId = this.modal.context.competitionId;
     period.id = '';
@@ -90,10 +92,24 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
   }
 
   get periodStart() {
-    return this.periodForm.get('start');
+    return this.periodForm.get('start').value;
+  }
+  set periodStart(value: Date) {
+    this.periodForm.patchValue({
+      'start': value
+    });
   }
 
+
+
   get periodEnd() {
-    return this.periodForm.get('end');
+    return this.periodForm.get('end').value;
   }
+
+  set periodEnd(value: Date) {
+    this.periodForm.patchValue({
+      'end': value
+    });
+  }
+
 }

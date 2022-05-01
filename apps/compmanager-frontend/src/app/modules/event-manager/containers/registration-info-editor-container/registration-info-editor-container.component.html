@@ -8,7 +8,7 @@
                               [timeZone]="timeZone$ | async"
                               [registrationInfo]="registrationInfo$ | async"
                               [categories]="categories$ | async"
-                              *ngIf="!(selectedRegistrationGroupId$ | async)"></app-registration-info-editor>
+                              *ngIf="(hasRegistrationGroupSelected$ | async) === false"></app-registration-info-editor>
 
 <app-registration-group-editor *ngIf="selectedRegistrationGroupId$ | async"
                                [groupId]="selectedRegistrationGroupId$ | async"

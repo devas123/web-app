@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {RegistrationGroup} from '../../../../reducers/global-reducers';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 
 export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
@@ -60,10 +60,16 @@ export interface IAddRegistrationGroupResult {
           Entry name:
           <input class="ui input" type="text" formControlName="displayName">
         </label>
-        <label>
-          Registration Fee:
-          <input class="ui input" type="number" formControlName="registrationFee">
-        </label>
+        <div formGroupName="registrationFee">
+          <label>
+            Registration Fee Currency:
+            <input class="ui input" type="text" formControlName="currency">
+          </label>
+          <label>
+            Registration Fee Amount:
+            <input class="ui input" type="number" formControlName="amount">
+          </label>
+        </div>
         <sui-checkbox formControlName="defaultGroup">
           default?
         </sui-checkbox>
@@ -85,6 +91,7 @@ export class AddGroupFormComponent implements OnInit {
 
   addGroup() {
     const group = this.groupForm.value as RegistrationGroup;
+    group.registrationFee.remainder = 0;
     let groups = [];
     let createNew = false;
     if (this.groupsToAdd && this.groupsToAdd.length > 0) {
@@ -115,8 +122,12 @@ export class AddGroupFormComponent implements OnInit {
 
   ngOnInit() {
     this.groupForm = this.fb.group({
-      displayName: [''],
-      registrationFee: [''],
+      displayName: ['', [Validators.required]],
+      registrationFee: this.fb.group({
+        currency: ['', [Validators.required]],
+        amount: ['', [Validators.required]],
+        remainder: ['']
+      }),
       defaultGroup: [false]
     });
   }

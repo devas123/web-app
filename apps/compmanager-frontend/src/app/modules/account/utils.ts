@@ -2,7 +2,7 @@ import {Dictionary} from '@ngrx/entity';
 import * as uuidv4 from 'uuid';
 
 
-export function  b64toBlob(b64Data, contentType, sliceSize?) {
+export function b64toBlob(b64Data, contentType, sliceSize?) {
   contentType = contentType || '';
   sliceSize = sliceSize || 512;
   const byteCharacters = atob(b64Data);
@@ -30,3 +30,12 @@ export const defaultUncompletableColor = '#595245';
 export const defaultBronzeFightColor = '#7b4132';
 
 export const generateUuid = () => uuidv4.v4().toString();
+
+export const objectToMap = obj => {
+  const keys = Object.keys(obj);
+  const map = new Map();
+  for (let i = 0; i < keys.length; i++) {
+    map.set(keys[i], obj[keys[i]]);
+  }
+  return map;
+};

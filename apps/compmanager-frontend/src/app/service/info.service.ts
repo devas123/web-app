@@ -198,7 +198,7 @@ export class InfoService {
 
   getRegistrationInfo(competitionId: string) {
     const params = {competitionId};
-    return this.httpGet(registrationInfoQueryEndpoint, {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/reginfo`, {
       params: params,
       headers: this.headers
     });
