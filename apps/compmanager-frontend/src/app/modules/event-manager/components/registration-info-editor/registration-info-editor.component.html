@@ -3,7 +3,7 @@
     <div>{{unassignedCategoies.length}} Unassigned {{unassignedCategoies.length === 1 ? 'category' : 'categories'}}</div>
     <button class="ui button" (click)="moveUnassignedCategoriesToDefault()">Assign to defaut</button>
   </div>
-  <div class="column" *ngFor="let p of registrationInfo?.registrationPeriods?.values()">
+  <div class="column" *ngFor="let p of getRegistrationPeriods()">
     <div class="ui fluid card">
       <div class="content">
         <div class="header">

@@ -86,7 +86,7 @@ import {
   DASHBOARD_MATS_LOADED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
-import {generateUuid, objectToMap} from "../modules/account/utils";
+import {generateUuid} from "../modules/account/utils";
 
 export interface AppState {
   accountState: AccountState;
@@ -211,9 +211,12 @@ export interface RegistrationPeriod {
   registrationGroupIds: string[];
 }
 
+export interface RegistrationPeriodCollection {[key: string]: RegistrationPeriod}
+export interface RegistrationGroupCollection {[key: string]: RegistrationGroup}
+
 export interface RegistrationInfo {
-  registrationPeriods: Map<string, RegistrationPeriod>;
-  registrationGroups: Map<string, RegistrationGroup>;
+  registrationPeriods: RegistrationPeriodCollection;
+  registrationGroups: RegistrationGroupCollection;
   registrationOpen: boolean;
   id: string;
 }
@@ -307,12 +310,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           && action.payload.periodId && action.payload.groupId) {
           const {periodId, groupId} = action.payload;
           if (!state.registrationInfo.registrationGroups) {
-            state.registrationInfo.registrationGroups = new Map();
+            state.registrationInfo.registrationGroups = {};
           }
-          const per = state.registrationInfo.registrationPeriods.get(periodId)
+          const per = state.registrationInfo.registrationPeriods[periodId]
           per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
           const group =
-            state.registrationInfo.registrationGroups.get(groupId);
+            state.registrationInfo.registrationGroups[groupId];
           if (!group.registrationPeriodIds) {
             group.registrationPeriodIds = [];
           }
@@ -329,11 +332,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (state.competitionProperties.id === action.competitionId
           && state && state.registrationInfo
           && action.payload.periodId && action.payload.groups) {
-          const registrationGroups = state.registrationInfo.registrationGroups || new Map();
+          const registrationGroups = state.registrationInfo.registrationGroups || {};
           action.payload.groups.forEach(group => {
-            registrationGroups.set(group.id, group);
+            registrationGroups[group.id] = group;
             if (state.registrationInfo.registrationPeriods) {
-              state.registrationInfo.registrationPeriods.get(action.payload.periodId)?.registrationGroupIds?.push(group.id);
+              state.registrationInfo.registrationPeriods[action.payload.periodId]?.registrationGroupIds?.push(group.id);
             }
           });
           state.registrationInfo.registrationGroups = registrationGroups;
@@ -527,10 +530,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case REGISTRATION_INFO_LOADED: {
         const newRegInfo = <RegistrationInfo>{};
-        newRegInfo.id = action.payload;
+        newRegInfo.id = action.payload.id;
         newRegInfo.registrationOpen = action.payload.registrationOpen || false;
-        newRegInfo.registrationPeriods = objectToMap(action.payload.registrationPeriods);
-        newRegInfo.registrationGroups = objectToMap(action.payload.registrationGroups);
+        newRegInfo.registrationPeriods = action.payload.registrationPeriods;
+        newRegInfo.registrationGroups = action.payload.registrationGroups;
         state.registrationInfo = newRegInfo;
         break;
       }

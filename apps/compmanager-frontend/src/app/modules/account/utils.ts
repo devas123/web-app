@@ -31,11 +31,13 @@ export const defaultBronzeFightColor = '#7b4132';
 
 export const generateUuid = () => uuidv4.v4().toString();
 
-export const objectToMap = obj => {
-  const keys = Object.keys(obj);
-  const map = new Map();
-  for (let i = 0; i < keys.length; i++) {
-    map.set(keys[i], obj[keys[i]]);
+export const objectValues = obj => {
+  if (obj) {
+    const keys = Object.keys(obj);
+    const map = [];
+    for (let i = 0; i < keys.length; i++) {
+      map.push(obj[keys[i]]);
+    }
+    return map;
   }
-  return map;
 };

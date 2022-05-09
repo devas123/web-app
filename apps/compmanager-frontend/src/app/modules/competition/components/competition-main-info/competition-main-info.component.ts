@@ -3,7 +3,7 @@ import {
   AppState,
   CompetitionProperties,
   getSelectedEventProperties,
-  RegistrationPeriod
+  RegistrationPeriod, RegistrationPeriodCollection
 } from '../../../../reducers/global-reducers';
 import {Category} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
@@ -35,7 +35,7 @@ export class CompetitionMainInfoComponent  {
         {name: 'Schedule', link: 'schedule'}];
 
     properties$: Observable<CompetitionProperties>;
-    registrationPeriod$: Observable<Map<string, RegistrationPeriod>>;
+    registrationPeriod$: Observable<RegistrationPeriodCollection>;
     timezone$: Observable<string>;
     categories$: Observable<Category[]>;
     url$: Observable<string>;
@@ -53,12 +53,5 @@ export class CompetitionMainInfoComponent  {
                 return (ev && ev.snapshot && ev.snapshot._routerState && ev.snapshot._routerState.url) || '';
             }
         }), startWith(this.router.routerState.snapshot.url));
-    }
-
-
-
-
-    public changeActiveMenuItem(menuItem) {
-        this.router.navigate([menuItem.link], {relativeTo: this.route}).catch(console.log);
     }
 }

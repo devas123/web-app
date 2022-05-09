@@ -3,6 +3,7 @@ import {Category, displayCategory as dc} from '../../../../commons/model/competi
 import {RegistrationGroup, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import produce from 'immer';
+import {objectValues} from "../../../account/utils";
 
 @Component({
   selector: 'app-registration-group-editor',
@@ -14,7 +15,7 @@ export class RegistrationGroupEditorComponent  {
 
   get group(): RegistrationGroup {
     if (this.groupId !== false && this.registrationInfo) {
-      return this.registrationInfo.registrationGroups && this.registrationInfo.registrationGroups.get(this.groupId as string);
+      return this.registrationInfo.registrationGroups && this.registrationInfo.registrationGroups[this.groupId as string];
     }
   }
 
@@ -28,7 +29,7 @@ export class RegistrationGroupEditorComponent  {
 
   get assignedCategoryIds(): string[] {
     return (this.registrationInfo && this.registrationInfo.registrationGroups
-      && Array.from(this.registrationInfo.registrationGroups.values()).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
+      && objectValues(this.registrationInfo.registrationGroups).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
   get unassignedCategoies(): Category[] {
@@ -56,7 +57,7 @@ export class RegistrationGroupEditorComponent  {
   moveCategoryToGroup(cdkDragDrop: CdkDragDrop<Category[]>) {
     if (cdkDragDrop.previousContainer !== cdkDragDrop.container) {
       this.registrationInfo = produce(this.registrationInfo, draft => {
-        const currentGroup = draft.registrationGroups.get(this.groupId as string);
+        const currentGroup = draft.registrationGroups[this.groupId as string];
         if (!currentGroup.categories) {
           currentGroup.categories = [];
         }
@@ -71,7 +72,7 @@ export class RegistrationGroupEditorComponent  {
   moveCategoryOutOfGroup(cdkDragDrop: CdkDragDrop<Category[]>) {
     if (cdkDragDrop.previousContainer !== cdkDragDrop.container) {
       this.registrationInfo = produce(this.registrationInfo, draft => {
-        const currentGroup = draft.registrationGroups.get(this.groupId as string);
+        const currentGroup = draft.registrationGroups[this.groupId as string];
         if (!currentGroup.categories) {
           currentGroup.categories = [];
         }

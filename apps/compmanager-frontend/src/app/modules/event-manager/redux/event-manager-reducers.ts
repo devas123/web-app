@@ -8,7 +8,7 @@ import {
   EventPropsEntities,
   getSelectedEventProperties, getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventState,
-  periodEntityAdapter
+  periodEntityAdapter, RegistrationGroupCollection, RegistrationPeriod, RegistrationPeriodCollection
 } from '../../../reducers/global-reducers';
 import {
   COMPETITION_CREATED,
@@ -259,7 +259,7 @@ export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
 export const eventManagerGetSelectedEventDefaultFightResults = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultFightResultOptions);
 
 export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventState, event => event && event.registrationInfo);
-export const eventManagerGetSelectedEventRegistrationPeriods = createSelector(eventManagerGetSelectedEventRegistrationInfo, registrationInfo => registrationInfo && registrationInfo.registrationPeriods || new Map());
+export const eventManagerGetSelectedEventRegistrationPeriods = createSelector(eventManagerGetSelectedEventRegistrationInfo, registrationInfo => registrationInfo && registrationInfo.registrationPeriods || <RegistrationPeriodCollection>{});
 export const eventManagerGetSelectedEventTimeZone = createSelector(getSelectedEventProperties, event => event && event.timeZone);
 
 export const eventManagerGetSelectedEventName = createSelector(getSelectedEventProperties, event => event && event.competitionName);

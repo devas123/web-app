@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers/global-reducers';
 import {Category} from '../../../../commons/model/competition.model';
-import produce from 'immer';
+import {objectValues} from "../../../account/utils";
 
 @Component({
   selector: 'app-registration-info-editor',
@@ -9,7 +9,7 @@ import produce from 'immer';
   styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegistrationInfoEditorComponent  {
+export class RegistrationInfoEditorComponent {
 
   ngStyle = {'grid-template-columns': 'repeat(2, 1fr)'};
 
@@ -55,7 +55,7 @@ export class RegistrationInfoEditorComponent  {
 
   get assignedCategoryIds(): string[] {
     return (this.registrationInfo && this.registrationInfo.registrationGroups
-      && Array.from(this.registrationInfo.registrationGroups.values()).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
+      && objectValues(this.registrationInfo.registrationGroups).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
   get unassignedCategoies(): Category[] {
@@ -65,10 +65,14 @@ export class RegistrationInfoEditorComponent  {
 
   getRegistrationGroupsForPeriod(period: RegistrationPeriod, info: RegistrationInfo): RegistrationGroup[] {
     if (period && info && period.registrationGroupIds && info.registrationGroups) {
-      return period.registrationGroupIds.map(id => info.registrationGroups.get(id)).filter(gr => !!gr);
+      return period.registrationGroupIds.map(id => info.registrationGroups[id]).filter(gr => !!gr);
     } else {
       return [];
     }
+  }
+
+  getRegistrationPeriods() {
+    return objectValues(this.registrationInfo?.registrationPeriods);
   }
 
   deleteGroupEvent(groupId: string, periodId: string) {
@@ -91,15 +95,21 @@ export class RegistrationInfoEditorComponent  {
 
   moveUnassignedCategoriesToDefault() {
     if (this.unassignedCategoies) {
-      const regInfo = produce(this.registrationInfo, draft => {
-        const defaultGroup = Array.from(draft.registrationGroups.values()).find(gr => gr.defaultGroup);
-        if (defaultGroup) {
-          const categories = defaultGroup.categories || [];
-          categories.push(...this.unassignedCategoies.map(cat => cat.id).filter(id => !categories.includes(id)));
-          defaultGroup.categories = categories;
+      const defaultGroup = objectValues(this.registrationInfo.registrationGroups).find(gr => gr.defaultGroup);
+      if (defaultGroup) {
+        const categories = defaultGroup.categories || [];
+        const updatedDefaultGroup = {
+          ...defaultGroup,
+          categories: [...categories, ...this.unassignedCategoies.map(cat => cat.id).filter(id => !categories.includes(id))]
+        };
+        const newRegistrationGroups = {...this.registrationInfo.registrationGroups};
+        newRegistrationGroups[updatedDefaultGroup.id] = updatedDefaultGroup;
+        const regInfo = {
+          ...this.registrationInfo,
+          registrationGroups: newRegistrationGroups
         }
-      });
-      this.registrationInfoUpdated.next(regInfo);
+        this.registrationInfoUpdated.next(regInfo);
+      }
     }
   }
 }

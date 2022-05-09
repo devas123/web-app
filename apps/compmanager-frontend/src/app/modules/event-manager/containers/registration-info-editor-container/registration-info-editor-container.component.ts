@@ -34,6 +34,7 @@ import {
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
+import {objectValues} from "../../../account/utils";
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -102,7 +103,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   public openGroupModal({competitionId, periodId, periodRegistrationGroups}) {
     if (periodId) {
       this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
-        this.modalService.open(new AddGroupModal(periodId, competitionId, Array.from(groups.values()).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
+        this.modalService.open(new AddGroupModal(periodId, competitionId, objectValues(groups).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
           .onApprove((result: IAddRegistrationGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {
           });
@@ -171,9 +172,9 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
       map(competitionId => eventManagerUpdateRegistrationInfo({
         registrationInfo: <RegistrationInfo>{
           id: competitionId,
-          registrationGroups: new Map(),
+          registrationGroups: {},
           registrationOpen: false,
-          registrationPeriods: new Map()
+          registrationPeriods: {}
         },
         competitionId
       }))).subscribe(this.store);
