@@ -4,8 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 
 export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
-  constructor(periodId: string, competitionId: string, existingGroups: RegistrationGroup[], size = ModalSize.Small) {
-    super(AddGroupFormComponent, {periodId, competitionId, existingGroups});
+  constructor(context: IAddRegistrationGroupContext, size = ModalSize.Small) {
+    super(AddGroupFormComponent, context);
 
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -17,6 +17,7 @@ export interface IAddRegistrationGroupContext {
   competitionId: string;
   periodId: string;
   existingGroups: RegistrationGroup[];
+  haveDefaultGroup: boolean;
 }
 
 export interface IAddRegistrationGroupResult {
@@ -70,9 +71,11 @@ export interface IAddRegistrationGroupResult {
             <input class="ui input" type="number" formControlName="amount">
           </label>
         </div>
-        <sui-checkbox formControlName="defaultGroup">
-          default?
-        </sui-checkbox>
+        <ng-container *ngIf="!modal.context?.haveDefaultGroup">
+          <sui-checkbox formControlName="defaultGroup">
+            default?
+          </sui-checkbox>
+        </ng-container>
       </form>
     </div>
     <div class="actions">

@@ -103,7 +103,12 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   public openGroupModal({competitionId, periodId, periodRegistrationGroups}) {
     if (periodId) {
       this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
-        this.modalService.open(new AddGroupModal(periodId, competitionId, objectValues(groups).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0))))
+        this.modalService.open(new AddGroupModal({
+          periodId,
+          competitionId,
+          existingGroups: objectValues(groups).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0)),
+          haveDefaultGroup: !!objectValues(groups).find(g => g.defaultGroup)
+        }))
           .onApprove((result: IAddRegistrationGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {
           });
