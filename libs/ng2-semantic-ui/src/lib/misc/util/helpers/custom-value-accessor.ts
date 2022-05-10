@@ -8,7 +8,7 @@ export interface ICustomValueAccessorHost<T> {
 export class CustomValueAccessor<U, T extends ICustomValueAccessorHost<U>> implements ControlValueAccessor {
     constructor(private _host:T) {}
 
-    public onChange = () => {};
+    public onChange = (_event) => {};
     public onTouched = () => {};
 
     public writeValue(value:U):void {

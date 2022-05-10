@@ -382,13 +382,13 @@ export const eventManagerFighterUnselected = (competitionId) => ({
   competitionId
 });
 
-export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategoryId: string, oldCategoryId: string) => ({
+export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategories: string[], oldCategories: string[]) => ({
   type: EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
   competitionId: fighter.competitionId,
   payload: {
     fighterId: fighter.id,
-    newCategoryId,
-    oldCategoryId
+    newCategories,
+    oldCategories
   }
 });
 export const eventManagerUpdateCompetitorCommand = (competitor: Competitor, categoryId: string) => ({

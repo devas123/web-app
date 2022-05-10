@@ -119,13 +119,13 @@
     <!---------->
   </div>
 
-  <div class="item" itemInput (contentEdited)="changeCategory()">
+  <div class="item" itemInput (contentEdited)="changeCategory()" (editModeEntered)="enterSelectedOptions(select)">
 
     <!--input  hidden field-->
     <div class="input-content">
       <div class="left floated content">
-        <sui-select class="selection" placeholder="Category"
-                    (selectedOptionChange)="setCategoryId($event)"
+        <sui-multi-select class="selection" placeholder="Category"
+                    (selectedOptionsChange)="setCategories($event)"
                     [options]="categories"
                     [isSearchable]="true"
                     [isDisabled]="false"
@@ -135,7 +135,7 @@
           <sui-select-option *ngFor="let option of select.filteredOptions"
                              [value]="option">
           </sui-select-option>
-        </sui-select>
+        </sui-multi-select>
       </div>
       <div class="right floated content ">
         <i class="check link green icon hide-input-btn "></i>

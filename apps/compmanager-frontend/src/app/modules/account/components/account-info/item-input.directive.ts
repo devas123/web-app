@@ -1,21 +1,19 @@
-import {Directive, ElementRef, EventEmitter, HostListener, OnChanges, OnInit, Output, Renderer2} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, OnInit, Output, Renderer2} from '@angular/core';
 
 @Directive({
   selector: '[itemInput]',
   exportAs: 'itemInp',
 })
-export class ItemInputDirective implements OnInit, OnChanges {
-
-
-  public inputVisible = false;
+export class ItemInputDirective implements OnInit {
   public elRef: ElementRef;
 
   @Output()
   public contentEdited = new EventEmitter<any>();
 
+  @Output()
+  public editModeEntered = new EventEmitter<any>();
 
-  ngOnChanges(): void {
-  }
+
 
   ngOnInit(): void {
     this.el.nativeElement.querySelector('.input-content').style.display = 'none';
@@ -30,6 +28,7 @@ export class ItemInputDirective implements OnInit, OnChanges {
       self.el.nativeElement.querySelector('.row-content ').style.display = 'none';
       self.el.nativeElement.querySelector('.input-content').style.display = 'block';
       self.el.nativeElement.querySelector('.input-content').querySelector('input').focus();
+      self.editModeEntered.next(event);
     });
   }
 

@@ -80,9 +80,9 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
   ngOnInit() {
   }
 
-  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategoryId: string }) {
-    const {fighter, newCategoryId} = payload;
-    this.store.dispatch(eventManagerChangeCompetitorCategoryCommand(fighter, newCategoryId, fighter.categories[0]));
+  sendChangeCategoryCommand(payload: { fighter: Competitor, newCategories: string[] }) {
+    const {fighter, newCategories} = payload;
+    this.store.dispatch(eventManagerChangeCompetitorCategoryCommand(fighter, newCategories, fighter.categories));
   }
 
   sendChangeCompetitorCommand(payload: { fighter: Competitor }) {

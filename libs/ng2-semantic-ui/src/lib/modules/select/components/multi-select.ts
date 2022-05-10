@@ -29,10 +29,10 @@ import { SuiSelectOption } from "./select-option";
 <div class="text"
      [class.default]="hasLabels"
      [class.filtered]="!!query && !isSearchExternal">
-    
+
     <!-- Placeholder text -->
     <ng-container *ngIf="hasLabels; else selectedBlock">{{ placeholder }}</ng-container>
-    
+
     <!-- Summary shown when labels are hidden -->
     <ng-template #selectedBlock> {{ selectedMessage }}</ng-template>
 </div>

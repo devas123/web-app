@@ -4,13 +4,13 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
 import {Academy, Category, Competitor} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
+import {SuiMultiSelect} from "@frontend-nx/ng2-semantic-ui";
 
 @Component({
   selector: 'app-fighter-profile',
@@ -18,10 +18,10 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
   styleUrls: ['./fighter-profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FighterProfileComponent implements OnInit, OnChanges {
+export class FighterProfileComponent implements  OnChanges {
 
   @Output()
-  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategoryId: string }>();
+  categoryChanged = new EventEmitter<{ fighter: Competitor, newCategories: string[] }>();
   @Output()
   competitorChanged = new EventEmitter<{ fighter: Competitor }>();
 
@@ -104,9 +104,9 @@ export class FighterProfileComponent implements OnInit, OnChanges {
     return this.form.get('promo');
   }
 
-  setCategoryId(category: Category) {
+  setCategories(categories: Category[]) {
     this.form.patchValue({
-      category: category
+      category: categories
     });
   }
 
@@ -147,14 +147,11 @@ export class FighterProfileComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnInit() {
-  }
-
   changeCategory() {
-    const newCategory = this.category.value;
+    const newCategories = this.category.value as Category[];
     const fighter = this.fighter;
-    if (newCategory && fighter && fighter.categories && fighter.categories.indexOf(newCategory.id) < 0) {
-      this.categoryChanged.next({fighter, newCategoryId: newCategory.id});
+    if (newCategories && fighter && fighter.categories && newCategories.length > 0) {
+      this.categoryChanged.next({fighter, newCategories: newCategories.map(c => c.id)});
     }
   }
 
@@ -189,5 +186,9 @@ export class FighterProfileComponent implements OnInit, OnChanges {
       }
     }
     return categoryId;
+  }
+
+  enterSelectedOptions(select: SuiMultiSelect<any, any>) {
+    select.selectedOptions = this.fighter?.categories?.map(c => this.categories.find(cat => cat.id === c));
   }
 }

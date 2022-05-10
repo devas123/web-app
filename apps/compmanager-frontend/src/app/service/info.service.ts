@@ -20,10 +20,7 @@ const {
   commandsEndpoint,
   generateCategoriesEndpoint,
   competitionQueryEndpoint,
-  registrationInfoQueryEndpoint,
-  competitorEdpoint,
   defaultCategories,
-  dashboardState,
   defaultFightResults,
 } = env.environment;
 
@@ -56,6 +53,8 @@ export const genericRetryStrategy = ({
     finalize(() => console.log('We are done!'))
   );
 };
+
+const competitionIdPrefix = (competitionId: string) => (arg: string) => `${competitionQueryEndpoint}/${competitionId}/${arg}`
 
 
 @Injectable()
@@ -129,29 +128,30 @@ export class InfoService {
   }
 
 
+
   getCompetitor(competitionId: string, fighterId: string) {
     const params = {competitionId, fighterId};
-    return this.httpGet(competitorEdpoint, {
+    return this.httpGet(competitionIdPrefix(competitionId)(`competitor/${fighterId}`), {
       params: params
     });
   }
 
 
   getSchedule(competitionId: string) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/schedule`, {
+    return this.httpGet(competitionIdPrefix(competitionId)('schedule'), {
       headers: this.headers
     });
   }
 
   getFightIdsByCategoryId(competitionId: string) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/fight`, {
+    return this.httpGet(competitionIdPrefix(competitionId)('fight'), {
       headers: this.headers
     });
   }
 
 
   getCategories(competitionId: string) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category`, {
+    return this.httpGet(competitionIdPrefix(competitionId)('category'), {
       headers: this.headers
     });
   }
@@ -172,7 +172,7 @@ export class InfoService {
     if (searchString && searchString.length > 0) {
       params = {...params, searchString};
     }
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/competitor`, {
+    return this.httpGet(competitionIdPrefix(competitionId)('competitor'), {
       params: params
     });
   }
@@ -198,7 +198,7 @@ export class InfoService {
 
   getRegistrationInfo(competitionId: string) {
     const params = {competitionId};
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/reginfo`, {
+    return this.httpGet(competitionIdPrefix(competitionId)('reginfo'), {
       params: params,
       headers: this.headers
     });
@@ -206,7 +206,7 @@ export class InfoService {
 
 
   getLatestCategoryState(competitionId, categoryId) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}`, {
+    return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}`), {
       headers: this.headers
     });
   }
@@ -270,24 +270,14 @@ export class InfoService {
     return this.sendPayloadToEndpoint(payload, `${generateCategoriesEndpoint}/${competitionId}`);
   }
 
-
-  getDashboardState(competitionId: any) {
-    const params = {competitionId};
-    return this.httpGet(dashboardState, {
-      params: params,
-      headers: this.headers
-    });
-  }
-
-
   getPeriodMats(competitionId: any, periodId: any) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/period/${periodId}/mat`, {
+    return this.httpGet(competitionIdPrefix(competitionId)(`period/${periodId}/mat`), {
       headers: this.headers
     });
   }
 
   getFight(competitionId: string, fightId: string, categoryId: string) {
-    return this.httpGet<Fight>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/fight/${fightId}`, {
+    return this.httpGet<Fight>(competitionIdPrefix(competitionId)(`category/${categoryId}/fight/${fightId}`), {
       headers: this.headers
     }).pipe(
       mergeMap(result => this.getFightResultOptions(competitionId, categoryId, result?.stageId).pipe(
@@ -297,7 +287,7 @@ export class InfoService {
   }
 
   getFightResultOptions(competitionId: string, categoryId: string, stageId: string) {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage/${stageId}/resultoptions`, {
+    return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/resultoptions`), {
       headers: this.headers
     });
   }
@@ -305,7 +295,7 @@ export class InfoService {
 
   getMatFights(competitionId: string, matId: string, maxResults: number = 10, queryString?: any) {
     const params = {matId, queryString: queryString || null, maxResults: `${maxResults}`};
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/mat/${matId}/fight`, {
+    return this.httpGet(competitionIdPrefix(competitionId)(`mat/${matId}/fight`), {
       params: params,
       headers: this.headers
     });
@@ -339,13 +329,13 @@ export class InfoService {
     if (!competitionId || !categoryId || !stageId) {
       return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
-    return this.httpGet<Fight[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage/${stageId}/fight`, {
+    return this.httpGet<Fight[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
       headers: this.headers
     });
   }
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
-    return this.httpGet<CategoryBracketsStage[]>(`${competitionQueryEndpoint}/${competitionId}/category/${categoryId}/stage`, {
+    return this.httpGet<CategoryBracketsStage[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage`), {
       headers: this.headers
     });
   }
