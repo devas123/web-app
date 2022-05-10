@@ -266,10 +266,9 @@ export const updateCompetitionProperties = (compprops: CompetitionProperties) =>
   }
 });
 
-export const addCompetitor = (competitionId: string, categoryId, competitor: Competitor) => ({
+export const addCompetitor = (competitionId: string, competitor: Competitor) => ({
   type: EVENT_MANAGER_ADD_COMPETITOR,
   competitionId: competitionId,
-  categoryId,
   payload: { competitor }
 });
 

@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {Academy, Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {AppState, CommonAction, getSelectedEventId} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {addCompetitor} from '../../redux/event-manager-actions';
+import {generateUuid} from "../../../account/utils";
 
 @Component({
   selector: 'app-add-fighter',
@@ -12,7 +13,7 @@ import {addCompetitor} from '../../redux/event-manager-actions';
   styleUrls: ['./add-fighter.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddFighterComponent implements OnInit, OnDestroy {
+export class AddFighterComponent implements  OnDestroy {
 
   @Input()
   collapsed = false;
@@ -21,11 +22,14 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   @Input()
   categories: Category[];
 
+  @Input()
+  academies: Academy[];
+
   @Output()
   closeClicked = new EventEmitter();
 
   @Output()
-  fighterAdded = new EventEmitter<CommonAction>();
+  fighterAdded = new EventEmitter<any>();
   private compIdSubscription;
 
 
@@ -37,7 +41,9 @@ export class AddFighterComponent implements OnInit, OnDestroy {
 
 
   optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
+  academyOptionsFilter = (options: Academy[], filter: string) => options.filter(acad => acad.id && acad.name?.toLowerCase()?.includes(filter.toLowerCase()));
+  formatter = (option: Category, _query?: string) => AddFighterComponent.displayCategory(option);
+  academyFormatter = (option: Academy, _query?: string) => option?.name.trim();
 
   get email() {
     return this.form.get('email');
@@ -85,18 +91,21 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnInit() {
-  }
-
   ngOnDestroy() {
     if (this.compIdSubscription) {
       this.compIdSubscription.unsubscribe();
     }
   }
 
-  setCategoryId(category: Category) {
+  setCategoryIds(categories: Category[]) {
     this.form.patchValue({
-      category: category
+      category: categories
+    });
+  }
+
+  setAcademy(academy: Academy) {
+    this.form.patchValue({
+      academy: academy
     });
   }
 
@@ -117,26 +126,32 @@ export class AddFighterComponent implements OnInit, OnDestroy {
   }
 
   submitForm() {
-    const categoryId = this.category.value.id;
+    const categoryIds = this.category.value.map(c => c.id);
     const competitor = {
       id: '',
       email: this.email.value,
       userId: this.userId.value,
-      academy: this.academy.value,
+      academy: <Academy>{name: this.academy.value, id: generateUuid()},
       birthDate: this.birthDate.value,
-      categories: [categoryId],
+      categories: categoryIds,
       firstName: this.firstName.value,
       lastName: this.lastName.value,
       promo: this.promo.value,
       registrationStatus: this.registrationStatus.value,
       competitionId: this.competitionId.value
     } as Competitor;
-    this.fighterAdded.next(addCompetitor(this.competitionId.value, categoryId, competitor));
+    this.fighterAdded.next(addCompetitor(this.competitionId.value, competitor));
     this.form.reset({
       competitionId: competitor.competitionId,
-      category: categoryId
+      category: categoryIds
     });
     this.form.markAsPristine();
     this.form.markAsUntouched();
+  }
+
+  updateBirthDate(date: Date) {
+    this.form.patchValue({
+      birthDate: date
+    })
   }
 }

@@ -1,4 +1,5 @@
-<form class="ui large form" [suiCollapse]="collapsed" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
+<form class="ui large form" [suiCollapse]="collapsed" [formGroup]="form"
+      [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
 
   <div class="field"
        [ngClass]="{error: email.invalid && (email.touched || email.dirty)}">
@@ -31,32 +32,43 @@
       <input suiDatepicker
              name="birthDate"
              placeholder="Birth Date"
-             formControlName="birthDate"
              [pickerMode]="'date'"
-             [pickerUseNativeOnMobile]="false">
+             [pickerUseNativeOnMobile]="false"
+             (pickerSelectedDateChange)="updateBirthDate($event)">
     </div>
   </div>
   <div class="field"
        [ngClass]="{error: academy.invalid && (academy.touched || academy.dirty)}">
+    <sui-select class="selection" placeholder="Academy"
+                      (selectedOptionChange)="setAcademy($event)"
+                      [options]="academies"
+                      [isSearchable]="true"
+                      [isDisabled]="false"
+                      [optionsFilter]="academyOptionsFilter"
+                      [optionFormatter]="academyFormatter"
+                      #selectAcademy>
+      <sui-select-option *ngFor="let option of selectAcademy.filteredOptions"
+                         [value]="option">
+      </sui-select-option>
+    </sui-select>
     <div class="ui input">
       <input type="text" name="academy" placeholder="Academy" formControlName="academy">
     </div>
   </div>
   <div class="field"
        [ngClass]="{error: category.invalid && (category.touched || category.dirty)}">
-    <sui-select class="selection" placeholder="Category"
-                (selectedOptionChange)="setCategoryId($event)"
-                [options]="categories"
-                [isSearchable]="true"
-                [isDisabled]="false"
-                [optionsFilter]="optionsFilter"
-                [optionFormatter]="formatter"
-
-                #select>
+    <sui-multi-select class="selection" placeholder="Category"
+                      (selectedOptionsChange)="setCategoryIds($event)"
+                      [options]="categories"
+                      [isSearchable]="true"
+                      [isDisabled]="false"
+                      [optionsFilter]="optionsFilter"
+                      [optionFormatter]="formatter"
+                      #select>
       <sui-select-option *ngFor="let option of select.filteredOptions"
                          [value]="option">
       </sui-select-option>
-    </sui-select>
+    </sui-multi-select>
   </div>
 
   <div class="ui button" (click)="closeClicked.next()">Close</div>
