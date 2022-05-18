@@ -1,5 +1,4 @@
 {
-  "root": "apps/registration",
   "sourceRoot": "apps/registration/src",
   "projectType": "application",
   "tags": [],

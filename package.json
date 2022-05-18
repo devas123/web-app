@@ -33,9 +33,13 @@
     "tslib": "^2.3.1",
     "util": "^0.12.4",
     "uuid": "^7.0.3",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.4",
+    "google-protobuf": "^3.20.1",
+    "@grpc/grpc-js": "^1.6.7"
   },
   "devDependencies": {
+    "grpc-tools": "^1.11.2",
+    "@types/google-protobuf": "^3.15.6",
     "@angular-devkit/build-angular": "^13.3.3",
     "@angular-devkit/build-ng-packagr": "^0.1002.0",
     "@angular-eslint/builder": "^13.2.1",
@@ -47,14 +51,15 @@
     "@angular/compiler-cli": "^13.3.3",
     "@angular/language-service": "^13.3.3",
     "@ngrx/store-devtools": "^13.1.0",
-    "@nrwl/angular": "^14.0.3",
-    "@nrwl/cli": "^14.0.3",
-    "@nrwl/cypress": "^14.0.3",
-    "@nrwl/jest": "^14.0.3",
-    "@nrwl/linter": "^14.0.3",
-    "@nrwl/tao": "^14.0.3",
-    "@nrwl/workspace": "^14.0.3",
-    "@nxext/svelte": "^13.0.1",
+    "@nrwl/js": "14.1.7",
+    "@nrwl/angular": "14.1.7",
+    "@nrwl/cli": "14.1.7",
+    "@nrwl/cypress": "14.1.7",
+    "@nrwl/jest": "14.1.7",
+    "@nrwl/linter": "14.1.7",
+    "@nrwl/tao": "14.1.7",
+    "@nrwl/workspace": "14.1.7",
+    "@nxext/svelte": "^14.0.0",
     "@testing-library/svelte": "^3.0.3",
     "@tsconfig/svelte": "^1.0.10",
     "@types/jasmine": "~3.5.0",
@@ -90,6 +95,7 @@
     "svelte-preprocess": "^4.9.8",
     "ts-jest": "^26.0.0",
     "ts-node": "~7.0.0",
+    "ts-protoc-gen": "^0.15.0",
     "typescript": "~4.4.4",
     "zone.js": "~0.11.4"
   },
@@ -99,11 +105,13 @@
     "start": "nx serve compmanager-frontend",
     "build-prod": "nx run compmanager-frontend:build-prod",
     "build": "nx run compmanager-frontend:build",
+    "build:proto": "./compile-proto.sh",
     "test": "ng test",
     "update": "ng update @nrwl/workspace",
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points --tsconfig ./tsconfig.json"
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points --tsconfig ./tsconfig.json",
+    "prebuild": "npm run build:proto"
   }
 }

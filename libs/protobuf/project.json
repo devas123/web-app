@@ -1,0 +1,8 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/protobuf/src",
+  "prefix": "frontend-nx",
+  "targets": {},
+  "generators": {},
+  "tags": []
+}

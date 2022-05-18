@@ -17,7 +17,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend-nx/ng2-semantic-ui": ["libs/ng2-semantic-ui/src/public.ts"]
+      "@frontend-nx/ng2-semantic-ui": ["libs/ng2-semantic-ui/src/public.ts"],
+      "@frontend-nx/protobuf": ["libs/protobuf/src/public.ts"]
     }
   },
   "angularCompilerOptions": {

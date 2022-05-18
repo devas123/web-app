@@ -3,6 +3,7 @@
   "projects": {
     "compmanager-frontend": "apps/compmanager-frontend",
     "ng2-semantic-ui": "libs/ng2-semantic-ui",
+    "protobuf": "libs/protobuf",
     "registration": "apps/registration",
     "registration-e2e": "apps/registration-e2e"
   }

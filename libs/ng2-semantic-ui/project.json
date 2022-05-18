@@ -1,19 +1,8 @@
 {
   "projectType": "library",
-  "root": "libs/ng2-semantic-ui",
   "sourceRoot": "libs/ng2-semantic-ui/src",
   "prefix": "frontend-nx",
   "targets": {
-    "build": {
-      "executor": "@angular-devkit/build-angular:browser",
-      "options": {
-        "outputPath": "dist/lib/ng2-semantic-ui",
-        "allowedCommonJsDependencies": [
-          "date-fns-tz"
-        ],
-        "aot": true
-      }
-    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {

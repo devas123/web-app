@@ -5,12 +5,11 @@
       "style": "scss"
     }
   },
-  "root": "apps/compmanager-frontend",
   "sourceRoot": "apps/compmanager-frontend/src",
   "prefix": "frontend-nx",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nrwl/angular:webpack-browser",
       "options": {
         "outputPath": "dist/apps/compmanager-frontend",
         "preserveSymlinks": true,
@@ -86,7 +85,7 @@
       }
     },
     "lint": {
-      "builder": "@angular-eslint/builder:lint",
+      "executor": "@angular-eslint/builder:lint",
       "options": {
         "lintFilePatterns": [
           "apps/compmanager-frontend/**/*.ts",
@@ -95,7 +94,7 @@
       }
     },
     "test": {
-      "builder": "@angular-devkit/build-angular:jest",
+      "executor": "@angular-devkit/build-angular:jest",
       "options": {
         "jestConfig": "apps/compmanager-frontend/jest.config.js",
         "tsConfig": "apps/compmanager-frontend/tsconfig.spec.json",
@@ -104,5 +103,5 @@
       }
     }
   },
-  "implicitDependencies": ["ng2-semantic-ui"]
+  "implicitDependencies": ["ng2-semantic-ui", "protobuf"]
 }
