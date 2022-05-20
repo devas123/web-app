@@ -2,8 +2,9 @@ import {DashboardState} from '../../modules/event-manager/redux/dashboard-reduce
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities, MatDescription} from '../../reducers/global-reducers';
+import {EventPropsEntities} from '../../reducers/global-reducers';
 import * as _ from 'lodash';
+import {model} from '@frontend-nx/protobuf'
 
 export const dragStartEvent = () => new CustomEvent('app-drag-start', {
   bubbles: true
@@ -159,7 +160,7 @@ export interface Fight {
   status: string;
   fightResult?: FightResult;
   numberInRound: number;
-  mat?: MatDescription;
+  mat?: model.MatDescription;
   numberOnMat?: number;
   priority: number;
   period?: string;
