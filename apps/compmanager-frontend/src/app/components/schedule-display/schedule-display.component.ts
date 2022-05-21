@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
-import {MatDescription, Schedule} from '../../reducers/global-reducers';
-import {Category, Period} from '../../commons/model/competition.model';
+import {Category, MatDescription, Period, Schedule} from '../../commons/model/competition.model';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';

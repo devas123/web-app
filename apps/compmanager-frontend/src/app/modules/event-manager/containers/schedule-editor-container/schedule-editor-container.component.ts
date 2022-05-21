@@ -1,6 +1,6 @@
 import {filter, map, startWith, take, tap} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, getSelectedEventId, Schedule} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';

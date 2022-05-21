@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Period, ScheduleEntry} from '../../commons/model/competition.model';
-import {MatDescription} from '../../reducers/global-reducers';
+import {MatDescription, Period, ScheduleEntry} from '../../commons/model/competition.model';
 import {format, parseISO} from 'date-fns';
 
 @Component({

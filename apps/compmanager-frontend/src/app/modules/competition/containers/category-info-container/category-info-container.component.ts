@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AppState, CompetitionProperties, getSelectedEventProperties} from '../../../../reducers/global-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {AppState, getSelectedEventProperties} from '../../../../reducers/global-reducers';
+import {Category, CompetitionProperties} from '../../../../commons/model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventCategories} from '../../../event-manager/redux/event-manager-reducers';
 

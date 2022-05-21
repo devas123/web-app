@@ -1,5 +1,5 @@
-import {AfterContentInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import { ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {CompetitionProperties} from "../../../../commons/model/competition.model";
 
 
 @Component({
@@ -8,14 +8,8 @@ import {CompetitionProperties} from '../../../../reducers/global-reducers';
   styleUrls: ['./event-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventListComponent implements OnInit, AfterContentInit {
+export class EventListComponent  {
 
   @Input()
   events: CompetitionProperties[];
-
-  ngOnInit() {
-  }
-
-  ngAfterContentInit(): void {
-  }
 }

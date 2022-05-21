@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
-import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
+import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
 import * as _ from 'lodash';
 
 import {
@@ -16,6 +16,7 @@ import {
   categoriesInitialState,
   Category,
   categoryEntityAdapter,
+  CompetitionProperties,
   Competitor,
   competitorEntityAdapter,
   CompetitorsCollection,
@@ -25,7 +26,10 @@ import {
   FightResultOption,
   FightsCollection,
   fightsInitialState,
+  MatDescription,
   Period,
+  RegistrationInfo,
+  Schedule,
   ScheduleRequirement,
   stagesEntityAdapter,
   stagesInitialState
@@ -99,13 +103,6 @@ export interface CommonAction extends Action {
   competitionId: string | null;
 }
 
-export interface MatDescription {
-  id: string;
-  name: string;
-  numberOfFights: number;
-  periodId: string;
-  matOrder: number;
-}
 
 export interface MatsCollection extends EntityState<MatDescription> {
   selectedMatId: string | null;
@@ -156,14 +153,6 @@ export const periodEntityInitialState = periodEntityAdapter.getInitialState({
   selectedPeriodId: null
 });
 
-export interface Schedule {
-  competitionId: string;
-  periods: PeriodEntities;
-  undispatchedRequirements: ScheduleRequirement[];
-  fightIdsBycategoryId: Dictionary<string[]>;
-}
-
-
 export const scheduleInitialState: Schedule = {
   periods: periodEntityInitialState,
   undispatchedRequirements: [],
@@ -185,59 +174,6 @@ export const initialCompetitionState: CompetitionState = {
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
   selectedEventId: null
 });
-
-export interface RegistrationGroup {
-  id: string;
-  displayName: string;
-  defaultGroup: boolean;
-  registrationFee: RegistrationFee;
-  registrationPeriodIds: string[];
-  registrationInfoId: string;
-  categories: string[];
-}
-
-export interface RegistrationFee {
-  currency: string,
-  amount: number,
-  remainder: number
-}
-
-export interface RegistrationPeriod {
-  id: string;
-  name: string;
-  start: string;
-  end: string;
-  competitionId: string;
-  registrationGroupIds: string[];
-}
-
-export interface RegistrationPeriodCollection {[key: string]: RegistrationPeriod}
-export interface RegistrationGroupCollection {[key: string]: RegistrationGroup}
-
-export interface RegistrationInfo {
-  registrationPeriods: RegistrationPeriodCollection;
-  registrationGroups: RegistrationGroupCollection;
-  registrationOpen: boolean;
-  id: string;
-}
-
-export interface CompetitionProperties {
-  infoTemplate: string;
-  creatorId: any;
-  id: string;
-  competitionName: string;
-  startDate: string;
-  schedulePublished: boolean;
-  bracketsPublished: boolean;
-  status: string;
-  endDate: string;
-  timeZone: string;
-}
-
-export interface Error {
-  type: string;
-  description: string;
-}
 
 export const reducers: ActionReducerMap<AppState> = {
   accountState: accountStateReducer,

@@ -1,11 +1,17 @@
 import {Observable} from 'rxjs';
 import {
   AppState,
-  CompetitionProperties,
   getSelectedEventId,
   getSelectedEventProperties
 } from '../../reducers/global-reducers';
-import {BracketsType, Category, CategoryBracketsStage, Competitor, Fight} from '../model/competition.model';
+import {
+  BracketsType,
+  Category,
+  CategoryBracketsStage,
+  CompetitionProperties,
+  Competitor,
+  Fight
+} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,

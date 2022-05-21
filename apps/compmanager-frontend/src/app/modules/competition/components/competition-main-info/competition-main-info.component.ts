@@ -1,11 +1,13 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
   AppState,
-  CompetitionProperties,
   getSelectedEventProperties,
-  RegistrationPeriod, RegistrationPeriodCollection
 } from '../../../../reducers/global-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  CompetitionProperties,
+  RegistrationPeriodCollection
+} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {

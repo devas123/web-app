@@ -5,9 +5,7 @@ import {
   RegistrationGroup,
   RegistrationInfo,
   RegistrationPeriod,
-  Schedule
-} from '../../../reducers/global-reducers';
-import {
+  Schedule,
   AdjacencyList,
   Category,
   CategoryBracketsStage,

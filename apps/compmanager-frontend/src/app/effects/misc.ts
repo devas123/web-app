@@ -3,11 +3,12 @@ import {Injectable} from '@angular/core';
 import {of} from 'rxjs';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as miscActions from '../actions/misc';
-import {AppState, CompetitionProperties} from '../reducers/global-reducers';
+import {AppState} from '../reducers/global-reducers';
 import {InfoService} from '../service/info.service';
 import {EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED, eventManagerLoadFightersForCompetition} from '../modules/event-manager/redux/event-manager-actions';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventCompetitorsPageSize} from '../modules/event-manager/redux/event-manager-reducers';
+import {CompetitionProperties} from "../commons/model/competition.model";
 
 
 @Injectable()

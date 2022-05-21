@@ -8,7 +8,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
+import {CompetitionProperties} from "../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-my-events-list',

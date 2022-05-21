@@ -1,6 +1,10 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, categoryFilter, defaultRestrictionFormatter} from '../../commons/model/competition.model';
-import {CompetitionProperties} from '../../reducers/global-reducers';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  Category,
+  categoryFilter,
+  CompetitionProperties,
+  defaultRestrictionFormatter
+} from '../../commons/model/competition.model';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 
@@ -11,7 +15,7 @@ import {AddFighterComponent} from '../../modules/event-manager/components/add-fi
   styleUrls: ['./category-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryEditorComponent implements OnInit {
+export class CategoryEditorComponent  {
 
   @Input()
   editMode = true;
@@ -125,9 +129,6 @@ export class CategoryEditorComponent implements OnInit {
 
     return filteredOptions;
   };
-
-  ngOnInit() {
-  }
 
   generateRandomFighters(category: Category) {
     if (category) {

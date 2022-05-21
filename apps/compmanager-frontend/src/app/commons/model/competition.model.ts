@@ -1,8 +1,8 @@
 import {DashboardState} from '../../modules/event-manager/redux/dashboard-reducers';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {createEntityAdapter, Dictionary, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities, MatDescription} from '../../reducers/global-reducers';
+import {EventPropsEntities, PeriodEntities} from '../../reducers/global-reducers';
 import * as _ from 'lodash';
 
 export const dragStartEvent = () => new CustomEvent('app-drag-start', {
@@ -12,11 +12,73 @@ export const dragEndEvent = () => new CustomEvent('app-drag-end', {
   bubbles: true
 });
 
-export const getRestrictionByType = (cat: Category, type: string) => {
-  if (cat && cat.restrictions) {
-    return cat.restrictions.find(r => r.name === type);
-  }
-};
+
+export interface Schedule {
+  competitionId: string;
+  periods: PeriodEntities;
+  undispatchedRequirements: ScheduleRequirement[];
+  fightIdsBycategoryId: Dictionary<string[]>;
+}
+
+
+export interface RegistrationGroup {
+  id: string;
+  displayName: string;
+  defaultGroup: boolean;
+  registrationFee: RegistrationFee;
+  registrationPeriodIds: string[];
+  registrationInfoId: string;
+  categories: string[];
+}
+
+export interface RegistrationFee {
+  currency: string,
+  amount: number,
+  remainder: number
+}
+
+export interface RegistrationPeriod {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  competitionId: string;
+  registrationGroupIds: string[];
+}
+
+export interface RegistrationPeriodCollection {
+  [key: string]: RegistrationPeriod
+}
+
+export interface RegistrationGroupCollection {
+  [key: string]: RegistrationGroup
+}
+
+export interface RegistrationInfo {
+  registrationPeriods: RegistrationPeriodCollection;
+  registrationGroups: RegistrationGroupCollection;
+  registrationOpen: boolean;
+  id: string;
+}
+
+export interface Error {
+  type: string;
+  description: string;
+}
+
+
+export interface CompetitionProperties {
+  infoTemplate: string;
+  creatorId: any;
+  id: string;
+  competitionName: string;
+  startDate: string;
+  schedulePublished: boolean;
+  bracketsPublished: boolean;
+  status: string;
+  endDate: string;
+  timeZone: string;
+}
 
 export const displayCategory = (cat: Category, maxLength: number = -1) => {
   if (!cat) {
@@ -36,10 +98,19 @@ const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 export const categoryFilter = value => cat => {
   return !value || value.length <= 0 || (cat.id
     && cat.restrictions && cat.restrictions.map(r => hasAny(r.name, value) || hasAny(r.alias, value) ||
-       hasAny(r.value, value) || hasAny(r.minValue, value) || hasAny(r.maxValue, value)));
+      hasAny(r.value, value) || hasAny(r.minValue, value) || hasAny(r.maxValue, value)));
 };
 
 export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
+
+
+export interface MatDescription {
+  id: string;
+  name: string;
+  numberOfFights: number;
+  periodId: string;
+  matOrder: number;
+}
 
 
 export interface Period {
@@ -140,6 +211,7 @@ export interface CompetitorGroupChange {
   groupId: string;
   changeType: GroupChangeType;
 }
+
 export interface FightEditorChange {
   fightId: string;
   competitors: string[];
@@ -189,7 +261,7 @@ export const restrictionTypes: RestrictionType[] = [
   'Value', 'Range'
 ];
 
-export const  defaultRestrictionFormatter = (showName: boolean = true) => (restr: CategoryRestriction) => {
+export const defaultRestrictionFormatter = (showName: boolean = true) => (restr: CategoryRestriction) => {
   if (restr.alias) {
     return restr.alias;
   }
@@ -250,9 +322,9 @@ export interface GroupDescriptor {
   size: number;
 }
 
-export type StageStatus =  'APPROVED' |  'WAITING_FOR_APPROVAL' |  'WAITING_FOR_COMPETITORS' | 'FINISHED' | 'IN_PROGRESS';
+export type StageStatus = 'APPROVED' | 'WAITING_FOR_APPROVAL' | 'WAITING_FOR_COMPETITORS' | 'FINISHED' | 'IN_PROGRESS';
 
-export const stageStatusValues: StageStatus[] = ['APPROVED', 'WAITING_FOR_APPROVAL',  'WAITING_FOR_COMPETITORS', 'FINISHED', 'IN_PROGRESS'];
+export const stageStatusValues: StageStatus[] = ['APPROVED', 'WAITING_FOR_APPROVAL', 'WAITING_FOR_COMPETITORS', 'FINISHED', 'IN_PROGRESS'];
 
 export interface CategoryBracketsStage {
   id: string;

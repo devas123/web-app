@@ -1,9 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {
   AppState,
-  CompetitionProperties,
   getSelectedEventProperties,
-  RegistrationInfo
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -20,7 +18,7 @@ import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {HeaderDescription} from '../../../../commons/model/competition.model';
+import {CompetitionProperties, HeaderDescription, RegistrationInfo} from '../../../../commons/model/competition.model';
 
 @Component({
   selector: 'app-event-properties-editor-container',
@@ -28,7 +26,7 @@ import {HeaderDescription} from '../../../../commons/model/competition.model';
                                           [registrationInfo]="registrationInfo$ | async"
                                           [properties]="competitionProperties$ | async"></app-event-properties-editor>`
 })
-export class EventPropertiesEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class EventPropertiesEditorContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
 
   competitionProperties$: Observable<CompetitionProperties>;
   registrationInfo$: Observable<RegistrationInfo>;
@@ -78,9 +76,6 @@ export class EventPropertiesEditorContainerComponent extends EventManagerRouterE
     }, menuService);
     this.competitionProperties$ = store.pipe(select(getSelectedEventProperties));
     this.registrationInfo$ = store.pipe(select(eventManagerGetSelectedEventRegistrationInfo));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

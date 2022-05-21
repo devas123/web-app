@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {CompetitionProperties, RegistrationInfo} from '../../../../reducers/global-reducers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {InfoService} from '../../../../service/info.service';
+import {CompetitionProperties, RegistrationInfo} from "../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-event-properties-editor',

@@ -1,7 +1,13 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, Competitor, dragEndEvent, dragStartEvent, Fight} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  Competitor,
+  dragEndEvent,
+  dragStartEvent,
+  Fight,
+  MatDescription
+} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {MatDescription} from '../../../../reducers/global-reducers';
 
 @Component({
   selector: 'app-mat-display',

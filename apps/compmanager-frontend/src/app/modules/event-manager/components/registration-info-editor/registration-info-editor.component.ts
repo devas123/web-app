@@ -1,6 +1,10 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {RegistrationGroup, RegistrationInfo, RegistrationPeriod} from '../../../../reducers/global-reducers';
-import {Category} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  RegistrationGroup,
+  RegistrationInfo,
+  RegistrationPeriod
+} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
 
 @Component({

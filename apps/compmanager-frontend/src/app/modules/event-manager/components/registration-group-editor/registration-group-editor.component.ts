@@ -1,6 +1,10 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Category, displayCategory as dc} from '../../../../commons/model/competition.model';
-import {RegistrationGroup, RegistrationInfo} from '../../../../reducers/global-reducers';
+import {
+  Category,
+  displayCategory as dc,
+  RegistrationGroup,
+  RegistrationInfo
+} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import produce from 'immer';
 import {objectValues} from "../../../account/utils";

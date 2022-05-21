@@ -1,6 +1,6 @@
-import {categoryEntityAdapter} from '../../../../commons/model/competition.model';
+import {categoryEntityAdapter, CompetitionProperties} from '../../../../commons/model/competition.model';
 import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
-import {AppState, CompetitionProperties, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
+import {AppState, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {COMPETITION_SELECTED} from '../../../event-manager/redux/event-manager-actions';

@@ -1,19 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {CompetitionProperties} from '../../../../../reducers/global-reducers';
+import {Component, Input} from '@angular/core';
+import {CompetitionProperties} from "../../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-competition-description',
   templateUrl: './competition-description.component.html',
   styleUrls: ['./competition-description.component.css']
 })
-export class CompetitionDescriptionComponent implements OnInit {
+export class CompetitionDescriptionComponent  {
 
   @Input()
   properties: CompetitionProperties;
 
   constructor() { }
 
-  ngOnInit() {
-  }
+
 
 }

@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {CompetitionProperties} from '../../../../reducers/global-reducers';
 import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
 import {Router} from '@angular/router';
+import {CompetitionProperties} from "../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-event-card',

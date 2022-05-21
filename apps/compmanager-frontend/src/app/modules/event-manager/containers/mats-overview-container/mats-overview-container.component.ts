@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
@@ -6,8 +6,7 @@ import {
   dashboardGetSelectedPeriodMats,
   getSelectedEventDashboardPeriodFights,
   getSelectedEventId,
-  getSelectedEventSelectedPeriod,
-  MatDescription
+  getSelectedEventSelectedPeriod
 } from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -18,14 +17,14 @@ import {
 import {filter, map, take, tap} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import {Fight, HeaderDescription, Period} from '../../../../commons/model/competition.model';
+import {Fight, HeaderDescription, MatDescription, Period} from '../../../../commons/model/competition.model';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
   styleUrls: ['./mats-overview-container.component.css']
 })
-export class MatsOverviewContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
+export class MatsOverviewContainerComponent extends EventManagerRouterEntryComponent  {
   selectedPeriod$: Observable<Period>;
   selectedPeriodMats$: Observable<MatDescription[]>;
   competitionId$: Observable<string>;
@@ -56,9 +55,6 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
     this.store.pipe(select(getSelectedEventId), take(1)).subscribe((id) => {
       this.router.navigateByUrl(`/eventmanager/${id}/dashboard`).catch(console.error);
     });
-  }
-
-  ngOnInit() {
   }
 
   navigateToMat(matId: string) {

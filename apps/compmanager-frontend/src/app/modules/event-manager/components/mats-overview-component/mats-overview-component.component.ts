@@ -4,12 +4,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
-import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
+import {Category, Competitor, Fight, MatDescription} from '../../../../commons/model/competition.model';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import {MatDescription} from '../../../../reducers/global-reducers';
 import * as _ from 'lodash';
 
 @Component({
@@ -18,7 +16,7 @@ import * as _ from 'lodash';
   styleUrls: ['./mats-overview-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatsOverviewComponentComponent implements OnInit {
+export class MatsOverviewComponentComponent  {
 
   @Input()
   matsFights: Fight[];
@@ -55,9 +53,6 @@ export class MatsOverviewComponentComponent implements OnInit {
 
   openCompetitorPage(competitor: Competitor) {
     this.competitorClicked.next(competitor);
-  }
-
-  ngOnInit() {
   }
 
   fightMatChanged($event: any) {

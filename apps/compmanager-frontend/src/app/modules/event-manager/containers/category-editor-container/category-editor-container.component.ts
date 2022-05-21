@@ -1,8 +1,7 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {
   AppState,
-  CompetitionProperties,
   getSelectedEventId,
   getSelectedEventProperties
 } from '../../../../reducers/global-reducers';
@@ -11,7 +10,12 @@ import {
   eventManagerGetSelectedEventName,
   getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
-import {Category, CategoryState, HeaderDescription} from '../../../../commons/model/competition.model';
+import {
+  Category,
+  CategoryState,
+  CompetitionProperties,
+  HeaderDescription
+} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
   deleteCategory,
@@ -45,7 +49,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
                          (generateRandomFightersEvent)="generateRandomFighters($event)"
                          (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>`
 })
-export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit {
+export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer  {
 
   competition$: Observable<CompetitionProperties>;
 
@@ -86,10 +90,6 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
     if (categoriesToAdd && categoriesToAdd.length > 0) {
       this.sendAddDefaultCategoriesCommand(categoriesToAdd.map(category => ({competitionId, category})));
     }
-  }
-
-
-  ngOnInit() {
   }
 
   addCategory() {

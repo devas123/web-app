@@ -32,11 +32,12 @@ import {
 } from './event-manager-actions';
 
 
-import {CommonAction, CompetitionProperties} from '../../../reducers/global-reducers';
+import {CommonAction} from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
+import {CompetitionProperties} from "../../../commons/model/competition.model";
 
 @Injectable()
 export class EventManagerEffects {

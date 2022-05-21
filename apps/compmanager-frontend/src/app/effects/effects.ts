@@ -8,7 +8,7 @@ import * as allActions from '../actions/actions';
 import {errorEvent} from '../actions/actions';
 import * as competitionMiscActions from '../actions/misc';
 import {InfoService} from '../service/info.service';
-import {CommonAction, CompetitionProperties, RegistrationInfo, Schedule} from '../reducers/global-reducers';
+import {CommonAction} from '../reducers/global-reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';
 import {
   COMPETITION_SELECTED,
@@ -33,7 +33,7 @@ import {
   LOAD_SCHEDULE_COMMAND,
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
-import {Competitor, Fight} from '../commons/model/competition.model';
+import {CompetitionProperties, Competitor, Fight, RegistrationInfo, Schedule} from '../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 
 @Injectable()

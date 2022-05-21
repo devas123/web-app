@@ -1,15 +1,16 @@
 import {map, take, tap} from 'rxjs/operators';
-import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
-import {AppState, CompetitionProperties, RegistrationInfo} from '../../../../reducers/global-reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {selectUser} from '../../../competition/redux/reducers';
+import {CompetitionProperties, RegistrationInfo} from "../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-create-event',
@@ -17,7 +18,7 @@ import {selectUser} from '../../../competition/redux/reducers';
   styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class CreateEventComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
 
   form: FormGroup;
   @Output()
@@ -64,9 +65,6 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
   displayErrorList() {
     // return displayErrors(this.userForm)
 
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {

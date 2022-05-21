@@ -1,15 +1,19 @@
 import {Observable} from 'rxjs';
 import {
   AppState,
-  CompetitionProperties,
   eventManagerGetSelectedEventSchedule,
   getSelectedEventId, getSelectedEventMats,
   getSelectedEventProperties, getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventSelectedPeriod,
-  MatDescription,
-  Schedule
 } from '../../reducers/global-reducers';
-import {Category, Period, ScheduleRequirement} from '../model/competition.model';
+import {
+  Category,
+  CompetitionProperties,
+  MatDescription,
+  Period,
+  Schedule,
+  ScheduleRequirement
+} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,

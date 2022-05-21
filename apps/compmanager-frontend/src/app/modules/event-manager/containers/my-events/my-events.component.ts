@@ -1,19 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, CompetitionProperties} from '../../../../reducers/global-reducers';
+import {AppState} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CompetitionProperties} from "../../../../commons/model/competition.model";
 
 @Component({
   selector: 'app-my-events',
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css']
 })
-export class MyEventsComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class MyEventsComponent extends EventManagerRouterEntryComponent  {
 
   events$: Observable<CompetitionProperties[]>;
 
@@ -30,12 +31,6 @@ export class MyEventsComponent extends EventManagerRouterEntryComponent implemen
       }
     }, menuService);
     this.events$ = store.pipe(select(eventManagerGetMyEventsProperties));
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy(): void {
   }
 
   sendDeleteCommand(props: CompetitionProperties) {

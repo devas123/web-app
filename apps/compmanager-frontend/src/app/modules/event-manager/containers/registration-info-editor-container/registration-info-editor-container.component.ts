@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState, getSelectedEventId, RegistrationInfo} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {
@@ -33,7 +33,7 @@ import {
 } from '../../components/registration-info-editor/add-registration-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {Category, HeaderDescription} from '../../../../commons/model/competition.model';
+import {Category, HeaderDescription, RegistrationInfo} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
 
 @Component({

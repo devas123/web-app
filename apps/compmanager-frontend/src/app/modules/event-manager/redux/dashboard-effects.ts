@@ -1,6 +1,6 @@
-import {from, Observable, of, of as observableOf} from 'rxjs';
+import {Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, exhaustMap, filter, map, mergeMap, switchMap, tap, toArray, withLatestFrom, take} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, mergeMap, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
@@ -12,7 +12,6 @@ import {
   getSelectedEventGetSelectedMatId,
   getSelectedEventId,
   getSelectedEventSelectedPeriodId,
-  MatDescription
 } from '../../../reducers/global-reducers';
 import {InfoService} from '../../../service/info.service';
 import {ERROR_EVENT, errorEvent} from '../../../actions/actions';

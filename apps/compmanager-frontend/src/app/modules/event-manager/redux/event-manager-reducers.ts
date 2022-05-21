@@ -1,14 +1,14 @@
 import {
   CommonAction,
-  CompetitionProperties,
   competitionPropertiesEntitiesAdapter,
   competitionPropertiesEntitiesInitialState,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventSchedulePeriodsCollection,
   EventPropsEntities,
-  getSelectedEventProperties, getSelectedEventScheduleFightsByCategoryId,
+  getSelectedEventProperties,
+  getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventState,
-  periodEntityAdapter, RegistrationGroupCollection, RegistrationPeriod, RegistrationPeriodCollection
+  periodEntityAdapter,
 } from '../../../reducers/global-reducers';
 import {
   COMPETITION_CREATED,
@@ -34,14 +34,14 @@ import {
   AdjacencyList,
   categoriesInitialState,
   CategoryConstructorState,
-  categoryEntityAdapter,
+  categoryEntityAdapter, CompetitionProperties,
   competitorEntityAdapter,
   competitorsInitialState,
   EventManagerState,
   fightEntityAdapter,
   fightsInitialState,
   HeaderDescription,
-  initialCategoryConstructorState,
+  initialCategoryConstructorState, RegistrationPeriodCollection,
   stagesEntityAdapter
 } from '../../../commons/model/competition.model';
 import {getEventManagerState} from './reducers';
