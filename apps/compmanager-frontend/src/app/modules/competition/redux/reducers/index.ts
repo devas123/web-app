@@ -1,10 +1,10 @@
-import {categoryEntityAdapter, CompetitionProperties} from '../../../../commons/model/competition.model';
+import {categoryEntityAdapter} from '../../../../commons/model/competition.model';
 import {COMPETITION_LIST_LOADED} from '../../../../actions/actions';
 import {AppState, competitionPropertiesEntitiesAdapter, competitionPropertiesEntitiesInitialState, EventPropsEntities, getSelectedEventState} from '../../../../reducers/global-reducers';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {COMPETITION_SELECTED} from '../../../event-manager/redux/event-manager-actions';
-import {Update} from '@ngrx/entity';
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 export const featureKey = 'events';
 

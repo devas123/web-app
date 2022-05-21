@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {Location} from '@angular/common';
 
 @Component({
@@ -6,12 +6,9 @@ import {Location} from '@angular/common';
   templateUrl: './dashboard-component.component.html',
   styleUrls: ['./dashboard-component.component.css']
 })
-export class DashboardComponentComponent implements OnInit {
+export class DashboardComponentComponent  {
 
   constructor(private location: Location) { }
-
-  ngOnInit() {
-  }
 
   navigateBack() {
     this.location.back();

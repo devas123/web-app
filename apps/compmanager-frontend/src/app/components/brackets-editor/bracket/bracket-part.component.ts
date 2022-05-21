@@ -4,14 +4,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Competitor, Fight, StageType} from '../../../commons/model/competition.model';
 import {ConnectionType} from '../bracketround/bracketround.component';
 import {Dictionary} from '@ngrx/entity';
+import {Competitor, FightDescription, FightStatus, StageRoundType, StageType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-bracket-part',
@@ -38,10 +36,10 @@ import {Dictionary} from '@ngrx/entity';
   styleUrls: ['./bracket.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
+export class BracketPartComponent implements  OnChanges {
 
   @Input()
-  set fights(fights: Fight[]) {
+  set fights(fights: FightDescription[]) {
     this.rounds = [];
     if (fights) {
       this._fights = fights;
@@ -74,7 +72,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
 
   rounds: number[][];
 
-  _fights: Fight[];
+  _fights: FightDescription[];
   _flatRoundsReversed: number[] = [];
 
   @Input()
@@ -130,7 +128,7 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
 
   getOneFightInPercent(round: number) {
     const roundFights = this.getActualFightsForRound(round);
-    const fightsNumber = roundFights.filter(f => f.roundType !== 'THIRD_PLACE_FIGHT').length;
+    const fightsNumber = roundFights.filter(f => f.roundType !== StageRoundType.STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT).length;
     const totalFights = this.getCalculatedFightsNumberForRound(round);
     if (this._fights) {
       return 100 * fightsNumber / totalFights;
@@ -139,10 +137,10 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  getExtraFights(round: number, fights: Fight[]) {
+  getExtraFights(round: number, fights: FightDescription[]) {
     const totalFights = this.getCalculatedFightsNumberForRound(round);
     if (round === 0 && fights.length < totalFights) {
-      const extraFights = [] as Fight[];
+      const extraFights = [] as FightDescription[];
       fights.forEach(f => extraFights.push(f));
       let i = fights.length;
       while (i++ < totalFights) {
@@ -150,8 +148,8 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
           id: `${i}`,
           round: round,
           scores: [],
-          status: 'BYE'
-        } as Fight;
+          status: FightStatus.FIGHT_STATUS_WALKOVER,
+        } as FightDescription;
         extraFights.push(f);
       }
       return extraFights;
@@ -165,11 +163,10 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
 
-  ngOnDestroy(): void {
-  }
+
 
   getRoundName(round, stageType: StageType) {
-    if (stageType === 'PRELIMINARY') {
+    if (stageType === StageType.STAGE_TYPE_PRELIMINARY) {
       return `Prelim. round ${round + 1}`;
     }
     if (this._flatRoundsReversed.indexOf(round) === 0) {
@@ -209,8 +206,5 @@ export class BracketPartComponent implements OnInit, OnDestroy, OnChanges {
     } else {
       return 0;
     }
-  }
-
-  ngOnInit() {
   }
 }

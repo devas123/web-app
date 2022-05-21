@@ -33,8 +33,9 @@ import {
 } from '../../components/registration-info-editor/add-registration-period-form.component';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {Category, HeaderDescription, RegistrationInfo} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
+import {CategoryDescriptor, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -49,7 +50,7 @@ export class RegistrationInfoEditorContainerComponent extends EventManagerRouter
   selectedRegistrationGroupId$: Observable<string | boolean>;
   hasRegistrationGroupSelected$: Observable<boolean>;
   columsNumber$: Observable<number>;
-  categories$: Observable<Category[]>;
+  categories$: Observable<CategoryDescriptor[]>;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
               private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {

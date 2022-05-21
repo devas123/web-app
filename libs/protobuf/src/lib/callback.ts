@@ -5,12 +5,14 @@ import { Any } from './google/protobuf/any';
 import { Event } from './event';
 import { Command } from './command';
 
-export enum CommandExecutionResult {
-  COMMAND_EXECUTION_RESULT_SUCCESS = 0,
-  COMMAND_EXECUTION_RESULT_FAIL = 1,
-  COMMAND_EXECUTION_RESULT_TIMEOUT = 2,
-  UNRECOGNIZED = -1,
-}
+export const CommandExecutionResult = {
+  COMMAND_EXECUTION_RESULT_SUCCESS: 'COMMAND_EXECUTION_RESULT_SUCCESS',
+  COMMAND_EXECUTION_RESULT_FAIL: 'COMMAND_EXECUTION_RESULT_FAIL',
+  COMMAND_EXECUTION_RESULT_TIMEOUT: 'COMMAND_EXECUTION_RESULT_TIMEOUT',
+} as const;
+
+export type CommandExecutionResult =
+  typeof CommandExecutionResult[keyof typeof CommandExecutionResult];
 
 export function commandExecutionResultFromJSON(
   object: any
@@ -25,10 +27,10 @@ export function commandExecutionResultFromJSON(
     case 2:
     case 'COMMAND_EXECUTION_RESULT_TIMEOUT':
       return CommandExecutionResult.COMMAND_EXECUTION_RESULT_TIMEOUT;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return CommandExecutionResult.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandExecutionResult'
+      );
   }
 }
 
@@ -42,9 +44,27 @@ export function commandExecutionResultToJSON(
       return 'COMMAND_EXECUTION_RESULT_FAIL';
     case CommandExecutionResult.COMMAND_EXECUTION_RESULT_TIMEOUT:
       return 'COMMAND_EXECUTION_RESULT_TIMEOUT';
-    case CommandExecutionResult.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandExecutionResult'
+      );
+  }
+}
+
+export function commandExecutionResultToNumber(
+  object: CommandExecutionResult
+): number {
+  switch (object) {
+    case CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS:
+      return 0;
+    case CommandExecutionResult.COMMAND_EXECUTION_RESULT_FAIL:
+      return 1;
+    case CommandExecutionResult.COMMAND_EXECUTION_RESULT_TIMEOUT:
+      return 2;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandExecutionResult'
+      );
   }
 }
 
@@ -66,7 +86,7 @@ function createBaseCommandCallback(): CommandCallback {
   return {
     id: '',
     correlationId: '',
-    result: 0,
+    result: CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS,
     errorInfo: undefined,
     events: [],
     command: undefined,
@@ -84,8 +104,10 @@ export const CommandCallback = {
     if (message.correlationId !== '') {
       writer.uint32(18).string(message.correlationId);
     }
-    if (message.result !== 0) {
-      writer.uint32(24).int32(message.result);
+    if (
+      message.result !== CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS
+    ) {
+      writer.uint32(24).int32(commandExecutionResultToNumber(message.result));
     }
     if (message.errorInfo !== undefined) {
       ErrorCallback.encode(
@@ -116,7 +138,7 @@ export const CommandCallback = {
           message.correlationId = reader.string();
           break;
         case 3:
-          message.result = reader.int32() as any;
+          message.result = commandExecutionResultFromJSON(reader.int32());
           break;
         case 4:
           message.errorInfo = ErrorCallback.decode(reader, reader.uint32());
@@ -143,7 +165,7 @@ export const CommandCallback = {
         : '',
       result: isSet(object.result)
         ? commandExecutionResultFromJSON(object.result)
-        : 0,
+        : CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS,
       errorInfo: isSet(object.errorInfo)
         ? ErrorCallback.fromJSON(object.errorInfo)
         : undefined,
@@ -185,7 +207,8 @@ export const CommandCallback = {
     const message = createBaseCommandCallback();
     message.id = object.id ?? '';
     message.correlationId = object.correlationId ?? '';
-    message.result = object.result ?? 0;
+    message.result =
+      object.result ?? CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS;
     message.errorInfo =
       object.errorInfo !== undefined && object.errorInfo !== null
         ? ErrorCallback.fromPartial(object.errorInfo)
@@ -265,6 +288,17 @@ export const ErrorCallback = {
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin =
   | Date

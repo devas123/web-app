@@ -7,14 +7,9 @@ import {
   eventManagerGetSelectedEventName
 } from '../../redux/event-manager-reducers';
 import {
-  Category,
-  CategoryBracketsStage,
   CompetitorGroupChange,
-  Fight,
   FightEditorChange,
-  FightResultOption,
-  HeaderDescription,
-  StageStatus
+  HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {
@@ -34,6 +29,13 @@ import {
 } from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {
+  CategoryDescriptor,
+  FightDescription,
+  FightResultOption,
+  StageDescriptor,
+  StageStatus
+} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-brackets-editor-container',
@@ -122,10 +124,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.router.navigate(['..'], {relativeTo: this.route}).catch(console.log);
   }
 
-  optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: Category) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
+  formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
 
-  setCategoryId(category: Category) {
+  setCategoryId(category: CategoryDescriptor) {
     this.editMode = false;
     this.bracketsInfo.category$.pipe(take(1)).subscribe(cat => {
       if (!cat || cat.id !== category.id) {
@@ -143,7 +145,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.showResults = !this.showResults;
   }
 
-  sendTheChanges({fights, competitorGroupChanges}: { fights: Fight[], competitorGroupChanges: CompetitorGroupChange[] }) {
+  sendTheChanges({fights, competitorGroupChanges}: { fights: FightDescription[], competitorGroupChanges: CompetitorGroupChange[] }) {
     combineLatest([this.bracketsInfo.competition$, this.bracketsInfo.category$, this.bracketsInfo.stage$]).pipe(
       take(1),
       filter(([competition, category, stage]) => !!competition && !!category && !!stage),
@@ -171,7 +173,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.bracketsInfo.sendCommandFromCompetitionId(competitionId => eventManagerLoadDefaultFightResults({competitionId}));
   }
 
-  generateBrackets(stages: CategoryBracketsStage[]) {
+  generateBrackets(stages: StageDescriptor[]) {
     this.sendCommandFromCategoryId(categoryId => eventManagerGenerateBrackets(this.competitionId, categoryId, stages));
   }
 

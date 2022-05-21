@@ -37,7 +37,7 @@ import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {CompetitionProperties} from "../../../commons/model/competition.model";
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class EventManagerEffects {

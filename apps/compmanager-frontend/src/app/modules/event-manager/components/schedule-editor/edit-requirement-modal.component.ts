@@ -1,17 +1,18 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ComponentModalConfig, IPopup, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
-import {Category, displayCategory, ScheduleRequirement} from '../../../../commons/model/competition.model';
+import {displayCategory} from '../../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {defaultActiveSelectionColor, uniqueFilter} from '../../../account/utils';
 import {ColorEvent} from 'ngx-color';
+import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 export interface IEditRequirementContext {
   competitionId: string;
   fightIdsByCategoryId: Dictionary<string[]>;
   fightsColors: Dictionary<string[]>;
-  allCategories: Category[];
+  allCategories: CategoryDescriptor[];
   undispatchedCategories: string[];
   requirement: ScheduleRequirement;
   requirementFactory: (fightIds, categoryId) => ScheduleRequirement;
@@ -23,7 +24,7 @@ export interface IEditRequirementResult {
 }
 
 export class EditRequirementModal extends ComponentModalConfig<IEditRequirementContext, IEditRequirementResult, void> {
-  constructor(competitionId: string, allCategories: Category[], undispatchedCategories: string[], fightIdsByCategoryId: Dictionary<string[]>, fightsColors: Dictionary<string[]>, requirement: ScheduleRequirement,
+  constructor(competitionId: string, allCategories: CategoryDescriptor[], undispatchedCategories: string[], fightIdsByCategoryId: Dictionary<string[]>, fightsColors: Dictionary<string[]>, requirement: ScheduleRequirement,
               requirementFactory: (fightIds, categoryId) => ScheduleRequirement, size = ModalSize.Large) {
     super(EditRequirementModalComponent, {competitionId, undispatchedCategories, allCategories, fightIdsByCategoryId, requirementFactory, fightsColors, requirement});
     this.isClosable = true;
@@ -116,7 +117,7 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
   affectedCategoryIds = new Set<string>();
   showColorPicker = false;
   showFightsPicker = false;
-  categoryFormatter = (category: Category) => displayCategory(category, 10);
+  categoryFormatter = (category: CategoryDescriptor) => displayCategory(category, 10);
 
   getFightsForCategoryId(id: string) {
     return this.fightIdsByCategoryId[id] || [];
@@ -195,7 +196,7 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
     this.bracketsInfo.clearCategorySelection(this.modal.context.competitionId);
   }
 
-  addCategory(event: Category) {
+  addCategory(event: CategoryDescriptor) {
     if (event) {
       this.affectedCategoryIds.add(event.id);
       this.requirement = produce(this.requirement, draft => {

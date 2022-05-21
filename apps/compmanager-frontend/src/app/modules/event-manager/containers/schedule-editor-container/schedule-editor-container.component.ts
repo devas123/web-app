@@ -4,7 +4,7 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
-import {HeaderDescription, Period, ScheduleRequirement} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {
   eventManagerDropScheduleCommand,
   eventManagerGenerateSchedule,
@@ -17,6 +17,7 @@ import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from 
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
+import {Period, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-schedule-editor-container',

@@ -1,27 +1,20 @@
 // commands
 import {
-  CompetitionProperties,
-  MatDescription,
-  RegistrationGroup,
-  RegistrationInfo,
-  RegistrationPeriod,
-  Schedule,
   AdjacencyList,
-  Category,
-  CategoryBracketsStage,
-  CategoryRestriction,
-  Competitor,
   CompetitorGroupChange,
-  Fight,
   FightEditorChange,
-  FightResultOption,
   HeaderDescription,
-  Period,
-  ScheduleRequirement,
-  StageStatus
 } from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
+import {
+  CategoryDescriptor,
+  CategoryRestriction, CompetitionProperties, Competitor, FightDescription,
+  FightResultOption, MatDescription,
+  Period, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule,
+  ScheduleRequirement, StageDescriptor,
+  StageStatus
+} from "@frontend-nx/protobuf";
 
 export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
@@ -122,7 +115,7 @@ export const eventManagerHeaderClear = {
 };
 
 export const eventManagerCategoriesCleared = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED);
-export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: Category[] }>());
+export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: CategoryDescriptor[] }>());
 export const generateCategoriesCommand = createAction(GENERATE_CATEGORIES_COMMAND, props<{
   competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[] }>());
 export const generatePreviewCategoriesCommand = createAction(GENERATE_PREVIEW_CATEGORIES_COMMAND, props<{
@@ -148,7 +141,7 @@ export const eventManagerLoadRegistrationInfo = createAction(EVENT_MANAGER_LOAD_
 export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND, props<{ competitionId: string, categoryId: string; newStatus: boolean }>());
 export const eventManagerFightsEditorSubmitChangesCommand = createAction(FIGHTS_EDITOR_APPLY_CHANGE, props<{ bracketsChanges: FightEditorChange[], competitorGroupChanges: CompetitorGroupChange[], competitionId: string, categoryId: string, stageId: string }>());
 export const eventManagerCategoryBracketsStageSelected = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, props<{ competitionId: string, categoryId: string, selectedStageId: string }>());
-export const eventManagerCategoryBracketsStageFightsLoaded = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, props<{ fights: Fight[] }>());
+export const eventManagerCategoryBracketsStageFightsLoaded = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, props<{ fights: FightDescription[] }>());
 
 export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
   type: EVENT_MANAGER_HEADER_SET,
@@ -225,7 +218,7 @@ export const competitionSelected = (competitionId: string) => ({
   competitionId: competitionId,
   type: COMPETITION_SELECTED
 });
-export const eventManagerAddCategory = (competitionId, category: Category) => ({
+export const eventManagerAddCategory = (competitionId, category: CategoryDescriptor) => ({
   type: ADD_CATEGORY_COMMAND,
   competitionId,
   payload: {category}
@@ -310,7 +303,7 @@ export const eventManagerCategoryStateLoaded = (categoryState) => ({
   payload: categoryState
 });
 
-export const eventManagerCategoryStagesLoaded = createAction(EVENT_MANAGER_CATEGORY_STAGES_LOADED, props<{ competitionId: string, categoryId: string, categoryStages: CategoryBracketsStage[], selectedStageId: string }>());
+export const eventManagerCategoryStagesLoaded = createAction(EVENT_MANAGER_CATEGORY_STAGES_LOADED, props<{ competitionId: string, categoryId: string, categoryStages: StageDescriptor[], selectedStageId: string }>());
 
 export const eventManagerCategoryUnselected = (competitionId: string) => ({
   type: EVENT_MANAGER_CATEGORY_UNSELECTED,

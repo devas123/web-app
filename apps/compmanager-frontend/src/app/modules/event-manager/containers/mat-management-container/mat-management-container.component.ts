@@ -1,5 +1,5 @@
 import {filter, map} from 'rxjs/operators';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -12,7 +12,7 @@ import {dashboardMatSelected, dashboardMatUnselected} from '../../redux/dashboar
     <router-outlet></router-outlet>`,
   styleUrls: ['./mat-management-container.component.css']
 })
-export class MatManagementContainerComponent implements OnInit, OnDestroy {
+export class MatManagementContainerComponent implements  OnDestroy {
 
 
   private subs = new Subscription();
@@ -23,9 +23,6 @@ export class MatManagementContainerComponent implements OnInit, OnDestroy {
       this.store.pipe(select(getSelectedEventId))]).pipe(
       filter(([matId, competitionId]) => !!matId && !!competitionId),
       map(([matId, competitionId]) => dashboardMatSelected(competitionId, matId))).subscribe(this.store));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

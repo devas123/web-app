@@ -1,8 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Category} from '../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
-import {Competitor} from '../../commons/model/competition.model';
 import {SuiPagination} from '@frontend-nx/ng2-semantic-ui';
+import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighters-editor',
@@ -10,7 +9,7 @@ import {SuiPagination} from '@frontend-nx/ng2-semantic-ui';
   styleUrls: ['./fighters-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FightersEditorComponent implements OnInit {
+export class FightersEditorComponent  {
 
   @Output()
   fighterClicked = new EventEmitter<Competitor>();
@@ -22,13 +21,13 @@ export class FightersEditorComponent implements OnInit {
   }
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
   competitionId: string;
 
   @Input()
-  category: Category;
+  category: CategoryDescriptor;
 
   @Input()
   fighters: Competitor[];
@@ -79,9 +78,6 @@ export class FightersEditorComponent implements OnInit {
   }
 
   constructor() {
-  }
-
-  ngOnInit() {
   }
 
   deleteFighter(fighter: Competitor) {

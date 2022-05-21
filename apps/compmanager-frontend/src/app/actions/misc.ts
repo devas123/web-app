@@ -1,4 +1,4 @@
-import {CategoryState, CompetitionProperties} from '../commons/model/competition.model';
+import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 
 export const CONNECTED_EVENT = 'CONNECTED_EVENT';
 export const RESUBSCRIBED_EVENT = 'RESUBSCRIBED_EVENT';

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CompetitionProperties} from "../../../../commons/model/competition.model";
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 
 @Component({

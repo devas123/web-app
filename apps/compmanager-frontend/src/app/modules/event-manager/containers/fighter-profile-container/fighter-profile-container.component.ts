@@ -1,7 +1,7 @@
 import {combineLatest, from, Observable, Subscription} from 'rxjs';
 
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -21,20 +21,21 @@ import {
   eventManagerGetSelectedEventSelectedCompetitor,
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
-import {Category, Competitor, HeaderDescription} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighter-profile-container',
   templateUrl: './fighter-profile-container.component.html',
   styleUrls: ['./fighter-profile-container.component.css']
 })
-export class FighterProfileContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class FighterProfileContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
 
   eventFighter$: Observable<Competitor>;
-  category$: Observable<Category>;
-  categories$: Observable<Category[]>;
+  category$: Observable<CategoryDescriptor>;
+  categories$: Observable<CategoryDescriptor[]>;
   private subs = new Subscription();
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
@@ -75,9 +76,6 @@ export class FighterProfileContainerComponent extends EventManagerRouterEntryCom
 
   navigateBack() {
     this.location.back();
-  }
-
-  ngOnInit() {
   }
 
   sendChangeCategoryCommand(payload: { fighter: Competitor, newCategories: string[] }) {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="bracketsType==='GROUP'">
+<ng-container *ngIf="bracketsType==='BRACKET_TYPE_GROUP'">
   <app-multiple-groups-display [stageType]="stageType"
                                [bracketsType]="bracketsType"
                                [competitors]="competitors"
@@ -7,7 +7,7 @@
                                [editMode]="editMode"
                                [changeFightsIds]="changeFightsIds"></app-multiple-groups-display>
 </ng-container>
-<ng-container *ngIf="bracketsType==='SINGLE_ELIMINATION'">
+<ng-container *ngIf="bracketsType==='BRACKET_TYPE_SINGLE_ELIMINATION'">
   <app-bracket-part [editMode]="editMode" [isLoserBracket]="false"
                     [stageType]="stageType"
                     [competitors]="competitors"
@@ -16,7 +16,7 @@
                     [rowWidthPx]="rowWidthPx"
                     (fightSelected)="fightSelected.next($event)"></app-bracket-part>
 </ng-container>
-<ng-container *ngIf="bracketsType==='DOUBLE_ELIMINATION'">
+<ng-container *ngIf="bracketsType==='BRACKET_TYPE_DOUBLE_ELIMINATION'">
   <div class="ui basic segment">
     <sui-checkbox class="toggle" name="brackets_selector"
                   (checkChange)="showUpperBrackets = !showUpperBrackets">

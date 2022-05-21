@@ -11,9 +11,6 @@ import {
   getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
 import {
-  Category,
-  CategoryState,
-  CompetitionProperties,
   HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -28,6 +25,7 @@ import {
 } from '../event-manager-container/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-editor-container',
@@ -86,7 +84,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
     this.catState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
   }
 
-  addSelectedCategories(categoriesToAdd: Category[], competitionId: string) {
+  addSelectedCategories(categoriesToAdd: CategoryDescriptor[], competitionId: string) {
     if (categoriesToAdd && categoriesToAdd.length > 0) {
       this.sendAddDefaultCategoriesCommand(categoriesToAdd.map(category => ({competitionId, category})));
     }
@@ -100,7 +98,7 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
     this.store.dispatch(deleteCategory(competitionId, category.id));
   }
 
-  sendAddDefaultCategoriesCommand(categories: { competitionId: string, category: Category }[]) {
+  sendAddDefaultCategoriesCommand(categories: { competitionId: string, category: CategoryDescriptor }[]) {
     console.log(categories);
     if (categories && categories.length > 0) {
       categories.forEach(cate => this.store.dispatch(eventManagerAddCategory(cate.competitionId, cate.category)));

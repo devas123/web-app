@@ -1,13 +1,10 @@
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {
-  Category,
-  Competitor,
   dragEndEvent,
   dragStartEvent,
-  Fight,
-  MatDescription
 } from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {CategoryDescriptor, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mat-display',
@@ -26,12 +23,12 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
         </div>
       </a>
     </div>
-    <div class="meta">{{(mat?.numberOfFights || 0) + ' fights'}}</div>
+    <div class="meta">{{('(TODO: mat?.numberOfFights)' || 0) + ' fights'}}</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['mats-overview-component.component.scss']
 })
-export class MatDisplayComponent implements OnInit {
+export class MatDisplayComponent  {
 
   @Input()
   title: string;
@@ -40,10 +37,10 @@ export class MatDisplayComponent implements OnInit {
   mat: MatDescription;
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
-  matFights: Fight[];
+  matFights: FightDescription[];
 
   @Input()
   competitors: Competitor[];
@@ -60,9 +57,6 @@ export class MatDisplayComponent implements OnInit {
   constructor(private el: ElementRef) {
   }
 
-  ngOnInit() {
-  }
-
   dragStart() {
     this.el.nativeElement.dispatchEvent(dragStartEvent());
   }
@@ -71,8 +65,8 @@ export class MatDisplayComponent implements OnInit {
     this.el.nativeElement.dispatchEvent(dragEndEvent());
   }
 
-  drop(event: CdkDragDrop<Fight[], any>, matId: string) {
-    const fight = event.item.data as Fight;
+  drop(event: CdkDragDrop<FightDescription[], any>, matId: string) {
+    const fight = event.item.data as FightDescription;
     if (fight && !(fight.mat?.id === matId && event.previousIndex === event.currentIndex)) {
       const newOrderOnMat = event.container.data[event.currentIndex].numberOnMat;
       this.fightMatChanged.next({

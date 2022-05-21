@@ -8,7 +8,6 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Competitor, Fight} from '../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import {
   collectingReducer,
@@ -17,6 +16,7 @@ import {
   defaultUncompletableColor,
   getKeyForEntry
 } from '../../../modules/account/utils';
+import {Competitor, FightDescription, FightStatus, StageRoundType} from "@frontend-nx/protobuf";
 
 export type ConnectionType = 'DEFAULT' | 'NONE' | 'STRAIGHT';
 
@@ -51,18 +51,18 @@ export class BracketRoundComponent implements OnInit, OnChanges {
   public round: number;
 
   @Input()
-  set roundFights(val: Fight[]) {
+  set roundFights(val: FightDescription[]) {
     if (val) {
-      this.thirdPlaceFight = val.find(f => f.roundType === 'THIRD_PLACE_FIGHT');
-      this.fights = val.filter(f => f.roundType !== 'THIRD_PLACE_FIGHT');
+      this.thirdPlaceFight = val.find(f => f.roundType === StageRoundType.STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT);
+      this.fights = val.filter(f => f.roundType !== StageRoundType.STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT);
     } else {
       this.fights = [];
       this.thirdPlaceFight = undefined;
     }
   }
 
-  public fights: Fight[];
-  public thirdPlaceFight: Fight;
+  public fights: FightDescription[];
+  public thirdPlaceFight: FightDescription;
 
   @Input()
   public rowWidthPx = 300;
@@ -94,7 +94,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     return this.allSelectedFights.includes(fightId);
   }
 
-  canSelectFight(fight: Fight) {
+  canSelectFight(fight: FightDescription) {
     const fightId = fight && fight.id;
     return (fightId && this.elementsSelectable);
   }
@@ -105,7 +105,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     }
   }
 
-  selectFightForEdit(fight: Fight) {
+  selectFightForEdit(fight: FightDescription) {
     if (this.canSelectFight(fight)) {
       this.fightSelected.next(fight.id);
     }
@@ -123,7 +123,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     }
   }
 
-  trackByFights = (index: number, fight: Fight) => fight.id;
+  trackByFights = (index: number, fight: FightDescription) => fight.id;
 
 
   getOffset() {
@@ -162,7 +162,7 @@ export class BracketRoundComponent implements OnInit, OnChanges {
     if (this.isSelected(id)) {
       return getKeyForEntry(this.changeFightIds, id) || defaultSelectionColor;
     } else {
-      if (this.fights.find(f => f.id === id)?.status === 'UNCOMPLETABLE') {
+      if (this.fights.find(f => f.id === id)?.status === FightStatus.FIGHT_STATUS_UNCOMPLETABLE) {
         return defaultUncompletableColor;
       } else if (this.thirdPlaceFight?.id === id) {
         return defaultBronzeFightColor;

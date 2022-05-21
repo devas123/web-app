@@ -9,8 +9,9 @@ import {
 } from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
 import {filter, take} from 'rxjs/operators';
-import {Category, HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
+import {HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CategoryDescriptor} from "@frontend-nx/protobuf";
 
 @Directive({})
 export abstract class EventManagerRouterEntryComponent implements OnDestroy {
@@ -54,7 +55,7 @@ export interface ComponentCommonMetadataProvider {
 export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEntryComponent {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
-  categories$: Observable<Category[]>;
+  categories$: Observable<CategoryDescriptor[]>;
   timeZone$: Observable<string>;
 
   protected constructor(store: Store<AppState>, metadataProvider: ComponentCommonMetadataProvider, menuService: MenuService) {

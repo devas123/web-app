@@ -1,8 +1,8 @@
-import {combineReducers, createSelector} from '@ngrx/store';
+import {createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers/global-reducers';
-import {CompScore, FightResult} from '../../../commons/model/competition.model';
 import {DASHBOARD_SOCKET_CONNECTED, DASHBOARD_SOCKET_DISCONNECTED} from './dashboard-actions';
 import {getEventManagerState} from './reducers';
+import {CompScore, FightResult} from "@frontend-nx/protobuf";
 
 
 export interface DashboardState {

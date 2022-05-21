@@ -1,14 +1,12 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 
 import {
-  CategoryRestriction,
   defaultRestrictionFormatter,
-  RestrictionType,
-  restrictionTypes
 } from '../../../../commons/model/competition.model';
 import {generateUuid} from '../../../account/utils';
+import {CategoryRestriction, CategoryRestrictionType} from "@frontend-nx/protobuf";
 
 export interface IAddCategoryRestrictionContext {
   name: string;
@@ -107,11 +105,11 @@ export class AddCategoryRestrictionModal extends ComponentModalConfig<IAddCatego
   styleUrls: ['./category-constructor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddCategoryRestrictionFormComponent implements OnInit, OnDestroy {
+export class AddCategoryRestrictionFormComponent implements OnInit {
   @ViewChild('multiSelect')
   multiSelect: SuiMultiSelect<CategoryRestriction, CategoryRestriction>;
   restrictionForm: FormGroup;
-  types: RestrictionType[] = restrictionTypes;
+  types: CategoryRestrictionType[] = this.getDefaultRestricionTypes()
   defaultRestrictionFmt = defaultRestrictionFormatter();
 
   get form() {
@@ -151,17 +149,23 @@ export class AddCategoryRestrictionFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-  }
 
-  setType($event: RestrictionType) {
+
+  setType($event: CategoryRestrictionType) {
     this.form.patchValue({
       type: $event
     });
   }
 
   get type() {
-    return this.form.get('type')?.value as RestrictionType;
+    return this.form.get('type')?.value as CategoryRestrictionType;
   }
 
+
+  getDefaultRestricionTypes(): CategoryRestrictionType[] {
+    return Object.values(CategoryRestrictionType).map(v => v as CategoryRestrictionType)
+  }
+
+
 }
+

@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {BracketsType, CompetitorSelector, OperatorType, SelectorClassifier} from '../../../../commons/model/competition.model';
 import produce from 'immer';
+import {BracketType, CompetitorSelector, OperatorType, SelectorClassifier} from "@frontend-nx/protobuf";
 
 export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSelectorFormContext, CompetitorSelector[], void> {
-  constructor(bracketsType: BracketsType, stageNumber: number, precedingStages: string[], size = ModalSize.Small) {
+  constructor(bracketsType: BracketType, stageNumber: number, precedingStages: string[], size = ModalSize.Small) {
     super(AddInputSelectorFormComponent, {bracketsType, stageNumber, precedingStages});
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -15,7 +15,7 @@ export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSel
 
 export interface IAddInputSelectorFormContext {
   stageNumber: number;
-  bracketsType: BracketsType;
+  bracketsType: BracketType;
   precedingStages: string[];
 }
 
@@ -82,7 +82,7 @@ export class AddInputSelectorFormComponent implements OnInit {
   addOptions() {
     const groups = this.form.value as CompetitorSelector[];
     if (groups) {
-      this.modal.approve(produce(groups, draft => { draft.forEach(d => d.operator = OperatorType.EQUALS); }));
+      this.modal.approve(produce(groups, draft => { draft.forEach(d => d.operator = OperatorType.OPERATOR_TYPE_EQUALS); }));
     } else {
       this.modal.deny(undefined);
     }

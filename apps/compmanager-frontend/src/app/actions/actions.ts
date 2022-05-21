@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {CompetitionProperties, RegistrationInfo} from "../commons/model/competition.model";
+import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 
 // Commands
 export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';

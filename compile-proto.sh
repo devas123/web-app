@@ -14,5 +14,5 @@ $PROTOC \
     --plugin=protoc-gen-ts="$PROTOC_GEN_TS_PATH" \
     --js_out=import_style=commonjs,binary:$OUT_DIR \
     --ts_proto_out=$TS_OUT_DIR \
-    --ts_proto_opt=useOptionals='messages',exportCommonSymbols=false,oneof=unions \
+    --ts_proto_opt=useOptionals='messages',exportCommonSymbols=false,oneof=unions,enumsAsLiterals=true,unrecognizedEnum=false,stringEnums=true \
     "$IN_DIR"/*.proto

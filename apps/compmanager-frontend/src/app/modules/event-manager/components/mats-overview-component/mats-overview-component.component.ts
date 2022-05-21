@@ -6,9 +6,9 @@ import {
   Input,
   Output
 } from '@angular/core';
-import {Category, Competitor, Fight, MatDescription} from '../../../../commons/model/competition.model';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 import * as _ from 'lodash';
+import {CategoryDescriptor, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -19,7 +19,7 @@ import * as _ from 'lodash';
 export class MatsOverviewComponentComponent  {
 
   @Input()
-  matsFights: Fight[];
+  matsFights: FightDescription[];
 
   @Input()
   periodId: string;
@@ -31,7 +31,7 @@ export class MatsOverviewComponentComponent  {
   mats: MatDescription[];
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
   competitors: Competitor[];

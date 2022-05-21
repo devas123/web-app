@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
@@ -13,7 +13,7 @@ import {loadScheduleCommand} from '../../redux/event-manager-actions';
     <router-outlet></router-outlet>`,
   styleUrls: ['./dashboard-container.component.css']
 })
-export class DashboardContainerComponent implements OnInit, OnDestroy {
+export class DashboardContainerComponent implements  OnDestroy {
 
   subs = new Subscription();
 
@@ -24,9 +24,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
         filter((id: any) => id && id.length > 0),
         map((id: string) => loadScheduleCommand({competitionId: id})))
         .subscribe(this.store));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

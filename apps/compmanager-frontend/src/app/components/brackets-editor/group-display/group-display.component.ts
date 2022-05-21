@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation} from '@angular/core';
-import {BracketsType, Competitor, CompScore, Fight} from '../../../commons/model/competition.model';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 import {Dictionary} from '@ngrx/entity';
 import {
@@ -8,6 +7,7 @@ import {
   defaultUncompletableColor,
   uniqueFilter
 } from '../../../modules/account/utils';
+import {BracketType, Competitor, CompScore, FightDescription, FightStatus} from "@frontend-nx/protobuf";
 
 const W = `<span class="green centered">W</span>`;
 const L = `<span class="red centered">L</span>`;
@@ -22,9 +22,9 @@ const L = `<span class="red centered">L</span>`;
 export class GroupDisplayComponent extends CommonFightsEditorComponent implements OnChanges {
 
   @Input()
-  set fights(value: Fight[]) {
+  set fights(value: FightDescription[]) {
     this._fights = value;
-    this._fightsMap = new Map<string, Fight>();
+    this._fightsMap = new Map<string, FightDescription>();
     if (this._fights) {
       this._fights.forEach(fight => this._fightsMap.set(fight.id, fight));
     }
@@ -48,12 +48,12 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   @Input()
   groupName: string;
 
-  _fights: Fight[] = [];
-  _fightsMap: Map<string, Fight>;
-  _fightsPerCompetitor: Dictionary<Fight[]>;
+  _fights: FightDescription[] = [];
+  _fightsMap: Map<string, FightDescription>;
+  _fightsPerCompetitor: Dictionary<FightDescription[]>;
 
   @Input()
-  bracketsType: BracketsType;
+  bracketsType: BracketType;
   ngStyle: any = {'grid-template-columns': `${this.competitorNameSize} repeat(10, 1fr)`};
 
   competitorsOrPlaceholders = [];
@@ -64,11 +64,11 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
     return this._competitorsMap.get(id) || <Competitor>{id: id, firstName: `Competitor ${index + 1}`};
   }
 
-  filterFightsByCompetitorIdOrPlaceholderId = (cmp: string) => (f: Fight) => {
+  filterFightsByCompetitorIdOrPlaceholderId = (cmp: string) => (f: FightDescription) => {
     return f.scores.find(s => s.competitorId === cmp) || f.scores.find(s => s.placeholderId === cmp);
   };
 
-  displayFight = (f: Fight, competitorPerspective: string) => {
+  displayFight = (f: FightDescription, competitorPerspective: string) => {
     if (f && f.fightResult && f.fightResult.winnerId) {
       let wol: string;
       const score = f.scores.find(s => s.competitorId === competitorPerspective).score;
@@ -86,11 +86,11 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   };
 
   getBackgroundColor(id: string) {
-    const defaultColor = this._fightsMap.get(id)?.status === 'UNCOMPLETABLE' ? defaultUncompletableColor : defaultSelectionColor;
+    const defaultColor = this._fightsMap.get(id)?.status === FightStatus.FIGHT_STATUS_UNCOMPLETABLE ? defaultUncompletableColor : defaultSelectionColor;
     return this.changeIdByFightId.get(id) || defaultColor;
   }
 
-  findOpponentId(forWhom: string, fight: Fight) {
+  findOpponentId(forWhom: string, fight: FightDescription) {
     const opponentScore = fight.scores.find(s => s.competitorId !== forWhom && s.placeholderId !== forWhom);
     return opponentScore && (opponentScore.competitorId || opponentScore.placeholderId);
   }
@@ -101,7 +101,7 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
         .filter(uniqueFilter)
         .sort((a, b) => a.localeCompare(b));
       this._fightsPerCompetitor = {};
-      const fightStub = <Fight>{};
+      const fightStub = <FightDescription>{};
       competitorsAndPlaceholders.forEach((cmp, index) => {
         const competitorFights = this._fights.filter(this.filterFightsByCompetitorIdOrPlaceholderId(cmp))
           .sort((a, b) => this.findOpponentId(cmp, a).localeCompare(this.findOpponentId(cmp, b)));

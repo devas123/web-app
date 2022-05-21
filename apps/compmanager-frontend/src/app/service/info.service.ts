@@ -9,10 +9,10 @@ import * as env from '../../environments/environment';
 import produce from 'immer';
 import {errorEvent} from '../actions/actions';
 import {Action} from '@ngrx/store';
-import {CategoryBracketsStage, Fight, FightResultOption} from '../commons/model/competition.model';
 import {parseISO} from 'date-fns';
 import {format, utcToZonedTime} from 'date-fns-tz';
 import {generateUuid} from "../modules/account/utils";
+import {FightDescription, FightResultOption, StageDescriptor} from "@frontend-nx/protobuf";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -277,7 +277,7 @@ export class InfoService {
   }
 
   getFight(competitionId: string, fightId: string, categoryId: string) {
-    return this.httpGet<Fight>(competitionIdPrefix(competitionId)(`category/${categoryId}/fight/${fightId}`), {
+    return this.httpGet<FightDescription>(competitionIdPrefix(competitionId)(`category/${categoryId}/fight/${fightId}`), {
       headers: this.headers
     }).pipe(
       mergeMap(result => this.getFightResultOptions(competitionId, categoryId, result?.stageId).pipe(
@@ -325,17 +325,17 @@ export class InfoService {
       }));
   }
 
-  getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<Fight[]> {
+  getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<FightDescription[]> {
     if (!competitionId || !categoryId || !stageId) {
       return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
-    return this.httpGet<Fight[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
+    return this.httpGet<FightDescription[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
       headers: this.headers
     });
   }
 
-  getCategoryStages(competitionId: string, categoryId: string): Observable<CategoryBracketsStage[]> {
-    return this.httpGet<CategoryBracketsStage[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage`), {
+  getCategoryStages(competitionId: string, categoryId: string): Observable<StageDescriptor[]> {
+    return this.httpGet<StageDescriptor[]>(competitionIdPrefix(competitionId)(`category/${categoryId}/stage`), {
       headers: this.headers
     });
   }

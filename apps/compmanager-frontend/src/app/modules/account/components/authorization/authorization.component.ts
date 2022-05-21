@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {HttpAuthService} from '../../service/AuthService';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
@@ -35,7 +35,7 @@ export function regexpValidator(nameRe: RegExp): ValidatorFn {
   styleUrls: ['./authorization.component.css'],
   providers: [HttpAuthService]
 })
-export class AuthorizationComponent implements OnInit {
+export class AuthorizationComponent  {
 
   public signIn: boolean;
 
@@ -45,8 +45,7 @@ export class AuthorizationComponent implements OnInit {
     this.signIn = false;
   }
 
-  ngOnInit() {
-  }
+
 
 
   public animate(transitionName: string = 'scale') {

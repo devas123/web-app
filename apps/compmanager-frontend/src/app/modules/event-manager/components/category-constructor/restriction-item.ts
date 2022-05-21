@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {CategoryRestriction, defaultRestrictionFormatter} from '../../../../commons/model/competition.model';
+import {defaultRestrictionFormatter} from '../../../../commons/model/competition.model';
+import {CategoryRestriction} from "@frontend-nx/protobuf";
 
 export type TypeInTree = 'fully-connected' | 'partially-connected' | 'not-connected';
 

@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, Competitor, Fight} from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import * as _ from 'lodash';
+import {CategoryDescriptor, Competitor, FightDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fight-display',
@@ -29,13 +29,13 @@ import * as _ from 'lodash';
   styleUrls: ['mats-overview-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FightDisplayComponent implements OnInit {
+export class FightDisplayComponent  {
 
   constructor() {
   }
 
   @Input()
-  fight: Fight;
+  fight: FightDescription;
 
   @Input()
   competitors: Competitor[];
@@ -47,7 +47,7 @@ export class FightDisplayComponent implements OnInit {
   competitorClicked = new EventEmitter<Competitor>();
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
 
 
@@ -71,8 +71,4 @@ export class FightDisplayComponent implements OnInit {
   selectCompetitor(competitor: Competitor) {
     this.competitorClicked.next(competitor);
   }
-
-  ngOnInit() {
-  }
-
 }

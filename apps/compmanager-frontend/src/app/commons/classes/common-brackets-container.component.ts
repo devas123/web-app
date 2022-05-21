@@ -4,14 +4,6 @@ import {
   getSelectedEventId,
   getSelectedEventProperties
 } from '../../reducers/global-reducers';
-import {
-  BracketsType,
-  Category,
-  CategoryBracketsStage,
-  CompetitionProperties,
-  Competitor,
-  Fight
-} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
@@ -33,20 +25,27 @@ import {
   eventManagerCategorySelected,
   eventManagerCategoryUnselected
 } from '../../modules/event-manager/redux/event-manager-actions';
+import {
+  BracketType,
+  CategoryDescriptor,
+  CompetitionProperties, Competitor,
+  FightDescription,
+  StageDescriptor
+} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class CommonBracketsInfoContainer {
 
   competition$: Observable<CompetitionProperties>;
   competitionId$: Observable<string>;
-  stages$: Observable<CategoryBracketsStage[]>;
-  fights$: Observable<Fight[]>;
-  firstRoundFights$: Observable<Fight[]>;
-  stage$: Observable<CategoryBracketsStage>;
-  bracketsType$: Observable<'' | BracketsType>;
+  stages$: Observable<StageDescriptor[]>;
+  fights$: Observable<FightDescription[]>;
+  firstRoundFights$: Observable<FightDescription[]>;
+  stage$: Observable<StageDescriptor>;
+  bracketsType$: Observable<'' | BracketType>;
   fightsAreLoading$: Observable<boolean>;
-  category$: Observable<Category>;
-  categories$: Observable<Category[]>;
+  category$: Observable<CategoryDescriptor>;
+  categories$: Observable<CategoryDescriptor[]>;
   numberOfCompetitor$: Observable<number>;
   bucketsize$: Observable<boolean>;
   competitors$: Observable<Competitor[]>;

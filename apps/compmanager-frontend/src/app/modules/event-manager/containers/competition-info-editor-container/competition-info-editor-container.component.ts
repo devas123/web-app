@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {
   ComponentCommonMetadataProvider,
   EventManagerRouterEntryComponent
@@ -19,7 +19,7 @@ type TabOption = 'template' | 'contacts';
   templateUrl: './competition-info-editor-container.component.html',
   styleUrls: ['./competition-info-editor-container.component.scss']
 })
-export class CompetitionInfoEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class CompetitionInfoEditorContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -60,8 +60,6 @@ export class CompetitionInfoEditorContainerComponent extends EventManagerRouterE
   selectedTab: TabOption = 'template';
   showTemplatePreview = true;
   showTemplateEditor = true;
-  ngOnInit() {
-  }
 
   goBack() {
     this.router.navigate(['..'], {relativeTo: this.route}).catch(console.error);

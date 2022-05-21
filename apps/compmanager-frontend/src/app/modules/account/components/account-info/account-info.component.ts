@@ -1,6 +1,6 @@
 
 import {filter} from 'rxjs/operators';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
 import {select, Store} from '@ngrx/store';
@@ -13,7 +13,7 @@ import {selectAccountState} from '../../../competition/redux/reducers';
   templateUrl: './account-info.component.html',
   styleUrls: ['./account-info.component.css']
 })
-export class AccountInfoComponent implements OnInit, OnDestroy {
+export class AccountInfoComponent implements OnInit {
 
 
   avatarSrc = 'assets/images/empty.png';
@@ -28,9 +28,6 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this.avatarSrc = data.user.avatar || this.avatarSrc;
       this.user = data.user;
     });
-  }
-
-  ngOnDestroy(): void {
   }
 
 

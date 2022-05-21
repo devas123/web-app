@@ -3,15 +3,16 @@ import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 
-export enum OperatorType {
-  OPERATOR_TYPE_EQUALS = 0,
-  OPERATOR_TYPE_IS_IN = 1,
-  OPERATOR_TYPE_LESS = 2,
-  OPERATOR_TYPE_GREATER = 3,
-  OPERATOR_TYPE_LEQ = 4,
-  OPERATOR_TYPE_GEQ = 5,
-  UNRECOGNIZED = -1,
-}
+export const OperatorType = {
+  OPERATOR_TYPE_EQUALS: 'OPERATOR_TYPE_EQUALS',
+  OPERATOR_TYPE_IS_IN: 'OPERATOR_TYPE_IS_IN',
+  OPERATOR_TYPE_LESS: 'OPERATOR_TYPE_LESS',
+  OPERATOR_TYPE_GREATER: 'OPERATOR_TYPE_GREATER',
+  OPERATOR_TYPE_LEQ: 'OPERATOR_TYPE_LEQ',
+  OPERATOR_TYPE_GEQ: 'OPERATOR_TYPE_GEQ',
+} as const;
+
+export type OperatorType = typeof OperatorType[keyof typeof OperatorType];
 
 export function operatorTypeFromJSON(object: any): OperatorType {
   switch (object) {
@@ -33,10 +34,10 @@ export function operatorTypeFromJSON(object: any): OperatorType {
     case 5:
     case 'OPERATOR_TYPE_GEQ':
       return OperatorType.OPERATOR_TYPE_GEQ;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return OperatorType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum OperatorType'
+      );
   }
 }
 
@@ -54,18 +55,42 @@ export function operatorTypeToJSON(object: OperatorType): string {
       return 'OPERATOR_TYPE_LEQ';
     case OperatorType.OPERATOR_TYPE_GEQ:
       return 'OPERATOR_TYPE_GEQ';
-    case OperatorType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum OperatorType'
+      );
   }
 }
 
-export enum SelectorClassifier {
-  SELECTOR_CLASSIFIER_FIRST_N_PLACES = 0,
-  SELECTOR_CLASSIFIER_LAST_N_PLACES = 1,
-  SELECTOR_CLASSIFIER_MANUAL = 2,
-  UNRECOGNIZED = -1,
+export function operatorTypeToNumber(object: OperatorType): number {
+  switch (object) {
+    case OperatorType.OPERATOR_TYPE_EQUALS:
+      return 0;
+    case OperatorType.OPERATOR_TYPE_IS_IN:
+      return 1;
+    case OperatorType.OPERATOR_TYPE_LESS:
+      return 2;
+    case OperatorType.OPERATOR_TYPE_GREATER:
+      return 3;
+    case OperatorType.OPERATOR_TYPE_LEQ:
+      return 4;
+    case OperatorType.OPERATOR_TYPE_GEQ:
+      return 5;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum OperatorType'
+      );
+  }
 }
+
+export const SelectorClassifier = {
+  SELECTOR_CLASSIFIER_FIRST_N_PLACES: 'SELECTOR_CLASSIFIER_FIRST_N_PLACES',
+  SELECTOR_CLASSIFIER_LAST_N_PLACES: 'SELECTOR_CLASSIFIER_LAST_N_PLACES',
+  SELECTOR_CLASSIFIER_MANUAL: 'SELECTOR_CLASSIFIER_MANUAL',
+} as const;
+
+export type SelectorClassifier =
+  typeof SelectorClassifier[keyof typeof SelectorClassifier];
 
 export function selectorClassifierFromJSON(object: any): SelectorClassifier {
   switch (object) {
@@ -78,10 +103,10 @@ export function selectorClassifierFromJSON(object: any): SelectorClassifier {
     case 2:
     case 'SELECTOR_CLASSIFIER_MANUAL':
       return SelectorClassifier.SELECTOR_CLASSIFIER_MANUAL;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return SelectorClassifier.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum SelectorClassifier'
+      );
   }
 }
 
@@ -93,19 +118,37 @@ export function selectorClassifierToJSON(object: SelectorClassifier): string {
       return 'SELECTOR_CLASSIFIER_LAST_N_PLACES';
     case SelectorClassifier.SELECTOR_CLASSIFIER_MANUAL:
       return 'SELECTOR_CLASSIFIER_MANUAL';
-    case SelectorClassifier.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum SelectorClassifier'
+      );
   }
 }
 
-export enum LogicalOperator {
-  LOGICAL_OPERATOR_AND = 0,
-  LOGICAL_OPERATOR_OR = 1,
-  LOGICAL_OPERATOR_AND_NOT = 2,
-  LOGICAL_OPERATOR_OR_NOT = 3,
-  UNRECOGNIZED = -1,
+export function selectorClassifierToNumber(object: SelectorClassifier): number {
+  switch (object) {
+    case SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES:
+      return 0;
+    case SelectorClassifier.SELECTOR_CLASSIFIER_LAST_N_PLACES:
+      return 1;
+    case SelectorClassifier.SELECTOR_CLASSIFIER_MANUAL:
+      return 2;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum SelectorClassifier'
+      );
+  }
 }
+
+export const LogicalOperator = {
+  LOGICAL_OPERATOR_AND: 'LOGICAL_OPERATOR_AND',
+  LOGICAL_OPERATOR_OR: 'LOGICAL_OPERATOR_OR',
+  LOGICAL_OPERATOR_AND_NOT: 'LOGICAL_OPERATOR_AND_NOT',
+  LOGICAL_OPERATOR_OR_NOT: 'LOGICAL_OPERATOR_OR_NOT',
+} as const;
+
+export type LogicalOperator =
+  typeof LogicalOperator[keyof typeof LogicalOperator];
 
 export function logicalOperatorFromJSON(object: any): LogicalOperator {
   switch (object) {
@@ -121,10 +164,10 @@ export function logicalOperatorFromJSON(object: any): LogicalOperator {
     case 3:
     case 'LOGICAL_OPERATOR_OR_NOT':
       return LogicalOperator.LOGICAL_OPERATOR_OR_NOT;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return LogicalOperator.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum LogicalOperator'
+      );
   }
 }
 
@@ -138,17 +181,37 @@ export function logicalOperatorToJSON(object: LogicalOperator): string {
       return 'LOGICAL_OPERATOR_AND_NOT';
     case LogicalOperator.LOGICAL_OPERATOR_OR_NOT:
       return 'LOGICAL_OPERATOR_OR_NOT';
-    case LogicalOperator.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum LogicalOperator'
+      );
   }
 }
 
-export enum DistributionType {
-  DISTRIBUTION_TYPE_AUTOMATIC = 0,
-  DISTRIBUTION_TYPE_MANUAL = 1,
-  UNRECOGNIZED = -1,
+export function logicalOperatorToNumber(object: LogicalOperator): number {
+  switch (object) {
+    case LogicalOperator.LOGICAL_OPERATOR_AND:
+      return 0;
+    case LogicalOperator.LOGICAL_OPERATOR_OR:
+      return 1;
+    case LogicalOperator.LOGICAL_OPERATOR_AND_NOT:
+      return 2;
+    case LogicalOperator.LOGICAL_OPERATOR_OR_NOT:
+      return 3;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum LogicalOperator'
+      );
+  }
 }
+
+export const DistributionType = {
+  DISTRIBUTION_TYPE_AUTOMATIC: 'DISTRIBUTION_TYPE_AUTOMATIC',
+  DISTRIBUTION_TYPE_MANUAL: 'DISTRIBUTION_TYPE_MANUAL',
+} as const;
+
+export type DistributionType =
+  typeof DistributionType[keyof typeof DistributionType];
 
 export function distributionTypeFromJSON(object: any): DistributionType {
   switch (object) {
@@ -158,10 +221,10 @@ export function distributionTypeFromJSON(object: any): DistributionType {
     case 1:
     case 'DISTRIBUTION_TYPE_MANUAL':
       return DistributionType.DISTRIBUTION_TYPE_MANUAL;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return DistributionType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum DistributionType'
+      );
   }
 }
 
@@ -171,17 +234,33 @@ export function distributionTypeToJSON(object: DistributionType): string {
       return 'DISTRIBUTION_TYPE_AUTOMATIC';
     case DistributionType.DISTRIBUTION_TYPE_MANUAL:
       return 'DISTRIBUTION_TYPE_MANUAL';
-    case DistributionType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum DistributionType'
+      );
   }
 }
 
-export enum GroupSortDirection {
-  GROUP_SORT_DIRECTION_ASC = 0,
-  GROUP_SORT_DIRECTION_DESC = 1,
-  UNRECOGNIZED = -1,
+export function distributionTypeToNumber(object: DistributionType): number {
+  switch (object) {
+    case DistributionType.DISTRIBUTION_TYPE_AUTOMATIC:
+      return 0;
+    case DistributionType.DISTRIBUTION_TYPE_MANUAL:
+      return 1;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum DistributionType'
+      );
+  }
 }
+
+export const GroupSortDirection = {
+  GROUP_SORT_DIRECTION_ASC: 'GROUP_SORT_DIRECTION_ASC',
+  GROUP_SORT_DIRECTION_DESC: 'GROUP_SORT_DIRECTION_DESC',
+} as const;
+
+export type GroupSortDirection =
+  typeof GroupSortDirection[keyof typeof GroupSortDirection];
 
 export function groupSortDirectionFromJSON(object: any): GroupSortDirection {
   switch (object) {
@@ -191,10 +270,10 @@ export function groupSortDirectionFromJSON(object: any): GroupSortDirection {
     case 1:
     case 'GROUP_SORT_DIRECTION_DESC':
       return GroupSortDirection.GROUP_SORT_DIRECTION_DESC;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return GroupSortDirection.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortDirection'
+      );
   }
 }
 
@@ -204,19 +283,37 @@ export function groupSortDirectionToJSON(object: GroupSortDirection): string {
       return 'GROUP_SORT_DIRECTION_ASC';
     case GroupSortDirection.GROUP_SORT_DIRECTION_DESC:
       return 'GROUP_SORT_DIRECTION_DESC';
-    case GroupSortDirection.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortDirection'
+      );
   }
 }
 
-export enum GroupSortSpecifier {
-  GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT = 0,
-  GROUP_SORT_SPECIFIER_MANUAL = 1,
-  GROUP_SORT_SPECIFIER_POINTS_DIFFERENCE = 2,
-  GROUP_SORT_SPECIFIER_TOTAL_POINTS = 3,
-  UNRECOGNIZED = -1,
+export function groupSortDirectionToNumber(object: GroupSortDirection): number {
+  switch (object) {
+    case GroupSortDirection.GROUP_SORT_DIRECTION_ASC:
+      return 0;
+    case GroupSortDirection.GROUP_SORT_DIRECTION_DESC:
+      return 1;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortDirection'
+      );
+  }
 }
+
+export const GroupSortSpecifier = {
+  GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT:
+    'GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT',
+  GROUP_SORT_SPECIFIER_MANUAL: 'GROUP_SORT_SPECIFIER_MANUAL',
+  GROUP_SORT_SPECIFIER_POINTS_DIFFERENCE:
+    'GROUP_SORT_SPECIFIER_POINTS_DIFFERENCE',
+  GROUP_SORT_SPECIFIER_TOTAL_POINTS: 'GROUP_SORT_SPECIFIER_TOTAL_POINTS',
+} as const;
+
+export type GroupSortSpecifier =
+  typeof GroupSortSpecifier[keyof typeof GroupSortSpecifier];
 
 export function groupSortSpecifierFromJSON(object: any): GroupSortSpecifier {
   switch (object) {
@@ -232,10 +329,10 @@ export function groupSortSpecifierFromJSON(object: any): GroupSortSpecifier {
     case 3:
     case 'GROUP_SORT_SPECIFIER_TOTAL_POINTS':
       return GroupSortSpecifier.GROUP_SORT_SPECIFIER_TOTAL_POINTS;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return GroupSortSpecifier.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortSpecifier'
+      );
   }
 }
 
@@ -249,21 +346,40 @@ export function groupSortSpecifierToJSON(object: GroupSortSpecifier): string {
       return 'GROUP_SORT_SPECIFIER_POINTS_DIFFERENCE';
     case GroupSortSpecifier.GROUP_SORT_SPECIFIER_TOTAL_POINTS:
       return 'GROUP_SORT_SPECIFIER_TOTAL_POINTS';
-    case GroupSortSpecifier.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortSpecifier'
+      );
   }
 }
 
-export enum StageRoundType {
-  STAGE_ROUND_TYPE_UNKNOWN = 0,
-  STAGE_ROUND_TYPE_GRAND_FINAL = 1,
-  STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT = 2,
-  STAGE_ROUND_TYPE_WINNER_BRACKETS = 3,
-  STAGE_ROUND_TYPE_LOSER_BRACKETS = 4,
-  STAGE_ROUND_TYPE_GROUP = 5,
-  UNRECOGNIZED = -1,
+export function groupSortSpecifierToNumber(object: GroupSortSpecifier): number {
+  switch (object) {
+    case GroupSortSpecifier.GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT:
+      return 0;
+    case GroupSortSpecifier.GROUP_SORT_SPECIFIER_MANUAL:
+      return 1;
+    case GroupSortSpecifier.GROUP_SORT_SPECIFIER_POINTS_DIFFERENCE:
+      return 2;
+    case GroupSortSpecifier.GROUP_SORT_SPECIFIER_TOTAL_POINTS:
+      return 3;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupSortSpecifier'
+      );
+  }
 }
+
+export const StageRoundType = {
+  STAGE_ROUND_TYPE_UNKNOWN: 'STAGE_ROUND_TYPE_UNKNOWN',
+  STAGE_ROUND_TYPE_GRAND_FINAL: 'STAGE_ROUND_TYPE_GRAND_FINAL',
+  STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT: 'STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT',
+  STAGE_ROUND_TYPE_WINNER_BRACKETS: 'STAGE_ROUND_TYPE_WINNER_BRACKETS',
+  STAGE_ROUND_TYPE_LOSER_BRACKETS: 'STAGE_ROUND_TYPE_LOSER_BRACKETS',
+  STAGE_ROUND_TYPE_GROUP: 'STAGE_ROUND_TYPE_GROUP',
+} as const;
+
+export type StageRoundType = typeof StageRoundType[keyof typeof StageRoundType];
 
 export function stageRoundTypeFromJSON(object: any): StageRoundType {
   switch (object) {
@@ -285,10 +401,10 @@ export function stageRoundTypeFromJSON(object: any): StageRoundType {
     case 5:
     case 'STAGE_ROUND_TYPE_GROUP':
       return StageRoundType.STAGE_ROUND_TYPE_GROUP;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return StageRoundType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageRoundType'
+      );
   }
 }
 
@@ -306,19 +422,42 @@ export function stageRoundTypeToJSON(object: StageRoundType): string {
       return 'STAGE_ROUND_TYPE_LOSER_BRACKETS';
     case StageRoundType.STAGE_ROUND_TYPE_GROUP:
       return 'STAGE_ROUND_TYPE_GROUP';
-    case StageRoundType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageRoundType'
+      );
   }
 }
 
-export enum BracketType {
-  BRACKET_TYPE_UNKNOWN = 0,
-  BRACKET_TYPE_SINGLE_ELIMINATION = 2,
-  BRACKET_TYPE_DOUBLE_ELIMINATION = 3,
-  BRACKET_TYPE_GROUP = 4,
-  UNRECOGNIZED = -1,
+export function stageRoundTypeToNumber(object: StageRoundType): number {
+  switch (object) {
+    case StageRoundType.STAGE_ROUND_TYPE_UNKNOWN:
+      return 0;
+    case StageRoundType.STAGE_ROUND_TYPE_GRAND_FINAL:
+      return 1;
+    case StageRoundType.STAGE_ROUND_TYPE_THIRD_PLACE_FIGHT:
+      return 2;
+    case StageRoundType.STAGE_ROUND_TYPE_WINNER_BRACKETS:
+      return 3;
+    case StageRoundType.STAGE_ROUND_TYPE_LOSER_BRACKETS:
+      return 4;
+    case StageRoundType.STAGE_ROUND_TYPE_GROUP:
+      return 5;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageRoundType'
+      );
+  }
 }
+
+export const BracketType = {
+  BRACKET_TYPE_UNKNOWN: 'BRACKET_TYPE_UNKNOWN',
+  BRACKET_TYPE_SINGLE_ELIMINATION: 'BRACKET_TYPE_SINGLE_ELIMINATION',
+  BRACKET_TYPE_DOUBLE_ELIMINATION: 'BRACKET_TYPE_DOUBLE_ELIMINATION',
+  BRACKET_TYPE_GROUP: 'BRACKET_TYPE_GROUP',
+} as const;
+
+export type BracketType = typeof BracketType[keyof typeof BracketType];
 
 export function bracketTypeFromJSON(object: any): BracketType {
   switch (object) {
@@ -334,10 +473,10 @@ export function bracketTypeFromJSON(object: any): BracketType {
     case 4:
     case 'BRACKET_TYPE_GROUP':
       return BracketType.BRACKET_TYPE_GROUP;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return BracketType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum BracketType'
+      );
   }
 }
 
@@ -351,18 +490,37 @@ export function bracketTypeToJSON(object: BracketType): string {
       return 'BRACKET_TYPE_DOUBLE_ELIMINATION';
     case BracketType.BRACKET_TYPE_GROUP:
       return 'BRACKET_TYPE_GROUP';
-    case BracketType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum BracketType'
+      );
   }
 }
 
-export enum StageType {
-  STAGE_TYPE_UNKNOWN = 0,
-  STAGE_TYPE_PRELIMINARY = 1,
-  STAGE_TYPE_FINAL = 2,
-  UNRECOGNIZED = -1,
+export function bracketTypeToNumber(object: BracketType): number {
+  switch (object) {
+    case BracketType.BRACKET_TYPE_UNKNOWN:
+      return 0;
+    case BracketType.BRACKET_TYPE_SINGLE_ELIMINATION:
+      return 2;
+    case BracketType.BRACKET_TYPE_DOUBLE_ELIMINATION:
+      return 3;
+    case BracketType.BRACKET_TYPE_GROUP:
+      return 4;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum BracketType'
+      );
+  }
 }
+
+export const StageType = {
+  STAGE_TYPE_UNKNOWN: 'STAGE_TYPE_UNKNOWN',
+  STAGE_TYPE_PRELIMINARY: 'STAGE_TYPE_PRELIMINARY',
+  STAGE_TYPE_FINAL: 'STAGE_TYPE_FINAL',
+} as const;
+
+export type StageType = typeof StageType[keyof typeof StageType];
 
 export function stageTypeFromJSON(object: any): StageType {
   switch (object) {
@@ -375,10 +533,10 @@ export function stageTypeFromJSON(object: any): StageType {
     case 2:
     case 'STAGE_TYPE_FINAL':
       return StageType.STAGE_TYPE_FINAL;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return StageType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageType'
+      );
   }
 }
 
@@ -390,21 +548,38 @@ export function stageTypeToJSON(object: StageType): string {
       return 'STAGE_TYPE_PRELIMINARY';
     case StageType.STAGE_TYPE_FINAL:
       return 'STAGE_TYPE_FINAL';
-    case StageType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageType'
+      );
   }
 }
 
-export enum StageStatus {
-  STAGE_STATUS_UNKNOWN = 0,
-  STAGE_STATUS_APPROVED = 1,
-  STAGE_STATUS_WAITING_FOR_APPROVAL = 2,
-  STAGE_STATUS_WAITING_FOR_COMPETITORS = 3,
-  STAGE_STATUS_FINISHED = 4,
-  STAGE_STATUS_IN_PROGRESS = 5,
-  UNRECOGNIZED = -1,
+export function stageTypeToNumber(object: StageType): number {
+  switch (object) {
+    case StageType.STAGE_TYPE_UNKNOWN:
+      return 0;
+    case StageType.STAGE_TYPE_PRELIMINARY:
+      return 1;
+    case StageType.STAGE_TYPE_FINAL:
+      return 2;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageType'
+      );
+  }
 }
+
+export const StageStatus = {
+  STAGE_STATUS_UNKNOWN: 'STAGE_STATUS_UNKNOWN',
+  STAGE_STATUS_APPROVED: 'STAGE_STATUS_APPROVED',
+  STAGE_STATUS_WAITING_FOR_APPROVAL: 'STAGE_STATUS_WAITING_FOR_APPROVAL',
+  STAGE_STATUS_WAITING_FOR_COMPETITORS: 'STAGE_STATUS_WAITING_FOR_COMPETITORS',
+  STAGE_STATUS_FINISHED: 'STAGE_STATUS_FINISHED',
+  STAGE_STATUS_IN_PROGRESS: 'STAGE_STATUS_IN_PROGRESS',
+} as const;
+
+export type StageStatus = typeof StageStatus[keyof typeof StageStatus];
 
 export function stageStatusFromJSON(object: any): StageStatus {
   switch (object) {
@@ -426,10 +601,10 @@ export function stageStatusFromJSON(object: any): StageStatus {
     case 5:
     case 'STAGE_STATUS_IN_PROGRESS':
       return StageStatus.STAGE_STATUS_IN_PROGRESS;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return StageStatus.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageStatus'
+      );
   }
 }
 
@@ -447,22 +622,45 @@ export function stageStatusToJSON(object: StageStatus): string {
       return 'STAGE_STATUS_FINISHED';
     case StageStatus.STAGE_STATUS_IN_PROGRESS:
       return 'STAGE_STATUS_IN_PROGRESS';
-    case StageStatus.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageStatus'
+      );
   }
 }
 
-export enum FightStatus {
-  FIGHT_STATUS_PENDING = 0,
-  FIGHT_STATUS_GET_READY = 1,
-  FIGHT_STATUS_IN_PROGRESS = 2,
-  FIGHT_STATUS_PAUSED = 3,
-  FIGHT_STATUS_FINISHED = 4,
-  FIGHT_STATUS_UNCOMPLETABLE = 5,
-  FIGHT_STATUS_WALKOVER = 6,
-  UNRECOGNIZED = -1,
+export function stageStatusToNumber(object: StageStatus): number {
+  switch (object) {
+    case StageStatus.STAGE_STATUS_UNKNOWN:
+      return 0;
+    case StageStatus.STAGE_STATUS_APPROVED:
+      return 1;
+    case StageStatus.STAGE_STATUS_WAITING_FOR_APPROVAL:
+      return 2;
+    case StageStatus.STAGE_STATUS_WAITING_FOR_COMPETITORS:
+      return 3;
+    case StageStatus.STAGE_STATUS_FINISHED:
+      return 4;
+    case StageStatus.STAGE_STATUS_IN_PROGRESS:
+      return 5;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum StageStatus'
+      );
+  }
 }
+
+export const FightStatus = {
+  FIGHT_STATUS_PENDING: 'FIGHT_STATUS_PENDING',
+  FIGHT_STATUS_GET_READY: 'FIGHT_STATUS_GET_READY',
+  FIGHT_STATUS_IN_PROGRESS: 'FIGHT_STATUS_IN_PROGRESS',
+  FIGHT_STATUS_PAUSED: 'FIGHT_STATUS_PAUSED',
+  FIGHT_STATUS_FINISHED: 'FIGHT_STATUS_FINISHED',
+  FIGHT_STATUS_UNCOMPLETABLE: 'FIGHT_STATUS_UNCOMPLETABLE',
+  FIGHT_STATUS_WALKOVER: 'FIGHT_STATUS_WALKOVER',
+} as const;
+
+export type FightStatus = typeof FightStatus[keyof typeof FightStatus];
 
 export function fightStatusFromJSON(object: any): FightStatus {
   switch (object) {
@@ -487,10 +685,10 @@ export function fightStatusFromJSON(object: any): FightStatus {
     case 6:
     case 'FIGHT_STATUS_WALKOVER':
       return FightStatus.FIGHT_STATUS_WALKOVER;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return FightStatus.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightStatus'
+      );
   }
 }
 
@@ -510,19 +708,45 @@ export function fightStatusToJSON(object: FightStatus): string {
       return 'FIGHT_STATUS_UNCOMPLETABLE';
     case FightStatus.FIGHT_STATUS_WALKOVER:
       return 'FIGHT_STATUS_WALKOVER';
-    case FightStatus.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightStatus'
+      );
   }
 }
 
-export enum FightReferenceType {
-  FIGHT_REFERENCE_TYPE_UNKNOWN = 0,
-  FIGHT_REFERENCE_TYPE_WINNER = 1,
-  FIGHT_REFERENCE_TYPE_LOSER = 2,
-  FIGHT_REFERENCE_TYPE_PROPAGATED = 3,
-  UNRECOGNIZED = -1,
+export function fightStatusToNumber(object: FightStatus): number {
+  switch (object) {
+    case FightStatus.FIGHT_STATUS_PENDING:
+      return 0;
+    case FightStatus.FIGHT_STATUS_GET_READY:
+      return 1;
+    case FightStatus.FIGHT_STATUS_IN_PROGRESS:
+      return 2;
+    case FightStatus.FIGHT_STATUS_PAUSED:
+      return 3;
+    case FightStatus.FIGHT_STATUS_FINISHED:
+      return 4;
+    case FightStatus.FIGHT_STATUS_UNCOMPLETABLE:
+      return 5;
+    case FightStatus.FIGHT_STATUS_WALKOVER:
+      return 6;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightStatus'
+      );
+  }
 }
+
+export const FightReferenceType = {
+  FIGHT_REFERENCE_TYPE_UNKNOWN: 'FIGHT_REFERENCE_TYPE_UNKNOWN',
+  FIGHT_REFERENCE_TYPE_WINNER: 'FIGHT_REFERENCE_TYPE_WINNER',
+  FIGHT_REFERENCE_TYPE_LOSER: 'FIGHT_REFERENCE_TYPE_LOSER',
+  FIGHT_REFERENCE_TYPE_PROPAGATED: 'FIGHT_REFERENCE_TYPE_PROPAGATED',
+} as const;
+
+export type FightReferenceType =
+  typeof FightReferenceType[keyof typeof FightReferenceType];
 
 export function fightReferenceTypeFromJSON(object: any): FightReferenceType {
   switch (object) {
@@ -538,10 +762,10 @@ export function fightReferenceTypeFromJSON(object: any): FightReferenceType {
     case 3:
     case 'FIGHT_REFERENCE_TYPE_PROPAGATED':
       return FightReferenceType.FIGHT_REFERENCE_TYPE_PROPAGATED;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return FightReferenceType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightReferenceType'
+      );
   }
 }
 
@@ -555,17 +779,37 @@ export function fightReferenceTypeToJSON(object: FightReferenceType): string {
       return 'FIGHT_REFERENCE_TYPE_LOSER';
     case FightReferenceType.FIGHT_REFERENCE_TYPE_PROPAGATED:
       return 'FIGHT_REFERENCE_TYPE_PROPAGATED';
-    case FightReferenceType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightReferenceType'
+      );
   }
 }
 
-export enum CategoryRestrictionType {
-  CATEGORY_RESTRICTION_TYPE_VALUE = 0,
-  CATEGORY_RESTRICTION_TYPE_RANGE = 1,
-  UNRECOGNIZED = -1,
+export function fightReferenceTypeToNumber(object: FightReferenceType): number {
+  switch (object) {
+    case FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN:
+      return 0;
+    case FightReferenceType.FIGHT_REFERENCE_TYPE_WINNER:
+      return 1;
+    case FightReferenceType.FIGHT_REFERENCE_TYPE_LOSER:
+      return 2;
+    case FightReferenceType.FIGHT_REFERENCE_TYPE_PROPAGATED:
+      return 3;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum FightReferenceType'
+      );
+  }
 }
+
+export const CategoryRestrictionType = {
+  CATEGORY_RESTRICTION_TYPE_VALUE: 'CATEGORY_RESTRICTION_TYPE_VALUE',
+  CATEGORY_RESTRICTION_TYPE_RANGE: 'CATEGORY_RESTRICTION_TYPE_RANGE',
+} as const;
+
+export type CategoryRestrictionType =
+  typeof CategoryRestrictionType[keyof typeof CategoryRestrictionType];
 
 export function categoryRestrictionTypeFromJSON(
   object: any
@@ -577,10 +821,12 @@ export function categoryRestrictionTypeFromJSON(
     case 1:
     case 'CATEGORY_RESTRICTION_TYPE_RANGE':
       return CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_RANGE;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return CategoryRestrictionType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CategoryRestrictionType'
+      );
   }
 }
 
@@ -592,23 +838,45 @@ export function categoryRestrictionTypeToJSON(
       return 'CATEGORY_RESTRICTION_TYPE_VALUE';
     case CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_RANGE:
       return 'CATEGORY_RESTRICTION_TYPE_RANGE';
-    case CategoryRestrictionType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CategoryRestrictionType'
+      );
   }
 }
 
-export enum CompetitionStatus {
-  COMPETITION_STATUS_UNKNOWN = 0,
-  COMPETITION_STATUS_CREATED = 1,
-  COMPETITION_STATUS_PUBLISHED = 2,
-  COMPETITION_STATUS_UNPUBLISHED = 3,
-  COMPETITION_STATUS_STARTED = 4,
-  COMPETITION_STATUS_PAUSED = 5,
-  COMPETITION_STATUS_STOPPED = 6,
-  COMPETITION_STATUS_DELETED = 7,
-  UNRECOGNIZED = -1,
+export function categoryRestrictionTypeToNumber(
+  object: CategoryRestrictionType
+): number {
+  switch (object) {
+    case CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_VALUE:
+      return 0;
+    case CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_RANGE:
+      return 1;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CategoryRestrictionType'
+      );
+  }
 }
+
+export const CompetitionStatus = {
+  COMPETITION_STATUS_UNKNOWN: 'COMPETITION_STATUS_UNKNOWN',
+  COMPETITION_STATUS_CREATED: 'COMPETITION_STATUS_CREATED',
+  COMPETITION_STATUS_PUBLISHED: 'COMPETITION_STATUS_PUBLISHED',
+  COMPETITION_STATUS_UNPUBLISHED: 'COMPETITION_STATUS_UNPUBLISHED',
+  COMPETITION_STATUS_STARTED: 'COMPETITION_STATUS_STARTED',
+  COMPETITION_STATUS_PAUSED: 'COMPETITION_STATUS_PAUSED',
+  COMPETITION_STATUS_STOPPED: 'COMPETITION_STATUS_STOPPED',
+  COMPETITION_STATUS_DELETED: 'COMPETITION_STATUS_DELETED',
+} as const;
+
+export type CompetitionStatus =
+  typeof CompetitionStatus[keyof typeof CompetitionStatus];
 
 export function competitionStatusFromJSON(object: any): CompetitionStatus {
   switch (object) {
@@ -636,10 +904,10 @@ export function competitionStatusFromJSON(object: any): CompetitionStatus {
     case 7:
     case 'COMPETITION_STATUS_DELETED':
       return CompetitionStatus.COMPETITION_STATUS_DELETED;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return CompetitionStatus.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CompetitionStatus'
+      );
   }
 }
 
@@ -661,19 +929,47 @@ export function competitionStatusToJSON(object: CompetitionStatus): string {
       return 'COMPETITION_STATUS_STOPPED';
     case CompetitionStatus.COMPETITION_STATUS_DELETED:
       return 'COMPETITION_STATUS_DELETED';
-    case CompetitionStatus.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CompetitionStatus'
+      );
   }
 }
 
-export enum ScheduleEntryType {
-  SCHEDULE_ENTRY_TYPE_UNKNOWN = 0,
-  SCHEDULE_ENTRY_TYPE_FIGHTS_GROUP = 1,
-  SCHEDULE_ENTRY_TYPE_FIXED_PAUSE = 2,
-  SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE = 3,
-  UNRECOGNIZED = -1,
+export function competitionStatusToNumber(object: CompetitionStatus): number {
+  switch (object) {
+    case CompetitionStatus.COMPETITION_STATUS_UNKNOWN:
+      return 0;
+    case CompetitionStatus.COMPETITION_STATUS_CREATED:
+      return 1;
+    case CompetitionStatus.COMPETITION_STATUS_PUBLISHED:
+      return 2;
+    case CompetitionStatus.COMPETITION_STATUS_UNPUBLISHED:
+      return 3;
+    case CompetitionStatus.COMPETITION_STATUS_STARTED:
+      return 4;
+    case CompetitionStatus.COMPETITION_STATUS_PAUSED:
+      return 5;
+    case CompetitionStatus.COMPETITION_STATUS_STOPPED:
+      return 6;
+    case CompetitionStatus.COMPETITION_STATUS_DELETED:
+      return 7;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CompetitionStatus'
+      );
+  }
 }
+
+export const ScheduleEntryType = {
+  SCHEDULE_ENTRY_TYPE_UNKNOWN: 'SCHEDULE_ENTRY_TYPE_UNKNOWN',
+  SCHEDULE_ENTRY_TYPE_FIGHTS_GROUP: 'SCHEDULE_ENTRY_TYPE_FIGHTS_GROUP',
+  SCHEDULE_ENTRY_TYPE_FIXED_PAUSE: 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE',
+  SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE: 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE',
+} as const;
+
+export type ScheduleEntryType =
+  typeof ScheduleEntryType[keyof typeof ScheduleEntryType];
 
 export function scheduleEntryTypeFromJSON(object: any): ScheduleEntryType {
   switch (object) {
@@ -689,10 +985,10 @@ export function scheduleEntryTypeFromJSON(object: any): ScheduleEntryType {
     case 3:
     case 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE':
       return ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return ScheduleEntryType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ScheduleEntryType'
+      );
   }
 }
 
@@ -706,20 +1002,42 @@ export function scheduleEntryTypeToJSON(object: ScheduleEntryType): string {
       return 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE';
     case ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE:
       return 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE';
-    case ScheduleEntryType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ScheduleEntryType'
+      );
   }
 }
 
-export enum ScheduleRequirementType {
-  SCHEDULE_REQUIREMENT_TYPE_UNKNOWN = 0,
-  SCHEDULE_REQUIREMENT_TYPE_CATEGORIES = 1,
-  SCHEDULE_REQUIREMENT_TYPE_FIGHTS = 2,
-  SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE = 3,
-  SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE = 4,
-  UNRECOGNIZED = -1,
+export function scheduleEntryTypeToNumber(object: ScheduleEntryType): number {
+  switch (object) {
+    case ScheduleEntryType.SCHEDULE_ENTRY_TYPE_UNKNOWN:
+      return 0;
+    case ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIGHTS_GROUP:
+      return 1;
+    case ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE:
+      return 2;
+    case ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE:
+      return 3;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum ScheduleEntryType'
+      );
+  }
 }
+
+export const ScheduleRequirementType = {
+  SCHEDULE_REQUIREMENT_TYPE_UNKNOWN: 'SCHEDULE_REQUIREMENT_TYPE_UNKNOWN',
+  SCHEDULE_REQUIREMENT_TYPE_CATEGORIES: 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES',
+  SCHEDULE_REQUIREMENT_TYPE_FIGHTS: 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS',
+  SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE:
+    'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE',
+  SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE:
+    'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE',
+} as const;
+
+export type ScheduleRequirementType =
+  typeof ScheduleRequirementType[keyof typeof ScheduleRequirementType];
 
 export function scheduleRequirementTypeFromJSON(
   object: any
@@ -740,10 +1058,12 @@ export function scheduleRequirementTypeFromJSON(
     case 4:
     case 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE':
       return ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return ScheduleRequirementType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum ScheduleRequirementType'
+      );
   }
 }
 
@@ -761,19 +1081,51 @@ export function scheduleRequirementTypeToJSON(
       return 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE';
     case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE:
       return 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE';
-    case ScheduleRequirementType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum ScheduleRequirementType'
+      );
   }
 }
 
-export enum CompetitorRegistrationStatus {
-  COMPETITOR_REGISTRATION_STATUS_UNKNOWN = 0,
-  COMPETITOR_REGISTRATION_STATUS_SUCCESS_CONFIRMED = 1,
-  COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING = 2,
-  COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED = 3,
-  UNRECOGNIZED = -1,
+export function scheduleRequirementTypeToNumber(
+  object: ScheduleRequirementType
+): number {
+  switch (object) {
+    case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_UNKNOWN:
+      return 0;
+    case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES:
+      return 1;
+    case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS:
+      return 2;
+    case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE:
+      return 3;
+    case ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE:
+      return 4;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum ScheduleRequirementType'
+      );
+  }
 }
+
+export const CompetitorRegistrationStatus = {
+  COMPETITOR_REGISTRATION_STATUS_UNKNOWN:
+    'COMPETITOR_REGISTRATION_STATUS_UNKNOWN',
+  COMPETITOR_REGISTRATION_STATUS_SUCCESS_CONFIRMED:
+    'COMPETITOR_REGISTRATION_STATUS_SUCCESS_CONFIRMED',
+  COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING:
+    'COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING',
+  COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED:
+    'COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED',
+} as const;
+
+export type CompetitorRegistrationStatus =
+  typeof CompetitorRegistrationStatus[keyof typeof CompetitorRegistrationStatus];
 
 export function competitorRegistrationStatusFromJSON(
   object: any
@@ -791,10 +1143,12 @@ export function competitorRegistrationStatusFromJSON(
     case 3:
     case 'COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED':
       return CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return CompetitorRegistrationStatus.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CompetitorRegistrationStatus'
+      );
   }
 }
 
@@ -810,9 +1164,33 @@ export function competitorRegistrationStatusToJSON(
       return 'COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING';
     case CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED:
       return 'COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED';
-    case CompetitorRegistrationStatus.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CompetitorRegistrationStatus'
+      );
+  }
+}
+
+export function competitorRegistrationStatusToNumber(
+  object: CompetitorRegistrationStatus
+): number {
+  switch (object) {
+    case CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_UNKNOWN:
+      return 0;
+    case CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_SUCCESS_CONFIRMED:
+      return 1;
+    case CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING:
+      return 2;
+    case CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_REGISTRATION_CANCELLED:
+      return 3;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' +
+          object +
+          ' for enum CompetitorRegistrationStatus'
+      );
   }
 }
 
@@ -1361,7 +1739,7 @@ function createBaseManagedCompetition(): ManagedCompetition {
     startsAt: undefined,
     endsAt: undefined,
     timeZone: '',
-    status: 0,
+    status: CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
   };
 }
 
@@ -1403,8 +1781,8 @@ export const ManagedCompetition = {
     if (message.timeZone !== '') {
       writer.uint32(66).string(message.timeZone);
     }
-    if (message.status !== 0) {
-      writer.uint32(72).int32(message.status);
+    if (message.status !== CompetitionStatus.COMPETITION_STATUS_UNKNOWN) {
+      writer.uint32(72).int32(competitionStatusToNumber(message.status));
     }
     return writer;
   },
@@ -1447,7 +1825,7 @@ export const ManagedCompetition = {
           message.timeZone = reader.string();
           break;
         case 9:
-          message.status = reader.int32() as any;
+          message.status = competitionStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1477,7 +1855,7 @@ export const ManagedCompetition = {
       timeZone: isSet(object.timeZone) ? String(object.timeZone) : '',
       status: isSet(object.status)
         ? competitionStatusFromJSON(object.status)
-        : 0,
+        : CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
     };
   },
 
@@ -1512,7 +1890,8 @@ export const ManagedCompetition = {
     message.startsAt = object.startsAt ?? undefined;
     message.endsAt = object.endsAt ?? undefined;
     message.timeZone = object.timeZone ?? '';
-    message.status = object.status ?? 0;
+    message.status =
+      object.status ?? CompetitionStatus.COMPETITION_STATUS_UNKNOWN;
     return message;
   },
 };
@@ -1523,9 +1902,9 @@ function createBaseStageDescriptor(): StageDescriptor {
     name: undefined,
     categoryId: '',
     competitionId: '',
-    bracketType: 0,
-    stageType: 0,
-    stageStatus: 0,
+    bracketType: BracketType.BRACKET_TYPE_UNKNOWN,
+    stageType: StageType.STAGE_TYPE_UNKNOWN,
+    stageStatus: StageStatus.STAGE_STATUS_UNKNOWN,
     stageResultDescriptor: undefined,
     inputDescriptor: undefined,
     stageOrder: 0,
@@ -1554,14 +1933,14 @@ export const StageDescriptor = {
     if (message.competitionId !== '') {
       writer.uint32(34).string(message.competitionId);
     }
-    if (message.bracketType !== 0) {
-      writer.uint32(40).int32(message.bracketType);
+    if (message.bracketType !== BracketType.BRACKET_TYPE_UNKNOWN) {
+      writer.uint32(40).int32(bracketTypeToNumber(message.bracketType));
     }
-    if (message.stageType !== 0) {
-      writer.uint32(48).int32(message.stageType);
+    if (message.stageType !== StageType.STAGE_TYPE_UNKNOWN) {
+      writer.uint32(48).int32(stageTypeToNumber(message.stageType));
     }
-    if (message.stageStatus !== 0) {
-      writer.uint32(56).int32(message.stageStatus);
+    if (message.stageStatus !== StageStatus.STAGE_STATUS_UNKNOWN) {
+      writer.uint32(56).int32(stageStatusToNumber(message.stageStatus));
     }
     if (message.stageResultDescriptor !== undefined) {
       StageResultDescriptor.encode(
@@ -1616,13 +1995,13 @@ export const StageDescriptor = {
           message.competitionId = reader.string();
           break;
         case 5:
-          message.bracketType = reader.int32() as any;
+          message.bracketType = bracketTypeFromJSON(reader.int32());
           break;
         case 6:
-          message.stageType = reader.int32() as any;
+          message.stageType = stageTypeFromJSON(reader.int32());
           break;
         case 7:
-          message.stageStatus = reader.int32() as any;
+          message.stageStatus = stageStatusFromJSON(reader.int32());
           break;
         case 8:
           message.stageResultDescriptor = StageResultDescriptor.decode(
@@ -1674,13 +2053,13 @@ export const StageDescriptor = {
         : '',
       bracketType: isSet(object.bracketType)
         ? bracketTypeFromJSON(object.bracketType)
-        : 0,
+        : BracketType.BRACKET_TYPE_UNKNOWN,
       stageType: isSet(object.stageType)
         ? stageTypeFromJSON(object.stageType)
-        : 0,
+        : StageType.STAGE_TYPE_UNKNOWN,
       stageStatus: isSet(object.stageStatus)
         ? stageStatusFromJSON(object.stageStatus)
-        : 0,
+        : StageStatus.STAGE_STATUS_UNKNOWN,
       stageResultDescriptor: isSet(object.stageResultDescriptor)
         ? StageResultDescriptor.fromJSON(object.stageResultDescriptor)
         : undefined,
@@ -1755,9 +2134,11 @@ export const StageDescriptor = {
     message.name = object.name ?? undefined;
     message.categoryId = object.categoryId ?? '';
     message.competitionId = object.competitionId ?? '';
-    message.bracketType = object.bracketType ?? 0;
-    message.stageType = object.stageType ?? 0;
-    message.stageStatus = object.stageStatus ?? 0;
+    message.bracketType =
+      object.bracketType ?? BracketType.BRACKET_TYPE_UNKNOWN;
+    message.stageType = object.stageType ?? StageType.STAGE_TYPE_UNKNOWN;
+    message.stageStatus =
+      object.stageStatus ?? StageStatus.STAGE_STATUS_UNKNOWN;
     message.stageResultDescriptor =
       object.stageResultDescriptor !== undefined &&
       object.stageResultDescriptor !== null
@@ -1851,7 +2232,11 @@ export const GroupDescriptor = {
 };
 
 function createBaseStageInputDescriptor(): StageInputDescriptor {
-  return { numberOfCompetitors: 0, selectors: [], distributionType: 0 };
+  return {
+    numberOfCompetitors: 0,
+    selectors: [],
+    distributionType: DistributionType.DISTRIBUTION_TYPE_AUTOMATIC,
+  };
 }
 
 export const StageInputDescriptor = {
@@ -1865,8 +2250,12 @@ export const StageInputDescriptor = {
     for (const v of message.selectors) {
       CompetitorSelector.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.distributionType !== 0) {
-      writer.uint32(24).int32(message.distributionType);
+    if (
+      message.distributionType !== DistributionType.DISTRIBUTION_TYPE_AUTOMATIC
+    ) {
+      writer
+        .uint32(24)
+        .int32(distributionTypeToNumber(message.distributionType));
     }
     return writer;
   },
@@ -1890,7 +2279,7 @@ export const StageInputDescriptor = {
           );
           break;
         case 3:
-          message.distributionType = reader.int32() as any;
+          message.distributionType = distributionTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1910,7 +2299,7 @@ export const StageInputDescriptor = {
         : [],
       distributionType: isSet(object.distributionType)
         ? distributionTypeFromJSON(object.distributionType)
-        : 0,
+        : DistributionType.DISTRIBUTION_TYPE_AUTOMATIC,
     };
   },
 
@@ -1937,7 +2326,8 @@ export const StageInputDescriptor = {
     message.numberOfCompetitors = object.numberOfCompetitors ?? 0;
     message.selectors =
       object.selectors?.map((e) => CompetitorSelector.fromPartial(e)) || [];
-    message.distributionType = object.distributionType ?? 0;
+    message.distributionType =
+      object.distributionType ?? DistributionType.DISTRIBUTION_TYPE_AUTOMATIC;
     return message;
   },
 };
@@ -1946,9 +2336,9 @@ function createBaseCompetitorSelector(): CompetitorSelector {
   return {
     id: '',
     applyToStageId: '',
-    logicalOperator: 0,
-    classifier: 0,
-    operator: 0,
+    logicalOperator: LogicalOperator.LOGICAL_OPERATOR_AND,
+    classifier: SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES,
+    operator: OperatorType.OPERATOR_TYPE_EQUALS,
     selectorValue: [],
   };
 }
@@ -1964,14 +2354,17 @@ export const CompetitorSelector = {
     if (message.applyToStageId !== '') {
       writer.uint32(18).string(message.applyToStageId);
     }
-    if (message.logicalOperator !== 0) {
-      writer.uint32(32).int32(message.logicalOperator);
+    if (message.logicalOperator !== LogicalOperator.LOGICAL_OPERATOR_AND) {
+      writer.uint32(32).int32(logicalOperatorToNumber(message.logicalOperator));
     }
-    if (message.classifier !== 0) {
-      writer.uint32(40).int32(message.classifier);
+    if (
+      message.classifier !==
+      SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES
+    ) {
+      writer.uint32(40).int32(selectorClassifierToNumber(message.classifier));
     }
-    if (message.operator !== 0) {
-      writer.uint32(48).int32(message.operator);
+    if (message.operator !== OperatorType.OPERATOR_TYPE_EQUALS) {
+      writer.uint32(48).int32(operatorTypeToNumber(message.operator));
     }
     for (const v of message.selectorValue) {
       writer.uint32(58).string(v!);
@@ -1993,13 +2386,13 @@ export const CompetitorSelector = {
           message.applyToStageId = reader.string();
           break;
         case 4:
-          message.logicalOperator = reader.int32() as any;
+          message.logicalOperator = logicalOperatorFromJSON(reader.int32());
           break;
         case 5:
-          message.classifier = reader.int32() as any;
+          message.classifier = selectorClassifierFromJSON(reader.int32());
           break;
         case 6:
-          message.operator = reader.int32() as any;
+          message.operator = operatorTypeFromJSON(reader.int32());
           break;
         case 7:
           message.selectorValue.push(reader.string());
@@ -2020,13 +2413,13 @@ export const CompetitorSelector = {
         : '',
       logicalOperator: isSet(object.logicalOperator)
         ? logicalOperatorFromJSON(object.logicalOperator)
-        : 0,
+        : LogicalOperator.LOGICAL_OPERATOR_AND,
       classifier: isSet(object.classifier)
         ? selectorClassifierFromJSON(object.classifier)
-        : 0,
+        : SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES,
       operator: isSet(object.operator)
         ? operatorTypeFromJSON(object.operator)
-        : 0,
+        : OperatorType.OPERATOR_TYPE_EQUALS,
       selectorValue: Array.isArray(object?.selectorValue)
         ? object.selectorValue.map((e: any) => String(e))
         : [],
@@ -2058,9 +2451,12 @@ export const CompetitorSelector = {
     const message = createBaseCompetitorSelector();
     message.id = object.id ?? '';
     message.applyToStageId = object.applyToStageId ?? '';
-    message.logicalOperator = object.logicalOperator ?? 0;
-    message.classifier = object.classifier ?? 0;
-    message.operator = object.operator ?? 0;
+    message.logicalOperator =
+      object.logicalOperator ?? LogicalOperator.LOGICAL_OPERATOR_AND;
+    message.classifier =
+      object.classifier ??
+      SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES;
+    message.operator = object.operator ?? OperatorType.OPERATOR_TYPE_EQUALS;
     message.selectorValue = object.selectorValue?.map((e) => e) || [];
     return message;
   },
@@ -2232,7 +2628,11 @@ export const StageResultDescriptor = {
 };
 
 function createBaseAdditionalGroupSortingDescriptor(): AdditionalGroupSortingDescriptor {
-  return { groupSortDirection: 0, groupSortSpecifier: 0 };
+  return {
+    groupSortDirection: GroupSortDirection.GROUP_SORT_DIRECTION_ASC,
+    groupSortSpecifier:
+      GroupSortSpecifier.GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT,
+  };
 }
 
 export const AdditionalGroupSortingDescriptor = {
@@ -2240,11 +2640,20 @@ export const AdditionalGroupSortingDescriptor = {
     message: AdditionalGroupSortingDescriptor,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.groupSortDirection !== 0) {
-      writer.uint32(8).int32(message.groupSortDirection);
+    if (
+      message.groupSortDirection !== GroupSortDirection.GROUP_SORT_DIRECTION_ASC
+    ) {
+      writer
+        .uint32(8)
+        .int32(groupSortDirectionToNumber(message.groupSortDirection));
     }
-    if (message.groupSortSpecifier !== 0) {
-      writer.uint32(16).int32(message.groupSortSpecifier);
+    if (
+      message.groupSortSpecifier !==
+      GroupSortSpecifier.GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT
+    ) {
+      writer
+        .uint32(16)
+        .int32(groupSortSpecifierToNumber(message.groupSortSpecifier));
     }
     return writer;
   },
@@ -2260,10 +2669,14 @@ export const AdditionalGroupSortingDescriptor = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groupSortDirection = reader.int32() as any;
+          message.groupSortDirection = groupSortDirectionFromJSON(
+            reader.int32()
+          );
           break;
         case 2:
-          message.groupSortSpecifier = reader.int32() as any;
+          message.groupSortSpecifier = groupSortSpecifierFromJSON(
+            reader.int32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -2277,10 +2690,10 @@ export const AdditionalGroupSortingDescriptor = {
     return {
       groupSortDirection: isSet(object.groupSortDirection)
         ? groupSortDirectionFromJSON(object.groupSortDirection)
-        : 0,
+        : GroupSortDirection.GROUP_SORT_DIRECTION_ASC,
       groupSortSpecifier: isSet(object.groupSortSpecifier)
         ? groupSortSpecifierFromJSON(object.groupSortSpecifier)
-        : 0,
+        : GroupSortSpecifier.GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT,
     };
   },
 
@@ -2301,8 +2714,11 @@ export const AdditionalGroupSortingDescriptor = {
     I extends Exact<DeepPartial<AdditionalGroupSortingDescriptor>, I>
   >(object: I): AdditionalGroupSortingDescriptor {
     const message = createBaseAdditionalGroupSortingDescriptor();
-    message.groupSortDirection = object.groupSortDirection ?? 0;
-    message.groupSortSpecifier = object.groupSortSpecifier ?? 0;
+    message.groupSortDirection =
+      object.groupSortDirection ?? GroupSortDirection.GROUP_SORT_DIRECTION_ASC;
+    message.groupSortSpecifier =
+      object.groupSortSpecifier ??
+      GroupSortSpecifier.GROUP_SORT_SPECIFIER_DIRECT_FIGHT_RESULT;
     return message;
   },
 };
@@ -2312,7 +2728,7 @@ function createBaseCompetitorStageResult(): CompetitorStageResult {
     competitorId: '',
     points: undefined,
     round: undefined,
-    roundType: 0,
+    roundType: StageRoundType.STAGE_ROUND_TYPE_UNKNOWN,
     place: undefined,
     stageId: '',
     groupId: undefined,
@@ -2334,8 +2750,8 @@ export const CompetitorStageResult = {
     if (message.round !== undefined) {
       writer.uint32(24).int32(message.round);
     }
-    if (message.roundType !== 0) {
-      writer.uint32(32).int32(message.roundType);
+    if (message.roundType !== StageRoundType.STAGE_ROUND_TYPE_UNKNOWN) {
+      writer.uint32(32).int32(stageRoundTypeToNumber(message.roundType));
     }
     if (message.place !== undefined) {
       writer.uint32(40).int32(message.place);
@@ -2372,7 +2788,7 @@ export const CompetitorStageResult = {
           message.round = reader.int32();
           break;
         case 4:
-          message.roundType = reader.int32() as any;
+          message.roundType = stageRoundTypeFromJSON(reader.int32());
           break;
         case 5:
           message.place = reader.int32();
@@ -2403,7 +2819,7 @@ export const CompetitorStageResult = {
       round: isSet(object.round) ? Number(object.round) : undefined,
       roundType: isSet(object.roundType)
         ? stageRoundTypeFromJSON(object.roundType)
-        : 0,
+        : StageRoundType.STAGE_ROUND_TYPE_UNKNOWN,
       place: isSet(object.place) ? Number(object.place) : undefined,
       stageId: isSet(object.stageId) ? String(object.stageId) : '',
       groupId: isSet(object.groupId) ? String(object.groupId) : undefined,
@@ -2436,7 +2852,8 @@ export const CompetitorStageResult = {
     message.competitorId = object.competitorId ?? '';
     message.points = object.points ?? undefined;
     message.round = object.round ?? undefined;
-    message.roundType = object.roundType ?? 0;
+    message.roundType =
+      object.roundType ?? StageRoundType.STAGE_ROUND_TYPE_UNKNOWN;
     message.place = object.place ?? undefined;
     message.stageId = object.stageId ?? '';
     message.groupId = object.groupId ?? undefined;
@@ -2595,8 +3012,8 @@ function createBaseFightDescription(): FightDescription {
     duration: 0,
     round: 0,
     invalid: false,
-    roundType: 0,
-    status: 0,
+    roundType: StageRoundType.STAGE_ROUND_TYPE_UNKNOWN,
+    status: FightStatus.FIGHT_STATUS_PENDING,
     fightResult: undefined,
     mat: undefined,
     numberOnMat: undefined,
@@ -2643,11 +3060,11 @@ export const FightDescription = {
     if (message.invalid === true) {
       writer.uint32(72).bool(message.invalid);
     }
-    if (message.roundType !== 0) {
-      writer.uint32(80).int32(message.roundType);
+    if (message.roundType !== StageRoundType.STAGE_ROUND_TYPE_UNKNOWN) {
+      writer.uint32(80).int32(stageRoundTypeToNumber(message.roundType));
     }
-    if (message.status !== 0) {
-      writer.uint32(88).int32(message.status);
+    if (message.status !== FightStatus.FIGHT_STATUS_PENDING) {
+      writer.uint32(88).int32(fightStatusToNumber(message.status));
     }
     if (message.fightResult !== undefined) {
       FightResult.encode(
@@ -2726,10 +3143,10 @@ export const FightDescription = {
           message.invalid = reader.bool();
           break;
         case 10:
-          message.roundType = reader.int32() as any;
+          message.roundType = stageRoundTypeFromJSON(reader.int32());
           break;
         case 11:
-          message.status = reader.int32() as any;
+          message.status = fightStatusFromJSON(reader.int32());
           break;
         case 12:
           message.fightResult = FightResult.decode(reader, reader.uint32());
@@ -2789,8 +3206,10 @@ export const FightDescription = {
       invalid: isSet(object.invalid) ? Boolean(object.invalid) : false,
       roundType: isSet(object.roundType)
         ? stageRoundTypeFromJSON(object.roundType)
-        : 0,
-      status: isSet(object.status) ? fightStatusFromJSON(object.status) : 0,
+        : StageRoundType.STAGE_ROUND_TYPE_UNKNOWN,
+      status: isSet(object.status)
+        ? fightStatusFromJSON(object.status)
+        : FightStatus.FIGHT_STATUS_PENDING,
       fightResult: isSet(object.fightResult)
         ? FightResult.fromJSON(object.fightResult)
         : undefined,
@@ -2876,8 +3295,9 @@ export const FightDescription = {
     message.duration = object.duration ?? 0;
     message.round = object.round ?? 0;
     message.invalid = object.invalid ?? false;
-    message.roundType = object.roundType ?? 0;
-    message.status = object.status ?? 0;
+    message.roundType =
+      object.roundType ?? StageRoundType.STAGE_ROUND_TYPE_UNKNOWN;
+    message.status = object.status ?? FightStatus.FIGHT_STATUS_PENDING;
     message.fightResult =
       object.fightResult !== undefined && object.fightResult !== null
         ? FightResult.fromPartial(object.fightResult)
@@ -3085,7 +3505,9 @@ export const CompScore = {
       writer.uint32(32).int32(message.order);
     }
     if (message.parentReferenceType !== undefined) {
-      writer.uint32(40).int32(message.parentReferenceType);
+      writer
+        .uint32(40)
+        .int32(fightReferenceTypeToNumber(message.parentReferenceType));
     }
     if (message.parentFightId !== undefined) {
       writer.uint32(50).string(message.parentFightId);
@@ -3113,7 +3535,9 @@ export const CompScore = {
           message.order = reader.int32();
           break;
         case 5:
-          message.parentReferenceType = reader.int32() as any;
+          message.parentReferenceType = fightReferenceTypeFromJSON(
+            reader.int32()
+          );
           break;
         case 6:
           message.parentFightId = reader.string();
@@ -4271,7 +4695,7 @@ export const CategoryDescriptor = {
 function createBaseCategoryRestriction(): CategoryRestriction {
   return {
     restrictionId: '',
-    type: 0,
+    type: CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_VALUE,
     name: '',
     value: undefined,
     alias: undefined,
@@ -4290,8 +4714,10 @@ export const CategoryRestriction = {
     if (message.restrictionId !== '') {
       writer.uint32(10).string(message.restrictionId);
     }
-    if (message.type !== 0) {
-      writer.uint32(16).int32(message.type);
+    if (
+      message.type !== CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_VALUE
+    ) {
+      writer.uint32(16).int32(categoryRestrictionTypeToNumber(message.type));
     }
     if (message.name !== '') {
       writer.uint32(26).string(message.name);
@@ -4328,7 +4754,7 @@ export const CategoryRestriction = {
           message.restrictionId = reader.string();
           break;
         case 2:
-          message.type = reader.int32() as any;
+          message.type = categoryRestrictionTypeFromJSON(reader.int32());
           break;
         case 3:
           message.name = reader.string();
@@ -4366,7 +4792,7 @@ export const CategoryRestriction = {
         : '',
       type: isSet(object.type)
         ? categoryRestrictionTypeFromJSON(object.type)
-        : 0,
+        : CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_VALUE,
       name: isSet(object.name) ? String(object.name) : '',
       value: isSet(object.value) ? String(object.value) : undefined,
       alias: isSet(object.alias) ? String(object.alias) : undefined,
@@ -4401,7 +4827,8 @@ export const CategoryRestriction = {
   ): CategoryRestriction {
     const message = createBaseCategoryRestriction();
     message.restrictionId = object.restrictionId ?? '';
-    message.type = object.type ?? 0;
+    message.type =
+      object.type ?? CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_VALUE;
     message.name = object.name ?? '';
     message.value = object.value ?? undefined;
     message.alias = object.alias ?? undefined;
@@ -4544,7 +4971,7 @@ function createBaseCompetitionProperties(): CompetitionProperties {
     endDate: undefined,
     timeZone: '',
     creationTimestamp: undefined,
-    status: 0,
+    status: CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
   };
 }
 
@@ -4601,8 +5028,8 @@ export const CompetitionProperties = {
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.status !== 0) {
-      writer.uint32(112).int32(message.status);
+    if (message.status !== CompetitionStatus.COMPETITION_STATUS_UNKNOWN) {
+      writer.uint32(112).int32(competitionStatusToNumber(message.status));
     }
     return writer;
   },
@@ -4663,7 +5090,7 @@ export const CompetitionProperties = {
           );
           break;
         case 14:
-          message.status = reader.int32() as any;
+          message.status = competitionStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -4710,7 +5137,7 @@ export const CompetitionProperties = {
         : undefined,
       status: isSet(object.status)
         ? competitionStatusFromJSON(object.status)
-        : 0,
+        : CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
     };
   },
 
@@ -4771,7 +5198,8 @@ export const CompetitionProperties = {
     message.endDate = object.endDate ?? undefined;
     message.timeZone = object.timeZone ?? '';
     message.creationTimestamp = object.creationTimestamp ?? undefined;
-    message.status = object.status ?? 0;
+    message.status =
+      object.status ?? CompetitionStatus.COMPETITION_STATUS_UNKNOWN;
     return message;
   },
 };
@@ -5023,7 +5451,7 @@ function createBaseCompetitionProcessingStarted(): CompetitionProcessingStarted 
     startsAt: undefined,
     endsAt: undefined,
     timeZone: '',
-    status: 0,
+    status: CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
   };
 }
 
@@ -5065,8 +5493,8 @@ export const CompetitionProcessingStarted = {
     if (message.timeZone !== '') {
       writer.uint32(66).string(message.timeZone);
     }
-    if (message.status !== 0) {
-      writer.uint32(72).int32(message.status);
+    if (message.status !== CompetitionStatus.COMPETITION_STATUS_UNKNOWN) {
+      writer.uint32(72).int32(competitionStatusToNumber(message.status));
     }
     return writer;
   },
@@ -5112,7 +5540,7 @@ export const CompetitionProcessingStarted = {
           message.timeZone = reader.string();
           break;
         case 9:
-          message.status = reader.int32() as any;
+          message.status = competitionStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -5140,7 +5568,7 @@ export const CompetitionProcessingStarted = {
       timeZone: isSet(object.timeZone) ? String(object.timeZone) : '',
       status: isSet(object.status)
         ? competitionStatusFromJSON(object.status)
-        : 0,
+        : CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
     };
   },
 
@@ -5173,7 +5601,8 @@ export const CompetitionProcessingStarted = {
     message.startsAt = object.startsAt ?? undefined;
     message.endsAt = object.endsAt ?? undefined;
     message.timeZone = object.timeZone ?? '';
-    message.status = object.status ?? 0;
+    message.status =
+      object.status ?? CompetitionStatus.COMPETITION_STATUS_UNKNOWN;
     return message;
   },
 };
@@ -5624,7 +6053,7 @@ function createBaseScheduleEntry(): ScheduleEntry {
     description: undefined,
     name: undefined,
     color: undefined,
-    entryType: 0,
+    entryType: ScheduleEntryType.SCHEDULE_ENTRY_TYPE_UNKNOWN,
     requirementIds: [],
     startTime: undefined,
     endTime: undefined,
@@ -5660,8 +6089,8 @@ export const ScheduleEntry = {
     if (message.color !== undefined) {
       writer.uint32(58).string(message.color);
     }
-    if (message.entryType !== 0) {
-      writer.uint32(64).int32(message.entryType);
+    if (message.entryType !== ScheduleEntryType.SCHEDULE_ENTRY_TYPE_UNKNOWN) {
+      writer.uint32(64).int32(scheduleEntryTypeToNumber(message.entryType));
     }
     for (const v of message.requirementIds) {
       writer.uint32(74).string(v!);
@@ -5721,7 +6150,7 @@ export const ScheduleEntry = {
           message.color = reader.string();
           break;
         case 8:
-          message.entryType = reader.int32() as any;
+          message.entryType = scheduleEntryTypeFromJSON(reader.int32());
           break;
         case 9:
           message.requirementIds.push(reader.string());
@@ -5770,7 +6199,7 @@ export const ScheduleEntry = {
       color: isSet(object.color) ? String(object.color) : undefined,
       entryType: isSet(object.entryType)
         ? scheduleEntryTypeFromJSON(object.entryType)
-        : 0,
+        : ScheduleEntryType.SCHEDULE_ENTRY_TYPE_UNKNOWN,
       requirementIds: Array.isArray(object?.requirementIds)
         ? object.requirementIds.map((e: any) => String(e))
         : [],
@@ -5839,7 +6268,8 @@ export const ScheduleEntry = {
     message.description = object.description ?? undefined;
     message.name = object.name ?? undefined;
     message.color = object.color ?? undefined;
-    message.entryType = object.entryType ?? 0;
+    message.entryType =
+      object.entryType ?? ScheduleEntryType.SCHEDULE_ENTRY_TYPE_UNKNOWN;
     message.requirementIds = object.requirementIds?.map((e) => e) || [];
     message.startTime = object.startTime ?? undefined;
     message.endTime = object.endTime ?? undefined;
@@ -5939,7 +6369,7 @@ function createBaseScheduleRequirement(): ScheduleRequirement {
     periodId: '',
     name: undefined,
     color: undefined,
-    entryType: 0,
+    entryType: ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_UNKNOWN,
     force: false,
     startTime: undefined,
     endTime: undefined,
@@ -5974,8 +6404,13 @@ export const ScheduleRequirement = {
     if (message.color !== undefined) {
       writer.uint32(58).string(message.color);
     }
-    if (message.entryType !== 0) {
-      writer.uint32(64).int32(message.entryType);
+    if (
+      message.entryType !==
+      ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_UNKNOWN
+    ) {
+      writer
+        .uint32(64)
+        .int32(scheduleRequirementTypeToNumber(message.entryType));
     }
     if (message.force === true) {
       writer.uint32(72).bool(message.force);
@@ -6030,7 +6465,7 @@ export const ScheduleRequirement = {
           message.color = reader.string();
           break;
         case 8:
-          message.entryType = reader.int32() as any;
+          message.entryType = scheduleRequirementTypeFromJSON(reader.int32());
           break;
         case 9:
           message.force = reader.bool();
@@ -6074,7 +6509,7 @@ export const ScheduleRequirement = {
       color: isSet(object.color) ? String(object.color) : undefined,
       entryType: isSet(object.entryType)
         ? scheduleRequirementTypeFromJSON(object.entryType)
-        : 0,
+        : ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_UNKNOWN,
       force: isSet(object.force) ? Boolean(object.force) : false,
       startTime: isSet(object.startTime)
         ? fromJsonTimestamp(object.startTime)
@@ -6131,7 +6566,9 @@ export const ScheduleRequirement = {
     message.periodId = object.periodId ?? '';
     message.name = object.name ?? undefined;
     message.color = object.color ?? undefined;
-    message.entryType = object.entryType ?? 0;
+    message.entryType =
+      object.entryType ??
+      ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_UNKNOWN;
     message.force = object.force ?? false;
     message.startTime = object.startTime ?? undefined;
     message.endTime = object.endTime ?? undefined;
@@ -6152,7 +6589,8 @@ function createBaseCompetitor(): Competitor {
     academy: undefined,
     categories: [],
     competitionId: '',
-    registrationStatus: 0,
+    registrationStatus:
+      CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_UNKNOWN,
     placeholder: false,
     promo: '',
   };
@@ -6193,8 +6631,15 @@ export const Competitor = {
     if (message.competitionId !== '') {
       writer.uint32(74).string(message.competitionId);
     }
-    if (message.registrationStatus !== 0) {
-      writer.uint32(80).int32(message.registrationStatus);
+    if (
+      message.registrationStatus !==
+      CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_UNKNOWN
+    ) {
+      writer
+        .uint32(80)
+        .int32(
+          competitorRegistrationStatusToNumber(message.registrationStatus)
+        );
     }
     if (message.placeholder === true) {
       writer.uint32(88).bool(message.placeholder);
@@ -6242,7 +6687,9 @@ export const Competitor = {
           message.competitionId = reader.string();
           break;
         case 10:
-          message.registrationStatus = reader.int32() as any;
+          message.registrationStatus = competitorRegistrationStatusFromJSON(
+            reader.int32()
+          );
           break;
         case 11:
           message.placeholder = reader.bool();
@@ -6279,7 +6726,7 @@ export const Competitor = {
         : '',
       registrationStatus: isSet(object.registrationStatus)
         ? competitorRegistrationStatusFromJSON(object.registrationStatus)
-        : 0,
+        : CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_UNKNOWN,
       placeholder: isSet(object.placeholder)
         ? Boolean(object.placeholder)
         : false,
@@ -6333,7 +6780,9 @@ export const Competitor = {
         : undefined;
     message.categories = object.categories?.map((e) => e) || [];
     message.competitionId = object.competitionId ?? '';
-    message.registrationStatus = object.registrationStatus ?? 0;
+    message.registrationStatus =
+      object.registrationStatus ??
+      CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_UNKNOWN;
     message.placeholder = object.placeholder ?? false;
     message.promo = object.promo ?? '';
     return message;
@@ -6578,6 +7027,17 @@ export const FightStartTimePair = {
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin =
   | Date

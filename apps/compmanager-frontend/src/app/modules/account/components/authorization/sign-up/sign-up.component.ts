@@ -1,6 +1,6 @@
 
 import {tap} from 'rxjs/operators';
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {flyOut} from '../../../../../animations/flyOut';
 import {HttpAuthService} from '../../../service/AuthService';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -25,7 +25,7 @@ declare var $: any;
   styleUrls: ['./sign-up.component.css'],
   animations: [flyOut]
 })
-export class SignUpComponent implements OnInit, OnDestroy {
+export class SignUpComponent implements OnInit {
 
 
   @Output()
@@ -94,10 +94,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.transitionController = new TransitionController();
     this.animate('fly left');
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   createUser() {

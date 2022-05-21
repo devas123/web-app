@@ -17,7 +17,7 @@ import {selectUser} from '../../../competition/redux/reducers';
 @Component({
   selector: 'app-event-manager-container',
   template: `
-    <sui-dimmer class="page" [isDimmed]="!(socketConnected$ | async)" [isClickable]="false">
+    <sui-dimmer class="page" [isDimmed]="(socketConnected$ | async) === false" [isClickable]="false">
       <div class="ui medium text loader">
         Connecting to server.
         <p></p>

@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {CompetitionProperties} from "../../../../commons/model/competition.model";
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-my-events',

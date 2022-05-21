@@ -3,47 +3,52 @@ import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import { MessageInfo } from './common';
 
-export enum CommandType {
-  COMMAND_TYPE_UNKNOWN = 0,
-  ADD_ACADEMY_COMMAND = 1,
-  ADD_CATEGORY_COMMAND = 2,
-  ADD_COMPETITOR_COMMAND = 3,
-  ADD_REGISTRATION_GROUP_COMMAND = 4,
-  ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND = 5,
-  ADD_REGISTRATION_PERIOD_COMMAND = 6,
-  ASSIGN_REGISTRATION_GROUP_CATEGORIES_COMMAND = 7,
-  CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 8,
-  CHANGE_COMPETITOR_CATEGORY_COMMAND = 9,
-  CREATE_COMPETITION_COMMAND = 10,
-  CREATE_FAKE_COMPETITORS_COMMAND = 11,
-  DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND = 12,
-  DASHBOARD_SET_FIGHT_RESULT_COMMAND = 13,
-  DELETE_CATEGORY_COMMAND = 14,
-  DELETE_COMPETITION_COMMAND = 15,
-  DELETE_REGISTRATION_GROUP_COMMAND = 16,
-  DELETE_REGISTRATION_PERIOD_COMMAND = 17,
-  DROP_ALL_BRACKETS_COMMAND = 18,
-  DROP_CATEGORY_BRACKETS_COMMAND = 19,
-  DROP_SCHEDULE_COMMAND = 20,
-  FIGHTS_EDITOR_APPLY_CHANGE = 21,
-  GENERATE_BRACKETS_COMMAND = 22,
-  GENERATE_CATEGORIES_COMMAND = 23,
-  GENERATE_SCHEDULE_COMMAND = 24,
-  PROPAGATE_COMPETITORS_COMMAND = 25,
-  PUBLISH_COMPETITION_COMMAND = 26,
-  REMOVE_ACADEMY_COMMAND = 27,
-  REMOVE_COMPETITOR_COMMAND = 28,
-  SAVE_ABSOLUTE_CATEGORY_COMMAND = 29,
-  START_COMPETITION_COMMAND = 30,
-  STOP_COMPETITION_COMMAND = 31,
-  UNPUBLISH_COMPETITION_COMMAND = 32,
-  UPDATE_ACADEMY_COMMAND = 33,
-  UPDATE_COMPETITION_PROPERTIES_COMMAND = 34,
-  UPDATE_COMPETITOR_COMMAND = 35,
-  UPDATE_REGISTRATION_INFO_COMMAND = 36,
-  UPDATE_STAGE_STATUS_COMMAND = 37,
-  UNRECOGNIZED = -1,
-}
+export const CommandType = {
+  COMMAND_TYPE_UNKNOWN: 'COMMAND_TYPE_UNKNOWN',
+  ADD_ACADEMY_COMMAND: 'ADD_ACADEMY_COMMAND',
+  ADD_CATEGORY_COMMAND: 'ADD_CATEGORY_COMMAND',
+  ADD_COMPETITOR_COMMAND: 'ADD_COMPETITOR_COMMAND',
+  ADD_REGISTRATION_GROUP_COMMAND: 'ADD_REGISTRATION_GROUP_COMMAND',
+  ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND:
+    'ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND',
+  ADD_REGISTRATION_PERIOD_COMMAND: 'ADD_REGISTRATION_PERIOD_COMMAND',
+  ASSIGN_REGISTRATION_GROUP_CATEGORIES_COMMAND:
+    'ASSIGN_REGISTRATION_GROUP_CATEGORIES_COMMAND',
+  CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND:
+    'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND',
+  CHANGE_COMPETITOR_CATEGORY_COMMAND: 'CHANGE_COMPETITOR_CATEGORY_COMMAND',
+  CREATE_COMPETITION_COMMAND: 'CREATE_COMPETITION_COMMAND',
+  CREATE_FAKE_COMPETITORS_COMMAND: 'CREATE_FAKE_COMPETITORS_COMMAND',
+  DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND: 'DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND',
+  DASHBOARD_SET_FIGHT_RESULT_COMMAND: 'DASHBOARD_SET_FIGHT_RESULT_COMMAND',
+  DELETE_CATEGORY_COMMAND: 'DELETE_CATEGORY_COMMAND',
+  DELETE_COMPETITION_COMMAND: 'DELETE_COMPETITION_COMMAND',
+  DELETE_REGISTRATION_GROUP_COMMAND: 'DELETE_REGISTRATION_GROUP_COMMAND',
+  DELETE_REGISTRATION_PERIOD_COMMAND: 'DELETE_REGISTRATION_PERIOD_COMMAND',
+  DROP_ALL_BRACKETS_COMMAND: 'DROP_ALL_BRACKETS_COMMAND',
+  DROP_CATEGORY_BRACKETS_COMMAND: 'DROP_CATEGORY_BRACKETS_COMMAND',
+  DROP_SCHEDULE_COMMAND: 'DROP_SCHEDULE_COMMAND',
+  FIGHTS_EDITOR_APPLY_CHANGE: 'FIGHTS_EDITOR_APPLY_CHANGE',
+  GENERATE_BRACKETS_COMMAND: 'GENERATE_BRACKETS_COMMAND',
+  GENERATE_CATEGORIES_COMMAND: 'GENERATE_CATEGORIES_COMMAND',
+  GENERATE_SCHEDULE_COMMAND: 'GENERATE_SCHEDULE_COMMAND',
+  PROPAGATE_COMPETITORS_COMMAND: 'PROPAGATE_COMPETITORS_COMMAND',
+  PUBLISH_COMPETITION_COMMAND: 'PUBLISH_COMPETITION_COMMAND',
+  REMOVE_ACADEMY_COMMAND: 'REMOVE_ACADEMY_COMMAND',
+  REMOVE_COMPETITOR_COMMAND: 'REMOVE_COMPETITOR_COMMAND',
+  SAVE_ABSOLUTE_CATEGORY_COMMAND: 'SAVE_ABSOLUTE_CATEGORY_COMMAND',
+  START_COMPETITION_COMMAND: 'START_COMPETITION_COMMAND',
+  STOP_COMPETITION_COMMAND: 'STOP_COMPETITION_COMMAND',
+  UNPUBLISH_COMPETITION_COMMAND: 'UNPUBLISH_COMPETITION_COMMAND',
+  UPDATE_ACADEMY_COMMAND: 'UPDATE_ACADEMY_COMMAND',
+  UPDATE_COMPETITION_PROPERTIES_COMMAND:
+    'UPDATE_COMPETITION_PROPERTIES_COMMAND',
+  UPDATE_COMPETITOR_COMMAND: 'UPDATE_COMPETITOR_COMMAND',
+  UPDATE_REGISTRATION_INFO_COMMAND: 'UPDATE_REGISTRATION_INFO_COMMAND',
+  UPDATE_STAGE_STATUS_COMMAND: 'UPDATE_STAGE_STATUS_COMMAND',
+} as const;
+
+export type CommandType = typeof CommandType[keyof typeof CommandType];
 
 export function commandTypeFromJSON(object: any): CommandType {
   switch (object) {
@@ -161,10 +166,10 @@ export function commandTypeFromJSON(object: any): CommandType {
     case 37:
     case 'UPDATE_STAGE_STATUS_COMMAND':
       return CommandType.UPDATE_STAGE_STATUS_COMMAND;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return CommandType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandType'
+      );
   }
 }
 
@@ -246,9 +251,95 @@ export function commandTypeToJSON(object: CommandType): string {
       return 'UPDATE_REGISTRATION_INFO_COMMAND';
     case CommandType.UPDATE_STAGE_STATUS_COMMAND:
       return 'UPDATE_STAGE_STATUS_COMMAND';
-    case CommandType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandType'
+      );
+  }
+}
+
+export function commandTypeToNumber(object: CommandType): number {
+  switch (object) {
+    case CommandType.COMMAND_TYPE_UNKNOWN:
+      return 0;
+    case CommandType.ADD_ACADEMY_COMMAND:
+      return 1;
+    case CommandType.ADD_CATEGORY_COMMAND:
+      return 2;
+    case CommandType.ADD_COMPETITOR_COMMAND:
+      return 3;
+    case CommandType.ADD_REGISTRATION_GROUP_COMMAND:
+      return 4;
+    case CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND:
+      return 5;
+    case CommandType.ADD_REGISTRATION_PERIOD_COMMAND:
+      return 6;
+    case CommandType.ASSIGN_REGISTRATION_GROUP_CATEGORIES_COMMAND:
+      return 7;
+    case CommandType.CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND:
+      return 8;
+    case CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND:
+      return 9;
+    case CommandType.CREATE_COMPETITION_COMMAND:
+      return 10;
+    case CommandType.CREATE_FAKE_COMPETITORS_COMMAND:
+      return 11;
+    case CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND:
+      return 12;
+    case CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND:
+      return 13;
+    case CommandType.DELETE_CATEGORY_COMMAND:
+      return 14;
+    case CommandType.DELETE_COMPETITION_COMMAND:
+      return 15;
+    case CommandType.DELETE_REGISTRATION_GROUP_COMMAND:
+      return 16;
+    case CommandType.DELETE_REGISTRATION_PERIOD_COMMAND:
+      return 17;
+    case CommandType.DROP_ALL_BRACKETS_COMMAND:
+      return 18;
+    case CommandType.DROP_CATEGORY_BRACKETS_COMMAND:
+      return 19;
+    case CommandType.DROP_SCHEDULE_COMMAND:
+      return 20;
+    case CommandType.FIGHTS_EDITOR_APPLY_CHANGE:
+      return 21;
+    case CommandType.GENERATE_BRACKETS_COMMAND:
+      return 22;
+    case CommandType.GENERATE_CATEGORIES_COMMAND:
+      return 23;
+    case CommandType.GENERATE_SCHEDULE_COMMAND:
+      return 24;
+    case CommandType.PROPAGATE_COMPETITORS_COMMAND:
+      return 25;
+    case CommandType.PUBLISH_COMPETITION_COMMAND:
+      return 26;
+    case CommandType.REMOVE_ACADEMY_COMMAND:
+      return 27;
+    case CommandType.REMOVE_COMPETITOR_COMMAND:
+      return 28;
+    case CommandType.SAVE_ABSOLUTE_CATEGORY_COMMAND:
+      return 29;
+    case CommandType.START_COMPETITION_COMMAND:
+      return 30;
+    case CommandType.STOP_COMPETITION_COMMAND:
+      return 31;
+    case CommandType.UNPUBLISH_COMPETITION_COMMAND:
+      return 32;
+    case CommandType.UPDATE_ACADEMY_COMMAND:
+      return 33;
+    case CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND:
+      return 34;
+    case CommandType.UPDATE_COMPETITOR_COMMAND:
+      return 35;
+    case CommandType.UPDATE_REGISTRATION_INFO_COMMAND:
+      return 36;
+    case CommandType.UPDATE_STAGE_STATUS_COMMAND:
+      return 37;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum CommandType'
+      );
   }
 }
 
@@ -258,7 +349,7 @@ export interface Command {
 }
 
 function createBaseCommand(): Command {
-  return { type: 0, messageInfo: undefined };
+  return { type: CommandType.COMMAND_TYPE_UNKNOWN, messageInfo: undefined };
 }
 
 export const Command = {
@@ -266,8 +357,8 @@ export const Command = {
     message: Command,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(32).int32(message.type);
+    if (message.type !== CommandType.COMMAND_TYPE_UNKNOWN) {
+      writer.uint32(32).int32(commandTypeToNumber(message.type));
     }
     if (message.messageInfo !== undefined) {
       MessageInfo.encode(
@@ -286,7 +377,7 @@ export const Command = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 4:
-          message.type = reader.int32() as any;
+          message.type = commandTypeFromJSON(reader.int32());
           break;
         case 5:
           message.messageInfo = MessageInfo.decode(reader, reader.uint32());
@@ -301,7 +392,9 @@ export const Command = {
 
   fromJSON(object: any): Command {
     return {
-      type: isSet(object.type) ? commandTypeFromJSON(object.type) : 0,
+      type: isSet(object.type)
+        ? commandTypeFromJSON(object.type)
+        : CommandType.COMMAND_TYPE_UNKNOWN,
       messageInfo: isSet(object.messageInfo)
         ? MessageInfo.fromJSON(object.messageInfo)
         : undefined,
@@ -320,7 +413,7 @@ export const Command = {
 
   fromPartial<I extends Exact<DeepPartial<Command>, I>>(object: I): Command {
     const message = createBaseCommand();
-    message.type = object.type ?? 0;
+    message.type = object.type ?? CommandType.COMMAND_TYPE_UNKNOWN;
     message.messageInfo =
       object.messageInfo !== undefined && object.messageInfo !== null
         ? MessageInfo.fromPartial(object.messageInfo)
@@ -328,6 +421,17 @@ export const Command = {
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin =
   | Date

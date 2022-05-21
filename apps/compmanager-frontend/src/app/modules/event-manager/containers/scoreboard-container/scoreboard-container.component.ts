@@ -13,10 +13,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {
-  Category,
-  Competitor,
-  Fight,
-  FightResultOption,
   HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
@@ -38,6 +34,7 @@ import {
 } from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {CategoryDescriptor, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
@@ -47,12 +44,12 @@ export class ScoreboardContainerComponent extends EventManagerRouterEntryCompone
 
   subs = new Subscription();
 
-  matFights$: Observable<Fight[]>;
+  matFights$: Observable<FightDescription[]>;
   competitors$: Observable<Competitor[]>;
   selectedPeriodId$: Observable<String>;
-  selectedFight$: Observable<Fight>;
+  selectedFight$: Observable<FightDescription>;
   selectedFightFightResultOptions$: Observable<FightResultOption[]>;
-  fightCategory$: Observable<Category>;
+  fightCategory$: Observable<CategoryDescriptor>;
   urlProvidedFightId$: Observable<string>;
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, public info: CommonBracketsInfoContainer, menuService: MenuService) {

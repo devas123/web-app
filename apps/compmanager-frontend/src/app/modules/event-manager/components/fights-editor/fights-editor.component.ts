@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import {Competitor, CompScore, Fight} from '../../../../commons/model/competition.model';
 import produce from 'immer';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {Competitor, CompScore, FightDescription} from "@frontend-nx/protobuf";
 
 @Component(
   {
@@ -59,7 +59,7 @@ export class FightsEditorComponent implements OnChanges {
   }
 
   @Output()
-  changeSaved = new EventEmitter<Fight[]>();
+  changeSaved = new EventEmitter<FightDescription[]>();
 
   @Output()
   closeClicked = new EventEmitter<void>();
@@ -71,7 +71,7 @@ export class FightsEditorComponent implements OnChanges {
   changeIds: string[] | number[];
 
   @Input()
-  seedFights: Fight[];
+  seedFights: FightDescription[];
 
   @Input()
   competitors: Competitor[] = [];
@@ -84,7 +84,7 @@ export class FightsEditorComponent implements OnChanges {
     this._originalFights = this.seedFights;
   }
 
-  scoresRestriction = (fight: Fight) => () => this.getFilledScores(fight)?.length < 2;
+  scoresRestriction = (fight: FightDescription) => () => this.getFilledScores(fight)?.length < 2;
 
   getCompetitor(competitorId: string) {
     return this.competitors && this.competitors.find(c => c.id === competitorId);
@@ -141,7 +141,7 @@ export class FightsEditorComponent implements OnChanges {
     this.closeClicked.next();
   }
 
-  getFilledScores(fight: Fight) {
+  getFilledScores(fight: FightDescription) {
     return fight.scores?.filter(sc => !!sc.competitorId) || [];
   }
 }

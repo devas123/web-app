@@ -10,7 +10,7 @@ import {Account} from '../../../account/model/Account';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {selectUser} from '../../../competition/redux/reducers';
-import {CompetitionProperties, RegistrationInfo} from "../../../../commons/model/competition.model";
+import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-create-event',
@@ -80,7 +80,7 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
         const props = {} as CompetitionProperties;
         const regInfo = {} as RegistrationInfo;
         regInfo.registrationOpen = this.registrationOpen.value || false;
-        props.creatorId = user.userId;
+        props.creatorId = Number(user.userId).toString();
         props.competitionName = this.competitionName.value;
         // props.registrationFee = this.registrationFee.value || '1500';
         props.id = '';

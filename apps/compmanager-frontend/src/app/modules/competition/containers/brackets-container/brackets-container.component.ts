@@ -1,19 +1,19 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnDestroy, TemplateRef, ViewChild} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable, of, Subscription} from 'rxjs';
 import {map, take, withLatestFrom} from 'rxjs/operators';
-import {Category} from '../../../../commons/model/competition.model';
 import {eventManagerCategorySelected, eventManagerCategoryUnselected} from '../../../event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {CategoryDescriptor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-brackets-container',
   templateUrl: './brackets-container.component.html',
   styleUrls: ['./brackets-container.component.scss']
 })
-export class BracketsContainerComponent implements OnInit, OnDestroy {
+export class BracketsContainerComponent implements  OnDestroy {
 
   private subs = new Subscription();
 
@@ -26,14 +26,11 @@ export class BracketsContainerComponent implements OnInit, OnDestroy {
     this.bucketSize$ = bracketsInfo.bucketsize$.pipe(map(val => val ? 2 : 6));
   }
 
-  optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: Category) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
+  formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
 
-  setCategoryId(category: Category) {
+  setCategoryId(category: CategoryDescriptor) {
     of(category.id).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([categoryId, competitionId]) => eventManagerCategorySelected(competitionId, categoryId))).subscribe(this.store);
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {

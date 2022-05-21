@@ -1,19 +1,19 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {Category, ScheduleRequirement} from '../../../../commons/model/competition.model';
+import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-requirement-line',
   template: `
     <div class="item schedule_page flex-container"
-         [ngClass]="{'category-restriction': req.entryType === 'CATEGORIES',
-             'pause': req.entryType === 'RELATIVE_PAUSE',
-             'fight-restriction': req.entryType === 'FIGHTS',
+         [ngClass]="{'category-restriction': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES',
+             'pause': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE',
+             'fight-restriction': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS',
               'selected': selected && canSelect}" [style]="getRequirementStyle(req)">
       <div cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
       <div>{{ getRequirementDisplay(req) }}</div>
       <div class="filler"></div>
       <div class="right-floated">
-        <ng-container *ngIf="req.entryType !== 'RELATIVE_PAUSE' && canSelect">
+        <ng-container *ngIf="req.entryType !== 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE' && canSelect">
           <a><i *ngIf="!selected" class="ui check icon" (click)="addToSelected()"></i></a>
           <a><i *ngIf="selected" class="ui minus icon" (click)="removeFromSelected()"></i></a>
         </ng-container>
@@ -46,7 +46,7 @@ export class RequirementLineComponent {
   canSelect = true;
 
   @Input()
-  requirementCategories: Category[];
+  requirementCategories: CategoryDescriptor[];
 
   @Output()
   selectionChanged = new EventEmitter<boolean>();
@@ -61,16 +61,16 @@ export class RequirementLineComponent {
     if (req.name && req.name.length > 0) {
       return req.name;
     }
-    if (req.entryType === 'CATEGORIES') {
+    if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES') {
       if (!this.requirementCategories) {
         return 'empty';
       }
       return this.requirementCategories.length + ' cat. ' + this.req.fightIds.length + ' f.';
     }
-    if (req.entryType === 'FIGHTS') {
+    if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS') {
       return req.fightIds && req.fightIds.length + ' Fights';
     }
-    if (req.entryType === 'RELATIVE_PAUSE') {
+    if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE') {
       return `Pause ${req.durationSeconds} min`;
     }
   }

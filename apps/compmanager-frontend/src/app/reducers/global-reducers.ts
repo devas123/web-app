@@ -8,29 +8,19 @@ import {environment} from '../../environments/environment';
 import {storeFreeze} from 'ngrx-store-freeze';
 import {AccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
-import {createEntityAdapter, EntityAdapter, EntityState, Update} from '@ngrx/entity';
+import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
 import * as _ from 'lodash';
 
 import {
   CategoriesCollection,
   categoriesInitialState,
-  Category,
   categoryEntityAdapter,
-  CompetitionProperties,
-  Competitor,
   competitorEntityAdapter,
   CompetitorsCollection,
   competitorsInitialState,
-  Fight,
   fightEntityAdapter,
-  FightResultOption,
   FightsCollection,
   fightsInitialState,
-  MatDescription,
-  Period,
-  RegistrationInfo,
-  Schedule,
-  ScheduleRequirement,
   stagesEntityAdapter,
   stagesInitialState
 } from '../commons/model/competition.model';
@@ -91,6 +81,14 @@ import {
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid} from "../modules/account/utils";
+import {
+  CategoryDescriptor,
+  CompetitionProperties, Competitor, FightDescription,
+  FightResultOption,
+  MatDescription, Period,
+  RegistrationInfo,
+  Schedule, ScheduleRequirement
+} from "@frontend-nx/protobuf";
 
 export interface AppState {
   accountState: AccountState;
@@ -119,13 +117,21 @@ export const matsInitialState = matEntityAdapter.getInitialState({
   matsFights: fightsInitialState
 });
 
+export interface InternalScheduleState {
+  competitionId: string;
+  periods: PeriodEntities;
+  undispatchedRequirements: ScheduleRequirement[];
+  fightIdsBycategoryId: Dictionary<string[]>;
+}
+
+
 
 export interface CompetitionState {
   selectedEventCategories: CategoriesCollection;
   selectedEventPreviewCategories: CategoriesCollection;
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventMats: MatsCollection;
-  selectedEventSchedule: Schedule;
+  selectedEventSchedule: InternalScheduleState;
   selectedEventDefaultFightResultOptions: FightResultOption[];
   competitionProperties: CompetitionProperties;
   registrationInfo: RegistrationInfo;
@@ -153,7 +159,7 @@ export const periodEntityInitialState = periodEntityAdapter.getInitialState({
   selectedPeriodId: null
 });
 
-export const scheduleInitialState: Schedule = {
+export const scheduleInitialState: InternalScheduleState = {
   periods: periodEntityInitialState,
   undispatchedRequirements: [],
   competitionId: null,
@@ -250,17 +256,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           }
           const per = state.registrationInfo.registrationPeriods[periodId]
           per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
-          const group =
-            state.registrationInfo.registrationGroups[groupId];
-          if (!group.registrationPeriodIds) {
-            group.registrationPeriodIds = [];
-          }
-          group.registrationPeriodIds = group.registrationPeriodIds.filter(pid => pid !== periodId);
-          if (group.registrationPeriodIds.length === 0) {
-            const newGroups = {...state.registrationInfo.registrationGroups}
-            delete newGroups[groupId];
-            state.registrationInfo.registrationGroups = newGroups
-          }
+          const newGroups = {...state.registrationInfo.registrationGroups}
+          delete newGroups[groupId];
+          state.registrationInfo.registrationGroups = newGroups
+
         }
         break;
       }
@@ -349,7 +348,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
                 const newRequirement = <ScheduleRequirement>{
                   id: competitionId + updatedPeriod.id + generateUuid(),
                   categoryIds: [category],
-                  entryType: 'CATEGORIES',
+                  entryType: 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES',
                   periodId: updatedPeriod.id
                 };
                 let newCategories = [...periodRequirements, newRequirement];
@@ -430,7 +429,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             ...rwc.category,
             fightsNumber: rwc.fightsNumber,
             numberOfCompetitors: rwc.numberOfCompetitors
-          } as Category));
+          } as CategoryDescriptor));
           return {
             ...state,
             selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
@@ -441,7 +440,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
 
       case EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED: {
         const competitionId = action.competitionId;
-        const categories = (action.categories || []) as Category[];
+        const categories = (action.categories || []) as CategoryDescriptor[];
         if (competitionId === state.competitionProperties.id) {
           return {
             ...state,
@@ -653,7 +652,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case DASHBOARD_MATS_LOADED: {
         if (action.payload) {
-          const payload = action.payload as { mats: { matDescription: MatDescription, numberOfFights: number, topFiveFights: Fight[] }[], competitors: Competitor[] };
+          const payload = action.payload as { mats: { matDescription: MatDescription, numberOfFights: number, topFiveFights: FightDescription[] }[], competitors: Competitor[] };
           state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats.map(m => (<MatDescription>{
             ...m.matDescription,
             numberOfFights: m.numberOfFights
@@ -684,7 +683,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case DASHBOARD_MAT_FIGHTS_LOADED: {
         const {fights, competitors} = action.payload;
         if (fights && competitors) {
-          const currentMatFights = _.flowRight(_.curryRight(_.filter)(f => f.matId !== action.matId), _.values)(state.selectedEventMats.matsFights.entities) as Fight[];
+          const currentMatFights = _.flowRight(_.curryRight(_.filter)(f => f.matId !== action.matId), _.values)(state.selectedEventMats.matsFights.entities) as FightDescription[];
           state.selectedEventMats.matsFights = fightEntityAdapter.setAll([...fights, ...currentMatFights], state.selectedEventMats.matsFights);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(competitors, state.selectedEventCompetitors);
         }
@@ -745,7 +744,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case CATEGORY_ADDED: {
-        const category = action.payload.categoryId as Category;
+        const category = action.payload.categoryId as CategoryDescriptor;
         if (action.competitionId === state.competitionProperties.id && category) {
           return {
             ...state,

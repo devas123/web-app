@@ -9,13 +9,14 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {AdjacencyList, CategoryRestriction} from '../../../../commons/model/competition.model';
+import {AdjacencyList} from '../../../../commons/model/competition.model';
 import * as _ from 'lodash';
 import {Dictionary} from '@ngrx/entity';
 import {TypeInTree} from './restriction-item';
 import {BehaviorSubject} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppAutocompleteDirective} from './autocomplete.directive';
+import {CategoryRestriction} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-constructor',

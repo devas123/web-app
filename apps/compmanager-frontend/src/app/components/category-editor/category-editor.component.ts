@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
-  Category,
   categoryFilter,
-  CompetitionProperties,
   defaultRestrictionFormatter
 } from '../../commons/model/competition.model';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
+import {CategoryDescriptor, CompetitionProperties} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -47,7 +46,7 @@ export class CategoryEditorComponent  {
   }
 
   @Input()
-  set defaultCategories(value: Category[]) {
+  set defaultCategories(value: CategoryDescriptor[]) {
     if (value && value.length > 0) {
       if (this._categories && this._categories.length > 0) {
         const ids = this._categories.map(c => c.id);
@@ -68,7 +67,7 @@ export class CategoryEditorComponent  {
   }
 
   @Input()
-  set categories(value: Category[]) {
+  set categories(value: CategoryDescriptor[]) {
     if (value && value.length > 0) {
       this._categories = value;
       if (this._defaultCategories && this._defaultCategories.length > 0) {
@@ -87,27 +86,27 @@ export class CategoryEditorComponent  {
     }
   }
 
-  _allDefaultCategories: Category[];
-  filteredCategories: Category[];
+  _allDefaultCategories: CategoryDescriptor[];
+  filteredCategories: CategoryDescriptor[];
 
   searchStr: string;
 
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
   @Output()
-  addDefaultCategories = new EventEmitter<{ competitionId: string, category: Category }[]>();
+  addDefaultCategories = new EventEmitter<{ competitionId: string, category: CategoryDescriptor }[]>();
   @Output()
   generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
 
   @Input()
   competition: CompetitionProperties;
 
-  _defaultCategories: Category[];
+  _defaultCategories: CategoryDescriptor[];
 
-  _categories: Category[];
+  _categories: CategoryDescriptor[];
 
   @Output()
-  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: Category }> = new EventEmitter<{ competitionId: string, category: Category }>();
+  deleteCategoryEvent: EventEmitter<{ competitionId: string, category: CategoryDescriptor }> = new EventEmitter<{ competitionId: string, category: CategoryDescriptor }>();
 
   @Output()
   registrationStatusToggled = new EventEmitter<{ categoryId: string, newStatus: boolean }>();
@@ -119,7 +118,7 @@ export class CategoryEditorComponent  {
   displayCategory = AddFighterComponent.displayCategory;
   displayRestriction = defaultRestrictionFormatter(true);
 
-  searchFilter = (options: Category[], filter: string) => {
+  searchFilter = (options: CategoryDescriptor[], filter: string) => {
     let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
 
@@ -130,22 +129,22 @@ export class CategoryEditorComponent  {
     return filteredOptions;
   };
 
-  generateRandomFighters(category: Category) {
+  generateRandomFighters(category: CategoryDescriptor) {
     if (category) {
       this.generateRandomFightersEvent.next(eventManagerCreateFakeCompetitorsCommand(this.competition.id, category.id, 10, 20));
     }
   }
 
 
-  deleteCategory(category: Category) {
+  deleteCategory(category: CategoryDescriptor) {
     this.deleteCategoryEvent.next({competitionId: this.competition.id, category});
   }
 
-  getCategoryId(category: Category) {
+  getCategoryId(category: CategoryDescriptor) {
     return category.id;
   }
 
-  toggleRegistrationOpen(category: Category) {
+  toggleRegistrationOpen(category: CategoryDescriptor) {
     this.registrationStatusToggled.next({categoryId: category.id, newStatus: !category.registrationOpen});
   }
 

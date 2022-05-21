@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {BracketsType, FightResultOption} from '../../../../commons/model/competition.model';
+import {BracketType, FightResultOption} from "@frontend-nx/protobuf";
 
 export class AddFightResultOptionModal extends ComponentModalConfig<IAddFightResultOptionContext, FightResultOption, void> {
-  constructor(bracketsType: BracketsType, stageNumber: number, size = ModalSize.Small) {
+  constructor(bracketsType: BracketType, stageNumber: number, size = ModalSize.Small) {
     super(AddFightResultOptionFormComponent, {bracketsType, stageNumber});
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -14,7 +14,7 @@ export class AddFightResultOptionModal extends ComponentModalConfig<IAddFightRes
 
 export interface IAddFightResultOptionContext {
   stageNumber: number;
-  bracketsType: BracketsType;
+  bracketsType: BracketType;
 }
 
 @Component({
@@ -23,13 +23,13 @@ export interface IAddFightResultOptionContext {
     <div class="header">Add fight result options for stage #{{modal.context.stageNumber + 1}}</div>
     <div class="content">
       <div class="ui form" [formGroup]="form" [ngClass]="{error: form.invalid && form.touched}">
-        <div class="ui field" *ngIf="modal.context.bracketsType ==='GROUP'">
+        <div class="ui field" *ngIf="modal.context.bracketsType ==='BRACKET_TYPE_GROUP'">
           <div class="ui horizontal label">{{isDraw?.value ? 'Draw' : 'Win by'}}</div>
           <sui-checkbox class="ui toggle checkbox" [name]="'draw'"
                         (checkChange)="setIsDraw($event)">Is this a draw
           </sui-checkbox>
         </div>
-        <div class="ui field" *ngIf="modal.context.bracketsType !=='GROUP'">
+        <div class="ui field" *ngIf="modal.context.bracketsType !=='BRACKET_TYPE_GROUP'">
           <h4 class="ui header">Win by</h4>
         </div>
         <div class="ui eight wide field" [ngClass]="{error: shortName?.invalid && shortName?.touched}">
@@ -38,7 +38,7 @@ export interface IAddFightResultOptionContext {
                  placeholder="Short name"
                  formControlName="shortName"/>
         </div>
-        <ng-container *ngIf="modal.context.bracketsType ==='GROUP'">
+        <ng-container *ngIf="modal.context.bracketsType ==='BRACKET_TYPE_GROUP'">
           <label>Points for the group stage.
             <div class="fields">
               <div class="ui six wide field" [ngClass]="{error: winnerPoints?.invalid && winnerPoints?.touched}">

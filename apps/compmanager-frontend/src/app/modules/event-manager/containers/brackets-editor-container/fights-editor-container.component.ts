@@ -1,16 +1,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
-  BracketsType,
-  CategoryBracketsStage,
-  Competitor,
   CompetitorGroupChange,
-  Fight,
-  StageStatus,
-  stageStatusValues
 } from '../../../../commons/model/competition.model';
+import {BracketType, Competitor, FightDescription, StageDescriptor, StageStatus} from "@frontend-nx/protobuf";
 
 @Component({
-  selector: `app-fights-editor-container`,
+  selector: 'app-fights-editor-container',
   template: `
       <div class="ui basic segment">
           <section>Set status</section>
@@ -18,13 +13,13 @@ import {
               <div class="item" [ngClass]="{selected: status === _status}" *ngFor="let status of getStageStatuses()" (click)="setStatus(status)">{{ status }}</div>
           </div>
       </div>
-      <app-groups-editor *ngIf="bracketType === 'GROUP'"
+      <app-groups-editor *ngIf="bracketType === 'BRACKET_TYPE_GROUP'"
                          [seedFights]="seedFights"
                          [competitors]="competitors"
                          [selectedStage]="_stage"
                          (closeClicked)="dipatchFightsSelectionClearedEvent()"
                          (changeSaved)="dispatchGroupChangeSavedEvent($event)"></app-groups-editor>
-      <app-seed-editor *ngIf="bracketType !== 'GROUP'"
+      <app-seed-editor *ngIf="bracketType !== 'BRACKET_TYPE_GROUP'"
                        [seedFights]="seedFights"
                        [competitors]="competitors"
                        (changeSaved)="dispatchChangeSavedEvent($event)"
@@ -37,24 +32,24 @@ export class FightsEditorContainerComponent {
   closeClicked = new EventEmitter<void>();
 
   @Output()
-  changeSaved = new EventEmitter<{ fights: Fight[], competitorGroupChanges: CompetitorGroupChange[] }>();
+  changeSaved = new EventEmitter<{ fights: FightDescription[], competitorGroupChanges: CompetitorGroupChange[] }>();
 
   @Output()
   stageStatusChanged = new EventEmitter<{ stageId: string, status: StageStatus }>();
 
   @Input()
-  bracketType: '' | BracketsType;
+  bracketType: '' | BracketType;
 
   @Input()
-  seedFights: Fight[];
+  seedFights: FightDescription[];
 
   @Input()
-  set stage(st: CategoryBracketsStage) {
+  set stage(st: StageDescriptor) {
     this._stage = st;
     this._status = st?.stageStatus;
   }
 
-  _stage: CategoryBracketsStage;
+  _stage: StageDescriptor;
 
 
   @Input()
@@ -63,7 +58,7 @@ export class FightsEditorContainerComponent {
   _status: StageStatus;
 
 
-  dispatchChangeSavedEvent(change: Fight[]) {
+  dispatchChangeSavedEvent(change: FightDescription[]) {
     this.changeSaved.next({fights: change, competitorGroupChanges: []});
   }
 
@@ -76,7 +71,7 @@ export class FightsEditorContainerComponent {
   }
 
   getStageStatuses() {
-    return stageStatusValues;
+    return Object.values(StageStatus).map(v => v as StageStatus);
   }
 
   setStatus(status: StageStatus) {

@@ -1,9 +1,21 @@
 import {DashboardState} from '../../modules/event-manager/redux/dashboard-reducers';
-import {createEntityAdapter, Dictionary, EntityAdapter, EntityState} from '@ngrx/entity';
+import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities, PeriodEntities} from '../../reducers/global-reducers';
+import {EventPropsEntities} from '../../reducers/global-reducers';
 import * as _ from 'lodash';
+import {
+  CategoryDescriptor,
+  CategoryRestriction,
+  CategoryRestrictionType,
+  CategoryState,
+  Competitor,
+  FightDescription,
+  FightResultOption,
+  FullAcademyInfo,
+  GroupChangeType, RegistrationGroup, RegistrationPeriod,
+  StageDescriptor
+} from "@frontend-nx/protobuf";
 
 export const dragStartEvent = () => new CustomEvent('app-drag-start', {
   bubbles: true
@@ -13,37 +25,9 @@ export const dragEndEvent = () => new CustomEvent('app-drag-end', {
 });
 
 
-export interface Schedule {
-  competitionId: string;
-  periods: PeriodEntities;
-  undispatchedRequirements: ScheduleRequirement[];
-  fightIdsBycategoryId: Dictionary<string[]>;
-}
-
-
-export interface RegistrationGroup {
-  id: string;
-  displayName: string;
-  defaultGroup: boolean;
-  registrationFee: RegistrationFee;
-  registrationPeriodIds: string[];
-  registrationInfoId: string;
-  categories: string[];
-}
-
-export interface RegistrationFee {
-  currency: string,
-  amount: number,
-  remainder: number
-}
-
-export interface RegistrationPeriod {
-  id: string;
-  name: string;
-  start: string;
-  end: string;
-  competitionId: string;
-  registrationGroupIds: string[];
+export interface Error {
+  type: string;
+  description: string;
 }
 
 export interface RegistrationPeriodCollection {
@@ -54,33 +38,8 @@ export interface RegistrationGroupCollection {
   [key: string]: RegistrationGroup
 }
 
-export interface RegistrationInfo {
-  registrationPeriods: RegistrationPeriodCollection;
-  registrationGroups: RegistrationGroupCollection;
-  registrationOpen: boolean;
-  id: string;
-}
 
-export interface Error {
-  type: string;
-  description: string;
-}
-
-
-export interface CompetitionProperties {
-  infoTemplate: string;
-  creatorId: any;
-  id: string;
-  competitionName: string;
-  startDate: string;
-  schedulePublished: boolean;
-  bracketsPublished: boolean;
-  status: string;
-  endDate: string;
-  timeZone: string;
-}
-
-export const displayCategory = (cat: Category, maxLength: number = -1) => {
+export const displayCategory = (cat: CategoryDescriptor, maxLength: number = -1) => {
   if (!cat) {
     return '';
   }
@@ -101,110 +60,7 @@ export const categoryFilter = value => cat => {
       hasAny(r.value, value) || hasAny(r.minValue, value) || hasAny(r.maxValue, value)));
 };
 
-export const categoriesComparer = (a: Category, b: Category) => displayCategory(a).localeCompare(displayCategory(b));
-
-
-export interface MatDescription {
-  id: string;
-  name: string;
-  numberOfFights: number;
-  periodId: string;
-  matOrder: number;
-}
-
-
-export interface Period {
-  id: string;
-  name: string;
-  startTime: string;
-  endTime?: string;
-  isActive: boolean;
-  scheduleEntries?: ScheduleEntry[];
-  scheduleRequirements?: ScheduleRequirement[];
-  duration?: number;
-  timeBetweenFights: number;
-  riskPercent: number;
-}
-
-export interface MatIdAndSomeId {
-  matId: string;
-  someId: string;
-  startTime: string;
-}
-
-export interface ScheduleEntry {
-  id: string;
-  startTime: string;
-  endTime: string;
-  color: string;
-  name: string;
-  numberOfFights: number;
-  categoryIds: string[];
-  fightIds: MatIdAndSomeId[];
-  periodId: string;
-  description: string;
-  entryType: string;
-  requirementIds: string[];
-  duration: number;
-  order: number;
-}
-
-export type ScheduleRequirementType = 'CATEGORIES' | 'FIGHTS' | 'RELATIVE_PAUSE' | 'FIXED_PAUSE';
-
-export interface ScheduleRequirement {
-  id: string;
-  categoryIds: string[];
-  fightIds: string[];
-  matId: string;
-  periodId: string;
-  entryType: ScheduleRequirementType;
-  durationSeconds: number;
-  name: string;
-  color: string;
-  force: boolean;
-  startTime: string;
-  endTime: string;
-  entryOrder: number;
-}
-
-export interface FightResult {
-  resultTypeId: String;
-  winnerId: string;
-  reason: string;
-}
-
-export interface Competitor {
-  id: string;
-  email: string;
-  userId?: string;
-  firstName: string;
-  lastName: string;
-  birthDate: Date | string;
-  academy?: Academy;
-  categories: string[];
-  competitionId: string;
-  registrationStatus: string;
-  promo?: string;
-}
-
-export interface Score {
-  advantages: number;
-  points: number;
-  penalties: number;
-}
-
-export interface CompScore {
-  competitorId: string;
-  score: Score;
-  placeholderId?: string;
-  parentFightId?: string;
-  parentReferenceType?: String;
-  order?: number;
-}
-
-export type RoundType = 'GRAND_FINAL' | 'THIRD_PLACE_FIGHT' | 'WINNER_BRACKETS' | 'LOSER_BRACKETS' | 'GROUP';
-export type GroupChangeType = 'ADD' | 'REMOVE';
-
+export const categoriesComparer = (a: CategoryDescriptor, b: CategoryDescriptor) => displayCategory(a).localeCompare(displayCategory(b));
 
 export interface CompetitorGroupChange {
   competitorId: string;
@@ -217,71 +73,17 @@ export interface FightEditorChange {
   competitors: string[];
 }
 
-export interface Fight {
-  fightName: string;
-  id: string;
-  categoryId: string;
-  winFight?: string;
-  loseFight?: string;
-  competitionId: string;
-  duration: number;
-  scores: CompScore[];
-  round: number;
-  roundType: RoundType;
-  status: string;
-  fightResult?: FightResult;
-  numberInRound: number;
-  mat?: MatDescription;
-  numberOnMat?: number;
-  priority: number;
-  period?: string;
-  stageId: string;
-  groupId: string;
-  startTime?: Date;
-}
-
-export interface Academy {
-  id: string;
-  name: string;
-  coaches?: string[];
-  created?: number;
-}
-
-export type BracketsType = 'SINGLE_ELIMINATION' | 'DOUBLE_ELIMINATION' | 'GROUP';
-
-export enum GroupSortSpecifier { 'DIRECT_FIGHT_RESULT', 'MANUAL', 'POINTS_DIFFERENCE', 'TOTAL_POINTS'}
-
-export enum GroupSortDirection {'DESC', 'ASC'}
-
-export type StageType = 'PRELIMINARY' | 'FINAL';
-
-export type RestrictionType = 'Value' | 'Range';
-
-export const restrictionTypes: RestrictionType[] = [
-  'Value', 'Range'
-];
 
 export const defaultRestrictionFormatter = (showName: boolean = true) => (restr: CategoryRestriction) => {
   if (restr.alias) {
     return restr.alias;
   }
   const name = showName ? `${restr.name}: ` : '';
-  if (restr.type === 'Range') {
+  if (restr.type === CategoryRestrictionType.CATEGORY_RESTRICTION_TYPE_RANGE) {
     return `${name}${restr.minValue} - ${restr.maxValue}`;
   }
   return `${name}${restr.value}`;
 };
-
-export interface CategoryRestriction {
-  restrictionId: string;
-  name: string;
-  type: RestrictionType;
-  minValue: string;
-  maxValue: string;
-  value: string;
-  alias: string;
-  unit: string;
-}
 
 export interface AdjacencyListEntry<Type> {
   id: Type;
@@ -293,23 +95,7 @@ export interface AdjacencyList<Type> {
   vertices: AdjacencyListEntry<Type>[];
 }
 
-export interface Category {
-  id: string;
-  name: string;
-  restrictions: CategoryRestriction[];
-  numberOfCompetitors: number;
-  fightsNumber: number;
-  registrationOpen: boolean;
-}
-
-export interface CategoryState {
-  id: string;
-  category: Category;
-  status: string;
-  numberOfCompetitors: number;
-}
-
-export interface CategoriesCollection extends EntityState<Category> {
+export interface CategoriesCollection extends EntityState<CategoryDescriptor> {
   selectedCategoryId: string | null;
   selectedCategoryState: CategoryState;
   selectedCategoryStages: CategoryBracketsStageCollection;
@@ -322,90 +108,14 @@ export interface GroupDescriptor {
   size: number;
 }
 
-export type StageStatus = 'APPROVED' | 'WAITING_FOR_APPROVAL' | 'WAITING_FOR_COMPETITORS' | 'FINISHED' | 'IN_PROGRESS';
 
-export const stageStatusValues: StageStatus[] = ['APPROVED', 'WAITING_FOR_APPROVAL', 'WAITING_FOR_COMPETITORS', 'FINISHED', 'IN_PROGRESS'];
-
-export interface CategoryBracketsStage {
-  id: string;
-  bracketType: BracketsType;
-  stageType: StageType;
-  stageStatus: StageStatus;
-  waitForPrevious: boolean;
-  hasThirdPlaceFight: boolean;
-  stageOrder: number;
-  stageResultDescriptor: StageResult;
-  inputDescriptor: StageInputDescriptor;
-  groupDescriptors: GroupDescriptor[];
-}
-
-export enum OperatorType {
-  'EQUALS', 'IS_IN', 'LESS', 'GREATER', 'LEQ', 'GEQ'
-}
-
-export enum SelectorClassifier {
-  'FIRST_N_PLACES',
-  'LAST_N_PLACES',
-}
-
-export interface CompetitorSelector {
-  applyToStageId: string;
-  logicalOperator: string;
-  classifier: SelectorClassifier;
-  operator: OperatorType;
-  selectorValue: string[];
-}
-
-export interface FightResultOption {
-  id: string;
-  description: string;
-  shortName: string;
-  draw: boolean;
-  winnerPoints: number;
-  winnerAdditionalPoints: number;
-  loserPoints: number;
-  loserAdditionalPoints: number;
-}
-
-export interface CompetitorResult {
-  id: string;
-  competitorId: string;
-  points: number;
-  round: number;
-  place: number;
-  groupId: string;
-}
-
-export interface AdditionalGroupSortingDescriptor {
-  groupSortDirection: GroupSortDirection;
-  groupSortSpecifier: GroupSortSpecifier;
-}
-
-export interface StageResult {
-  id: string;
-  name?: string;
-  competitorResults?: CompetitorResult[];
-  fightResultOptions?: FightResultOption[];
-  forceManualAssignment?: boolean;
-  outputSize: number;
-  additionalGroupSortingDescriptors?: AdditionalGroupSortingDescriptor[];
-}
-
-export interface StageInputDescriptor {
-  selectors?: CompetitorSelector[];
-  distributionType?: string;
-  numberOfCompetitors: number;
-  fightDuration: number;
-  id?: string;
-}
-
-export interface CategoryBracketsStageCollection extends EntityState<CategoryBracketsStage> {
+export interface CategoryBracketsStageCollection extends EntityState<StageDescriptor> {
   selectedStageId: string | null;
   fightsAreLoading: boolean;
   selectedStageFights: FightsCollection;
 }
 
-export interface FightsCollection extends EntityState<Fight> {
+export interface FightsCollection extends EntityState<FightDescription> {
   selectedFightId: string | null;
   selectedFightFightResultOptions: FightResultOption[] | null;
 }
@@ -417,7 +127,7 @@ export interface CompetitorsCollection extends EntityState<Competitor> {
   pageNumber: number;
 }
 
-export interface AcademiesCollection extends EntityState<Academy> {
+export interface AcademiesCollection extends EntityState<FullAcademyInfo> {
   selectedAcademyId: string | null;
   total: number;
   pageSize: number;
@@ -461,24 +171,24 @@ export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAd
   sortComparer: false
 });
 
-export const academyEntityAdapter: EntityAdapter<Academy> = createEntityAdapter<Academy>({
-  selectId: (c: Academy) => c.id,
+export const academyEntityAdapter: EntityAdapter<FullAcademyInfo> = createEntityAdapter<FullAcademyInfo>({
+  selectId: (c: FullAcademyInfo) => c.id,
   sortComparer: false
 });
 
-export const fightEntityAdapter: EntityAdapter<Fight> = createEntityAdapter<Fight>({
-  selectId: (fight: Fight) => fight.id,
+export const fightEntityAdapter: EntityAdapter<FightDescription> = createEntityAdapter<FightDescription>({
+  selectId: (fight: FightDescription) => fight.id,
   sortComparer: false
 });
 
-export const stagesEntityAdapter: EntityAdapter<CategoryBracketsStage> = createEntityAdapter<CategoryBracketsStage>({
-  selectId: (stage: CategoryBracketsStage) => stage.id,
+export const stagesEntityAdapter: EntityAdapter<StageDescriptor> = createEntityAdapter<StageDescriptor>({
+  selectId: (stage: StageDescriptor) => stage.id,
   sortComparer: (st1, st2) => st1.stageOrder - st2.stageOrder
 });
 
 
-export const categoryEntityAdapter: EntityAdapter<Category> = createEntityAdapter<Category>({
-  selectId: (category: Category) => category.id,
+export const categoryEntityAdapter: EntityAdapter<CategoryDescriptor> = createEntityAdapter<CategoryDescriptor>({
+  selectId: (category: CategoryDescriptor) => category.id,
   sortComparer: categoriesComparer
 });
 

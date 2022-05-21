@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {BracketsType, Competitor, Fight} from '../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
+import {BracketType, Competitor, FightDescription, StageRoundType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-bracket',
@@ -8,22 +8,22 @@ import {CommonFightsEditorComponent} from '../common-fights-editor.component';
   styleUrls: ['./bracket.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BracketComponent extends CommonFightsEditorComponent implements OnInit, OnDestroy {
+export class BracketComponent extends CommonFightsEditorComponent  {
 
   @Input()
-  set fights(fights: Fight[]) {
-    this._fights = fights.filter(f => f.roundType !== 'LOSER_BRACKETS');
-    this._loserFights = fights.filter(f => f.roundType === 'LOSER_BRACKETS');
+  set fights(fights: FightDescription[]) {
+    this._fights = fights.filter(f => f.roundType !== StageRoundType.STAGE_ROUND_TYPE_LOSER_BRACKETS);
+    this._loserFights = fights.filter(f => f.roundType === StageRoundType.STAGE_ROUND_TYPE_LOSER_BRACKETS);
   }
 
   @Input()
-  bracketsType: BracketsType;
+  bracketsType: BracketType;
 
   @Input()
   bucketsize = 3;
 
-  _fights: Fight[];
-  _loserFights: Fight[];
+  _fights: FightDescription[];
+  _loserFights: FightDescription[];
 
   public rowWidthPx = 180;
 
@@ -31,13 +31,6 @@ export class BracketComponent extends CommonFightsEditorComponent implements OnI
 
   @Input()
   competitors: Competitor[] = [];
-
-  ngOnDestroy(): void {
-  }
-
-
-  ngOnInit() {
-  }
 
   getWInnerFightsLength() {
     return this._fights.filter(f => f.round === 0).length / 2;

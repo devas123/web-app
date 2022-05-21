@@ -3,11 +3,6 @@ import {
   AppState,
   getSelectedEventProperties,
 } from '../../../../reducers/global-reducers';
-import {
-  Category,
-  CompetitionProperties,
-  RegistrationPeriodCollection
-} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {
@@ -17,6 +12,8 @@ import {
 } from '../../../event-manager/redux/event-manager-reducers';
 import {ActivatedRoute, ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
+import {CategoryDescriptor, CompetitionProperties} from "@frontend-nx/protobuf";
+import {RegistrationPeriodCollection} from "../../../../commons/model/competition.model";
 
 @Component({
     selector: 'competition-main-info',
@@ -39,7 +36,7 @@ export class CompetitionMainInfoComponent  {
     properties$: Observable<CompetitionProperties>;
     registrationPeriod$: Observable<RegistrationPeriodCollection>;
     timezone$: Observable<string>;
-    categories$: Observable<Category[]>;
+    categories$: Observable<CategoryDescriptor[]>;
     url$: Observable<string>;
 
     constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {

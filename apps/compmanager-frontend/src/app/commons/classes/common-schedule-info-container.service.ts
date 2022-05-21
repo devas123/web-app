@@ -2,18 +2,13 @@ import {Observable} from 'rxjs';
 import {
   AppState,
   eventManagerGetSelectedEventSchedule,
-  getSelectedEventId, getSelectedEventMats,
-  getSelectedEventProperties, getSelectedEventScheduleFightsByCategoryId,
+  getSelectedEventId,
+  getSelectedEventMats,
+  getSelectedEventProperties,
+  getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventSelectedPeriod,
+  InternalScheduleState,
 } from '../../reducers/global-reducers';
-import {
-  Category,
-  CompetitionProperties,
-  MatDescription,
-  Period,
-  Schedule,
-  ScheduleRequirement
-} from '../model/competition.model';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
@@ -25,11 +20,18 @@ import {
 import {filter, map, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
+import {
+  CategoryDescriptor,
+  CompetitionProperties,
+  MatDescription,
+  Period,
+  ScheduleRequirement
+} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class CommonScheduleInfoContainerService {
-  schedule$: Observable<Schedule>;
-  categories$: Observable<Category[]>;
+  schedule$: Observable<InternalScheduleState>;
+  categories$: Observable<CategoryDescriptor[]>;
   scheduleEmpty$: Observable<boolean>;
   timeZone$: Observable<string>;
   competitionId$: Observable<string>;

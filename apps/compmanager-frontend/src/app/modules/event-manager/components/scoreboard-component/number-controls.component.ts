@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 
 @Component({
@@ -15,7 +15,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
   styleUrls: ['scoreboard-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NumberControlsComponent implements OnInit {
+export class NumberControlsComponent  {
   @Input()
   changeCoeff = 1;
 
@@ -24,8 +24,5 @@ export class NumberControlsComponent implements OnInit {
 
   changeAmount(val: number) {
     this.valueChanged.next(this.changeCoeff * val);
-  }
-
-  ngOnInit(): void {
   }
 }

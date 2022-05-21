@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Category, CategoryState, displayCategory, HeaderDescription} from '../../../../commons/model/competition.model';
+import {Component} from '@angular/core';
+import {displayCategory, HeaderDescription} from '../../../../commons/model/competition.model';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventSelectedCategory,
@@ -13,6 +13,7 @@ import {Location} from '@angular/common';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
+import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-summary-container',
@@ -27,14 +28,14 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
       </app-category-summary>`,
   styleUrls: ['./category-summary-container.component.css']
 })
-export class CategorySummaryContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
+export class CategorySummaryContainerComponent extends EventManagerRouterEntryComponent  {
 
   categoryState$: Observable<CategoryState>;
 
-  category$: Observable<Category>;
+  category$: Observable<CategoryDescriptor>;
   competitionId$: Observable<string>;
 
-  categoryStartTime$: Observable<string>;
+  categoryStartTime$: Observable<Date>;
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -53,10 +54,6 @@ export class CategorySummaryContainerComponent extends EventManagerRouterEntryCo
     this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.categoryState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
     this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
-  }
-
-
-  ngOnInit() {
   }
 
   goback() {

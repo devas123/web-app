@@ -1,9 +1,8 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 
-import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
     eventManagerGetSelectedEventCategories,
@@ -16,21 +15,22 @@ import {
 } from '../../../event-manager/redux/event-manager-reducers';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerCompetitionFightersPageChanged} from '../../../event-manager/redux/event-manager-actions';
+import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
     selector: 'app-fighters-display-container',
     templateUrl: './fighters-display-container.component.html',
     styleUrls: ['./fighters-display-container.component.scss']
 })
-export class FightersDisplayContainerComponent implements OnInit {
+export class FightersDisplayContainerComponent  {
     competitionName$: Observable<string>;
     competitionId$: Observable<string>;
     competitors$: Observable<Competitor[]>;
     totalCompetitors$: Observable<number>;
     pageSize$: Observable<number>;
     pageNumber$: Observable<number>;
-    categories$: Observable<Category[]>;
-    category$: Observable<Category>;
+    categories$: Observable<CategoryDescriptor[]>;
+    category$: Observable<CategoryDescriptor>;
     @ViewChild('categorySelect', {static: true})
     categorySelect: TemplateRef<any>;
     subs = new Subscription();
@@ -53,8 +53,8 @@ export class FightersDisplayContainerComponent implements OnInit {
         this.subs.add(this.searchString$.subscribe(str => this.setSearchString(str)));
     }
 
-    optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-    formatter = (option: Category) => AddFighterComponent.displayCategory(option);
+    optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
+    formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
 
 
     changePage(info: any) {
@@ -69,7 +69,7 @@ export class FightersDisplayContainerComponent implements OnInit {
     }
 
 
-    setCategoryId(category: Category) {
+    setCategoryId(category: CategoryDescriptor) {
         if (category) {
             this.addQueryParam('categoryId', category.id);
         } else {
@@ -79,9 +79,6 @@ export class FightersDisplayContainerComponent implements OnInit {
 
     setSearchString(searchString) {
         this.addQueryParam('query', searchString, 'merge');
-    }
-
-    ngOnInit() {
     }
 
     navigateToUserProfilePage(competitor: Competitor) {

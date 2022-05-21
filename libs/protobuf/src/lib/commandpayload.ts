@@ -19,17 +19,21 @@ import {
   MatDescription,
   CompetitorSelector,
   CompScore,
+  fightStatusToNumber,
   fightStatusFromJSON,
   fightStatusToJSON,
+  stageStatusToNumber,
   stageStatusFromJSON,
   stageStatusToJSON,
 } from './model';
 
-export enum GroupChangeType {
-  GROUP_CHANGE_TYPE_ADD = 0,
-  GROUP_CHANGE_TYPE_REMOVE = 2,
-  UNRECOGNIZED = -1,
-}
+export const GroupChangeType = {
+  GROUP_CHANGE_TYPE_ADD: 'GROUP_CHANGE_TYPE_ADD',
+  GROUP_CHANGE_TYPE_REMOVE: 'GROUP_CHANGE_TYPE_REMOVE',
+} as const;
+
+export type GroupChangeType =
+  typeof GroupChangeType[keyof typeof GroupChangeType];
 
 export function groupChangeTypeFromJSON(object: any): GroupChangeType {
   switch (object) {
@@ -39,10 +43,10 @@ export function groupChangeTypeFromJSON(object: any): GroupChangeType {
     case 2:
     case 'GROUP_CHANGE_TYPE_REMOVE':
       return GroupChangeType.GROUP_CHANGE_TYPE_REMOVE;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return GroupChangeType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupChangeType'
+      );
   }
 }
 
@@ -52,9 +56,23 @@ export function groupChangeTypeToJSON(object: GroupChangeType): string {
       return 'GROUP_CHANGE_TYPE_ADD';
     case GroupChangeType.GROUP_CHANGE_TYPE_REMOVE:
       return 'GROUP_CHANGE_TYPE_REMOVE';
-    case GroupChangeType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupChangeType'
+      );
+  }
+}
+
+export function groupChangeTypeToNumber(object: GroupChangeType): number {
+  switch (object) {
+    case GroupChangeType.GROUP_CHANGE_TYPE_ADD:
+      return 0;
+    case GroupChangeType.GROUP_CHANGE_TYPE_REMOVE:
+      return 2;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum GroupChangeType'
+      );
   }
 }
 
@@ -934,7 +952,11 @@ export const CompetitorCategoryAddedPayload = {
 };
 
 function createBaseCompetitorMovedToGroup(): CompetitorMovedToGroup {
-  return { competitorId: '', groupId: '', changeType: 0 };
+  return {
+    competitorId: '',
+    groupId: '',
+    changeType: GroupChangeType.GROUP_CHANGE_TYPE_ADD,
+  };
 }
 
 export const CompetitorMovedToGroup = {
@@ -948,8 +970,8 @@ export const CompetitorMovedToGroup = {
     if (message.groupId !== '') {
       writer.uint32(18).string(message.groupId);
     }
-    if (message.changeType !== 0) {
-      writer.uint32(24).int32(message.changeType);
+    if (message.changeType !== GroupChangeType.GROUP_CHANGE_TYPE_ADD) {
+      writer.uint32(24).int32(groupChangeTypeToNumber(message.changeType));
     }
     return writer;
   },
@@ -971,7 +993,7 @@ export const CompetitorMovedToGroup = {
           message.groupId = reader.string();
           break;
         case 3:
-          message.changeType = reader.int32() as any;
+          message.changeType = groupChangeTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -989,7 +1011,7 @@ export const CompetitorMovedToGroup = {
       groupId: isSet(object.groupId) ? String(object.groupId) : '',
       changeType: isSet(object.changeType)
         ? groupChangeTypeFromJSON(object.changeType)
-        : 0,
+        : GroupChangeType.GROUP_CHANGE_TYPE_ADD,
     };
   },
 
@@ -1009,7 +1031,8 @@ export const CompetitorMovedToGroup = {
     const message = createBaseCompetitorMovedToGroup();
     message.competitorId = object.competitorId ?? '';
     message.groupId = object.groupId ?? '';
-    message.changeType = object.changeType ?? 0;
+    message.changeType =
+      object.changeType ?? GroupChangeType.GROUP_CHANGE_TYPE_ADD;
     return message;
   },
 };
@@ -2122,7 +2145,12 @@ export const RemoveCompetitorPayload = {
 };
 
 function createBaseSetFightResultPayload(): SetFightResultPayload {
-  return { fightId: '', fightResult: undefined, scores: [], status: 0 };
+  return {
+    fightId: '',
+    fightResult: undefined,
+    scores: [],
+    status: FightStatus.FIGHT_STATUS_PENDING,
+  };
 }
 
 export const SetFightResultPayload = {
@@ -2142,8 +2170,8 @@ export const SetFightResultPayload = {
     for (const v of message.scores) {
       CompScore.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.status !== 0) {
-      writer.uint32(32).int32(message.status);
+    if (message.status !== FightStatus.FIGHT_STATUS_PENDING) {
+      writer.uint32(32).int32(fightStatusToNumber(message.status));
     }
     return writer;
   },
@@ -2168,7 +2196,7 @@ export const SetFightResultPayload = {
           message.scores.push(CompScore.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.status = reader.int32() as any;
+          message.status = fightStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2187,7 +2215,9 @@ export const SetFightResultPayload = {
       scores: Array.isArray(object?.scores)
         ? object.scores.map((e: any) => CompScore.fromJSON(e))
         : [],
-      status: isSet(object.status) ? fightStatusFromJSON(object.status) : 0,
+      status: isSet(object.status)
+        ? fightStatusFromJSON(object.status)
+        : FightStatus.FIGHT_STATUS_PENDING,
     };
   },
 
@@ -2220,7 +2250,7 @@ export const SetFightResultPayload = {
         ? FightResult.fromPartial(object.fightResult)
         : undefined;
     message.scores = object.scores?.map((e) => CompScore.fromPartial(e)) || [];
-    message.status = object.status ?? 0;
+    message.status = object.status ?? FightStatus.FIGHT_STATUS_PENDING;
     return message;
   },
 };
@@ -2502,7 +2532,7 @@ export const UpdateRegistrationInfoPayload = {
 };
 
 function createBaseUpdateStageStatusPayload(): UpdateStageStatusPayload {
-  return { stageId: '', status: 0 };
+  return { stageId: '', status: StageStatus.STAGE_STATUS_UNKNOWN };
 }
 
 export const UpdateStageStatusPayload = {
@@ -2513,8 +2543,8 @@ export const UpdateStageStatusPayload = {
     if (message.stageId !== '') {
       writer.uint32(10).string(message.stageId);
     }
-    if (message.status !== 0) {
-      writer.uint32(16).int32(message.status);
+    if (message.status !== StageStatus.STAGE_STATUS_UNKNOWN) {
+      writer.uint32(16).int32(stageStatusToNumber(message.status));
     }
     return writer;
   },
@@ -2533,7 +2563,7 @@ export const UpdateStageStatusPayload = {
           message.stageId = reader.string();
           break;
         case 2:
-          message.status = reader.int32() as any;
+          message.status = stageStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2546,7 +2576,9 @@ export const UpdateStageStatusPayload = {
   fromJSON(object: any): UpdateStageStatusPayload {
     return {
       stageId: isSet(object.stageId) ? String(object.stageId) : '',
-      status: isSet(object.status) ? stageStatusFromJSON(object.status) : 0,
+      status: isSet(object.status)
+        ? stageStatusFromJSON(object.status)
+        : StageStatus.STAGE_STATUS_UNKNOWN,
     };
   },
 
@@ -2563,10 +2595,21 @@ export const UpdateStageStatusPayload = {
   ): UpdateStageStatusPayload {
     const message = createBaseUpdateStageStatusPayload();
     message.stageId = object.stageId ?? '';
-    message.status = object.status ?? 0;
+    message.status = object.status ?? StageStatus.STAGE_STATUS_UNKNOWN;
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin =
   | Date

@@ -8,7 +8,7 @@ import {InfoService} from '../service/info.service';
 import {EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED, eventManagerLoadFightersForCompetition} from '../modules/event-manager/redux/event-manager-actions';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventCompetitorsPageSize} from '../modules/event-manager/redux/event-manager-reducers';
-import {CompetitionProperties} from "../commons/model/competition.model";
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 
 @Injectable()

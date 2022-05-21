@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {BracketsType, Competitor, Fight} from '../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
+import {BracketType, Competitor, FightDescription} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -25,13 +25,13 @@ import {CommonFightsEditorComponent} from '../common-fights-editor.component';
 export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent {
 
   @Input()
-  bracketsType: BracketsType;
+  bracketsType: BracketType;
 
   @Input()
   competitors: Competitor[] = [];
 
 
-  _fightsByGroups: Dictionary<Fight[]> = {} as Dictionary<Fight[]>;
+  _fightsByGroups: Dictionary<FightDescription[]> = {} as Dictionary<FightDescription[]>;
   _groupIds: string[] = [];
 
   getGroupIds() {
@@ -39,8 +39,8 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
   }
 
   @Input()
-  set fights(value: Fight[]) {
-    this._fightsByGroups = {} as Dictionary<Fight[]>;
+  set fights(value: FightDescription[]) {
+    this._fightsByGroups = {} as Dictionary<FightDescription[]>;
     const groupIdsSet = new Set<string>();
     this._groupIds = [];
     if (value) {

@@ -6,20 +6,19 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
-import {
-  Category,
-  Competitor,
-  Fight,
-  FightResult,
-  FightResultOption,
-  Score
-} from '../../../../commons/model/competition.model';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import produce from 'immer';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
+import {
+  CategoryDescriptor,
+  Competitor,
+  FightDescription,
+  FightResult,
+  FightResultOption,
+  Score
+} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -28,13 +27,13 @@ import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
   styleUrls: ['./scoreboard-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
+export class ScoreboardComponentComponent implements  AfterContentInit {
 
   @Input()
   fightResultOptions: FightResultOption[];
 
   @Input()
-  set selectedFight(f: Fight) {
+  set selectedFight(f: FightDescription) {
     if (f) {
       this.fight = produce(f, d => {
         d.scores.forEach( sc => {
@@ -60,10 +59,10 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
 
   showControls = false;
 
-  fight: Fight;
+  fight: FightDescription;
 
   @Input()
-  category: Category;
+  category: CategoryDescriptor;
 
   stageName;
 
@@ -114,7 +113,7 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
     }
   }
 
-  displayCategory = (cat: Category) => AddFighterComponent.displayCategory(cat);
+  displayCategory = (cat: CategoryDescriptor) => AddFighterComponent.displayCategory(cat);
 
   getScore = (compScore: { competitorId: string, score: Score }) => {
     return compScore && compScore.score;
@@ -147,9 +146,6 @@ export class ScoreboardComponentComponent implements OnInit, AfterContentInit {
       scores: this.fight.scores
 
     });
-  }
-
-  ngOnInit() {
   }
 
   ngAfterContentInit(): void {

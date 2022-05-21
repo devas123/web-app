@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
@@ -9,15 +9,15 @@ import {dashboardDeleteState, dashboardRemovePeriod} from '../../redux/dashboard
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {Period} from '../../../../commons/model/competition.model';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
+import {Period} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-periods-management-container',
   templateUrl: './periods-management-container.component.html',
   styleUrls: ['./periods-management-container.component.scss']
 })
-export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
+export class PeriodsManagementContainerComponent extends BasicCompetitionInfoContainer implements  OnDestroy {
 
   subs = new Subscription();
 
@@ -67,9 +67,6 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
 
   sendDeleteDashboardStateCommand() {
     this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardDeleteState(competitionId));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {

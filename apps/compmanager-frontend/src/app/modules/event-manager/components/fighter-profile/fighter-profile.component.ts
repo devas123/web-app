@@ -7,10 +7,10 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Academy, Category, Competitor} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import {SuiMultiSelect} from "@frontend-nx/ng2-semantic-ui";
+import {Academy, CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighter-profile',
@@ -29,7 +29,7 @@ export class FighterProfileComponent implements  OnChanges {
   fighter: Competitor;
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
   academies: Academy[];
@@ -58,8 +58,8 @@ export class FighterProfileComponent implements  OnChanges {
   promo: string; */
 
   displayCategory = (category: string) => this.getCategoryName(category);
-  formatter = (option: Category, query?: string) => AddFighterComponent.displayCategory(option);
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  formatter = (option: CategoryDescriptor, query?: string) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryDescriptor[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   academyFormatter = (option: Academy, query?: string) => option.name || option.id;
   academyOptionsFilter = (options: Academy[], filter: string) => options.filter(ac => ac.name && ac.name.toLowerCase().includes(filter.toLowerCase()));
 
@@ -104,7 +104,7 @@ export class FighterProfileComponent implements  OnChanges {
     return this.form.get('promo');
   }
 
-  setCategories(categories: Category[]) {
+  setCategories(categories: CategoryDescriptor[]) {
     this.form.patchValue({
       category: categories
     });
@@ -148,7 +148,7 @@ export class FighterProfileComponent implements  OnChanges {
   }
 
   changeCategory() {
-    const newCategories = this.category.value as Category[];
+    const newCategories = this.category.value as CategoryDescriptor[];
     const fighter = this.fighter;
     if (newCategories && fighter && fighter.categories && newCategories.length > 0) {
       this.categoryChanged.next({fighter, newCategories: newCategories.map(c => c.id)});

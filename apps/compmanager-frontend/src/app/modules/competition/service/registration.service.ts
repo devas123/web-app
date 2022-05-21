@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Academy} from '../../../commons/model/competition.model';
-import {Competitor} from '../../../commons/model/competition.model';
+import {Competitor, FullAcademyInfo} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class RegistrationService {
@@ -74,11 +73,11 @@ export class RegistrationService {
     return this.http.get('register/getAcademies/');
   }
 
-  addAcademy(academy: Academy) {
+  addAcademy(academy: FullAcademyInfo) {
     return this.http.post('register/addAcademy/', JSON.stringify(academy), {headers: this.headers});
   }
 
-  checkAcademyExist(academy: Academy) {
+  checkAcademyExist(academy: FullAcademyInfo) {
     return this.http.post('register/checkAcademyExist/', JSON.stringify(academy), {headers: this.headers});
   }
 }

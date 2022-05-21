@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
@@ -11,7 +11,7 @@ import {filter, map} from 'rxjs/operators';
   template: '<router-outlet></router-outlet>',
   styleUrls: ['./category-container.component.css']
 })
-export class CategoryContainerComponent implements OnInit, OnDestroy {
+export class CategoryContainerComponent implements  OnDestroy {
 
   private competitionId;
   private subs = new Subscription();
@@ -26,9 +26,6 @@ export class CategoryContainerComponent implements OnInit, OnDestroy {
         return eventManagerCategorySelected(result[1], result[0]);
       })
     ).subscribe(this.store));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

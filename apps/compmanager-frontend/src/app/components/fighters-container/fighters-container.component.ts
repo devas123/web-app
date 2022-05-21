@@ -1,5 +1,5 @@
 import {filter, map, take} from 'rxjs/operators';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute} from '@angular/router';
@@ -13,7 +13,7 @@ import {eventManagerCategorySelected, eventManagerCategoryUnselected, eventManag
     <router-outlet></router-outlet>`,
   styleUrls: ['./fighters-container.component.css']
 })
-export class FightersContainerComponent implements OnInit, OnDestroy {
+export class FightersContainerComponent implements  OnDestroy {
 
   pageSize$: Observable<number>;
 
@@ -42,9 +42,6 @@ export class FightersContainerComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe(store));
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy(): void {

@@ -15,8 +15,6 @@ import {
 import {
   AdjacencyList,
   AdjacencyListEntry,
-  Category,
-  CategoryRestriction,
   HeaderDescription
 } from '../../../../commons/model/competition.model';
 import {
@@ -45,6 +43,7 @@ import {
 import {generateUuid, uniqueFilter} from '../../../account/utils';
 import {Observable} from 'rxjs';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {CategoryDescriptor, CategoryRestriction} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-create-category',
@@ -86,7 +85,7 @@ export class CreateCategoryComponent extends EventManagerRouterEntryComponent im
   defaultRestrictionsNames$: Observable<string[]>;
 
   restrictions$: Observable<CategoryRestriction[]>;
-  previewCategories$: Observable<Category[]>;
+  previewCategories$: Observable<CategoryDescriptor[]>;
 
   adjacencyLists$: Observable<AdjacencyList<string>[]>;
   restrictionNames$: Observable<string[]>;

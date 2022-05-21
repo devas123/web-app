@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CategoryBracketsStage, Competitor, CompetitorResult} from '../../commons/model/competition.model';
 import * as _ from 'lodash';
+import {Competitor, CompetitorStageResult, StageDescriptor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-stage-result-display',
@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 })
 export class StageResultDisplayComponent {
   @Input()
-  stage: CategoryBracketsStage;
+  stage: StageDescriptor;
 
   @Input()
   competitors: Competitor[];
@@ -23,11 +23,11 @@ export class StageResultDisplayComponent {
     return this.stage?.groupDescriptors;
   }
 
-  getStageResults(): CompetitorResult[] {
+  getStageResults(): CompetitorStageResult[] {
     return _.sortBy(this.stage?.stageResultDescriptor?.competitorResults, o => o.place);
   }
 
-  getGroupResults(id: string): CompetitorResult[] {
+  getGroupResults(id: string): CompetitorStageResult[] {
     return _.sortBy(this.stage?.stageResultDescriptor?.competitorResults?.filter(r => r.groupId === id), o => o.place);
   }
 }

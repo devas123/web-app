@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ScheduleEntry} from '../../commons/model/competition.model';
 import * as _ from 'lodash';
 import {uniqueFilter} from "../../modules/account/utils";
+import {ScheduleEntry, ScheduleEntryType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-schedule-entry-display',
@@ -19,7 +19,7 @@ import {uniqueFilter} from "../../modules/account/utils";
                  (click)="goToCategoryEditor(categoryId)"
                  [ngClass]="{pause: isPause(scheduleEntry),header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: highlightedCategories?.has(categoryId)}"
                  *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{!!categoryFormat ? categoryFormat(categoryId) : categoryId | truncate}}</div>
-            <div class="description">{{scheduleEntry?.fightIds.length}} fights</div>
+            <div class="description">{{scheduleEntry?.fightScheduleInfo.length}} fights</div>
           </ng-container>
           <div class="description">{{getEntryMatId(scheduleEntry)}}</div>
           <div class="description" *ngIf="!isPause(scheduleEntry)">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
@@ -59,15 +59,15 @@ export class ScheduleEntryDisplayComponent {
   categoryClicked = new EventEmitter<string>();
 
   isPause(scheduleEntry: ScheduleEntry) {
-    return scheduleEntry.entryType === 'RELATIVE_PAUSE' || scheduleEntry.entryType === 'FIXED_PAUSE';
+    return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE || scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE;
   }
 
   isRelativePause(scheduleEntry: ScheduleEntry) {
-    return scheduleEntry.entryType === 'RELATIVE_PAUSE';
+    return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE;
   }
 
   isFixedPause(scheduleEntry: ScheduleEntry) {
-    return scheduleEntry.entryType === 'FIXED_PAUSE';
+    return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE;
   }
 
   getEntryStyle(req: ScheduleEntry) {
@@ -88,8 +88,8 @@ export class ScheduleEntryDisplayComponent {
   }
 
   getEntryMatId(scheduleEntry: ScheduleEntry) {
-    if (!_.isEmpty(scheduleEntry.fightIds)) {
-      const matIds = scheduleEntry.fightIds.map(f => f.matId).filter(uniqueFilter);
+    if (!_.isEmpty(scheduleEntry.fightScheduleInfo)) {
+      const matIds = scheduleEntry.fightScheduleInfo.map(f => f.matId).filter(uniqueFilter);
       if (matIds.length === 1) {
         return this.matFormat(matIds[0]);
       } else {

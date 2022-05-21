@@ -1,16 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
-import {
-  CategoryBracketsStage,
-  Competitor,
-  CompetitorGroupChange,
-  Fight,
-  GroupChangeType
-} from '../../../../commons/model/competition.model';
 import produce from 'immer';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {collectingReducer, uniqueFilter} from '../../../account/utils';
 import {Dictionary} from '@ngrx/entity';
 import * as _ from 'lodash';
+import {Competitor, FightDescription, GroupChangeType, StageDescriptor} from "@frontend-nx/protobuf";
+import {CompetitorGroupChange} from "../../../../commons/model/competition.model";
 
 const changePedicate = (groupId: string, competitorId: string, changeType: GroupChangeType) => (ch: CompetitorGroupChange) => ch.groupId === groupId && ch.competitorId === competitorId && ch.changeType === changeType;
 
@@ -62,8 +57,8 @@ const changePedicate = (groupId: string, competitorId: string, changeType: Group
 export class GroupsEditorComponent {
 
   get undispatchedCompetitors() {
-    return this.competitors.filter( cmp => !this._competitorGroupChanges.find(ch => ch.changeType === 'ADD' && ch.competitorId === cmp.id)
-      && (this._competitorGroupChanges.find(ch => ch.changeType === 'REMOVE' && ch.competitorId === cmp.id)
+    return this.competitors.filter( cmp => !this._competitorGroupChanges.find(ch => ch.changeType === GroupChangeType.GROUP_CHANGE_TYPE_ADD && ch.competitorId === cmp.id)
+      && (this._competitorGroupChanges.find(ch => ch.changeType === GroupChangeType.GROUP_CHANGE_TYPE_REMOVE && ch.competitorId === cmp.id)
       || !this.flatCompetitors.includes(cmp.id)));
   }
 
@@ -78,7 +73,7 @@ export class GroupsEditorComponent {
   closeClicked = new EventEmitter<void>();
 
   @Input()
-  set seedFights(value: Fight[]) {
+  set seedFights(value: FightDescription[]) {
     this._competitorsByGroupsDictionary = {};
     if (value && value.length > 0) {
       const byGroups = _.groupBy(value, f => f.groupId);
@@ -92,7 +87,7 @@ export class GroupsEditorComponent {
   competitors: Competitor[] = [];
 
   @Input()
-  selectedStage: CategoryBracketsStage;
+  selectedStage: StageDescriptor;
 
   _competitorGroupChanges: CompetitorGroupChange[] = [];
   _competitorsByGroupsDictionary: Dictionary<string[]> = {};
@@ -106,8 +101,8 @@ export class GroupsEditorComponent {
 
   getDispatchedCompetitorsByGroup(groupId: string) {
     return _.union(
-      this._competitorsByGroupsDictionary[groupId].filter(c => !this._competitorGroupChanges.find(ch => ch.changeType === 'REMOVE' && ch.groupId === groupId && ch.competitorId === c)),
-      this._competitorGroupChanges.filter(ch => ch.changeType === 'ADD' && ch.groupId === groupId).map(ch => ch.competitorId)
+      this._competitorsByGroupsDictionary[groupId].filter(c => !this._competitorGroupChanges.find(ch => ch.changeType === GroupChangeType.GROUP_CHANGE_TYPE_REMOVE && ch.groupId === groupId && ch.competitorId === c)),
+      this._competitorGroupChanges.filter(ch => ch.changeType === GroupChangeType.GROUP_CHANGE_TYPE_ADD && ch.groupId === groupId).map(ch => ch.competitorId)
     );
   }
 
@@ -126,19 +121,19 @@ export class GroupsEditorComponent {
   addCompetitorToGroup(event: CdkDragDrop<any>, groupId: string) {
     this._competitorGroupChanges = produce(this._competitorGroupChanges, draft => {
       const {competitorId, groupId: fromGroupId} = event.item.data;
-      if (!draft.find(changePedicate(groupId, competitorId, 'ADD')) && fromGroupId !== groupId) {
-        const removeChange = draft.find(changePedicate(groupId, competitorId, 'REMOVE'));
+      if (!draft.find(changePedicate(groupId, competitorId, GroupChangeType.GROUP_CHANGE_TYPE_ADD)) && fromGroupId !== groupId) {
+        const removeChange = draft.find(changePedicate(groupId, competitorId, GroupChangeType.GROUP_CHANGE_TYPE_REMOVE));
         if (removeChange) {
           draft.splice(draft.indexOf(removeChange, 1));
         } else {
-          draft.push(<CompetitorGroupChange>{competitorId, groupId, changeType: 'ADD'});
+          draft.push(<CompetitorGroupChange>{competitorId, groupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_ADD});
         }
         if (fromGroupId) {
-          const addChange = draft.find(changePedicate(fromGroupId, competitorId, 'ADD'));
+          const addChange = draft.find(changePedicate(fromGroupId, competitorId, GroupChangeType.GROUP_CHANGE_TYPE_ADD));
           if (addChange) {
             draft.splice(draft.indexOf(addChange, 1));
           } else {
-            draft.push(<CompetitorGroupChange>{competitorId, groupId: fromGroupId, changeType: 'REMOVE'});
+            draft.push(<CompetitorGroupChange>{competitorId, groupId: fromGroupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_REMOVE});
           }
         }
       }
@@ -149,8 +144,8 @@ export class GroupsEditorComponent {
     const {competitorId, groupId} = event.item.data;
     if (competitorId && groupId) {
       this._competitorGroupChanges = produce(this._competitorGroupChanges, draft => {
-        if (!draft.find(changePedicate(groupId, competitorId, 'REMOVE'))) {
-          draft.push({changeType: 'REMOVE', competitorId, groupId});
+        if (!draft.find(changePedicate(groupId, competitorId, GroupChangeType.GROUP_CHANGE_TYPE_REMOVE))) {
+          draft.push({changeType: GroupChangeType.GROUP_CHANGE_TYPE_REMOVE, competitorId, groupId});
         }
       });
     }

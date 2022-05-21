@@ -1,11 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {Academy, Category, Competitor, displayCategory} from '../../../../commons/model/competition.model';
+import {displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {addCompetitor} from '../../redux/event-manager-actions';
 import {generateUuid} from "../../../account/utils";
+import {Academy, CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-add-fighter',
@@ -20,7 +21,7 @@ export class AddFighterComponent implements  OnDestroy {
 
   form: FormGroup;
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
   academies: Academy[];
@@ -34,15 +35,15 @@ export class AddFighterComponent implements  OnDestroy {
 
 
 
-  static displayCategory(cat: Category) {
+  static displayCategory(cat: CategoryDescriptor) {
     return displayCategory(cat);
   }
 
 
 
-  optionsFilter = (options: Category[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
+  optionsFilter = (options: CategoryDescriptor[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
   academyOptionsFilter = (options: Academy[], filter: string) => options.filter(acad => acad.id && acad.name?.toLowerCase()?.includes(filter.toLowerCase()));
-  formatter = (option: Category, _query?: string) => AddFighterComponent.displayCategory(option);
+  formatter = (option: CategoryDescriptor, _query?: string) => AddFighterComponent.displayCategory(option);
   academyFormatter = (option: Academy, _query?: string) => option?.name.trim();
 
   get email() {
@@ -97,7 +98,7 @@ export class AddFighterComponent implements  OnDestroy {
     }
   }
 
-  setCategoryIds(categories: Category[]) {
+  setCategoryIds(categories: CategoryDescriptor[]) {
     this.form.patchValue({
       category: categories
     });

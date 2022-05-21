@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {RegistrationGroup} from "../../../../commons/model/competition.model";
+import {RegistrationGroup} from "@frontend-nx/protobuf";
 
 export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
   constructor(context: IAddRegistrationGroupContext, size = ModalSize.Small) {
@@ -101,7 +101,6 @@ export class AddGroupFormComponent implements OnInit {
       groups = this.groupsToAdd;
     } else if (group.displayName && group.registrationFee) {
       group.id = '';
-      group.registrationInfoId = this.modal.context.competitionId;
       groups = [group];
       createNew = true;
     }

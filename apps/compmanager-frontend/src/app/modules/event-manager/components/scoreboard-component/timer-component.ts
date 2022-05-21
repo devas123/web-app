@@ -4,8 +4,7 @@ import {
   Component,
   HostListener,
   Input,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import {BehaviorSubject, interval, NEVER, Subscription} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -15,7 +14,7 @@ import {map, switchMap, tap} from 'rxjs/operators';
   selector: 'app-timer-component',
   template: `
     <div class="info__time"
-         [ngClass]="{'red': minutes == 0 && (seconds < 10 && seconds != 0)}">
+         [ngClass]="{'red': minutes === 0 && (seconds < 10 && seconds !== 0)}">
       <div class="participant__score_controls grid_controls">
         <app-number-controls
           (valueChanged)="updateMinutes($event)"
@@ -25,13 +24,13 @@ import {map, switchMap, tap} from 'rxjs/operators';
       </div>
       <span [ngClass]="{gold: !timerPaused}">
       {{(minutes < 10 &&
-      minutes != 0 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds}}</span>
+      minutes !== 0 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds}}</span>
       <app-timer-controls *ngIf="showControls" class="timer_start_stop_controls" [initialValue]="timerPaused" (valueChanged)="togglePause()"></app-timer-controls>
     </div>`,
   styleUrls: ['scoreboard-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimerComponent implements OnInit, OnDestroy {
+export class TimerComponent implements  OnDestroy {
   @Input()
   minutes = 5;
   @Input()
@@ -93,9 +92,6 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   constructor(private cdref: ChangeDetectorRef) {
     this.timerSubscription.add(this.timerObservable.subscribe());
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

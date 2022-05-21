@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Competitor} from '../commons/model/competition.model';
+import {Competitor} from "@frontend-nx/protobuf";
 
 const translitMatrix = {
   'А': 'A',

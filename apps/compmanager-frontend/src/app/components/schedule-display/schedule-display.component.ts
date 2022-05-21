@@ -1,9 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
-import {Category, MatDescription, Period, Schedule} from '../../commons/model/competition.model';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
-import {InfoService} from '../../service/info.service';
+import {CategoryDescriptor, MatDescription, Period, Schedule, ScheduleEntryType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-schedule-display',
@@ -44,7 +43,7 @@ import {InfoService} from '../../service/info.service';
           <div class="extra content">
             <span *ngIf="showTotalFights">Total fights: {{getFightsNumberForPeriod(period)}}</span>
             <br/>
-            <span *ngIf="showDuration">Duration: {{period?.duration || 'N/A'}} <span *ngIf="period?.duration">h</span></span>
+            <span *ngIf="showDuration">Duration: {{getPeriodDuration(period) || 'N/A'}} <span *ngIf="getPeriodDuration(period)">h</span></span>
           </div>
         </div>
       </div>
@@ -73,7 +72,7 @@ export class ScheduleDisplayComponent  {
   competitionId: string;
 
   @Input()
-  categories: Category[];
+  categories: CategoryDescriptor[];
 
   @Input()
   schedule: Schedule;
@@ -91,24 +90,26 @@ export class ScheduleDisplayComponent  {
 
   matsView = <Dictionary<boolean>>{};
 
+  getPeriodDuration= (p: Period) => undefined
+
 
   getFightsNumberForPeriod = (period: Period) => {
     if (!period || !period.scheduleEntries || period.scheduleEntries.length === 0) {
       return 0;
     }
-    return period.scheduleEntries.map(e => e.fightIds.length).reduce((previousValue, currentValue) => previousValue + currentValue);
+    return period.scheduleEntries.map(e => e.fightScheduleInfo.length).reduce((previousValue, currentValue) => previousValue + currentValue);
   };
-  categoryName = (cat: Category) => AddFighterComponent.displayCategory(cat);
+  categoryName = (cat: CategoryDescriptor) => AddFighterComponent.displayCategory(cat);
 
   getPeriodEntries(period: Period) {
-    return (period.scheduleEntries.filter(e => e.entryType !== 'FIXED_PAUSE') && produce(period.scheduleEntries, draft => {
-      draft.sort((a, b) => InfoService.parseDate(a.startTime).getTime() - InfoService.parseDate(b.startTime).getTime());
+    return (period.scheduleEntries.filter(e => e.entryType !== ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE) && produce(period.scheduleEntries, draft => {
+      draft.sort((a, b) => a.startTime?.getTime() - b.startTime?.getTime());
     })) || [];
   }
 
   getPeriodFixedPauses(period: Period) {
-    return (period.scheduleEntries.filter(e => e.entryType === 'FIXED_PAUSE') && produce(period.scheduleEntries, draft => {
-      draft.sort((a, b) => InfoService.parseDate(a.startTime).getTime() - InfoService.parseDate(b.startTime).getTime());
+    return (period.scheduleEntries.filter(e => e.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE) && produce(period.scheduleEntries, draft => {
+      draft.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
     })) || [];
   }
 

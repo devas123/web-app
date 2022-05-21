@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {InfoService} from '../../../../service/info.service';
-import {CompetitionProperties, RegistrationInfo} from "../../../../commons/model/competition.model";
+import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-properties-editor',
@@ -90,12 +89,12 @@ export class EventPropertiesEditorComponent implements OnChanges {
         competitionId: this.properties.id,
         competitionName: this.properties.competitionName,
         // registrationFee: this.properties.registrationFee,
-        startDate: InfoService.parseDate(this.properties.startDate),
+        startDate: this.properties.startDate,
         timeZone: this.properties.timeZone || 'UNKNOWN',
         schedulePublished: this.properties.schedulePublished || false,
         bracketsPublished: this.properties.bracketsPublished || false,
         status: this.properties.status || 'UNKNOWN',
-        endDate: InfoService.parseDate(this.properties.endDate),
+        endDate: this.properties.endDate,
         registrationOpen: (this.registrationInfo && this.registrationInfo.registrationOpen) || false,
       });
     }
@@ -115,8 +114,8 @@ export class EventPropertiesEditorComponent implements OnChanges {
     const properties = {
       ...this.properties,
       competitionName: this.competitionName.value,
-      startDate: sd?.toISOString(),
-      endDate: ed?.toISOString(),
+      startDate: sd,
+      endDate: ed,
       registrationOpen: this.registrationOpen.value,
     } as CompetitionProperties;
     this.propertiesUpdated.next(properties);

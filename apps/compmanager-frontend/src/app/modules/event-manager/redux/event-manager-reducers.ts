@@ -34,7 +34,7 @@ import {
   AdjacencyList,
   categoriesInitialState,
   CategoryConstructorState,
-  categoryEntityAdapter, CompetitionProperties,
+  categoryEntityAdapter,
   competitorEntityAdapter,
   competitorsInitialState,
   EventManagerState,
@@ -51,6 +51,7 @@ import {InfoService} from '../../../service/info.service';
 import {collectingReducer} from '../../account/utils';
 import produce from 'immer';
 import * as _ from 'lodash';
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
@@ -350,7 +351,7 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
       const scheduleEntries = periods.map(value => value.scheduleEntries).reduce(collectingReducer, []);
       const entry = scheduleEntries
         .filter(value => value.categoryIds.includes(categoryId))
-        .sort((a, b) => InfoService.parseDate(b.startTime).getTime() - InfoService.parseDate(a.startTime).getTime())[0];
+        .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())[0];
       return entry && entry.startTime;
     }
   });
@@ -358,7 +359,7 @@ export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelec
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFights = eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights;
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights =
-  createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights, fights => fights && fights.filter(f => f.round === 0 && f.roundType !== 'LOSER_BRACKETS'));
+  createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights, fights => fights && fights.filter(f => f.round === 0 && f.roundType !== 'STAGE_ROUND_TYPE_LOSER_BRACKETS'));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventCompetitors) || competitorsInitialState;

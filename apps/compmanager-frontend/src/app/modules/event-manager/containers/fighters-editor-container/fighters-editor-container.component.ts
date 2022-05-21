@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
@@ -11,7 +11,6 @@ import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory
 } from '../../redux/event-manager-reducers';
-import {Category, Competitor} from '../../../../commons/model/competition.model';
 import {eventManagerCompetitionFightersPageChanged, eventManagerRemoveCompetitor} from '../../redux/event-manager-actions';
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {Location} from '@angular/common';
@@ -19,21 +18,22 @@ import {filter, map, take} from 'rxjs/operators';
 import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
+import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighters-container',
   templateUrl: './fighters-editor-container.component.html',
   styleUrls: ['./fighters-editor-container.component.css']
 })
-export class FightersEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit {
+export class FightersEditorContainerComponent extends EventManagerRouterEntryComponent  {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
   competitors$: Observable<Competitor[]>;
   totalCompetitors$: Observable<number>;
   pageSize$: Observable<number>;
   pageNumber$: Observable<number>;
-  categories$: Observable<Category[]>;
-  category$: Observable<Category>;
+  categories$: Observable<CategoryDescriptor[]>;
+  category$: Observable<CategoryDescriptor>;
   addFighterOpen = false;
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
@@ -87,8 +87,8 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
     this.subs.add(this.searchString$.subscribe(str => this.setSearchString(str)));
   }
 
-  optionsFilter = (options: Category[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: Category) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
+  formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
 
 
   deleteFighter(competitor: Competitor) {
@@ -110,7 +110,7 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
     this.router.navigate([fighter.id], {relativeTo: this.route}).catch(console.log);
   }
 
-  setCategoryId(category: Category) {
+  setCategoryId(category: CategoryDescriptor) {
     if (category) {
       this.addQueryParam('categoryId', category.id);
     } else {
@@ -125,9 +125,6 @@ export class FightersEditorContainerComponent extends EventManagerRouterEntryCom
   dispatchAddFighterAction(action: any) {
     this.store.dispatch(action);
     this.addFighterOpen = false;
-  }
-
-  ngOnInit() {
   }
 
   navigateBack() {

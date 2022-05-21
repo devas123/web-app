@@ -1,8 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {InfoService} from '../../../../service/info.service';
-import {RegistrationPeriod} from "../../../../commons/model/competition.model";
+import {RegistrationPeriod} from "@frontend-nx/protobuf";
 
 export interface IAddRegistrationPeriodContext {
   competitionId: string;
@@ -66,8 +65,8 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
 
   triggerAddPeriod() {
     const period = {} as RegistrationPeriod;
-    period.end = InfoService.formatDate(this.periodStart, this.modal.context.timeZone);
-    period.start = InfoService.formatDate(this.periodEnd, this.modal.context.timeZone);
+    period.end = this.periodStart;
+    period.start = this.periodEnd;
     period.name = this.periodName.value;
     period.competitionId = this.modal.context.competitionId;
     period.id = '';

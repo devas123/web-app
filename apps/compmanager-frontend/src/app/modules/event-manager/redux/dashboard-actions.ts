@@ -1,7 +1,7 @@
 // commands
-import {Competitor, Fight, FightResultOption} from '../../../commons/model/competition.model';
 import {createAction, props} from '@ngrx/store';
 import {IScoreboardFightResultSet} from './dashboard-reducers';
+import {Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
@@ -47,7 +47,7 @@ export const refreshMatView = (periodId, competitionId) => ({
 });
 export const dashboardLoadFightIfNeededCommand = createAction(DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND, props<{ competitionId: string, fightId: string }>());
 export const dashboardLoadPeriodMatsCommand = createAction(DASHBOARD_LOAD_MATS_COMMAND, props<{ competitionId: string, periodId: string }>());
-export const dashboardFightLoaded = createAction(DASHBOARD_FIGHT_LOADED, props<{ competitionId: string, fightId: string, fightresultOptions: FightResultOption[], fight: Fight }>());
+export const dashboardFightLoaded = createAction(DASHBOARD_FIGHT_LOADED, props<{ competitionId: string, fightId: string, fightresultOptions: FightResultOption[], fight: FightDescription }>());
 export const dashboardMatFightsUnloaded = {type: DASHBOARD_MAT_FIGHTS_UNLOADED};
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};
@@ -74,7 +74,7 @@ export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId
   payload: mats
 });
 
-export const dashboardMatFightsLoaded = (fights: Fight[], competitors: Competitor[], matId: string) => ({
+export const dashboardMatFightsLoaded = (fights: FightDescription[], competitors: Competitor[], matId: string) => ({
   type: DASHBOARD_MAT_FIGHTS_LOADED,
   matId,
   payload: { fights, competitors }

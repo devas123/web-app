@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 
 @Component({
@@ -13,7 +13,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
   styleUrls: ['scoreboard-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimerControlsComponent implements OnInit {
+export class TimerControlsComponent  {
   @Output()
   valueChanged = new EventEmitter<boolean>();
 
@@ -23,8 +23,5 @@ export class TimerControlsComponent implements OnInit {
   changeAmount(val: number) {
     this.initialValue = !this.initialValue;
     this.valueChanged.next(this.initialValue);
-  }
-
-  ngOnInit(): void {
   }
 }

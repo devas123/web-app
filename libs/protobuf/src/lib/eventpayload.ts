@@ -17,10 +17,13 @@ import {
   MatDescription,
   RegistrationGroup,
   CompetitorStageResult,
+  competitionStatusToNumber,
   competitionStatusFromJSON,
   competitionStatusToJSON,
+  fightReferenceTypeToNumber,
   fightReferenceTypeFromJSON,
   fightReferenceTypeToJSON,
+  stageStatusToNumber,
   stageStatusFromJSON,
   stageStatusToJSON,
 } from './model';
@@ -537,7 +540,7 @@ export const CompetitionPropertiesUpdatedPayload = {
 };
 
 function createBaseCompetitionStatusUpdatedPayload(): CompetitionStatusUpdatedPayload {
-  return { status: 0 };
+  return { status: CompetitionStatus.COMPETITION_STATUS_UNKNOWN };
 }
 
 export const CompetitionStatusUpdatedPayload = {
@@ -545,8 +548,8 @@ export const CompetitionStatusUpdatedPayload = {
     message: CompetitionStatusUpdatedPayload,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.status !== 0) {
-      writer.uint32(8).int32(message.status);
+    if (message.status !== CompetitionStatus.COMPETITION_STATUS_UNKNOWN) {
+      writer.uint32(8).int32(competitionStatusToNumber(message.status));
     }
     return writer;
   },
@@ -562,7 +565,7 @@ export const CompetitionStatusUpdatedPayload = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.status = reader.int32() as any;
+          message.status = competitionStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -576,7 +579,7 @@ export const CompetitionStatusUpdatedPayload = {
     return {
       status: isSet(object.status)
         ? competitionStatusFromJSON(object.status)
-        : 0,
+        : CompetitionStatus.COMPETITION_STATUS_UNKNOWN,
     };
   },
 
@@ -591,7 +594,8 @@ export const CompetitionStatusUpdatedPayload = {
     object: I
   ): CompetitionStatusUpdatedPayload {
     const message = createBaseCompetitionStatusUpdatedPayload();
-    message.status = object.status ?? 0;
+    message.status =
+      object.status ?? CompetitionStatus.COMPETITION_STATUS_UNKNOWN;
     return message;
   },
 };
@@ -662,7 +666,12 @@ export const CompetitorAddedPayload = {
 };
 
 function createBaseCompetitorAssignmentDescriptor(): CompetitorAssignmentDescriptor {
-  return { fromFightId: '', toFightId: '', competitorId: '', referenceType: 0 };
+  return {
+    fromFightId: '',
+    toFightId: '',
+    competitorId: '',
+    referenceType: FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN,
+  };
 }
 
 export const CompetitorAssignmentDescriptor = {
@@ -679,8 +688,12 @@ export const CompetitorAssignmentDescriptor = {
     if (message.competitorId !== '') {
       writer.uint32(26).string(message.competitorId);
     }
-    if (message.referenceType !== 0) {
-      writer.uint32(32).int32(message.referenceType);
+    if (
+      message.referenceType !== FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN
+    ) {
+      writer
+        .uint32(32)
+        .int32(fightReferenceTypeToNumber(message.referenceType));
     }
     return writer;
   },
@@ -705,7 +718,7 @@ export const CompetitorAssignmentDescriptor = {
           message.competitorId = reader.string();
           break;
         case 4:
-          message.referenceType = reader.int32() as any;
+          message.referenceType = fightReferenceTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -724,7 +737,7 @@ export const CompetitorAssignmentDescriptor = {
         : '',
       referenceType: isSet(object.referenceType)
         ? fightReferenceTypeFromJSON(object.referenceType)
-        : 0,
+        : FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN,
     };
   },
 
@@ -747,7 +760,8 @@ export const CompetitorAssignmentDescriptor = {
     message.fromFightId = object.fromFightId ?? '';
     message.toFightId = object.toFightId ?? '';
     message.competitorId = object.competitorId ?? '';
-    message.referenceType = object.referenceType ?? 0;
+    message.referenceType =
+      object.referenceType ?? FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN;
     return message;
   },
 };
@@ -1994,7 +2008,7 @@ export const StageResultSetPayload = {
 };
 
 function createBaseStageStatusUpdatedPayload(): StageStatusUpdatedPayload {
-  return { stageId: '', status: 0 };
+  return { stageId: '', status: StageStatus.STAGE_STATUS_UNKNOWN };
 }
 
 export const StageStatusUpdatedPayload = {
@@ -2005,8 +2019,8 @@ export const StageStatusUpdatedPayload = {
     if (message.stageId !== '') {
       writer.uint32(10).string(message.stageId);
     }
-    if (message.status !== 0) {
-      writer.uint32(16).int32(message.status);
+    if (message.status !== StageStatus.STAGE_STATUS_UNKNOWN) {
+      writer.uint32(16).int32(stageStatusToNumber(message.status));
     }
     return writer;
   },
@@ -2025,7 +2039,7 @@ export const StageStatusUpdatedPayload = {
           message.stageId = reader.string();
           break;
         case 2:
-          message.status = reader.int32() as any;
+          message.status = stageStatusFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2038,7 +2052,9 @@ export const StageStatusUpdatedPayload = {
   fromJSON(object: any): StageStatusUpdatedPayload {
     return {
       stageId: isSet(object.stageId) ? String(object.stageId) : '',
-      status: isSet(object.status) ? stageStatusFromJSON(object.status) : 0,
+      status: isSet(object.status)
+        ? stageStatusFromJSON(object.status)
+        : StageStatus.STAGE_STATUS_UNKNOWN,
     };
   },
 
@@ -2055,7 +2071,7 @@ export const StageStatusUpdatedPayload = {
   ): StageStatusUpdatedPayload {
     const message = createBaseStageStatusUpdatedPayload();
     message.stageId = object.stageId ?? '';
-    message.status = object.status ?? 0;
+    message.status = object.status ?? StageStatus.STAGE_STATUS_UNKNOWN;
     return message;
   },
 };

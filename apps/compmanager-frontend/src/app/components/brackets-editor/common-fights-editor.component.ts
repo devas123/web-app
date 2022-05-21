@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {StageType} from '../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
+import {StageType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-common-fights-editor',

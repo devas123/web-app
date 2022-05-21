@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatDescription, Period, ScheduleEntry} from '../../commons/model/competition.model';
 import {format, parseISO} from 'date-fns';
+import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-schedule-mat-display',
@@ -31,7 +31,7 @@ import {format, parseISO} from 'date-fns';
             </ng-container>
           </div>
         </div>
-        <section>{{mat.numberOfFights}} fights</section>
+        <section><!--{{mat.numberOfFights}}--> TODO fights</section>
       </div>
     </div>
   `,
@@ -73,18 +73,18 @@ export class ScheduleMatDisplayComponent {
   categoryClicked = new EventEmitter<string>();
 
   getMatEntries(matId) {
-    return this.scheduleEntries?.filter(e => e.fightIds.find(f => f.matId === matId));
+    return this.scheduleEntries?.filter(e => e.fightScheduleInfo.find(f => f.matId === matId));
   }
 
   getEntryFightsForMat(matId: string, entry: ScheduleEntry) {
-    return entry.fightIds.filter(f => f.matId === matId);
+    return entry.fightScheduleInfo.filter(f => f.matId === matId);
   }
 
   getEntryStartTimeForMat(matId: string, entry: ScheduleEntry) {
-    const st = entry.fightIds.filter(f => f.matId === matId && !!f.startTime)
-      .sort((a, b) => Date.parse(a.startTime) - Date.parse(b.startTime))[0]?.startTime;
+    const st = entry.fightScheduleInfo.filter(f => f.matId === matId && !!f.startTime)
+      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0]?.startTime;
     if (st) {
-      return format(parseISO(st), 'HH:mm');
+      return format(st, 'HH:mm');
     }
   }
 

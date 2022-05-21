@@ -33,8 +33,8 @@ import {
   LOAD_SCHEDULE_COMMAND,
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
-import {CompetitionProperties, Competitor, Fight, RegistrationInfo, Schedule} from '../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
+import {CompetitionProperties, Competitor, FightDescription, RegistrationInfo, Schedule} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class Effects {
@@ -158,7 +158,7 @@ export class Effects {
       else
         return of([])
     }),
-    map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as Fight[]})),
+    map(payload => eventManagerCategoryBracketsStageFightsLoaded({fights: payload as FightDescription[]})),
     catchError(error => observableOf(errorEvent(error)))
   ));
 

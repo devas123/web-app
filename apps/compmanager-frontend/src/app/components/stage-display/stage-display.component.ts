@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryBracketsStage, Competitor, Fight} from '../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
 import * as _ from 'lodash';
+import {CategoryDescriptor, Competitor, FightDescription, StageDescriptor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-stage-display',
@@ -9,12 +9,12 @@ import * as _ from 'lodash';
   styleUrls: ['./stage-display.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StageDisplayComponent implements OnInit {
+export class StageDisplayComponent  {
   @Input()
-  category: Category;
+  category: CategoryDescriptor;
 
   @Input()
-  set stages(stages: CategoryBracketsStage[]) {
+  set stages(stages: StageDescriptor[]) {
     if (!_.isEmpty(stages)) {
       this._stages = _.sortBy(stages, 'stageOrder');
     } else {
@@ -22,9 +22,9 @@ export class StageDisplayComponent implements OnInit {
     }
   }
 
-  _stages: CategoryBracketsStage[];
+  _stages: StageDescriptor[];
   @Input()
-  selectedStage: CategoryBracketsStage;
+  selectedStage: StageDescriptor;
   @Input()
   fightsAreLoading: boolean;
   @Output()
@@ -32,7 +32,7 @@ export class StageDisplayComponent implements OnInit {
   @Output()
   fightSelected = new EventEmitter<string>();
   @Input()
-  fights: Fight[];
+  fights: FightDescription[];
   @Input()
   bucketSize: number;
   @Input()
@@ -51,9 +51,6 @@ export class StageDisplayComponent implements OnInit {
   }
 
   constructor() {
-  }
-
-  ngOnInit() {
   }
 
   selectStage(id: string) {

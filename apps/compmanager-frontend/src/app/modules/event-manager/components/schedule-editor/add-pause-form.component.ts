@@ -2,11 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
-import {
-  MatDescription,
-  ScheduleRequirement,
-  ScheduleRequirementType
-} from '../../../../commons/model/competition.model';
+import {MatDescription, ScheduleRequirement, ScheduleRequirementType} from "@frontend-nx/protobuf";
 
 export interface IAddSchedulePauseContext {
   competitionId: string;
@@ -39,7 +35,9 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
       <div class="ui form" [formGroup]="form"
            [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
         <div class="ui error message" *ngIf="form?.errors?.invalidDates">Invalid start or end date.</div>
-        <div class="ui error message" *ngIf="form?.errors?.startsBeforePeriod">Pause cannot start before the period starts.</div>
+        <div class="ui error message" *ngIf="form?.errors?.startsBeforePeriod">Pause cannot start before the period
+          starts.
+        </div>
         <div class="field">
           <sui-checkbox (checkChange)="_all = $event">
             Add to all mats
@@ -60,13 +58,15 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
         <div class="grouped fields margin-vertical">
           <label>Pause type</label>
           <div class="field">
-            <input type="radio" name="entryType" [value]="'FIXED_PAUSE'" formControlName="entryType">Fixed
+            <input type="radio" name="entryType" [value]="'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE'"
+                   formControlName="entryType">Fixed
           </div>
           <div class="field">
-            <input type="radio" name="entryType" [value]="'RELATIVE_PAUSE'" formControlName="entryType">Relative
+            <input type="radio" name="entryType" [value]="'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE'"
+                   formControlName="entryType">Relative
           </div>
         </div>
-        <div class="fields" *ngIf="entryType === 'FIXED_PAUSE'">
+        <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE'">
           <div class="field"
                [ngClass]="{error: startTime.invalid && (startTime.touched || startTime.dirty)}">
             <label>Start time</label>
@@ -94,7 +94,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
             </div>
           </div>
         </div>
-        <div class="fields" *ngIf="entryType === 'RELATIVE_PAUSE'">
+        <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE'">
           <div class="three wide field"
                [ngClass]="{error: durationSeconds.invalid && (durationSeconds.touched || durationSeconds.dirty)}">
             <label>Duration</label>
@@ -107,7 +107,9 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
     </div>
     <div class="actions">
       <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-      <button class="ui green button" [disabled]="form.invalid || !((select?.selectedOptions && select?.selectedOptions?.length > 0) || _all)" (click)="triggerAddPause()" autofocus>OK
+      <button class="ui green button"
+              [disabled]="form.invalid || !((select?.selectedOptions && select?.selectedOptions?.length > 0) || _all)"
+              (click)="triggerAddPause()" autofocus>OK
       </button>
     </div>
   `,
@@ -125,7 +127,7 @@ export class AddSchedulePauseFormComponent implements OnInit {
     const endTime = control.get('endTime').value;
     const durationSeconds = control.get('durationSeconds').value;
     switch (entryType) {
-      case 'FIXED_PAUSE': {
+      case 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE': {
         if (startTime && endTime) {
           const periodStartTime = InfoService.parseDate(this.modal.context.periodStartTime);
           const s = InfoService.parseDate(startTime);
@@ -140,7 +142,7 @@ export class AddSchedulePauseFormComponent implements OnInit {
         }
         return {'invalidDates': true};
       }
-      case 'RELATIVE_PAUSE': {
+      case 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE': {
         if (durationSeconds) {
           return null;
         }
@@ -167,16 +169,16 @@ export class AddSchedulePauseFormComponent implements OnInit {
     if (this.form && (!this.select || (this.select.selectedOptions && this.select.selectedOptions.length > 0) || this._all)) {
       const toMats = this._all ? this.modal.context.mats : this.select.selectedOptions;
       switch (this.entryType) {
-        case 'RELATIVE_PAUSE': {
+        case 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE': {
           const pauseReq = this.pauseForm.value as ScheduleRequirement;
           pauseReq.entryType = this.entryType;
           this.modal.approve({pauseRequirement: pauseReq, toMats: toMats.map(m => m.id)});
           break;
         }
-        case 'FIXED_PAUSE': {
+        case 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE': {
           const pauseReq = {} as ScheduleRequirement;
-          pauseReq.startTime = InfoService.formatDate(this.startTime.value, this.modal.context.timeZone);
-          pauseReq.endTime = InfoService.formatDate(this.endTime.value, this.modal.context.timeZone);
+          pauseReq.startTime = this.startTime.value
+          pauseReq.endTime = this.endTime.value
           pauseReq.entryType = this.entryType;
           this.modal.approve({pauseRequirement: pauseReq, toMats: toMats.map(m => m.id)});
           break;
@@ -196,10 +198,9 @@ export class AddSchedulePauseFormComponent implements OnInit {
       startTime: [''],
       endTime: [''],
       matId: [''],
-      entryType: ['FIXED_PAUSE']
+      entryType: ['SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE']
     }, {validators: [this.formValidator]});
   }
-
 
 
   get durationSeconds() {

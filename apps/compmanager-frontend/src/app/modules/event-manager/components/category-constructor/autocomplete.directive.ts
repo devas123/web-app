@@ -6,7 +6,6 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnInit,
   Output,
   TemplateRef,
   ViewContainerRef
@@ -32,7 +31,7 @@ export function overlayClickOutside(overlayRef: OverlayRef, origin: HTMLElement)
   selector: '[appAutocomplete]',
   exportAs: 'appAutoComplete'
 })
-export class AppAutocompleteDirective implements OnInit, AfterViewInit {
+export class AppAutocompleteDirective implements  AfterViewInit {
 
   @Input()
   appAutocomplete: TemplateRef<any>;
@@ -54,9 +53,6 @@ export class AppAutocompleteDirective implements OnInit, AfterViewInit {
     private vcr: ViewContainerRef,
     private overlay: Overlay
   ) {
-  }
-
-  ngOnInit() {
   }
 
   handleScroll = () => {

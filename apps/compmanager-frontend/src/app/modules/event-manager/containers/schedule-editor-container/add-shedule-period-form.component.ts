@@ -3,15 +3,14 @@ import {
   Component,
   ElementRef,
   OnInit,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
-import {MatDescription, Period} from '../../../../commons/model/competition.model';
 import produce from 'immer';
 import {generateUuid} from '../../../account/utils';
+import {MatDescription, Period} from "@frontend-nx/protobuf";
 
 export interface IAddSchedulePeriodContext {
   competitionId: string;
@@ -131,7 +130,7 @@ export class AddSchedulePeriodFormComponent implements OnInit {
       const properties = {
         id: this.modal.context.competitionId + generateUuid(),
         name: this.name.value,
-        startTime: InfoService.formatDate(this.startTime.value, this.modal.context.timeZone),
+        startTime: this.startTime.value,
         timeBetweenFights: this.timeBetweenFights.value,
         riskPercent: this.riskPercent.value,
         categories: [] as string[],

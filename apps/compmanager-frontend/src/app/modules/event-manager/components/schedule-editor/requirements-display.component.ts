@@ -5,13 +5,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
-import {Category, ScheduleRequirement} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Dictionary} from '@ngrx/entity';
+import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   template: `
@@ -39,8 +38,8 @@ import {Dictionary} from '@ngrx/entity';
                               [requirementCategories]="_categoriesByRequirementId[req.id]"
                               (removed)="requirementRemoved.next(req)"
                               (selectionChanged)="changeSelection($event, req.id)"
-                              [canDelete]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES' || req.entryType === 'RELATIVE_PAUSE'"
-                              [canSplit]="req.entryType === 'FIGHTS' || req.entryType === 'CATEGORIES'"
+                              [canDelete]="req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS' || req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES' || req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE'"
+                              [canSplit]="req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS' || req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES'"
                               [canSelect]="canSelect(req)"
                               (edit)="this.splitIconCicked.next(req)"
                               *ngFor="let req of _requirements"></app-requirement-line>
@@ -51,7 +50,7 @@ import {Dictionary} from '@ngrx/entity';
   selector: 'app-requirements-display',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RequirementsDisplayComponent implements OnInit, OnChanges {
+export class RequirementsDisplayComponent implements  OnChanges {
 
   constructor(private el: ElementRef) {
   }
@@ -60,18 +59,18 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   @Input()
   set requirements(srs: ScheduleRequirement[]) {
     const val = srs || [];
-    this._requirements = val.filter(v => v.entryType !== 'FIXED_PAUSE');
-    this._fixedPauses = val.filter(v => v.entryType === 'FIXED_PAUSE');
+    this._requirements = val.filter(v => v.entryType !== 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE');
+    this._fixedPauses = val.filter(v => v.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE');
   }
 
   @Input()
-  set categories(val: Category[]) {
+  set categories(val: CategoryDescriptor[]) {
     this._categories = val || [];
   }
 
   get requirementsEmpty() {
     return !this._requirements
-      || this._requirements.filter(r => r.entryType !== 'RELATIVE_PAUSE').length <= 0;
+      || this._requirements.filter(r => r.entryType !== 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE').length <= 0;
   }
 
   @Input()
@@ -95,7 +94,7 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   @Input()
   selectedReqs: Set<string> = new Set<string>();
 
-  private _categories: Category[];
+  private _categories: CategoryDescriptor[];
 
   @Output()
   itemDropped = new EventEmitter<{ event: CdkDragDrop<any, any>, periodId: string }>();
@@ -106,7 +105,7 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   @Output()
   requirementSelectionChanged = new EventEmitter<{ id: string, value: boolean }>();
 
-  _categoriesByRequirementId: Dictionary<Category[]>;
+  _categoriesByRequirementId: Dictionary<CategoryDescriptor[]>;
 
   dragStart() {
     this.el.nativeElement.dispatchEvent(
@@ -129,14 +128,10 @@ export class RequirementsDisplayComponent implements OnInit, OnChanges {
   }
 
   canSelect(scheduleRequirement: ScheduleRequirement) {
-    if (!scheduleRequirement || (scheduleRequirement.entryType !== 'FIGHTS' && scheduleRequirement.entryType !== 'CATEGORIES')) {
+    if (!scheduleRequirement || (scheduleRequirement.entryType !== 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS' && scheduleRequirement.entryType !== 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES')) {
       return false;
     }
     return this.selectedReqs.size === 0 || this.allRequirements.find(r => r.id === this.selectedReqs.values().next().value).entryType === scheduleRequirement.entryType;
-  }
-
-
-  ngOnInit(): void {
   }
 
   getRequirementCategories(categoryIds: string[]) {

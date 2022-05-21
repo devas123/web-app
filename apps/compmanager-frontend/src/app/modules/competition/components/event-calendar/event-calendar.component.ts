@@ -5,7 +5,7 @@ import {select, Store} from '@ngrx/store';
 import {selectAllCompetitions} from '../../redux/reducers';
 import {map} from 'rxjs/operators';
 import * as allActions from '../../../../actions/actions';
-import {CompetitionProperties} from "../../../../commons/model/competition.model";
+import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-calendar',

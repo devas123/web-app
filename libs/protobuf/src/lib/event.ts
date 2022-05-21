@@ -4,45 +4,47 @@ import * as _m0 from 'protobufjs/minimal';
 import { MessageInfo } from './common';
 import { Timestamp } from './google/protobuf/timestamp';
 
-export enum EventType {
-  EVENT_TYPE_UNKNOWN = 0,
-  ACADEMY_ADDED = 1,
-  ACADEMY_REMOVED = 2,
-  ACADEMY_UPDATED = 3,
-  BRACKETS_GENERATED = 4,
-  CATEGORY_ADDED = 5,
-  CATEGORY_BRACKETS_DROPPED = 6,
-  CATEGORY_DELETED = 7,
-  CATEGORY_REGISTRATION_STATUS_CHANGED = 8,
-  COMPETITION_CREATED = 9,
-  COMPETITION_DELETED = 10,
-  COMPETITION_PROPERTIES_UPDATED = 11,
-  COMPETITORS_PROPAGATED_TO_STAGE = 12,
-  COMPETITOR_ADDED = 13,
-  COMPETITOR_CATEGORY_ADDED = 14,
-  COMPETITOR_CATEGORY_CHANGED = 15,
-  COMPETITOR_REMOVED = 16,
-  COMPETITOR_UPDATED = 17,
-  DASHBOARD_FIGHT_COMPETITORS_ASSIGNED = 18,
-  DASHBOARD_FIGHT_RESULT_SET = 19,
-  DASHBOARD_STAGE_RESULT_SET = 20,
-  FIGHTS_ADDED_TO_STAGE = 21,
-  FIGHTS_EDITOR_CHANGE_APPLIED = 22,
-  FIGHTS_START_TIME_CLEANED = 23,
-  FIGHTS_START_TIME_UPDATED = 24,
-  FIGHT_ORDER_CHANGED = 25,
-  MATS_UPDATED = 26,
-  REGISTRATION_GROUP_ADDED = 27,
-  REGISTRATION_GROUP_CATEGORIES_ASSIGNED = 28,
-  REGISTRATION_GROUP_DELETED = 29,
-  REGISTRATION_INFO_UPDATED = 30,
-  REGISTRATION_PERIOD_ADDED = 31,
-  REGISTRATION_PERIOD_DELETED = 32,
-  SCHEDULE_DROPPED = 33,
-  SCHEDULE_GENERATED = 34,
-  STAGE_STATUS_UPDATED = 35,
-  UNRECOGNIZED = -1,
-}
+export const EventType = {
+  EVENT_TYPE_UNKNOWN: 'EVENT_TYPE_UNKNOWN',
+  ACADEMY_ADDED: 'ACADEMY_ADDED',
+  ACADEMY_REMOVED: 'ACADEMY_REMOVED',
+  ACADEMY_UPDATED: 'ACADEMY_UPDATED',
+  BRACKETS_GENERATED: 'BRACKETS_GENERATED',
+  CATEGORY_ADDED: 'CATEGORY_ADDED',
+  CATEGORY_BRACKETS_DROPPED: 'CATEGORY_BRACKETS_DROPPED',
+  CATEGORY_DELETED: 'CATEGORY_DELETED',
+  CATEGORY_REGISTRATION_STATUS_CHANGED: 'CATEGORY_REGISTRATION_STATUS_CHANGED',
+  COMPETITION_CREATED: 'COMPETITION_CREATED',
+  COMPETITION_DELETED: 'COMPETITION_DELETED',
+  COMPETITION_PROPERTIES_UPDATED: 'COMPETITION_PROPERTIES_UPDATED',
+  COMPETITORS_PROPAGATED_TO_STAGE: 'COMPETITORS_PROPAGATED_TO_STAGE',
+  COMPETITOR_ADDED: 'COMPETITOR_ADDED',
+  COMPETITOR_CATEGORY_ADDED: 'COMPETITOR_CATEGORY_ADDED',
+  COMPETITOR_CATEGORY_CHANGED: 'COMPETITOR_CATEGORY_CHANGED',
+  COMPETITOR_REMOVED: 'COMPETITOR_REMOVED',
+  COMPETITOR_UPDATED: 'COMPETITOR_UPDATED',
+  DASHBOARD_FIGHT_COMPETITORS_ASSIGNED: 'DASHBOARD_FIGHT_COMPETITORS_ASSIGNED',
+  DASHBOARD_FIGHT_RESULT_SET: 'DASHBOARD_FIGHT_RESULT_SET',
+  DASHBOARD_STAGE_RESULT_SET: 'DASHBOARD_STAGE_RESULT_SET',
+  FIGHTS_ADDED_TO_STAGE: 'FIGHTS_ADDED_TO_STAGE',
+  FIGHTS_EDITOR_CHANGE_APPLIED: 'FIGHTS_EDITOR_CHANGE_APPLIED',
+  FIGHTS_START_TIME_CLEANED: 'FIGHTS_START_TIME_CLEANED',
+  FIGHTS_START_TIME_UPDATED: 'FIGHTS_START_TIME_UPDATED',
+  FIGHT_ORDER_CHANGED: 'FIGHT_ORDER_CHANGED',
+  MATS_UPDATED: 'MATS_UPDATED',
+  REGISTRATION_GROUP_ADDED: 'REGISTRATION_GROUP_ADDED',
+  REGISTRATION_GROUP_CATEGORIES_ASSIGNED:
+    'REGISTRATION_GROUP_CATEGORIES_ASSIGNED',
+  REGISTRATION_GROUP_DELETED: 'REGISTRATION_GROUP_DELETED',
+  REGISTRATION_INFO_UPDATED: 'REGISTRATION_INFO_UPDATED',
+  REGISTRATION_PERIOD_ADDED: 'REGISTRATION_PERIOD_ADDED',
+  REGISTRATION_PERIOD_DELETED: 'REGISTRATION_PERIOD_DELETED',
+  SCHEDULE_DROPPED: 'SCHEDULE_DROPPED',
+  SCHEDULE_GENERATED: 'SCHEDULE_GENERATED',
+  STAGE_STATUS_UPDATED: 'STAGE_STATUS_UPDATED',
+} as const;
+
+export type EventType = typeof EventType[keyof typeof EventType];
 
 export function eventTypeFromJSON(object: any): EventType {
   switch (object) {
@@ -154,10 +156,10 @@ export function eventTypeFromJSON(object: any): EventType {
     case 35:
     case 'STAGE_STATUS_UPDATED':
       return EventType.STAGE_STATUS_UPDATED;
-    case -1:
-    case 'UNRECOGNIZED':
     default:
-      return EventType.UNRECOGNIZED;
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum EventType'
+      );
   }
 }
 
@@ -235,9 +237,91 @@ export function eventTypeToJSON(object: EventType): string {
       return 'SCHEDULE_GENERATED';
     case EventType.STAGE_STATUS_UPDATED:
       return 'STAGE_STATUS_UPDATED';
-    case EventType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum EventType'
+      );
+  }
+}
+
+export function eventTypeToNumber(object: EventType): number {
+  switch (object) {
+    case EventType.EVENT_TYPE_UNKNOWN:
+      return 0;
+    case EventType.ACADEMY_ADDED:
+      return 1;
+    case EventType.ACADEMY_REMOVED:
+      return 2;
+    case EventType.ACADEMY_UPDATED:
+      return 3;
+    case EventType.BRACKETS_GENERATED:
+      return 4;
+    case EventType.CATEGORY_ADDED:
+      return 5;
+    case EventType.CATEGORY_BRACKETS_DROPPED:
+      return 6;
+    case EventType.CATEGORY_DELETED:
+      return 7;
+    case EventType.CATEGORY_REGISTRATION_STATUS_CHANGED:
+      return 8;
+    case EventType.COMPETITION_CREATED:
+      return 9;
+    case EventType.COMPETITION_DELETED:
+      return 10;
+    case EventType.COMPETITION_PROPERTIES_UPDATED:
+      return 11;
+    case EventType.COMPETITORS_PROPAGATED_TO_STAGE:
+      return 12;
+    case EventType.COMPETITOR_ADDED:
+      return 13;
+    case EventType.COMPETITOR_CATEGORY_ADDED:
+      return 14;
+    case EventType.COMPETITOR_CATEGORY_CHANGED:
+      return 15;
+    case EventType.COMPETITOR_REMOVED:
+      return 16;
+    case EventType.COMPETITOR_UPDATED:
+      return 17;
+    case EventType.DASHBOARD_FIGHT_COMPETITORS_ASSIGNED:
+      return 18;
+    case EventType.DASHBOARD_FIGHT_RESULT_SET:
+      return 19;
+    case EventType.DASHBOARD_STAGE_RESULT_SET:
+      return 20;
+    case EventType.FIGHTS_ADDED_TO_STAGE:
+      return 21;
+    case EventType.FIGHTS_EDITOR_CHANGE_APPLIED:
+      return 22;
+    case EventType.FIGHTS_START_TIME_CLEANED:
+      return 23;
+    case EventType.FIGHTS_START_TIME_UPDATED:
+      return 24;
+    case EventType.FIGHT_ORDER_CHANGED:
+      return 25;
+    case EventType.MATS_UPDATED:
+      return 26;
+    case EventType.REGISTRATION_GROUP_ADDED:
+      return 27;
+    case EventType.REGISTRATION_GROUP_CATEGORIES_ASSIGNED:
+      return 28;
+    case EventType.REGISTRATION_GROUP_DELETED:
+      return 29;
+    case EventType.REGISTRATION_INFO_UPDATED:
+      return 30;
+    case EventType.REGISTRATION_PERIOD_ADDED:
+      return 31;
+    case EventType.REGISTRATION_PERIOD_DELETED:
+      return 32;
+    case EventType.SCHEDULE_DROPPED:
+      return 33;
+    case EventType.SCHEDULE_GENERATED:
+      return 34;
+    case EventType.STAGE_STATUS_UPDATED:
+      return 35;
+    default:
+      throw new globalThis.Error(
+        'Unrecognized enum value ' + object + ' for enum EventType'
+      );
   }
 }
 
@@ -254,7 +338,7 @@ function createBaseEvent(): Event {
     timestamp: undefined,
     version: 0,
     localEventNumber: 0,
-    type: 0,
+    type: EventType.EVENT_TYPE_UNKNOWN,
     messageInfo: undefined,
   };
 }
@@ -273,8 +357,8 @@ export const Event = {
     if (message.localEventNumber !== 0) {
       writer.uint32(24).int32(message.localEventNumber);
     }
-    if (message.type !== 0) {
-      writer.uint32(32).int32(message.type);
+    if (message.type !== EventType.EVENT_TYPE_UNKNOWN) {
+      writer.uint32(32).int32(eventTypeToNumber(message.type));
     }
     if (message.messageInfo !== undefined) {
       MessageInfo.encode(
@@ -304,7 +388,7 @@ export const Event = {
           message.localEventNumber = reader.int32();
           break;
         case 4:
-          message.type = reader.int32() as any;
+          message.type = eventTypeFromJSON(reader.int32());
           break;
         case 5:
           message.messageInfo = MessageInfo.decode(reader, reader.uint32());
@@ -326,7 +410,9 @@ export const Event = {
       localEventNumber: isSet(object.localEventNumber)
         ? Number(object.localEventNumber)
         : 0,
-      type: isSet(object.type) ? eventTypeFromJSON(object.type) : 0,
+      type: isSet(object.type)
+        ? eventTypeFromJSON(object.type)
+        : EventType.EVENT_TYPE_UNKNOWN,
       messageInfo: isSet(object.messageInfo)
         ? MessageInfo.fromJSON(object.messageInfo)
         : undefined,
@@ -354,7 +440,7 @@ export const Event = {
     message.timestamp = object.timestamp ?? undefined;
     message.version = object.version ?? 0;
     message.localEventNumber = object.localEventNumber ?? 0;
-    message.type = object.type ?? 0;
+    message.type = object.type ?? EventType.EVENT_TYPE_UNKNOWN;
     message.messageInfo =
       object.messageInfo !== undefined && object.messageInfo !== null
         ? MessageInfo.fromPartial(object.messageInfo)
@@ -362,6 +448,17 @@ export const Event = {
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin =
   | Date

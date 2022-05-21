@@ -17,8 +17,9 @@ import {
 import {filter, map, take, tap} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import {Fight, HeaderDescription, MatDescription, Period} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
+import {FightDescription, MatDescription, Period} from "@frontend-nx/protobuf";
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -28,7 +29,7 @@ export class MatsOverviewContainerComponent extends EventManagerRouterEntryCompo
   selectedPeriod$: Observable<Period>;
   selectedPeriodMats$: Observable<MatDescription[]>;
   competitionId$: Observable<string>;
-  selectedPeriodMatsFights$: Observable<Fight[]>;
+  selectedPeriodMatsFights$: Observable<FightDescription[]>;
 
   constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, private cd: ChangeDetectorRef,
               public info: CommonBracketsInfoContainer, menuService: MenuService) {

@@ -18,7 +18,8 @@ import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {CompetitionProperties, HeaderDescription, RegistrationInfo} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
+import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-properties-editor-container',

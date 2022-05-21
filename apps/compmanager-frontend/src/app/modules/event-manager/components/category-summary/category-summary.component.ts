@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryState} from '../../../../commons/model/competition.model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-summary',
@@ -7,7 +7,7 @@ import {Category, CategoryState} from '../../../../commons/model/competition.mod
   styleUrls: ['./category-summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategorySummaryComponent implements OnInit {
+export class CategorySummaryComponent  {
 
   @Input()
   categoryState: CategoryState;
@@ -16,10 +16,10 @@ export class CategorySummaryComponent implements OnInit {
   competitionId: string;
 
   @Input()
-  category: Category;
+  category: CategoryDescriptor;
 
   @Input()
-  categoryStartTime: string;
+  categoryStartTime: Date;
 
   @Output()
   categoryFightersSelected = new EventEmitter<{ categoryId: string, competitionId: string }>();
@@ -30,8 +30,7 @@ export class CategorySummaryComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
-  }
+
 
   navigateToCategoryFighters(categoryId: string) {
     if (categoryId) {
