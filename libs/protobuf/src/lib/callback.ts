@@ -69,12 +69,12 @@ export function commandExecutionResultToNumber(
 }
 
 export interface CommandCallback {
-  id: string;
   correlationId: string;
   result: CommandExecutionResult;
   errorInfo?: ErrorCallback;
   events: Event[];
   command?: Command | undefined;
+  numberOfEvents: number;
 }
 
 export interface ErrorCallback {
@@ -84,12 +84,12 @@ export interface ErrorCallback {
 
 function createBaseCommandCallback(): CommandCallback {
   return {
-    id: '',
     correlationId: '',
     result: CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS,
     errorInfo: undefined,
     events: [],
     command: undefined,
+    numberOfEvents: 0,
   };
 }
 
@@ -98,9 +98,6 @@ export const CommandCallback = {
     message: CommandCallback,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== '') {
-      writer.uint32(10).string(message.id);
-    }
     if (message.correlationId !== '') {
       writer.uint32(18).string(message.correlationId);
     }
@@ -121,6 +118,9 @@ export const CommandCallback = {
     if (message.command !== undefined) {
       Command.encode(message.command, writer.uint32(50).fork()).ldelim();
     }
+    if (message.numberOfEvents !== 0) {
+      writer.uint32(56).int32(message.numberOfEvents);
+    }
     return writer;
   },
 
@@ -131,9 +131,6 @@ export const CommandCallback = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = reader.string();
-          break;
         case 2:
           message.correlationId = reader.string();
           break;
@@ -149,6 +146,9 @@ export const CommandCallback = {
         case 6:
           message.command = Command.decode(reader, reader.uint32());
           break;
+        case 7:
+          message.numberOfEvents = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -159,7 +159,6 @@ export const CommandCallback = {
 
   fromJSON(object: any): CommandCallback {
     return {
-      id: isSet(object.id) ? String(object.id) : '',
       correlationId: isSet(object.correlationId)
         ? String(object.correlationId)
         : '',
@@ -175,12 +174,14 @@ export const CommandCallback = {
       command: isSet(object.command)
         ? Command.fromJSON(object.command)
         : undefined,
+      numberOfEvents: isSet(object.numberOfEvents)
+        ? Number(object.numberOfEvents)
+        : 0,
     };
   },
 
   toJSON(message: CommandCallback): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
     message.correlationId !== undefined &&
       (obj.correlationId = message.correlationId);
     message.result !== undefined &&
@@ -198,6 +199,8 @@ export const CommandCallback = {
       (obj.command = message.command
         ? Command.toJSON(message.command)
         : undefined);
+    message.numberOfEvents !== undefined &&
+      (obj.numberOfEvents = Math.round(message.numberOfEvents));
     return obj;
   },
 
@@ -205,7 +208,6 @@ export const CommandCallback = {
     object: I
   ): CommandCallback {
     const message = createBaseCommandCallback();
-    message.id = object.id ?? '';
     message.correlationId = object.correlationId ?? '';
     message.result =
       object.result ?? CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS;
@@ -218,6 +220,7 @@ export const CommandCallback = {
       object.command !== undefined && object.command !== null
         ? Command.fromPartial(object.command)
         : undefined;
+    message.numberOfEvents = object.numberOfEvents ?? 0;
     return message;
   },
 };

@@ -3,6 +3,7 @@ PROXY_CONFIG = [
     context: [
       "/accounts",
       "/competition/command",
+      "/competition/scommand",
     ],
     target: "http://localhost:8080",
     secure: false,

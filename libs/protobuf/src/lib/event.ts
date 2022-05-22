@@ -331,6 +331,7 @@ export interface Event {
   localEventNumber: number;
   type: EventType;
   messageInfo?: MessageInfo;
+  numberOfEventsInBatch: number;
 }
 
 function createBaseEvent(): Event {
@@ -340,6 +341,7 @@ function createBaseEvent(): Event {
     localEventNumber: 0,
     type: EventType.EVENT_TYPE_UNKNOWN,
     messageInfo: undefined,
+    numberOfEventsInBatch: 0,
   };
 }
 
@@ -365,6 +367,9 @@ export const Event = {
         message.messageInfo,
         writer.uint32(42).fork()
       ).ldelim();
+    }
+    if (message.numberOfEventsInBatch !== 0) {
+      writer.uint32(48).int32(message.numberOfEventsInBatch);
     }
     return writer;
   },
@@ -393,6 +398,9 @@ export const Event = {
         case 5:
           message.messageInfo = MessageInfo.decode(reader, reader.uint32());
           break;
+        case 6:
+          message.numberOfEventsInBatch = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -416,6 +424,9 @@ export const Event = {
       messageInfo: isSet(object.messageInfo)
         ? MessageInfo.fromJSON(object.messageInfo)
         : undefined,
+      numberOfEventsInBatch: isSet(object.numberOfEventsInBatch)
+        ? Number(object.numberOfEventsInBatch)
+        : 0,
     };
   },
 
@@ -432,6 +443,8 @@ export const Event = {
       (obj.messageInfo = message.messageInfo
         ? MessageInfo.toJSON(message.messageInfo)
         : undefined);
+    message.numberOfEventsInBatch !== undefined &&
+      (obj.numberOfEventsInBatch = Math.round(message.numberOfEventsInBatch));
     return obj;
   },
 
@@ -445,6 +458,7 @@ export const Event = {
       object.messageInfo !== undefined && object.messageInfo !== null
         ? MessageInfo.fromPartial(object.messageInfo)
         : undefined;
+    message.numberOfEventsInBatch = object.numberOfEventsInBatch ?? 0;
     return message;
   },
 };

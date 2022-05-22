@@ -1,9 +1,16 @@
-export const urls = {
-  commandsEndpoint: '/query/v1/command',
-  commandsSyncEndpoint: '/query/v1/commandsync',
+const commands = "/competition/command"
+
+const urls = {
+  dashboardErrorQueue: `/state/dashboard/errors`,
+  dashboardEventQueue: `/state/dashboard/events`,
+  eventQueue: `/state/events`,
+  errorQueue: `/state/errors`,
+  webSocketUrl: `/query/v1/ws`,
+  commandsEndpoint: commands,
+  generateCategoriesEndpoint: '/query/v1/generatecategories',
+  commandsSyncEndpoint: "/competition/scommand",
   competitionQueryEndpoint: '/query/v1/competition',
   competitorQueryEndpoint: '/query/v1/competitor',
-  generateCategoriesEndpoint: '/query/v1/generatecategories',
   competitorEdpoint: '/query/v1/competitor',
   scheduleEndpoint: '/query/v1/schedule',
   categoriesEndpoint: '/query/v1/categories',
@@ -15,12 +22,12 @@ export const urls = {
   dashboardState: '/query/v1/dashboardstate',
   mats: '/query/v1/mats',
   fightResultOptions: '/query/v1/fightresultoptions',
+  fight: '/query/v1/fight',
   matFights: '/query/v1/matfights',
   stageFights: '/query/v1/stagefights',
   defaultFightResults: '/query/v1/defaultfightresults',
   categoryStages: '/query/v1/stages',
   registrationInfoQueryEndpoint: '/query/v1/reginfo',
-  fight: '/query/v1/fight',
   fightIdsBycategoryId: '/query/v1/fightsbycategories'
 };
 

@@ -105,13 +105,13 @@ proto.compservice.model.protobuf.CommandCallback.prototype.toObject = function(o
  */
 proto.compservice.model.protobuf.CommandCallback.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     correlationid: jspb.Message.getFieldWithDefault(msg, 2, ""),
     result: jspb.Message.getFieldWithDefault(msg, 3, 0),
     errorinfo: (f = msg.getErrorinfo()) && proto.compservice.model.protobuf.ErrorCallback.toObject(includeInstance, f),
     eventsList: jspb.Message.toObjectList(msg.getEventsList(),
     event_pb.Event.toObject, includeInstance),
-    command: (f = msg.getCommand()) && command_pb.Command.toObject(includeInstance, f)
+    command: (f = msg.getCommand()) && command_pb.Command.toObject(includeInstance, f),
+    numberofevents: jspb.Message.getFieldWithDefault(msg, 7, 0)
   };
 
   if (includeInstance) {
@@ -148,10 +148,6 @@ proto.compservice.model.protobuf.CommandCallback.deserializeBinaryFromReader = f
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setId(value);
-      break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
       msg.setCorrelationid(value);
@@ -174,6 +170,10 @@ proto.compservice.model.protobuf.CommandCallback.deserializeBinaryFromReader = f
       var value = new command_pb.Command;
       reader.readMessage(value,command_pb.Command.deserializeBinaryFromReader);
       msg.setCommand(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setNumberofevents(value);
       break;
     default:
       reader.skipField();
@@ -204,13 +204,6 @@ proto.compservice.model.protobuf.CommandCallback.prototype.serializeBinary = fun
  */
 proto.compservice.model.protobuf.CommandCallback.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getId();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getCorrelationid();
   if (f.length > 0) {
     writer.writeString(
@@ -249,24 +242,13 @@ proto.compservice.model.protobuf.CommandCallback.serializeBinaryToWriter = funct
       command_pb.Command.serializeBinaryToWriter
     );
   }
-};
-
-
-/**
- * optional string id = 1;
- * @return {string}
- */
-proto.compservice.model.protobuf.CommandCallback.prototype.getId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.compservice.model.protobuf.CommandCallback} returns this
- */
-proto.compservice.model.protobuf.CommandCallback.prototype.setId = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  f = message.getNumberofevents();
+  if (f !== 0) {
+    writer.writeInt32(
+      7,
+      f
+    );
+  }
 };
 
 
@@ -415,6 +397,24 @@ proto.compservice.model.protobuf.CommandCallback.prototype.clearCommand = functi
  */
 proto.compservice.model.protobuf.CommandCallback.prototype.hasCommand = function() {
   return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional int32 numberOfEvents = 7;
+ * @return {number}
+ */
+proto.compservice.model.protobuf.CommandCallback.prototype.getNumberofevents = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.compservice.model.protobuf.CommandCallback} returns this
+ */
+proto.compservice.model.protobuf.CommandCallback.prototype.setNumberofevents = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 

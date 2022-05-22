@@ -1,4 +1,4 @@
-import {Observable, of, of as observableOf} from 'rxjs';
+import {from, Observable, of, of as observableOf} from 'rxjs';
 
 import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
@@ -52,7 +52,9 @@ export class EventManagerEffects {
       EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
-    mergeMap((command: any) => this.infoService.sendCommandSync(command)),
+    mergeMap((command: any) => this.infoService.sendCommandSync(command).pipe(
+      mergeMap(from)
+    )),
     catchError(error => {
       console.error(error);
       return of(errorEvent(JSON.stringify(error)));

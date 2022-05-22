@@ -78,7 +78,8 @@ proto.compservice.model.protobuf.Event.toObject = function(includeInstance, msg)
     version: jspb.Message.getFieldWithDefault(msg, 2, 0),
     localeventnumber: jspb.Message.getFieldWithDefault(msg, 3, 0),
     type: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    messageinfo: (f = msg.getMessageinfo()) && common_pb.MessageInfo.toObject(includeInstance, f)
+    messageinfo: (f = msg.getMessageinfo()) && common_pb.MessageInfo.toObject(includeInstance, f),
+    numberofeventsinbatch: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -136,6 +137,10 @@ proto.compservice.model.protobuf.Event.deserializeBinaryFromReader = function(ms
       var value = new common_pb.MessageInfo;
       reader.readMessage(value,common_pb.MessageInfo.deserializeBinaryFromReader);
       msg.setMessageinfo(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setNumberofeventsinbatch(value);
       break;
     default:
       reader.skipField();
@@ -201,6 +206,13 @@ proto.compservice.model.protobuf.Event.serializeBinaryToWriter = function(messag
       5,
       f,
       common_pb.MessageInfo.serializeBinaryToWriter
+    );
+  }
+  f = message.getNumberofeventsinbatch();
+  if (f !== 0) {
+    writer.writeInt32(
+      6,
+      f
     );
   }
 };
@@ -331,6 +343,24 @@ proto.compservice.model.protobuf.Event.prototype.clearMessageinfo = function() {
  */
 proto.compservice.model.protobuf.Event.prototype.hasMessageinfo = function() {
   return jspb.Message.getField(this, 5) != null;
+};
+
+
+/**
+ * optional int32 numberOfEventsInBatch = 6;
+ * @return {number}
+ */
+proto.compservice.model.protobuf.Event.prototype.getNumberofeventsinbatch = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.compservice.model.protobuf.Event} returns this
+ */
+proto.compservice.model.protobuf.Event.prototype.setNumberofeventsinbatch = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 

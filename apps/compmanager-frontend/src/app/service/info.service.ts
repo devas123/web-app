@@ -1,5 +1,5 @@
-import {from, Observable, throwError, timer} from 'rxjs';
-import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
+import {Observable, of, throwError, timer} from 'rxjs';
+import {catchError, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -7,7 +7,7 @@ import {HttpAuthService} from '../modules/account/service/AuthService';
 import * as env from '../../environments/environment';
 import produce from 'immer';
 import * as allActions from '../actions/actions';
-import {CREATE_COMPETITION_COMMAND, errorEvent} from '../actions/actions';
+import {CREATE_COMPETITION_COMMAND} from '../actions/actions';
 import {Action} from '@ngrx/store';
 import {parseISO} from 'date-fns';
 import {format, utcToZonedTime} from 'date-fns-tz';
@@ -30,7 +30,8 @@ import {
   FightDescription,
   FightResultOption,
   GenerateBracketsPayload,
-  GenerateCategoriesFromRestrictionsPayload, GenerateCategoriesFromRestrictionsResponse,
+  GenerateCategoriesFromRestrictionsPayload,
+  GenerateCategoriesFromRestrictionsResponse,
   GenerateSchedulePayload,
   GetCompetitorsResponse,
   ManagedCompetition,
@@ -61,11 +62,13 @@ import {
   DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND,
   DASHBOARD_SET_FIGHT_RESULT_COMMAND
 } from "../modules/event-manager/redux/dashboard-actions";
+import {CommandCallback, CommandExecutionResult} from "../../../../../libs/protobuf/src/lib/callback";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
 const {
   commandsEndpoint,
+  commandsSyncEndpoint,
   generateCategoriesEndpoint,
   competitionQueryEndpoint,
   defaultRestrictions,
@@ -326,14 +329,15 @@ export class InfoService {
     let command = InfoService.createCommandWithPayload(action)
     command.messageInfo.competitionId = competitionId;
     command.messageInfo.id = id;
-    const encodedRequest = Command.encode(command).finish();
-    const userRequestArrayBuffer = InfoService.toBytes(encodedRequest);
-    return this.http.post(`${commandsEndpoint}?competitionId=${competitionId}`, userRequestArrayBuffer, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf'
-      })
-    });
+    return this.sendCommandSync(command)
+    // const encodedRequest = Command.encode(command).finish();
+    // const userRequestArrayBuffer = InfoService.toBytes(encodedRequest);
+    // return this.http.post(`${commandsEndpoint}?competitionId=${competitionId}`, userRequestArrayBuffer, {
+    //   headers: new HttpHeaders({
+    //     'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    //     'Content-Type': 'application/x-protobuf'
+    //   })
+    // });
   }
 
   private sendCommandToEndpoint(payload: Command, endpoint: string): Observable<any> {
@@ -550,27 +554,25 @@ export class InfoService {
       );
   }
 
-  sendCommandSync(command: Command): Observable<Action> {
+  sendCommandSync(command: Command): Observable<Action[]> {
     const id = generateUuid()
     const competitionId = command.messageInfo.competitionId;
-    const body = Command.encode({...command, messageInfo: {...command.messageInfo, competitionId, id}});
-    return this.http.post<Action[]>(`${commandsEndpoint}?competitionId=${competitionId}`, body, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf'
-      })
-    }).pipe(
-      timeout(this.defaultTimeout),
-      retryWhen(genericRetryStrategy()),
-      filter(events => events && events.length > 0),
-      mergeMap(events => from(events)),
-      map((ev: CommonAction) => produce(ev, draft => {
-        draft.payload = ev.payload;
-      })),
-      catchError(error => {
-        console.error(error);
-        return throwError(errorEvent(JSON.stringify(error)));
-      }));
+    return this.sendCommandToEndpoint({
+      ...command,
+      messageInfo: {...command.messageInfo, competitionId, id}
+    }, `${commandsSyncEndpoint}?competitionId=${competitionId}`)
+      .pipe(
+        map(callbackBytes => CommandCallback.decode(new Uint8Array(callbackBytes))),
+        tap(cc => console.log("Command callback: ",cc)),
+        mergeMap(callback => {
+          if (callback.result == CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS) {
+            return of(callback.events)
+          } else {
+            return throwError(callback.errorInfo)
+          }
+        }),
+        map(events => events.map(e => <Action>{...e}))
+      );
   }
 
   getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<FightDescription[]> {

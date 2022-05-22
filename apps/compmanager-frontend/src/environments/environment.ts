@@ -14,7 +14,7 @@ export const environment = {
   webSocketUrl: `/query/v1/ws`,
   commandsEndpoint: commands,
   generateCategoriesEndpoint: '/query/v1/generatecategories',
-  commandsSyncEndpoint: commands,
+  commandsSyncEndpoint: "/competition/scommand",
   competitionQueryEndpoint: '/query/v1/competition',
   competitorQueryEndpoint: '/query/v1/competitor',
   competitorEdpoint: '/query/v1/competitor',
