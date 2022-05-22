@@ -1,7 +1,7 @@
-import {from, Observable, of, throwError, timer} from 'rxjs';
+import {from, Observable, throwError, timer} from 'rxjs';
 import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import * as env from '../../environments/environment';
@@ -23,7 +23,8 @@ import {
   Command,
   CommandType,
   CompetitionProperties,
-  Competitor, CreateCompetitionPayload,
+  Competitor,
+  CreateCompetitionPayload,
   CreateFakeCompetitorsPayload,
   DeleteRegistrationPeriodPayload,
   FightDescription,
@@ -140,9 +141,11 @@ export class InfoService {
   }
 
   private httpGet(url: string, options: any, tmt = 60000): Observable<QueryServiceResponse> {
-    return this.http.get<ArrayBuffer>(url, {...options, responseType: 'arraybuffer', headers: {
+    return this.http.get<ArrayBuffer>(url, {
+      ...options, responseType: 'arraybuffer', headers: {
         Accept: 'application/x-protobuf'
-      }}).pipe(
+      }
+    }).pipe(
       timeout(tmt),
       retryWhen(genericRetryStrategy()),
       map(buff => QueryServiceResponse.decode(new Uint8Array(buff as any))),
@@ -493,7 +496,7 @@ export class InfoService {
 
   generatePreliminaryCategories(payload: GenerateCategoriesFromRestrictionsPayload, competitionId: string): Observable<any> {
     return this.sendByteArrayToEndpoint(`${generateCategoriesEndpoint}/${competitionId}`,
-      GenerateCategoriesFromRestrictionsPayload.encode(payload).finish(),
+      InfoService.toBytes(GenerateCategoriesFromRestrictionsPayload.encode(payload).finish()),
       this.defaultTimeout);
   }
 
