@@ -30,7 +30,7 @@ import {
   FightDescription,
   FightResultOption,
   GenerateBracketsPayload,
-  GenerateCategoriesFromRestrictionsPayload,
+  GenerateCategoriesFromRestrictionsPayload, GenerateCategoriesFromRestrictionsResponse,
   GenerateSchedulePayload,
   GetCompetitorsResponse,
   ManagedCompetition,
@@ -71,6 +71,21 @@ const {
   defaultRestrictions,
   defaultFightResults,
 } = env.environment;
+
+const normalizeCommand = (command: any) => {
+  return produce(command, draft => {
+    const oldPayload = draft.payload || {};
+    draft.payload = produce(oldPayload, pd => {
+      for (const key of Object.keys(draft)) {
+        if (InfoService.commandFields.indexOf(key) < 0) {
+          pd[key] = draft[key];
+          delete draft[key];
+        }
+      }
+    });
+  }) as any;
+};
+
 
 export const genericRetryStrategy = ({
                                        maxRetryAttempts = 3,
@@ -113,7 +128,7 @@ export class InfoService {
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  commandFields = [
+  static commandFields = [
     'payload',
     'type',
     'correlationId',
@@ -321,20 +336,6 @@ export class InfoService {
     });
   }
 
-  // normalizeCommand = (command: Command) => {
-  //   return produce(command, draft => {
-  //     const oldPayload = draft.payload || {};
-  //     draft.payload = produce(oldPayload, pd => {
-  //       for (const key of Object.keys(draft)) {
-  //         if (this.commandFields.indexOf(key) < 0) {
-  //           pd[key] = draft[key];
-  //           delete draft[key];
-  //         }
-  //       }
-  //     });
-  //   });
-  // };
-
   private sendCommandToEndpoint(payload: Command, endpoint: string): Observable<any> {
     const body = Command.encode(payload).finish();
     const userRequestArrayBuffer = InfoService.toBytes(body);
@@ -344,9 +345,11 @@ export class InfoService {
 
   private sendByteArrayToEndpoint(endpoint: string, body: ArrayBuffer, tmt: number) {
     return this.http.post(endpoint, body, {
+      responseType: 'arraybuffer',
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf'
+        'Content-Type': 'application/x-protobuf',
+        'Accept': 'application/x-protobuf'
       })
     }).pipe(
       timeout(tmt),
@@ -358,7 +361,8 @@ export class InfoService {
     );
   }
 
-  static createCommandWithPayload(action: any): Command {
+  static createCommandWithPayload(rawAction: any): Command {
+    const action = normalizeCommand(rawAction)
     let messageInfo = <MessageInfo>{
       competitionId: action.competitionId,
       categoryId: action.categoryId,
@@ -494,10 +498,14 @@ export class InfoService {
 
   private defaultTimeout = 15000;
 
-  generatePreliminaryCategories(payload: GenerateCategoriesFromRestrictionsPayload, competitionId: string): Observable<any> {
+  generatePreliminaryCategories(payload: GenerateCategoriesFromRestrictionsPayload, competitionId: string): Observable<GenerateCategoriesFromRestrictionsResponse> {
     return this.sendByteArrayToEndpoint(`${generateCategoriesEndpoint}/${competitionId}`,
       InfoService.toBytes(GenerateCategoriesFromRestrictionsPayload.encode(payload).finish()),
-      this.defaultTimeout);
+      this.defaultTimeout)
+      .pipe(
+        map(buff => QueryServiceResponse.decode(new Uint8Array(buff as any))),
+        map(qsResponse => qsResponse.generateCategoriesFromRestrictionsResponse),
+      );
   }
 
   getPeriodMats(competitionId: any, periodId: any): Observable<MatsQueryResult> {

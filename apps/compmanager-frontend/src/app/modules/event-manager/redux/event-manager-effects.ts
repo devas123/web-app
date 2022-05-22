@@ -134,7 +134,7 @@ export class EventManagerEffects {
       payload.restrictions = commandAsAny.restrictions;
       payload.restrictionNames = commandAsAny.restrictionNames;
       return this.infoService.generatePreliminaryCategories(payload, command.competitionId).pipe(
-        map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response }))
+        map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response.categories }))
       )
     }),
   ));
