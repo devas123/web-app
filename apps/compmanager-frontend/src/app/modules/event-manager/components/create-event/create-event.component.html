@@ -2,9 +2,24 @@
   <div class="ui basic segment">
     <div class="field"
          [ngClass]="{error: competitionName.invalid && (competitionName.touched || competitionName.dirty)}">
+      <div class="ui label">
+        Competition Name
+      </div>
       <div class="ui input">
         <input type="text" id="competitionName" placeholder="Competition Name" formControlName="competitionName"
                required>
+      </div>
+    </div>
+    <div class="field"
+         [ngClass]="{error: startDate.invalid && (startDate.touched || startDate.dirty)}">
+      <div class="ui label">
+        Start date
+      </div>
+      <div class="ui input small">
+        <input suiDatepicker
+               name="startDate"
+               (pickerSelectedDateChange)="setStartDate($event)"
+               [pickerFirstDayOfWeek]="1">
       </div>
     </div>
     <!--<div class="field"-->
@@ -15,12 +30,8 @@
     <!--</div>-->
     <!--</div>-->
     <div class="field">
-      <div class="ui checkbox">
-
-        <label for="registrationOpen">
-          <input id="registrationOpen" type="checkbox" formControlName="registrationOpen">
-          Registration open?</label>
-      </div>
+      <label for="registrationOpen">
+        <sui-checkbox id="registrationOpen" type="checkbox" formControlName="registrationOpen">Registration open?</sui-checkbox></label>
     </div>
     <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
       Create

@@ -83,11 +83,15 @@ import {
 import {generateUuid} from "../modules/account/utils";
 import {
   CategoryDescriptor,
-  CompetitionProperties, Competitor, FightDescription,
+  CompetitionProperties,
+  Competitor,
+  FightDescription,
   FightResultOption,
-  MatDescription, Period,
+  ManagedCompetition,
+  MatDescription,
+  Period,
   RegistrationInfo,
-  Schedule, ScheduleRequirement
+  ScheduleRequirement
 } from "@frontend-nx/protobuf";
 
 export interface AppState {
@@ -137,12 +141,12 @@ export interface CompetitionState {
   registrationInfo: RegistrationInfo;
 }
 
-export const competitionPropertiesEntitiesAdapter: EntityAdapter<CompetitionProperties> = createEntityAdapter<CompetitionProperties>({
-  selectId: (competitionProperties: CompetitionProperties) => competitionProperties.id,
+export const competitionPropertiesEntitiesAdapter: EntityAdapter<ManagedCompetition> = createEntityAdapter<ManagedCompetition>({
+  selectId: (competitionProperties: ManagedCompetition) => competitionProperties.id,
   sortComparer: false
 });
 
-export interface EventPropsEntities extends EntityState<CompetitionProperties> {
+export interface EventPropsEntities extends EntityState<ManagedCompetition> {
   selectedEventId: string | null;
 }
 

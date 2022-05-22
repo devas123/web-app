@@ -34,7 +34,14 @@ import {
   loadCategories
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Dictionary} from '@ngrx/entity';
-import {CompetitionProperties, Competitor, FightDescription, RegistrationInfo, Schedule} from "@frontend-nx/protobuf";
+import {
+  CompetitionProperties,
+  Competitor,
+  FightDescription,
+  ManagedCompetition,
+  RegistrationInfo,
+  Schedule
+} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class Effects {
@@ -46,7 +53,7 @@ export class Effects {
   getCompetitions$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.LOAD_COMPETITIONS_LIST),
     switchMap(() =>
       this.infoService.getCompetitions(null, 'PUBLISHED').pipe(
-        map((payload: CompetitionProperties[]) => {
+        map((payload: ManagedCompetition[]) => {
           return allActions.competitionsLoaded(payload);
         }),
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
@@ -76,10 +83,13 @@ export class Effects {
       eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
       allActions.PUBLISH_COMPETITION_COMMAND,
       allActions.UNPUBLISH_COMPETITION_COMMAND),
-    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId))), {dispatch: false});
+    mergeMap((action: CommonAction) => {
+      let cmd = InfoService.createCommandWithPayload(action)
+      return this.infoService.sendCommand(cmd, action.competitionId)
+    })), {dispatch: false});
 
   createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
-    tap(command => this.infoService.sendCreateCompetitionCommand(command).subscribe())), {dispatch: false});
+    tap(action => this.infoService.sendCreateCompetitionCommand(action).subscribe())), {dispatch: false});
 
 
   competitionSelected$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(COMPETITION_SELECTED),
@@ -171,8 +181,8 @@ export class Effects {
       return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString)
         .pipe(
           map(response => {
-            if (response.total != null && response.page != null && response.competitionId) {
-              return eventManagerFightersForCompetitionLoaded(response.competitionId, response, replace);
+            if (response.pageInfo.total != null && response.pageInfo.page != null) {
+              return eventManagerFightersForCompetitionLoaded(competitionId, response, replace);
             } else {
               return errorEvent('Error occured while loading: ' + JSON.stringify(response));
             }

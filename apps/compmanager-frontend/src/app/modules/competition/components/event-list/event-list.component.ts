@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
+import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -11,5 +11,5 @@ import {CompetitionProperties} from "@frontend-nx/protobuf";
 export class EventListComponent  {
 
   @Input()
-  events: CompetitionProperties[];
+  events: ManagedCompetition[];
 }

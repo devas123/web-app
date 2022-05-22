@@ -8,7 +8,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
+import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-my-events-list',
@@ -19,7 +19,7 @@ import {CompetitionProperties} from "@frontend-nx/protobuf";
 export class MyEventsListComponent implements OnInit, AfterViewInit {
 
   @Input()
-  events: CompetitionProperties[];
+  events: ManagedCompetition[];
 
   @Output()
   editCategoriesPressed: EventEmitter<string> = new EventEmitter<string>();
@@ -29,13 +29,13 @@ export class MyEventsListComponent implements OnInit, AfterViewInit {
   editEventPressed: EventEmitter<string> = new EventEmitter<string>();
 
   @Output()
-  eventDeleted: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
+  eventDeleted: EventEmitter<ManagedCompetition> = new EventEmitter<ManagedCompetition>();
 
   @Output()
-  eventPublished: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
+  eventPublished: EventEmitter<ManagedCompetition> = new EventEmitter<ManagedCompetition>();
 
   @Output()
-  eventUnpublished: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
+  eventUnpublished: EventEmitter<ManagedCompetition> = new EventEmitter<ManagedCompetition>();
 
 
   loaded = false;
@@ -56,15 +56,15 @@ export class MyEventsListComponent implements OnInit, AfterViewInit {
     this.cd.detach();
   }
 
-  deleteEvent(event: CompetitionProperties) {
+  deleteEvent(event: ManagedCompetition) {
     this.eventDeleted.next(event);
   }
 
-  publishEvent(event: CompetitionProperties) {
+  publishEvent(event: ManagedCompetition) {
     this.eventPublished.next(event);
   }
 
-  unpublishEvent(event: CompetitionProperties) {
+  unpublishEvent(event: ManagedCompetition) {
     this.eventUnpublished.next(event);
   }
 

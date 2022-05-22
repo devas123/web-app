@@ -3,6 +3,7 @@ import {AddFighterComponent} from '../../modules/event-manager/components/add-fi
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {CategoryDescriptor, MatDescription, Period, Schedule, ScheduleEntryType} from "@frontend-nx/protobuf";
+import {InternalScheduleState} from "../../reducers/global-reducers";
 
 @Component({
   selector: 'app-schedule-display',
@@ -75,7 +76,7 @@ export class ScheduleDisplayComponent  {
   categories: CategoryDescriptor[];
 
   @Input()
-  schedule: Schedule;
+  schedule: InternalScheduleState;
 
   @Input()
   schedulePeriods: Period[];

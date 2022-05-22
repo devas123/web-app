@@ -60,227 +60,148 @@ import {
 } from './eventpayload';
 
 export interface MessageInfo {
-  id: string;
-  correlationId: string;
-  competitionId: string;
-  competitorId: string;
-  categoryId: string;
-  matId: string;
-  payload?:
-    | { $case: 'addAcademyPayload'; addAcademyPayload: AddAcademyPayload }
-    | { $case: 'addCategoryPayload'; addCategoryPayload: AddCategoryPayload }
-    | {
-        $case: 'addCompetitorPayload';
-        addCompetitorPayload: AddCompetitorPayload;
-      }
-    | {
-        $case: 'addRegistrationGroupPayload';
-        addRegistrationGroupPayload: AddRegistrationGroupPayload;
-      }
-    | {
-        $case: 'addRegistrationPeriodPayload';
-        addRegistrationPeriodPayload: AddRegistrationPeriodPayload;
-      }
-    | {
-        $case: 'assignRegistrationGroupCategoriesPayload';
-        assignRegistrationGroupCategoriesPayload: AssignRegistrationGroupCategoriesPayload;
-      }
-    | {
-        $case: 'categoryRegistrationStatusChangePayload';
-        categoryRegistrationStatusChangePayload: CategoryRegistrationStatusChangePayload;
-      }
-    | {
-        $case: 'changeCompetitorCategoryPayload';
-        changeCompetitorCategoryPayload: ChangeCompetitorCategoryPayload;
-      }
-    | {
-        $case: 'changeFightOrderPayload';
-        changeFightOrderPayload: ChangeFightOrderPayload;
-      }
-    | {
-        $case: 'competitorCategoryAddedPayload';
-        competitorCategoryAddedPayload: CompetitorCategoryAddedPayload;
-      }
-    | {
-        $case: 'createCompetitionPayload';
-        createCompetitionPayload: CreateCompetitionPayload;
-      }
-    | {
-        $case: 'createFakeCompetitorsPayload';
-        createFakeCompetitorsPayload: CreateFakeCompetitorsPayload;
-      }
-    | {
-        $case: 'deleteRegistrationGroupPayload';
-        deleteRegistrationGroupPayload: DeleteRegistrationGroupPayload;
-      }
-    | {
-        $case: 'deleteRegistrationPeriodPayload';
-        deleteRegistrationPeriodPayload: DeleteRegistrationPeriodPayload;
-      }
-    | {
-        $case: 'fightEditorApplyChangesPayload';
-        fightEditorApplyChangesPayload: FightEditorApplyChangesPayload;
-      }
-    | {
-        $case: 'generateAbsoluteCategoryPayload';
-        generateAbsoluteCategoryPayload: GenerateAbsoluteCategoryPayload;
-      }
-    | {
-        $case: 'generateBracketsPayload';
-        generateBracketsPayload: GenerateBracketsPayload;
-      }
-    | {
-        $case: 'generateCategoriesFromRestrictionsPayload';
-        generateCategoriesFromRestrictionsPayload: GenerateCategoriesFromRestrictionsPayload;
-      }
-    | {
-        $case: 'generateSchedulePayload';
-        generateSchedulePayload: GenerateSchedulePayload;
-      }
-    | {
-        $case: 'propagateCompetitorsPayload';
-        propagateCompetitorsPayload: PropagateCompetitorsPayload;
-      }
-    | {
-        $case: 'registrationPeriodAddRegistrationGroupPayload';
-        registrationPeriodAddRegistrationGroupPayload: RegistrationPeriodAddRegistrationGroupPayload;
-      }
-    | {
-        $case: 'removeAcademyPayload';
-        removeAcademyPayload: RemoveAcademyPayload;
-      }
-    | {
-        $case: 'removeCompetitorPayload';
-        removeCompetitorPayload: RemoveCompetitorPayload;
-      }
-    | {
-        $case: 'setFightResultPayload';
-        setFightResultPayload: SetFightResultPayload;
-      }
-    | {
-        $case: 'updateAcademyPayload';
-        updateAcademyPayload: UpdateAcademyPayload;
-      }
-    | {
-        $case: 'updateCompetionPropertiesPayload';
-        updateCompetionPropertiesPayload: UpdateCompetionPropertiesPayload;
-      }
-    | {
-        $case: 'updateCompetitorPayload';
-        updateCompetitorPayload: UpdateCompetitorPayload;
-      }
-    | {
-        $case: 'updateRegistrationInfoPayload';
-        updateRegistrationInfoPayload: UpdateRegistrationInfoPayload;
-      }
-    | {
-        $case: 'updateStageStatusPayload';
-        updateStageStatusPayload: UpdateStageStatusPayload;
-      }
-    | {
-        $case: 'bracketsGeneratedPayload';
-        bracketsGeneratedPayload: BracketsGeneratedPayload;
-      }
-    | {
-        $case: 'categoryAddedPayload';
-        categoryAddedPayload: CategoryAddedPayload;
-      }
-    | {
-        $case: 'competitionCreatedPayload';
-        competitionCreatedPayload: CompetitionCreatedPayload;
-      }
-    | {
-        $case: 'competitionInfoPayload';
-        competitionInfoPayload: CompetitionInfoPayload;
-      }
-    | {
-        $case: 'competitionPropertiesUpdatedPayload';
-        competitionPropertiesUpdatedPayload: CompetitionPropertiesUpdatedPayload;
-      }
-    | {
-        $case: 'competitionStatusUpdatedPayload';
-        competitionStatusUpdatedPayload: CompetitionStatusUpdatedPayload;
-      }
-    | {
-        $case: 'competitorAddedPayload';
-        competitorAddedPayload: CompetitorAddedPayload;
-      }
-    | {
-        $case: 'competitorRemovedPayload';
-        competitorRemovedPayload: CompetitorRemovedPayload;
-      }
-    | {
-        $case: 'competitorsPropagatedToStagePayload';
-        competitorsPropagatedToStagePayload: CompetitorsPropagatedToStagePayload;
-      }
-    | {
-        $case: 'competitorUpdatedPayload';
-        competitorUpdatedPayload: CompetitorUpdatedPayload;
-      }
-    | {
-        $case: 'fightCompetitorsAssignedPayload';
-        fightCompetitorsAssignedPayload: FightCompetitorsAssignedPayload;
-      }
-    | {
-        $case: 'fightEditorChangesAppliedPayload';
-        fightEditorChangesAppliedPayload: FightEditorChangesAppliedPayload;
-      }
-    | {
-        $case: 'fightsAddedToStagePayload';
-        fightsAddedToStagePayload: FightsAddedToStagePayload;
-      }
-    | {
-        $case: 'fightStartTimeUpdatedPayload';
-        fightStartTimeUpdatedPayload: FightStartTimeUpdatedPayload;
-      }
-    | { $case: 'matsUpdatedPayload'; matsUpdatedPayload: MatsUpdatedPayload }
-    | {
-        $case: 'registrationGroupAddedPayload';
-        registrationGroupAddedPayload: RegistrationGroupAddedPayload;
-      }
-    | {
-        $case: 'registrationGroupCategoriesAssignedPayload';
-        registrationGroupCategoriesAssignedPayload: RegistrationGroupCategoriesAssignedPayload;
-      }
-    | {
-        $case: 'registrationGroupDeletedPayload';
-        registrationGroupDeletedPayload: RegistrationGroupDeletedPayload;
-      }
-    | {
-        $case: 'registrationInfoUpdatedPayload';
-        registrationInfoUpdatedPayload: RegistrationInfoUpdatedPayload;
-      }
-    | {
-        $case: 'registrationPeriodAddedPayload';
-        registrationPeriodAddedPayload: RegistrationPeriodAddedPayload;
-      }
-    | {
-        $case: 'registrationPeriodDeletedPayload';
-        registrationPeriodDeletedPayload: RegistrationPeriodDeletedPayload;
-      }
-    | {
-        $case: 'scheduleGeneratedPayload';
-        scheduleGeneratedPayload: ScheduleGeneratedPayload;
-      }
-    | {
-        $case: 'stageResultSetPayload';
-        stageResultSetPayload: StageResultSetPayload;
-      }
-    | {
-        $case: 'stageStatusUpdatedPayload';
-        stageStatusUpdatedPayload: StageStatusUpdatedPayload;
-      };
+  id?: string | undefined;
+  correlationId?: string | undefined;
+  competitionId?: string | undefined;
+  competitorId?: string | undefined;
+  categoryId?: string | undefined;
+  matId?: string | undefined;
+  addAcademyPayload?: AddAcademyPayload | undefined;
+  addCategoryPayload?: AddCategoryPayload | undefined;
+  addCompetitorPayload?: AddCompetitorPayload | undefined;
+  addRegistrationGroupPayload?: AddRegistrationGroupPayload | undefined;
+  addRegistrationPeriodPayload?: AddRegistrationPeriodPayload | undefined;
+  assignRegistrationGroupCategoriesPayload?:
+    | AssignRegistrationGroupCategoriesPayload
+    | undefined;
+  categoryRegistrationStatusChangePayload?:
+    | CategoryRegistrationStatusChangePayload
+    | undefined;
+  changeCompetitorCategoryPayload?: ChangeCompetitorCategoryPayload | undefined;
+  changeFightOrderPayload?: ChangeFightOrderPayload | undefined;
+  competitorCategoryAddedPayload?: CompetitorCategoryAddedPayload | undefined;
+  createCompetitionPayload?: CreateCompetitionPayload | undefined;
+  createFakeCompetitorsPayload?: CreateFakeCompetitorsPayload | undefined;
+  deleteRegistrationGroupPayload?: DeleteRegistrationGroupPayload | undefined;
+  deleteRegistrationPeriodPayload?: DeleteRegistrationPeriodPayload | undefined;
+  fightEditorApplyChangesPayload?: FightEditorApplyChangesPayload | undefined;
+  generateAbsoluteCategoryPayload?: GenerateAbsoluteCategoryPayload | undefined;
+  generateBracketsPayload?: GenerateBracketsPayload | undefined;
+  generateCategoriesFromRestrictionsPayload?:
+    | GenerateCategoriesFromRestrictionsPayload
+    | undefined;
+  generateSchedulePayload?: GenerateSchedulePayload | undefined;
+  propagateCompetitorsPayload?: PropagateCompetitorsPayload | undefined;
+  registrationPeriodAddRegistrationGroupPayload?:
+    | RegistrationPeriodAddRegistrationGroupPayload
+    | undefined;
+  removeAcademyPayload?: RemoveAcademyPayload | undefined;
+  removeCompetitorPayload?: RemoveCompetitorPayload | undefined;
+  setFightResultPayload?: SetFightResultPayload | undefined;
+  updateAcademyPayload?: UpdateAcademyPayload | undefined;
+  updateCompetionPropertiesPayload?:
+    | UpdateCompetionPropertiesPayload
+    | undefined;
+  updateCompetitorPayload?: UpdateCompetitorPayload | undefined;
+  updateRegistrationInfoPayload?: UpdateRegistrationInfoPayload | undefined;
+  updateStageStatusPayload?: UpdateStageStatusPayload | undefined;
+  bracketsGeneratedPayload?: BracketsGeneratedPayload | undefined;
+  categoryAddedPayload?: CategoryAddedPayload | undefined;
+  competitionCreatedPayload?: CompetitionCreatedPayload | undefined;
+  competitionInfoPayload?: CompetitionInfoPayload | undefined;
+  competitionPropertiesUpdatedPayload?:
+    | CompetitionPropertiesUpdatedPayload
+    | undefined;
+  competitionStatusUpdatedPayload?: CompetitionStatusUpdatedPayload | undefined;
+  competitorAddedPayload?: CompetitorAddedPayload | undefined;
+  competitorRemovedPayload?: CompetitorRemovedPayload | undefined;
+  competitorsPropagatedToStagePayload?:
+    | CompetitorsPropagatedToStagePayload
+    | undefined;
+  competitorUpdatedPayload?: CompetitorUpdatedPayload | undefined;
+  fightCompetitorsAssignedPayload?: FightCompetitorsAssignedPayload | undefined;
+  fightEditorChangesAppliedPayload?:
+    | FightEditorChangesAppliedPayload
+    | undefined;
+  fightsAddedToStagePayload?: FightsAddedToStagePayload | undefined;
+  fightStartTimeUpdatedPayload?: FightStartTimeUpdatedPayload | undefined;
+  matsUpdatedPayload?: MatsUpdatedPayload | undefined;
+  registrationGroupAddedPayload?: RegistrationGroupAddedPayload | undefined;
+  registrationGroupCategoriesAssignedPayload?:
+    | RegistrationGroupCategoriesAssignedPayload
+    | undefined;
+  registrationGroupDeletedPayload?: RegistrationGroupDeletedPayload | undefined;
+  registrationInfoUpdatedPayload?: RegistrationInfoUpdatedPayload | undefined;
+  registrationPeriodAddedPayload?: RegistrationPeriodAddedPayload | undefined;
+  registrationPeriodDeletedPayload?:
+    | RegistrationPeriodDeletedPayload
+    | undefined;
+  scheduleGeneratedPayload?: ScheduleGeneratedPayload | undefined;
+  stageResultSetPayload?: StageResultSetPayload | undefined;
+  stageStatusUpdatedPayload?: StageStatusUpdatedPayload | undefined;
 }
 
 function createBaseMessageInfo(): MessageInfo {
   return {
-    id: '',
-    correlationId: '',
-    competitionId: '',
-    competitorId: '',
-    categoryId: '',
-    matId: '',
-    payload: undefined,
+    id: undefined,
+    correlationId: undefined,
+    competitionId: undefined,
+    competitorId: undefined,
+    categoryId: undefined,
+    matId: undefined,
+    addAcademyPayload: undefined,
+    addCategoryPayload: undefined,
+    addCompetitorPayload: undefined,
+    addRegistrationGroupPayload: undefined,
+    addRegistrationPeriodPayload: undefined,
+    assignRegistrationGroupCategoriesPayload: undefined,
+    categoryRegistrationStatusChangePayload: undefined,
+    changeCompetitorCategoryPayload: undefined,
+    changeFightOrderPayload: undefined,
+    competitorCategoryAddedPayload: undefined,
+    createCompetitionPayload: undefined,
+    createFakeCompetitorsPayload: undefined,
+    deleteRegistrationGroupPayload: undefined,
+    deleteRegistrationPeriodPayload: undefined,
+    fightEditorApplyChangesPayload: undefined,
+    generateAbsoluteCategoryPayload: undefined,
+    generateBracketsPayload: undefined,
+    generateCategoriesFromRestrictionsPayload: undefined,
+    generateSchedulePayload: undefined,
+    propagateCompetitorsPayload: undefined,
+    registrationPeriodAddRegistrationGroupPayload: undefined,
+    removeAcademyPayload: undefined,
+    removeCompetitorPayload: undefined,
+    setFightResultPayload: undefined,
+    updateAcademyPayload: undefined,
+    updateCompetionPropertiesPayload: undefined,
+    updateCompetitorPayload: undefined,
+    updateRegistrationInfoPayload: undefined,
+    updateStageStatusPayload: undefined,
+    bracketsGeneratedPayload: undefined,
+    categoryAddedPayload: undefined,
+    competitionCreatedPayload: undefined,
+    competitionInfoPayload: undefined,
+    competitionPropertiesUpdatedPayload: undefined,
+    competitionStatusUpdatedPayload: undefined,
+    competitorAddedPayload: undefined,
+    competitorRemovedPayload: undefined,
+    competitorsPropagatedToStagePayload: undefined,
+    competitorUpdatedPayload: undefined,
+    fightCompetitorsAssignedPayload: undefined,
+    fightEditorChangesAppliedPayload: undefined,
+    fightsAddedToStagePayload: undefined,
+    fightStartTimeUpdatedPayload: undefined,
+    matsUpdatedPayload: undefined,
+    registrationGroupAddedPayload: undefined,
+    registrationGroupCategoriesAssignedPayload: undefined,
+    registrationGroupDeletedPayload: undefined,
+    registrationInfoUpdatedPayload: undefined,
+    registrationPeriodAddedPayload: undefined,
+    registrationPeriodDeletedPayload: undefined,
+    scheduleGeneratedPayload: undefined,
+    stageResultSetPayload: undefined,
+    stageStatusUpdatedPayload: undefined,
   };
 }
 
@@ -289,345 +210,339 @@ export const MessageInfo = {
     message: MessageInfo,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== '') {
+    if (message.id !== undefined) {
       writer.uint32(10).string(message.id);
     }
-    if (message.correlationId !== '') {
+    if (message.correlationId !== undefined) {
       writer.uint32(18).string(message.correlationId);
     }
-    if (message.competitionId !== '') {
+    if (message.competitionId !== undefined) {
       writer.uint32(26).string(message.competitionId);
     }
-    if (message.competitorId !== '') {
+    if (message.competitorId !== undefined) {
       writer.uint32(34).string(message.competitorId);
     }
-    if (message.categoryId !== '') {
+    if (message.categoryId !== undefined) {
       writer.uint32(42).string(message.categoryId);
     }
-    if (message.matId !== '') {
+    if (message.matId !== undefined) {
       writer.uint32(50).string(message.matId);
     }
-    if (message.payload?.$case === 'addAcademyPayload') {
+    if (message.addAcademyPayload !== undefined) {
       AddAcademyPayload.encode(
-        message.payload.addAcademyPayload,
+        message.addAcademyPayload,
         writer.uint32(90).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'addCategoryPayload') {
+    if (message.addCategoryPayload !== undefined) {
       AddCategoryPayload.encode(
-        message.payload.addCategoryPayload,
+        message.addCategoryPayload,
         writer.uint32(98).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'addCompetitorPayload') {
+    if (message.addCompetitorPayload !== undefined) {
       AddCompetitorPayload.encode(
-        message.payload.addCompetitorPayload,
+        message.addCompetitorPayload,
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'addRegistrationGroupPayload') {
+    if (message.addRegistrationGroupPayload !== undefined) {
       AddRegistrationGroupPayload.encode(
-        message.payload.addRegistrationGroupPayload,
+        message.addRegistrationGroupPayload,
         writer.uint32(114).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'addRegistrationPeriodPayload') {
+    if (message.addRegistrationPeriodPayload !== undefined) {
       AddRegistrationPeriodPayload.encode(
-        message.payload.addRegistrationPeriodPayload,
+        message.addRegistrationPeriodPayload,
         writer.uint32(122).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'assignRegistrationGroupCategoriesPayload') {
+    if (message.assignRegistrationGroupCategoriesPayload !== undefined) {
       AssignRegistrationGroupCategoriesPayload.encode(
-        message.payload.assignRegistrationGroupCategoriesPayload,
+        message.assignRegistrationGroupCategoriesPayload,
         writer.uint32(130).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'categoryRegistrationStatusChangePayload') {
+    if (message.categoryRegistrationStatusChangePayload !== undefined) {
       CategoryRegistrationStatusChangePayload.encode(
-        message.payload.categoryRegistrationStatusChangePayload,
+        message.categoryRegistrationStatusChangePayload,
         writer.uint32(138).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'changeCompetitorCategoryPayload') {
+    if (message.changeCompetitorCategoryPayload !== undefined) {
       ChangeCompetitorCategoryPayload.encode(
-        message.payload.changeCompetitorCategoryPayload,
+        message.changeCompetitorCategoryPayload,
         writer.uint32(146).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'changeFightOrderPayload') {
+    if (message.changeFightOrderPayload !== undefined) {
       ChangeFightOrderPayload.encode(
-        message.payload.changeFightOrderPayload,
+        message.changeFightOrderPayload,
         writer.uint32(154).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitorCategoryAddedPayload') {
+    if (message.competitorCategoryAddedPayload !== undefined) {
       CompetitorCategoryAddedPayload.encode(
-        message.payload.competitorCategoryAddedPayload,
+        message.competitorCategoryAddedPayload,
         writer.uint32(882).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'createCompetitionPayload') {
+    if (message.createCompetitionPayload !== undefined) {
       CreateCompetitionPayload.encode(
-        message.payload.createCompetitionPayload,
+        message.createCompetitionPayload,
         writer.uint32(890).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'createFakeCompetitorsPayload') {
+    if (message.createFakeCompetitorsPayload !== undefined) {
       CreateFakeCompetitorsPayload.encode(
-        message.payload.createFakeCompetitorsPayload,
+        message.createFakeCompetitorsPayload,
         writer.uint32(898).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'deleteRegistrationGroupPayload') {
+    if (message.deleteRegistrationGroupPayload !== undefined) {
       DeleteRegistrationGroupPayload.encode(
-        message.payload.deleteRegistrationGroupPayload,
+        message.deleteRegistrationGroupPayload,
         writer.uint32(906).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'deleteRegistrationPeriodPayload') {
+    if (message.deleteRegistrationPeriodPayload !== undefined) {
       DeleteRegistrationPeriodPayload.encode(
-        message.payload.deleteRegistrationPeriodPayload,
+        message.deleteRegistrationPeriodPayload,
         writer.uint32(914).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'fightEditorApplyChangesPayload') {
+    if (message.fightEditorApplyChangesPayload !== undefined) {
       FightEditorApplyChangesPayload.encode(
-        message.payload.fightEditorApplyChangesPayload,
+        message.fightEditorApplyChangesPayload,
         writer.uint32(922).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'generateAbsoluteCategoryPayload') {
+    if (message.generateAbsoluteCategoryPayload !== undefined) {
       GenerateAbsoluteCategoryPayload.encode(
-        message.payload.generateAbsoluteCategoryPayload,
+        message.generateAbsoluteCategoryPayload,
         writer.uint32(930).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'generateBracketsPayload') {
+    if (message.generateBracketsPayload !== undefined) {
       GenerateBracketsPayload.encode(
-        message.payload.generateBracketsPayload,
+        message.generateBracketsPayload,
         writer.uint32(938).fork()
       ).ldelim();
     }
-    if (
-      message.payload?.$case === 'generateCategoriesFromRestrictionsPayload'
-    ) {
+    if (message.generateCategoriesFromRestrictionsPayload !== undefined) {
       GenerateCategoriesFromRestrictionsPayload.encode(
-        message.payload.generateCategoriesFromRestrictionsPayload,
+        message.generateCategoriesFromRestrictionsPayload,
         writer.uint32(946).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'generateSchedulePayload') {
+    if (message.generateSchedulePayload !== undefined) {
       GenerateSchedulePayload.encode(
-        message.payload.generateSchedulePayload,
+        message.generateSchedulePayload,
         writer.uint32(954).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'propagateCompetitorsPayload') {
+    if (message.propagateCompetitorsPayload !== undefined) {
       PropagateCompetitorsPayload.encode(
-        message.payload.propagateCompetitorsPayload,
+        message.propagateCompetitorsPayload,
         writer.uint32(962).fork()
       ).ldelim();
     }
-    if (
-      message.payload?.$case === 'registrationPeriodAddRegistrationGroupPayload'
-    ) {
+    if (message.registrationPeriodAddRegistrationGroupPayload !== undefined) {
       RegistrationPeriodAddRegistrationGroupPayload.encode(
-        message.payload.registrationPeriodAddRegistrationGroupPayload,
+        message.registrationPeriodAddRegistrationGroupPayload,
         writer.uint32(970).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'removeAcademyPayload') {
+    if (message.removeAcademyPayload !== undefined) {
       RemoveAcademyPayload.encode(
-        message.payload.removeAcademyPayload,
+        message.removeAcademyPayload,
         writer.uint32(978).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'removeCompetitorPayload') {
+    if (message.removeCompetitorPayload !== undefined) {
       RemoveCompetitorPayload.encode(
-        message.payload.removeCompetitorPayload,
+        message.removeCompetitorPayload,
         writer.uint32(986).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'setFightResultPayload') {
+    if (message.setFightResultPayload !== undefined) {
       SetFightResultPayload.encode(
-        message.payload.setFightResultPayload,
+        message.setFightResultPayload,
         writer.uint32(994).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'updateAcademyPayload') {
+    if (message.updateAcademyPayload !== undefined) {
       UpdateAcademyPayload.encode(
-        message.payload.updateAcademyPayload,
+        message.updateAcademyPayload,
         writer.uint32(1002).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'updateCompetionPropertiesPayload') {
+    if (message.updateCompetionPropertiesPayload !== undefined) {
       UpdateCompetionPropertiesPayload.encode(
-        message.payload.updateCompetionPropertiesPayload,
+        message.updateCompetionPropertiesPayload,
         writer.uint32(1010).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'updateCompetitorPayload') {
+    if (message.updateCompetitorPayload !== undefined) {
       UpdateCompetitorPayload.encode(
-        message.payload.updateCompetitorPayload,
+        message.updateCompetitorPayload,
         writer.uint32(1018).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'updateRegistrationInfoPayload') {
+    if (message.updateRegistrationInfoPayload !== undefined) {
       UpdateRegistrationInfoPayload.encode(
-        message.payload.updateRegistrationInfoPayload,
+        message.updateRegistrationInfoPayload,
         writer.uint32(1026).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'updateStageStatusPayload') {
+    if (message.updateStageStatusPayload !== undefined) {
       UpdateStageStatusPayload.encode(
-        message.payload.updateStageStatusPayload,
+        message.updateStageStatusPayload,
         writer.uint32(1034).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'bracketsGeneratedPayload') {
+    if (message.bracketsGeneratedPayload !== undefined) {
       BracketsGeneratedPayload.encode(
-        message.payload.bracketsGeneratedPayload,
+        message.bracketsGeneratedPayload,
         writer.uint32(170).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'categoryAddedPayload') {
+    if (message.categoryAddedPayload !== undefined) {
       CategoryAddedPayload.encode(
-        message.payload.categoryAddedPayload,
+        message.categoryAddedPayload,
         writer.uint32(178).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitionCreatedPayload') {
+    if (message.competitionCreatedPayload !== undefined) {
       CompetitionCreatedPayload.encode(
-        message.payload.competitionCreatedPayload,
+        message.competitionCreatedPayload,
         writer.uint32(186).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitionInfoPayload') {
+    if (message.competitionInfoPayload !== undefined) {
       CompetitionInfoPayload.encode(
-        message.payload.competitionInfoPayload,
+        message.competitionInfoPayload,
         writer.uint32(194).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitionPropertiesUpdatedPayload') {
+    if (message.competitionPropertiesUpdatedPayload !== undefined) {
       CompetitionPropertiesUpdatedPayload.encode(
-        message.payload.competitionPropertiesUpdatedPayload,
+        message.competitionPropertiesUpdatedPayload,
         writer.uint32(202).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitionStatusUpdatedPayload') {
+    if (message.competitionStatusUpdatedPayload !== undefined) {
       CompetitionStatusUpdatedPayload.encode(
-        message.payload.competitionStatusUpdatedPayload,
+        message.competitionStatusUpdatedPayload,
         writer.uint32(210).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitorAddedPayload') {
+    if (message.competitorAddedPayload !== undefined) {
       CompetitorAddedPayload.encode(
-        message.payload.competitorAddedPayload,
+        message.competitorAddedPayload,
         writer.uint32(218).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitorRemovedPayload') {
+    if (message.competitorRemovedPayload !== undefined) {
       CompetitorRemovedPayload.encode(
-        message.payload.competitorRemovedPayload,
+        message.competitorRemovedPayload,
         writer.uint32(226).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitorsPropagatedToStagePayload') {
+    if (message.competitorsPropagatedToStagePayload !== undefined) {
       CompetitorsPropagatedToStagePayload.encode(
-        message.payload.competitorsPropagatedToStagePayload,
+        message.competitorsPropagatedToStagePayload,
         writer.uint32(234).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'competitorUpdatedPayload') {
+    if (message.competitorUpdatedPayload !== undefined) {
       CompetitorUpdatedPayload.encode(
-        message.payload.competitorUpdatedPayload,
+        message.competitorUpdatedPayload,
         writer.uint32(1682).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'fightCompetitorsAssignedPayload') {
+    if (message.fightCompetitorsAssignedPayload !== undefined) {
       FightCompetitorsAssignedPayload.encode(
-        message.payload.fightCompetitorsAssignedPayload,
+        message.fightCompetitorsAssignedPayload,
         writer.uint32(1690).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'fightEditorChangesAppliedPayload') {
+    if (message.fightEditorChangesAppliedPayload !== undefined) {
       FightEditorChangesAppliedPayload.encode(
-        message.payload.fightEditorChangesAppliedPayload,
+        message.fightEditorChangesAppliedPayload,
         writer.uint32(1698).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'fightsAddedToStagePayload') {
+    if (message.fightsAddedToStagePayload !== undefined) {
       FightsAddedToStagePayload.encode(
-        message.payload.fightsAddedToStagePayload,
+        message.fightsAddedToStagePayload,
         writer.uint32(1706).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'fightStartTimeUpdatedPayload') {
+    if (message.fightStartTimeUpdatedPayload !== undefined) {
       FightStartTimeUpdatedPayload.encode(
-        message.payload.fightStartTimeUpdatedPayload,
+        message.fightStartTimeUpdatedPayload,
         writer.uint32(1714).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'matsUpdatedPayload') {
+    if (message.matsUpdatedPayload !== undefined) {
       MatsUpdatedPayload.encode(
-        message.payload.matsUpdatedPayload,
+        message.matsUpdatedPayload,
         writer.uint32(1722).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'registrationGroupAddedPayload') {
+    if (message.registrationGroupAddedPayload !== undefined) {
       RegistrationGroupAddedPayload.encode(
-        message.payload.registrationGroupAddedPayload,
+        message.registrationGroupAddedPayload,
         writer.uint32(1730).fork()
       ).ldelim();
     }
-    if (
-      message.payload?.$case === 'registrationGroupCategoriesAssignedPayload'
-    ) {
+    if (message.registrationGroupCategoriesAssignedPayload !== undefined) {
       RegistrationGroupCategoriesAssignedPayload.encode(
-        message.payload.registrationGroupCategoriesAssignedPayload,
+        message.registrationGroupCategoriesAssignedPayload,
         writer.uint32(1738).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'registrationGroupDeletedPayload') {
+    if (message.registrationGroupDeletedPayload !== undefined) {
       RegistrationGroupDeletedPayload.encode(
-        message.payload.registrationGroupDeletedPayload,
+        message.registrationGroupDeletedPayload,
         writer.uint32(1746).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'registrationInfoUpdatedPayload') {
+    if (message.registrationInfoUpdatedPayload !== undefined) {
       RegistrationInfoUpdatedPayload.encode(
-        message.payload.registrationInfoUpdatedPayload,
+        message.registrationInfoUpdatedPayload,
         writer.uint32(1754).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'registrationPeriodAddedPayload') {
+    if (message.registrationPeriodAddedPayload !== undefined) {
       RegistrationPeriodAddedPayload.encode(
-        message.payload.registrationPeriodAddedPayload,
+        message.registrationPeriodAddedPayload,
         writer.uint32(1762).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'registrationPeriodDeletedPayload') {
+    if (message.registrationPeriodDeletedPayload !== undefined) {
       RegistrationPeriodDeletedPayload.encode(
-        message.payload.registrationPeriodDeletedPayload,
+        message.registrationPeriodDeletedPayload,
         writer.uint32(1770).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'scheduleGeneratedPayload') {
+    if (message.scheduleGeneratedPayload !== undefined) {
       ScheduleGeneratedPayload.encode(
-        message.payload.scheduleGeneratedPayload,
+        message.scheduleGeneratedPayload,
         writer.uint32(1778).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'stageResultSetPayload') {
+    if (message.stageResultSetPayload !== undefined) {
       StageResultSetPayload.encode(
-        message.payload.stageResultSetPayload,
+        message.stageResultSetPayload,
         writer.uint32(1786).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'stageStatusUpdatedPayload') {
+    if (message.stageStatusUpdatedPayload !== undefined) {
       StageStatusUpdatedPayload.encode(
-        message.payload.stageStatusUpdatedPayload,
+        message.stageStatusUpdatedPayload,
         writer.uint32(1794).fork()
       ).ldelim();
     }
@@ -660,460 +575,281 @@ export const MessageInfo = {
           message.matId = reader.string();
           break;
         case 11:
-          message.payload = {
-            $case: 'addAcademyPayload',
-            addAcademyPayload: AddAcademyPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.addAcademyPayload = AddAcademyPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 12:
-          message.payload = {
-            $case: 'addCategoryPayload',
-            addCategoryPayload: AddCategoryPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.addCategoryPayload = AddCategoryPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 13:
-          message.payload = {
-            $case: 'addCompetitorPayload',
-            addCompetitorPayload: AddCompetitorPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.addCompetitorPayload = AddCompetitorPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 14:
-          message.payload = {
-            $case: 'addRegistrationGroupPayload',
-            addRegistrationGroupPayload: AddRegistrationGroupPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.addRegistrationGroupPayload =
+            AddRegistrationGroupPayload.decode(reader, reader.uint32());
           break;
         case 15:
-          message.payload = {
-            $case: 'addRegistrationPeriodPayload',
-            addRegistrationPeriodPayload: AddRegistrationPeriodPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.addRegistrationPeriodPayload =
+            AddRegistrationPeriodPayload.decode(reader, reader.uint32());
           break;
         case 16:
-          message.payload = {
-            $case: 'assignRegistrationGroupCategoriesPayload',
-            assignRegistrationGroupCategoriesPayload:
-              AssignRegistrationGroupCategoriesPayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.assignRegistrationGroupCategoriesPayload =
+            AssignRegistrationGroupCategoriesPayload.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 17:
-          message.payload = {
-            $case: 'categoryRegistrationStatusChangePayload',
-            categoryRegistrationStatusChangePayload:
-              CategoryRegistrationStatusChangePayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.categoryRegistrationStatusChangePayload =
+            CategoryRegistrationStatusChangePayload.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 18:
-          message.payload = {
-            $case: 'changeCompetitorCategoryPayload',
-            changeCompetitorCategoryPayload:
-              ChangeCompetitorCategoryPayload.decode(reader, reader.uint32()),
-          };
+          message.changeCompetitorCategoryPayload =
+            ChangeCompetitorCategoryPayload.decode(reader, reader.uint32());
           break;
         case 19:
-          message.payload = {
-            $case: 'changeFightOrderPayload',
-            changeFightOrderPayload: ChangeFightOrderPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.changeFightOrderPayload = ChangeFightOrderPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 110:
-          message.payload = {
-            $case: 'competitorCategoryAddedPayload',
-            competitorCategoryAddedPayload:
-              CompetitorCategoryAddedPayload.decode(reader, reader.uint32()),
-          };
+          message.competitorCategoryAddedPayload =
+            CompetitorCategoryAddedPayload.decode(reader, reader.uint32());
           break;
         case 111:
-          message.payload = {
-            $case: 'createCompetitionPayload',
-            createCompetitionPayload: CreateCompetitionPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.createCompetitionPayload = CreateCompetitionPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 112:
-          message.payload = {
-            $case: 'createFakeCompetitorsPayload',
-            createFakeCompetitorsPayload: CreateFakeCompetitorsPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.createFakeCompetitorsPayload =
+            CreateFakeCompetitorsPayload.decode(reader, reader.uint32());
           break;
         case 113:
-          message.payload = {
-            $case: 'deleteRegistrationGroupPayload',
-            deleteRegistrationGroupPayload:
-              DeleteRegistrationGroupPayload.decode(reader, reader.uint32()),
-          };
+          message.deleteRegistrationGroupPayload =
+            DeleteRegistrationGroupPayload.decode(reader, reader.uint32());
           break;
         case 114:
-          message.payload = {
-            $case: 'deleteRegistrationPeriodPayload',
-            deleteRegistrationPeriodPayload:
-              DeleteRegistrationPeriodPayload.decode(reader, reader.uint32()),
-          };
+          message.deleteRegistrationPeriodPayload =
+            DeleteRegistrationPeriodPayload.decode(reader, reader.uint32());
           break;
         case 115:
-          message.payload = {
-            $case: 'fightEditorApplyChangesPayload',
-            fightEditorApplyChangesPayload:
-              FightEditorApplyChangesPayload.decode(reader, reader.uint32()),
-          };
+          message.fightEditorApplyChangesPayload =
+            FightEditorApplyChangesPayload.decode(reader, reader.uint32());
           break;
         case 116:
-          message.payload = {
-            $case: 'generateAbsoluteCategoryPayload',
-            generateAbsoluteCategoryPayload:
-              GenerateAbsoluteCategoryPayload.decode(reader, reader.uint32()),
-          };
+          message.generateAbsoluteCategoryPayload =
+            GenerateAbsoluteCategoryPayload.decode(reader, reader.uint32());
           break;
         case 117:
-          message.payload = {
-            $case: 'generateBracketsPayload',
-            generateBracketsPayload: GenerateBracketsPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.generateBracketsPayload = GenerateBracketsPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 118:
-          message.payload = {
-            $case: 'generateCategoriesFromRestrictionsPayload',
-            generateCategoriesFromRestrictionsPayload:
-              GenerateCategoriesFromRestrictionsPayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.generateCategoriesFromRestrictionsPayload =
+            GenerateCategoriesFromRestrictionsPayload.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 119:
-          message.payload = {
-            $case: 'generateSchedulePayload',
-            generateSchedulePayload: GenerateSchedulePayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.generateSchedulePayload = GenerateSchedulePayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 120:
-          message.payload = {
-            $case: 'propagateCompetitorsPayload',
-            propagateCompetitorsPayload: PropagateCompetitorsPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.propagateCompetitorsPayload =
+            PropagateCompetitorsPayload.decode(reader, reader.uint32());
           break;
         case 121:
-          message.payload = {
-            $case: 'registrationPeriodAddRegistrationGroupPayload',
-            registrationPeriodAddRegistrationGroupPayload:
-              RegistrationPeriodAddRegistrationGroupPayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.registrationPeriodAddRegistrationGroupPayload =
+            RegistrationPeriodAddRegistrationGroupPayload.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 122:
-          message.payload = {
-            $case: 'removeAcademyPayload',
-            removeAcademyPayload: RemoveAcademyPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.removeAcademyPayload = RemoveAcademyPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 123:
-          message.payload = {
-            $case: 'removeCompetitorPayload',
-            removeCompetitorPayload: RemoveCompetitorPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.removeCompetitorPayload = RemoveCompetitorPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 124:
-          message.payload = {
-            $case: 'setFightResultPayload',
-            setFightResultPayload: SetFightResultPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.setFightResultPayload = SetFightResultPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 125:
-          message.payload = {
-            $case: 'updateAcademyPayload',
-            updateAcademyPayload: UpdateAcademyPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.updateAcademyPayload = UpdateAcademyPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 126:
-          message.payload = {
-            $case: 'updateCompetionPropertiesPayload',
-            updateCompetionPropertiesPayload:
-              UpdateCompetionPropertiesPayload.decode(reader, reader.uint32()),
-          };
+          message.updateCompetionPropertiesPayload =
+            UpdateCompetionPropertiesPayload.decode(reader, reader.uint32());
           break;
         case 127:
-          message.payload = {
-            $case: 'updateCompetitorPayload',
-            updateCompetitorPayload: UpdateCompetitorPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.updateCompetitorPayload = UpdateCompetitorPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 128:
-          message.payload = {
-            $case: 'updateRegistrationInfoPayload',
-            updateRegistrationInfoPayload: UpdateRegistrationInfoPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.updateRegistrationInfoPayload =
+            UpdateRegistrationInfoPayload.decode(reader, reader.uint32());
           break;
         case 129:
-          message.payload = {
-            $case: 'updateStageStatusPayload',
-            updateStageStatusPayload: UpdateStageStatusPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.updateStageStatusPayload = UpdateStageStatusPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 21:
-          message.payload = {
-            $case: 'bracketsGeneratedPayload',
-            bracketsGeneratedPayload: BracketsGeneratedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.bracketsGeneratedPayload = BracketsGeneratedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 22:
-          message.payload = {
-            $case: 'categoryAddedPayload',
-            categoryAddedPayload: CategoryAddedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.categoryAddedPayload = CategoryAddedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 23:
-          message.payload = {
-            $case: 'competitionCreatedPayload',
-            competitionCreatedPayload: CompetitionCreatedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.competitionCreatedPayload = CompetitionCreatedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 24:
-          message.payload = {
-            $case: 'competitionInfoPayload',
-            competitionInfoPayload: CompetitionInfoPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.competitionInfoPayload = CompetitionInfoPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 25:
-          message.payload = {
-            $case: 'competitionPropertiesUpdatedPayload',
-            competitionPropertiesUpdatedPayload:
-              CompetitionPropertiesUpdatedPayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.competitionPropertiesUpdatedPayload =
+            CompetitionPropertiesUpdatedPayload.decode(reader, reader.uint32());
           break;
         case 26:
-          message.payload = {
-            $case: 'competitionStatusUpdatedPayload',
-            competitionStatusUpdatedPayload:
-              CompetitionStatusUpdatedPayload.decode(reader, reader.uint32()),
-          };
+          message.competitionStatusUpdatedPayload =
+            CompetitionStatusUpdatedPayload.decode(reader, reader.uint32());
           break;
         case 27:
-          message.payload = {
-            $case: 'competitorAddedPayload',
-            competitorAddedPayload: CompetitorAddedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.competitorAddedPayload = CompetitorAddedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 28:
-          message.payload = {
-            $case: 'competitorRemovedPayload',
-            competitorRemovedPayload: CompetitorRemovedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.competitorRemovedPayload = CompetitorRemovedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 29:
-          message.payload = {
-            $case: 'competitorsPropagatedToStagePayload',
-            competitorsPropagatedToStagePayload:
-              CompetitorsPropagatedToStagePayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.competitorsPropagatedToStagePayload =
+            CompetitorsPropagatedToStagePayload.decode(reader, reader.uint32());
           break;
         case 210:
-          message.payload = {
-            $case: 'competitorUpdatedPayload',
-            competitorUpdatedPayload: CompetitorUpdatedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.competitorUpdatedPayload = CompetitorUpdatedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 211:
-          message.payload = {
-            $case: 'fightCompetitorsAssignedPayload',
-            fightCompetitorsAssignedPayload:
-              FightCompetitorsAssignedPayload.decode(reader, reader.uint32()),
-          };
+          message.fightCompetitorsAssignedPayload =
+            FightCompetitorsAssignedPayload.decode(reader, reader.uint32());
           break;
         case 212:
-          message.payload = {
-            $case: 'fightEditorChangesAppliedPayload',
-            fightEditorChangesAppliedPayload:
-              FightEditorChangesAppliedPayload.decode(reader, reader.uint32()),
-          };
+          message.fightEditorChangesAppliedPayload =
+            FightEditorChangesAppliedPayload.decode(reader, reader.uint32());
           break;
         case 213:
-          message.payload = {
-            $case: 'fightsAddedToStagePayload',
-            fightsAddedToStagePayload: FightsAddedToStagePayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.fightsAddedToStagePayload = FightsAddedToStagePayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 214:
-          message.payload = {
-            $case: 'fightStartTimeUpdatedPayload',
-            fightStartTimeUpdatedPayload: FightStartTimeUpdatedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.fightStartTimeUpdatedPayload =
+            FightStartTimeUpdatedPayload.decode(reader, reader.uint32());
           break;
         case 215:
-          message.payload = {
-            $case: 'matsUpdatedPayload',
-            matsUpdatedPayload: MatsUpdatedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.matsUpdatedPayload = MatsUpdatedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 216:
-          message.payload = {
-            $case: 'registrationGroupAddedPayload',
-            registrationGroupAddedPayload: RegistrationGroupAddedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.registrationGroupAddedPayload =
+            RegistrationGroupAddedPayload.decode(reader, reader.uint32());
           break;
         case 217:
-          message.payload = {
-            $case: 'registrationGroupCategoriesAssignedPayload',
-            registrationGroupCategoriesAssignedPayload:
-              RegistrationGroupCategoriesAssignedPayload.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.registrationGroupCategoriesAssignedPayload =
+            RegistrationGroupCategoriesAssignedPayload.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 218:
-          message.payload = {
-            $case: 'registrationGroupDeletedPayload',
-            registrationGroupDeletedPayload:
-              RegistrationGroupDeletedPayload.decode(reader, reader.uint32()),
-          };
+          message.registrationGroupDeletedPayload =
+            RegistrationGroupDeletedPayload.decode(reader, reader.uint32());
           break;
         case 219:
-          message.payload = {
-            $case: 'registrationInfoUpdatedPayload',
-            registrationInfoUpdatedPayload:
-              RegistrationInfoUpdatedPayload.decode(reader, reader.uint32()),
-          };
+          message.registrationInfoUpdatedPayload =
+            RegistrationInfoUpdatedPayload.decode(reader, reader.uint32());
           break;
         case 220:
-          message.payload = {
-            $case: 'registrationPeriodAddedPayload',
-            registrationPeriodAddedPayload:
-              RegistrationPeriodAddedPayload.decode(reader, reader.uint32()),
-          };
+          message.registrationPeriodAddedPayload =
+            RegistrationPeriodAddedPayload.decode(reader, reader.uint32());
           break;
         case 221:
-          message.payload = {
-            $case: 'registrationPeriodDeletedPayload',
-            registrationPeriodDeletedPayload:
-              RegistrationPeriodDeletedPayload.decode(reader, reader.uint32()),
-          };
+          message.registrationPeriodDeletedPayload =
+            RegistrationPeriodDeletedPayload.decode(reader, reader.uint32());
           break;
         case 222:
-          message.payload = {
-            $case: 'scheduleGeneratedPayload',
-            scheduleGeneratedPayload: ScheduleGeneratedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.scheduleGeneratedPayload = ScheduleGeneratedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 223:
-          message.payload = {
-            $case: 'stageResultSetPayload',
-            stageResultSetPayload: StageResultSetPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.stageResultSetPayload = StageResultSetPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 224:
-          message.payload = {
-            $case: 'stageStatusUpdatedPayload',
-            stageStatusUpdatedPayload: StageStatusUpdatedPayload.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.stageStatusUpdatedPayload = StageStatusUpdatedPayload.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -1125,412 +861,276 @@ export const MessageInfo = {
 
   fromJSON(object: any): MessageInfo {
     return {
-      id: isSet(object.id) ? String(object.id) : '',
+      id: isSet(object.id) ? String(object.id) : undefined,
       correlationId: isSet(object.correlationId)
         ? String(object.correlationId)
-        : '',
+        : undefined,
       competitionId: isSet(object.competitionId)
         ? String(object.competitionId)
-        : '',
+        : undefined,
       competitorId: isSet(object.competitorId)
         ? String(object.competitorId)
-        : '',
-      categoryId: isSet(object.categoryId) ? String(object.categoryId) : '',
-      matId: isSet(object.matId) ? String(object.matId) : '',
-      payload: isSet(object.addAcademyPayload)
-        ? {
-            $case: 'addAcademyPayload',
-            addAcademyPayload: AddAcademyPayload.fromJSON(
-              object.addAcademyPayload
-            ),
-          }
-        : isSet(object.addCategoryPayload)
-        ? {
-            $case: 'addCategoryPayload',
-            addCategoryPayload: AddCategoryPayload.fromJSON(
-              object.addCategoryPayload
-            ),
-          }
-        : isSet(object.addCompetitorPayload)
-        ? {
-            $case: 'addCompetitorPayload',
-            addCompetitorPayload: AddCompetitorPayload.fromJSON(
-              object.addCompetitorPayload
-            ),
-          }
-        : isSet(object.addRegistrationGroupPayload)
-        ? {
-            $case: 'addRegistrationGroupPayload',
-            addRegistrationGroupPayload: AddRegistrationGroupPayload.fromJSON(
-              object.addRegistrationGroupPayload
-            ),
-          }
-        : isSet(object.addRegistrationPeriodPayload)
-        ? {
-            $case: 'addRegistrationPeriodPayload',
-            addRegistrationPeriodPayload: AddRegistrationPeriodPayload.fromJSON(
-              object.addRegistrationPeriodPayload
-            ),
-          }
-        : isSet(object.assignRegistrationGroupCategoriesPayload)
-        ? {
-            $case: 'assignRegistrationGroupCategoriesPayload',
-            assignRegistrationGroupCategoriesPayload:
-              AssignRegistrationGroupCategoriesPayload.fromJSON(
-                object.assignRegistrationGroupCategoriesPayload
-              ),
-          }
-        : isSet(object.categoryRegistrationStatusChangePayload)
-        ? {
-            $case: 'categoryRegistrationStatusChangePayload',
-            categoryRegistrationStatusChangePayload:
-              CategoryRegistrationStatusChangePayload.fromJSON(
-                object.categoryRegistrationStatusChangePayload
-              ),
-          }
-        : isSet(object.changeCompetitorCategoryPayload)
-        ? {
-            $case: 'changeCompetitorCategoryPayload',
-            changeCompetitorCategoryPayload:
-              ChangeCompetitorCategoryPayload.fromJSON(
-                object.changeCompetitorCategoryPayload
-              ),
-          }
-        : isSet(object.changeFightOrderPayload)
-        ? {
-            $case: 'changeFightOrderPayload',
-            changeFightOrderPayload: ChangeFightOrderPayload.fromJSON(
-              object.changeFightOrderPayload
-            ),
-          }
-        : isSet(object.competitorCategoryAddedPayload)
-        ? {
-            $case: 'competitorCategoryAddedPayload',
-            competitorCategoryAddedPayload:
-              CompetitorCategoryAddedPayload.fromJSON(
-                object.competitorCategoryAddedPayload
-              ),
-          }
-        : isSet(object.createCompetitionPayload)
-        ? {
-            $case: 'createCompetitionPayload',
-            createCompetitionPayload: CreateCompetitionPayload.fromJSON(
-              object.createCompetitionPayload
-            ),
-          }
-        : isSet(object.createFakeCompetitorsPayload)
-        ? {
-            $case: 'createFakeCompetitorsPayload',
-            createFakeCompetitorsPayload: CreateFakeCompetitorsPayload.fromJSON(
-              object.createFakeCompetitorsPayload
-            ),
-          }
-        : isSet(object.deleteRegistrationGroupPayload)
-        ? {
-            $case: 'deleteRegistrationGroupPayload',
-            deleteRegistrationGroupPayload:
-              DeleteRegistrationGroupPayload.fromJSON(
-                object.deleteRegistrationGroupPayload
-              ),
-          }
-        : isSet(object.deleteRegistrationPeriodPayload)
-        ? {
-            $case: 'deleteRegistrationPeriodPayload',
-            deleteRegistrationPeriodPayload:
-              DeleteRegistrationPeriodPayload.fromJSON(
-                object.deleteRegistrationPeriodPayload
-              ),
-          }
-        : isSet(object.fightEditorApplyChangesPayload)
-        ? {
-            $case: 'fightEditorApplyChangesPayload',
-            fightEditorApplyChangesPayload:
-              FightEditorApplyChangesPayload.fromJSON(
-                object.fightEditorApplyChangesPayload
-              ),
-          }
-        : isSet(object.generateAbsoluteCategoryPayload)
-        ? {
-            $case: 'generateAbsoluteCategoryPayload',
-            generateAbsoluteCategoryPayload:
-              GenerateAbsoluteCategoryPayload.fromJSON(
-                object.generateAbsoluteCategoryPayload
-              ),
-          }
-        : isSet(object.generateBracketsPayload)
-        ? {
-            $case: 'generateBracketsPayload',
-            generateBracketsPayload: GenerateBracketsPayload.fromJSON(
-              object.generateBracketsPayload
-            ),
-          }
-        : isSet(object.generateCategoriesFromRestrictionsPayload)
-        ? {
-            $case: 'generateCategoriesFromRestrictionsPayload',
-            generateCategoriesFromRestrictionsPayload:
-              GenerateCategoriesFromRestrictionsPayload.fromJSON(
-                object.generateCategoriesFromRestrictionsPayload
-              ),
-          }
-        : isSet(object.generateSchedulePayload)
-        ? {
-            $case: 'generateSchedulePayload',
-            generateSchedulePayload: GenerateSchedulePayload.fromJSON(
-              object.generateSchedulePayload
-            ),
-          }
-        : isSet(object.propagateCompetitorsPayload)
-        ? {
-            $case: 'propagateCompetitorsPayload',
-            propagateCompetitorsPayload: PropagateCompetitorsPayload.fromJSON(
-              object.propagateCompetitorsPayload
-            ),
-          }
-        : isSet(object.registrationPeriodAddRegistrationGroupPayload)
-        ? {
-            $case: 'registrationPeriodAddRegistrationGroupPayload',
-            registrationPeriodAddRegistrationGroupPayload:
-              RegistrationPeriodAddRegistrationGroupPayload.fromJSON(
-                object.registrationPeriodAddRegistrationGroupPayload
-              ),
-          }
-        : isSet(object.removeAcademyPayload)
-        ? {
-            $case: 'removeAcademyPayload',
-            removeAcademyPayload: RemoveAcademyPayload.fromJSON(
-              object.removeAcademyPayload
-            ),
-          }
-        : isSet(object.removeCompetitorPayload)
-        ? {
-            $case: 'removeCompetitorPayload',
-            removeCompetitorPayload: RemoveCompetitorPayload.fromJSON(
-              object.removeCompetitorPayload
-            ),
-          }
-        : isSet(object.setFightResultPayload)
-        ? {
-            $case: 'setFightResultPayload',
-            setFightResultPayload: SetFightResultPayload.fromJSON(
-              object.setFightResultPayload
-            ),
-          }
-        : isSet(object.updateAcademyPayload)
-        ? {
-            $case: 'updateAcademyPayload',
-            updateAcademyPayload: UpdateAcademyPayload.fromJSON(
-              object.updateAcademyPayload
-            ),
-          }
-        : isSet(object.updateCompetionPropertiesPayload)
-        ? {
-            $case: 'updateCompetionPropertiesPayload',
-            updateCompetionPropertiesPayload:
-              UpdateCompetionPropertiesPayload.fromJSON(
-                object.updateCompetionPropertiesPayload
-              ),
-          }
-        : isSet(object.updateCompetitorPayload)
-        ? {
-            $case: 'updateCompetitorPayload',
-            updateCompetitorPayload: UpdateCompetitorPayload.fromJSON(
-              object.updateCompetitorPayload
-            ),
-          }
-        : isSet(object.updateRegistrationInfoPayload)
-        ? {
-            $case: 'updateRegistrationInfoPayload',
-            updateRegistrationInfoPayload:
-              UpdateRegistrationInfoPayload.fromJSON(
-                object.updateRegistrationInfoPayload
-              ),
-          }
-        : isSet(object.updateStageStatusPayload)
-        ? {
-            $case: 'updateStageStatusPayload',
-            updateStageStatusPayload: UpdateStageStatusPayload.fromJSON(
-              object.updateStageStatusPayload
-            ),
-          }
-        : isSet(object.bracketsGeneratedPayload)
-        ? {
-            $case: 'bracketsGeneratedPayload',
-            bracketsGeneratedPayload: BracketsGeneratedPayload.fromJSON(
-              object.bracketsGeneratedPayload
-            ),
-          }
-        : isSet(object.categoryAddedPayload)
-        ? {
-            $case: 'categoryAddedPayload',
-            categoryAddedPayload: CategoryAddedPayload.fromJSON(
-              object.categoryAddedPayload
-            ),
-          }
-        : isSet(object.competitionCreatedPayload)
-        ? {
-            $case: 'competitionCreatedPayload',
-            competitionCreatedPayload: CompetitionCreatedPayload.fromJSON(
-              object.competitionCreatedPayload
-            ),
-          }
-        : isSet(object.competitionInfoPayload)
-        ? {
-            $case: 'competitionInfoPayload',
-            competitionInfoPayload: CompetitionInfoPayload.fromJSON(
-              object.competitionInfoPayload
-            ),
-          }
-        : isSet(object.competitionPropertiesUpdatedPayload)
-        ? {
-            $case: 'competitionPropertiesUpdatedPayload',
-            competitionPropertiesUpdatedPayload:
-              CompetitionPropertiesUpdatedPayload.fromJSON(
-                object.competitionPropertiesUpdatedPayload
-              ),
-          }
-        : isSet(object.competitionStatusUpdatedPayload)
-        ? {
-            $case: 'competitionStatusUpdatedPayload',
-            competitionStatusUpdatedPayload:
-              CompetitionStatusUpdatedPayload.fromJSON(
-                object.competitionStatusUpdatedPayload
-              ),
-          }
-        : isSet(object.competitorAddedPayload)
-        ? {
-            $case: 'competitorAddedPayload',
-            competitorAddedPayload: CompetitorAddedPayload.fromJSON(
-              object.competitorAddedPayload
-            ),
-          }
-        : isSet(object.competitorRemovedPayload)
-        ? {
-            $case: 'competitorRemovedPayload',
-            competitorRemovedPayload: CompetitorRemovedPayload.fromJSON(
-              object.competitorRemovedPayload
-            ),
-          }
-        : isSet(object.competitorsPropagatedToStagePayload)
-        ? {
-            $case: 'competitorsPropagatedToStagePayload',
-            competitorsPropagatedToStagePayload:
-              CompetitorsPropagatedToStagePayload.fromJSON(
-                object.competitorsPropagatedToStagePayload
-              ),
-          }
-        : isSet(object.competitorUpdatedPayload)
-        ? {
-            $case: 'competitorUpdatedPayload',
-            competitorUpdatedPayload: CompetitorUpdatedPayload.fromJSON(
-              object.competitorUpdatedPayload
-            ),
-          }
-        : isSet(object.fightCompetitorsAssignedPayload)
-        ? {
-            $case: 'fightCompetitorsAssignedPayload',
-            fightCompetitorsAssignedPayload:
-              FightCompetitorsAssignedPayload.fromJSON(
-                object.fightCompetitorsAssignedPayload
-              ),
-          }
-        : isSet(object.fightEditorChangesAppliedPayload)
-        ? {
-            $case: 'fightEditorChangesAppliedPayload',
-            fightEditorChangesAppliedPayload:
-              FightEditorChangesAppliedPayload.fromJSON(
-                object.fightEditorChangesAppliedPayload
-              ),
-          }
-        : isSet(object.fightsAddedToStagePayload)
-        ? {
-            $case: 'fightsAddedToStagePayload',
-            fightsAddedToStagePayload: FightsAddedToStagePayload.fromJSON(
-              object.fightsAddedToStagePayload
-            ),
-          }
-        : isSet(object.fightStartTimeUpdatedPayload)
-        ? {
-            $case: 'fightStartTimeUpdatedPayload',
-            fightStartTimeUpdatedPayload: FightStartTimeUpdatedPayload.fromJSON(
-              object.fightStartTimeUpdatedPayload
-            ),
-          }
-        : isSet(object.matsUpdatedPayload)
-        ? {
-            $case: 'matsUpdatedPayload',
-            matsUpdatedPayload: MatsUpdatedPayload.fromJSON(
-              object.matsUpdatedPayload
-            ),
-          }
-        : isSet(object.registrationGroupAddedPayload)
-        ? {
-            $case: 'registrationGroupAddedPayload',
-            registrationGroupAddedPayload:
-              RegistrationGroupAddedPayload.fromJSON(
-                object.registrationGroupAddedPayload
-              ),
-          }
-        : isSet(object.registrationGroupCategoriesAssignedPayload)
-        ? {
-            $case: 'registrationGroupCategoriesAssignedPayload',
-            registrationGroupCategoriesAssignedPayload:
-              RegistrationGroupCategoriesAssignedPayload.fromJSON(
-                object.registrationGroupCategoriesAssignedPayload
-              ),
-          }
-        : isSet(object.registrationGroupDeletedPayload)
-        ? {
-            $case: 'registrationGroupDeletedPayload',
-            registrationGroupDeletedPayload:
-              RegistrationGroupDeletedPayload.fromJSON(
-                object.registrationGroupDeletedPayload
-              ),
-          }
-        : isSet(object.registrationInfoUpdatedPayload)
-        ? {
-            $case: 'registrationInfoUpdatedPayload',
-            registrationInfoUpdatedPayload:
-              RegistrationInfoUpdatedPayload.fromJSON(
-                object.registrationInfoUpdatedPayload
-              ),
-          }
-        : isSet(object.registrationPeriodAddedPayload)
-        ? {
-            $case: 'registrationPeriodAddedPayload',
-            registrationPeriodAddedPayload:
-              RegistrationPeriodAddedPayload.fromJSON(
-                object.registrationPeriodAddedPayload
-              ),
-          }
-        : isSet(object.registrationPeriodDeletedPayload)
-        ? {
-            $case: 'registrationPeriodDeletedPayload',
-            registrationPeriodDeletedPayload:
-              RegistrationPeriodDeletedPayload.fromJSON(
-                object.registrationPeriodDeletedPayload
-              ),
-          }
-        : isSet(object.scheduleGeneratedPayload)
-        ? {
-            $case: 'scheduleGeneratedPayload',
-            scheduleGeneratedPayload: ScheduleGeneratedPayload.fromJSON(
-              object.scheduleGeneratedPayload
-            ),
-          }
-        : isSet(object.stageResultSetPayload)
-        ? {
-            $case: 'stageResultSetPayload',
-            stageResultSetPayload: StageResultSetPayload.fromJSON(
-              object.stageResultSetPayload
-            ),
-          }
-        : isSet(object.stageStatusUpdatedPayload)
-        ? {
-            $case: 'stageStatusUpdatedPayload',
-            stageStatusUpdatedPayload: StageStatusUpdatedPayload.fromJSON(
-              object.stageStatusUpdatedPayload
-            ),
-          }
+        : undefined,
+      categoryId: isSet(object.categoryId)
+        ? String(object.categoryId)
+        : undefined,
+      matId: isSet(object.matId) ? String(object.matId) : undefined,
+      addAcademyPayload: isSet(object.addAcademyPayload)
+        ? AddAcademyPayload.fromJSON(object.addAcademyPayload)
+        : undefined,
+      addCategoryPayload: isSet(object.addCategoryPayload)
+        ? AddCategoryPayload.fromJSON(object.addCategoryPayload)
+        : undefined,
+      addCompetitorPayload: isSet(object.addCompetitorPayload)
+        ? AddCompetitorPayload.fromJSON(object.addCompetitorPayload)
+        : undefined,
+      addRegistrationGroupPayload: isSet(object.addRegistrationGroupPayload)
+        ? AddRegistrationGroupPayload.fromJSON(
+            object.addRegistrationGroupPayload
+          )
+        : undefined,
+      addRegistrationPeriodPayload: isSet(object.addRegistrationPeriodPayload)
+        ? AddRegistrationPeriodPayload.fromJSON(
+            object.addRegistrationPeriodPayload
+          )
+        : undefined,
+      assignRegistrationGroupCategoriesPayload: isSet(
+        object.assignRegistrationGroupCategoriesPayload
+      )
+        ? AssignRegistrationGroupCategoriesPayload.fromJSON(
+            object.assignRegistrationGroupCategoriesPayload
+          )
+        : undefined,
+      categoryRegistrationStatusChangePayload: isSet(
+        object.categoryRegistrationStatusChangePayload
+      )
+        ? CategoryRegistrationStatusChangePayload.fromJSON(
+            object.categoryRegistrationStatusChangePayload
+          )
+        : undefined,
+      changeCompetitorCategoryPayload: isSet(
+        object.changeCompetitorCategoryPayload
+      )
+        ? ChangeCompetitorCategoryPayload.fromJSON(
+            object.changeCompetitorCategoryPayload
+          )
+        : undefined,
+      changeFightOrderPayload: isSet(object.changeFightOrderPayload)
+        ? ChangeFightOrderPayload.fromJSON(object.changeFightOrderPayload)
+        : undefined,
+      competitorCategoryAddedPayload: isSet(
+        object.competitorCategoryAddedPayload
+      )
+        ? CompetitorCategoryAddedPayload.fromJSON(
+            object.competitorCategoryAddedPayload
+          )
+        : undefined,
+      createCompetitionPayload: isSet(object.createCompetitionPayload)
+        ? CreateCompetitionPayload.fromJSON(object.createCompetitionPayload)
+        : undefined,
+      createFakeCompetitorsPayload: isSet(object.createFakeCompetitorsPayload)
+        ? CreateFakeCompetitorsPayload.fromJSON(
+            object.createFakeCompetitorsPayload
+          )
+        : undefined,
+      deleteRegistrationGroupPayload: isSet(
+        object.deleteRegistrationGroupPayload
+      )
+        ? DeleteRegistrationGroupPayload.fromJSON(
+            object.deleteRegistrationGroupPayload
+          )
+        : undefined,
+      deleteRegistrationPeriodPayload: isSet(
+        object.deleteRegistrationPeriodPayload
+      )
+        ? DeleteRegistrationPeriodPayload.fromJSON(
+            object.deleteRegistrationPeriodPayload
+          )
+        : undefined,
+      fightEditorApplyChangesPayload: isSet(
+        object.fightEditorApplyChangesPayload
+      )
+        ? FightEditorApplyChangesPayload.fromJSON(
+            object.fightEditorApplyChangesPayload
+          )
+        : undefined,
+      generateAbsoluteCategoryPayload: isSet(
+        object.generateAbsoluteCategoryPayload
+      )
+        ? GenerateAbsoluteCategoryPayload.fromJSON(
+            object.generateAbsoluteCategoryPayload
+          )
+        : undefined,
+      generateBracketsPayload: isSet(object.generateBracketsPayload)
+        ? GenerateBracketsPayload.fromJSON(object.generateBracketsPayload)
+        : undefined,
+      generateCategoriesFromRestrictionsPayload: isSet(
+        object.generateCategoriesFromRestrictionsPayload
+      )
+        ? GenerateCategoriesFromRestrictionsPayload.fromJSON(
+            object.generateCategoriesFromRestrictionsPayload
+          )
+        : undefined,
+      generateSchedulePayload: isSet(object.generateSchedulePayload)
+        ? GenerateSchedulePayload.fromJSON(object.generateSchedulePayload)
+        : undefined,
+      propagateCompetitorsPayload: isSet(object.propagateCompetitorsPayload)
+        ? PropagateCompetitorsPayload.fromJSON(
+            object.propagateCompetitorsPayload
+          )
+        : undefined,
+      registrationPeriodAddRegistrationGroupPayload: isSet(
+        object.registrationPeriodAddRegistrationGroupPayload
+      )
+        ? RegistrationPeriodAddRegistrationGroupPayload.fromJSON(
+            object.registrationPeriodAddRegistrationGroupPayload
+          )
+        : undefined,
+      removeAcademyPayload: isSet(object.removeAcademyPayload)
+        ? RemoveAcademyPayload.fromJSON(object.removeAcademyPayload)
+        : undefined,
+      removeCompetitorPayload: isSet(object.removeCompetitorPayload)
+        ? RemoveCompetitorPayload.fromJSON(object.removeCompetitorPayload)
+        : undefined,
+      setFightResultPayload: isSet(object.setFightResultPayload)
+        ? SetFightResultPayload.fromJSON(object.setFightResultPayload)
+        : undefined,
+      updateAcademyPayload: isSet(object.updateAcademyPayload)
+        ? UpdateAcademyPayload.fromJSON(object.updateAcademyPayload)
+        : undefined,
+      updateCompetionPropertiesPayload: isSet(
+        object.updateCompetionPropertiesPayload
+      )
+        ? UpdateCompetionPropertiesPayload.fromJSON(
+            object.updateCompetionPropertiesPayload
+          )
+        : undefined,
+      updateCompetitorPayload: isSet(object.updateCompetitorPayload)
+        ? UpdateCompetitorPayload.fromJSON(object.updateCompetitorPayload)
+        : undefined,
+      updateRegistrationInfoPayload: isSet(object.updateRegistrationInfoPayload)
+        ? UpdateRegistrationInfoPayload.fromJSON(
+            object.updateRegistrationInfoPayload
+          )
+        : undefined,
+      updateStageStatusPayload: isSet(object.updateStageStatusPayload)
+        ? UpdateStageStatusPayload.fromJSON(object.updateStageStatusPayload)
+        : undefined,
+      bracketsGeneratedPayload: isSet(object.bracketsGeneratedPayload)
+        ? BracketsGeneratedPayload.fromJSON(object.bracketsGeneratedPayload)
+        : undefined,
+      categoryAddedPayload: isSet(object.categoryAddedPayload)
+        ? CategoryAddedPayload.fromJSON(object.categoryAddedPayload)
+        : undefined,
+      competitionCreatedPayload: isSet(object.competitionCreatedPayload)
+        ? CompetitionCreatedPayload.fromJSON(object.competitionCreatedPayload)
+        : undefined,
+      competitionInfoPayload: isSet(object.competitionInfoPayload)
+        ? CompetitionInfoPayload.fromJSON(object.competitionInfoPayload)
+        : undefined,
+      competitionPropertiesUpdatedPayload: isSet(
+        object.competitionPropertiesUpdatedPayload
+      )
+        ? CompetitionPropertiesUpdatedPayload.fromJSON(
+            object.competitionPropertiesUpdatedPayload
+          )
+        : undefined,
+      competitionStatusUpdatedPayload: isSet(
+        object.competitionStatusUpdatedPayload
+      )
+        ? CompetitionStatusUpdatedPayload.fromJSON(
+            object.competitionStatusUpdatedPayload
+          )
+        : undefined,
+      competitorAddedPayload: isSet(object.competitorAddedPayload)
+        ? CompetitorAddedPayload.fromJSON(object.competitorAddedPayload)
+        : undefined,
+      competitorRemovedPayload: isSet(object.competitorRemovedPayload)
+        ? CompetitorRemovedPayload.fromJSON(object.competitorRemovedPayload)
+        : undefined,
+      competitorsPropagatedToStagePayload: isSet(
+        object.competitorsPropagatedToStagePayload
+      )
+        ? CompetitorsPropagatedToStagePayload.fromJSON(
+            object.competitorsPropagatedToStagePayload
+          )
+        : undefined,
+      competitorUpdatedPayload: isSet(object.competitorUpdatedPayload)
+        ? CompetitorUpdatedPayload.fromJSON(object.competitorUpdatedPayload)
+        : undefined,
+      fightCompetitorsAssignedPayload: isSet(
+        object.fightCompetitorsAssignedPayload
+      )
+        ? FightCompetitorsAssignedPayload.fromJSON(
+            object.fightCompetitorsAssignedPayload
+          )
+        : undefined,
+      fightEditorChangesAppliedPayload: isSet(
+        object.fightEditorChangesAppliedPayload
+      )
+        ? FightEditorChangesAppliedPayload.fromJSON(
+            object.fightEditorChangesAppliedPayload
+          )
+        : undefined,
+      fightsAddedToStagePayload: isSet(object.fightsAddedToStagePayload)
+        ? FightsAddedToStagePayload.fromJSON(object.fightsAddedToStagePayload)
+        : undefined,
+      fightStartTimeUpdatedPayload: isSet(object.fightStartTimeUpdatedPayload)
+        ? FightStartTimeUpdatedPayload.fromJSON(
+            object.fightStartTimeUpdatedPayload
+          )
+        : undefined,
+      matsUpdatedPayload: isSet(object.matsUpdatedPayload)
+        ? MatsUpdatedPayload.fromJSON(object.matsUpdatedPayload)
+        : undefined,
+      registrationGroupAddedPayload: isSet(object.registrationGroupAddedPayload)
+        ? RegistrationGroupAddedPayload.fromJSON(
+            object.registrationGroupAddedPayload
+          )
+        : undefined,
+      registrationGroupCategoriesAssignedPayload: isSet(
+        object.registrationGroupCategoriesAssignedPayload
+      )
+        ? RegistrationGroupCategoriesAssignedPayload.fromJSON(
+            object.registrationGroupCategoriesAssignedPayload
+          )
+        : undefined,
+      registrationGroupDeletedPayload: isSet(
+        object.registrationGroupDeletedPayload
+      )
+        ? RegistrationGroupDeletedPayload.fromJSON(
+            object.registrationGroupDeletedPayload
+          )
+        : undefined,
+      registrationInfoUpdatedPayload: isSet(
+        object.registrationInfoUpdatedPayload
+      )
+        ? RegistrationInfoUpdatedPayload.fromJSON(
+            object.registrationInfoUpdatedPayload
+          )
+        : undefined,
+      registrationPeriodAddedPayload: isSet(
+        object.registrationPeriodAddedPayload
+      )
+        ? RegistrationPeriodAddedPayload.fromJSON(
+            object.registrationPeriodAddedPayload
+          )
+        : undefined,
+      registrationPeriodDeletedPayload: isSet(
+        object.registrationPeriodDeletedPayload
+      )
+        ? RegistrationPeriodDeletedPayload.fromJSON(
+            object.registrationPeriodDeletedPayload
+          )
+        : undefined,
+      scheduleGeneratedPayload: isSet(object.scheduleGeneratedPayload)
+        ? ScheduleGeneratedPayload.fromJSON(object.scheduleGeneratedPayload)
+        : undefined,
+      stageResultSetPayload: isSet(object.stageResultSetPayload)
+        ? StageResultSetPayload.fromJSON(object.stageResultSetPayload)
+        : undefined,
+      stageStatusUpdatedPayload: isSet(object.stageStatusUpdatedPayload)
+        ? StageStatusUpdatedPayload.fromJSON(object.stageStatusUpdatedPayload)
         : undefined,
     };
   },
@@ -1546,333 +1146,294 @@ export const MessageInfo = {
       (obj.competitorId = message.competitorId);
     message.categoryId !== undefined && (obj.categoryId = message.categoryId);
     message.matId !== undefined && (obj.matId = message.matId);
-    message.payload?.$case === 'addAcademyPayload' &&
-      (obj.addAcademyPayload = message.payload?.addAcademyPayload
-        ? AddAcademyPayload.toJSON(message.payload?.addAcademyPayload)
+    message.addAcademyPayload !== undefined &&
+      (obj.addAcademyPayload = message.addAcademyPayload
+        ? AddAcademyPayload.toJSON(message.addAcademyPayload)
         : undefined);
-    message.payload?.$case === 'addCategoryPayload' &&
-      (obj.addCategoryPayload = message.payload?.addCategoryPayload
-        ? AddCategoryPayload.toJSON(message.payload?.addCategoryPayload)
+    message.addCategoryPayload !== undefined &&
+      (obj.addCategoryPayload = message.addCategoryPayload
+        ? AddCategoryPayload.toJSON(message.addCategoryPayload)
         : undefined);
-    message.payload?.$case === 'addCompetitorPayload' &&
-      (obj.addCompetitorPayload = message.payload?.addCompetitorPayload
-        ? AddCompetitorPayload.toJSON(message.payload?.addCompetitorPayload)
+    message.addCompetitorPayload !== undefined &&
+      (obj.addCompetitorPayload = message.addCompetitorPayload
+        ? AddCompetitorPayload.toJSON(message.addCompetitorPayload)
         : undefined);
-    message.payload?.$case === 'addRegistrationGroupPayload' &&
-      (obj.addRegistrationGroupPayload = message.payload
-        ?.addRegistrationGroupPayload
+    message.addRegistrationGroupPayload !== undefined &&
+      (obj.addRegistrationGroupPayload = message.addRegistrationGroupPayload
         ? AddRegistrationGroupPayload.toJSON(
-            message.payload?.addRegistrationGroupPayload
+            message.addRegistrationGroupPayload
           )
         : undefined);
-    message.payload?.$case === 'addRegistrationPeriodPayload' &&
-      (obj.addRegistrationPeriodPayload = message.payload
-        ?.addRegistrationPeriodPayload
+    message.addRegistrationPeriodPayload !== undefined &&
+      (obj.addRegistrationPeriodPayload = message.addRegistrationPeriodPayload
         ? AddRegistrationPeriodPayload.toJSON(
-            message.payload?.addRegistrationPeriodPayload
+            message.addRegistrationPeriodPayload
           )
         : undefined);
-    message.payload?.$case === 'assignRegistrationGroupCategoriesPayload' &&
-      (obj.assignRegistrationGroupCategoriesPayload = message.payload
-        ?.assignRegistrationGroupCategoriesPayload
-        ? AssignRegistrationGroupCategoriesPayload.toJSON(
-            message.payload?.assignRegistrationGroupCategoriesPayload
-          )
+    message.assignRegistrationGroupCategoriesPayload !== undefined &&
+      (obj.assignRegistrationGroupCategoriesPayload =
+        message.assignRegistrationGroupCategoriesPayload
+          ? AssignRegistrationGroupCategoriesPayload.toJSON(
+              message.assignRegistrationGroupCategoriesPayload
+            )
+          : undefined);
+    message.categoryRegistrationStatusChangePayload !== undefined &&
+      (obj.categoryRegistrationStatusChangePayload =
+        message.categoryRegistrationStatusChangePayload
+          ? CategoryRegistrationStatusChangePayload.toJSON(
+              message.categoryRegistrationStatusChangePayload
+            )
+          : undefined);
+    message.changeCompetitorCategoryPayload !== undefined &&
+      (obj.changeCompetitorCategoryPayload =
+        message.changeCompetitorCategoryPayload
+          ? ChangeCompetitorCategoryPayload.toJSON(
+              message.changeCompetitorCategoryPayload
+            )
+          : undefined);
+    message.changeFightOrderPayload !== undefined &&
+      (obj.changeFightOrderPayload = message.changeFightOrderPayload
+        ? ChangeFightOrderPayload.toJSON(message.changeFightOrderPayload)
         : undefined);
-    message.payload?.$case === 'categoryRegistrationStatusChangePayload' &&
-      (obj.categoryRegistrationStatusChangePayload = message.payload
-        ?.categoryRegistrationStatusChangePayload
-        ? CategoryRegistrationStatusChangePayload.toJSON(
-            message.payload?.categoryRegistrationStatusChangePayload
-          )
+    message.competitorCategoryAddedPayload !== undefined &&
+      (obj.competitorCategoryAddedPayload =
+        message.competitorCategoryAddedPayload
+          ? CompetitorCategoryAddedPayload.toJSON(
+              message.competitorCategoryAddedPayload
+            )
+          : undefined);
+    message.createCompetitionPayload !== undefined &&
+      (obj.createCompetitionPayload = message.createCompetitionPayload
+        ? CreateCompetitionPayload.toJSON(message.createCompetitionPayload)
         : undefined);
-    message.payload?.$case === 'changeCompetitorCategoryPayload' &&
-      (obj.changeCompetitorCategoryPayload = message.payload
-        ?.changeCompetitorCategoryPayload
-        ? ChangeCompetitorCategoryPayload.toJSON(
-            message.payload?.changeCompetitorCategoryPayload
-          )
-        : undefined);
-    message.payload?.$case === 'changeFightOrderPayload' &&
-      (obj.changeFightOrderPayload = message.payload?.changeFightOrderPayload
-        ? ChangeFightOrderPayload.toJSON(
-            message.payload?.changeFightOrderPayload
-          )
-        : undefined);
-    message.payload?.$case === 'competitorCategoryAddedPayload' &&
-      (obj.competitorCategoryAddedPayload = message.payload
-        ?.competitorCategoryAddedPayload
-        ? CompetitorCategoryAddedPayload.toJSON(
-            message.payload?.competitorCategoryAddedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'createCompetitionPayload' &&
-      (obj.createCompetitionPayload = message.payload?.createCompetitionPayload
-        ? CreateCompetitionPayload.toJSON(
-            message.payload?.createCompetitionPayload
-          )
-        : undefined);
-    message.payload?.$case === 'createFakeCompetitorsPayload' &&
-      (obj.createFakeCompetitorsPayload = message.payload
-        ?.createFakeCompetitorsPayload
+    message.createFakeCompetitorsPayload !== undefined &&
+      (obj.createFakeCompetitorsPayload = message.createFakeCompetitorsPayload
         ? CreateFakeCompetitorsPayload.toJSON(
-            message.payload?.createFakeCompetitorsPayload
+            message.createFakeCompetitorsPayload
           )
         : undefined);
-    message.payload?.$case === 'deleteRegistrationGroupPayload' &&
-      (obj.deleteRegistrationGroupPayload = message.payload
-        ?.deleteRegistrationGroupPayload
-        ? DeleteRegistrationGroupPayload.toJSON(
-            message.payload?.deleteRegistrationGroupPayload
-          )
+    message.deleteRegistrationGroupPayload !== undefined &&
+      (obj.deleteRegistrationGroupPayload =
+        message.deleteRegistrationGroupPayload
+          ? DeleteRegistrationGroupPayload.toJSON(
+              message.deleteRegistrationGroupPayload
+            )
+          : undefined);
+    message.deleteRegistrationPeriodPayload !== undefined &&
+      (obj.deleteRegistrationPeriodPayload =
+        message.deleteRegistrationPeriodPayload
+          ? DeleteRegistrationPeriodPayload.toJSON(
+              message.deleteRegistrationPeriodPayload
+            )
+          : undefined);
+    message.fightEditorApplyChangesPayload !== undefined &&
+      (obj.fightEditorApplyChangesPayload =
+        message.fightEditorApplyChangesPayload
+          ? FightEditorApplyChangesPayload.toJSON(
+              message.fightEditorApplyChangesPayload
+            )
+          : undefined);
+    message.generateAbsoluteCategoryPayload !== undefined &&
+      (obj.generateAbsoluteCategoryPayload =
+        message.generateAbsoluteCategoryPayload
+          ? GenerateAbsoluteCategoryPayload.toJSON(
+              message.generateAbsoluteCategoryPayload
+            )
+          : undefined);
+    message.generateBracketsPayload !== undefined &&
+      (obj.generateBracketsPayload = message.generateBracketsPayload
+        ? GenerateBracketsPayload.toJSON(message.generateBracketsPayload)
         : undefined);
-    message.payload?.$case === 'deleteRegistrationPeriodPayload' &&
-      (obj.deleteRegistrationPeriodPayload = message.payload
-        ?.deleteRegistrationPeriodPayload
-        ? DeleteRegistrationPeriodPayload.toJSON(
-            message.payload?.deleteRegistrationPeriodPayload
-          )
+    message.generateCategoriesFromRestrictionsPayload !== undefined &&
+      (obj.generateCategoriesFromRestrictionsPayload =
+        message.generateCategoriesFromRestrictionsPayload
+          ? GenerateCategoriesFromRestrictionsPayload.toJSON(
+              message.generateCategoriesFromRestrictionsPayload
+            )
+          : undefined);
+    message.generateSchedulePayload !== undefined &&
+      (obj.generateSchedulePayload = message.generateSchedulePayload
+        ? GenerateSchedulePayload.toJSON(message.generateSchedulePayload)
         : undefined);
-    message.payload?.$case === 'fightEditorApplyChangesPayload' &&
-      (obj.fightEditorApplyChangesPayload = message.payload
-        ?.fightEditorApplyChangesPayload
-        ? FightEditorApplyChangesPayload.toJSON(
-            message.payload?.fightEditorApplyChangesPayload
-          )
-        : undefined);
-    message.payload?.$case === 'generateAbsoluteCategoryPayload' &&
-      (obj.generateAbsoluteCategoryPayload = message.payload
-        ?.generateAbsoluteCategoryPayload
-        ? GenerateAbsoluteCategoryPayload.toJSON(
-            message.payload?.generateAbsoluteCategoryPayload
-          )
-        : undefined);
-    message.payload?.$case === 'generateBracketsPayload' &&
-      (obj.generateBracketsPayload = message.payload?.generateBracketsPayload
-        ? GenerateBracketsPayload.toJSON(
-            message.payload?.generateBracketsPayload
-          )
-        : undefined);
-    message.payload?.$case === 'generateCategoriesFromRestrictionsPayload' &&
-      (obj.generateCategoriesFromRestrictionsPayload = message.payload
-        ?.generateCategoriesFromRestrictionsPayload
-        ? GenerateCategoriesFromRestrictionsPayload.toJSON(
-            message.payload?.generateCategoriesFromRestrictionsPayload
-          )
-        : undefined);
-    message.payload?.$case === 'generateSchedulePayload' &&
-      (obj.generateSchedulePayload = message.payload?.generateSchedulePayload
-        ? GenerateSchedulePayload.toJSON(
-            message.payload?.generateSchedulePayload
-          )
-        : undefined);
-    message.payload?.$case === 'propagateCompetitorsPayload' &&
-      (obj.propagateCompetitorsPayload = message.payload
-        ?.propagateCompetitorsPayload
+    message.propagateCompetitorsPayload !== undefined &&
+      (obj.propagateCompetitorsPayload = message.propagateCompetitorsPayload
         ? PropagateCompetitorsPayload.toJSON(
-            message.payload?.propagateCompetitorsPayload
+            message.propagateCompetitorsPayload
           )
         : undefined);
-    message.payload?.$case ===
-      'registrationPeriodAddRegistrationGroupPayload' &&
-      (obj.registrationPeriodAddRegistrationGroupPayload = message.payload
-        ?.registrationPeriodAddRegistrationGroupPayload
-        ? RegistrationPeriodAddRegistrationGroupPayload.toJSON(
-            message.payload?.registrationPeriodAddRegistrationGroupPayload
-          )
+    message.registrationPeriodAddRegistrationGroupPayload !== undefined &&
+      (obj.registrationPeriodAddRegistrationGroupPayload =
+        message.registrationPeriodAddRegistrationGroupPayload
+          ? RegistrationPeriodAddRegistrationGroupPayload.toJSON(
+              message.registrationPeriodAddRegistrationGroupPayload
+            )
+          : undefined);
+    message.removeAcademyPayload !== undefined &&
+      (obj.removeAcademyPayload = message.removeAcademyPayload
+        ? RemoveAcademyPayload.toJSON(message.removeAcademyPayload)
         : undefined);
-    message.payload?.$case === 'removeAcademyPayload' &&
-      (obj.removeAcademyPayload = message.payload?.removeAcademyPayload
-        ? RemoveAcademyPayload.toJSON(message.payload?.removeAcademyPayload)
+    message.removeCompetitorPayload !== undefined &&
+      (obj.removeCompetitorPayload = message.removeCompetitorPayload
+        ? RemoveCompetitorPayload.toJSON(message.removeCompetitorPayload)
         : undefined);
-    message.payload?.$case === 'removeCompetitorPayload' &&
-      (obj.removeCompetitorPayload = message.payload?.removeCompetitorPayload
-        ? RemoveCompetitorPayload.toJSON(
-            message.payload?.removeCompetitorPayload
-          )
+    message.setFightResultPayload !== undefined &&
+      (obj.setFightResultPayload = message.setFightResultPayload
+        ? SetFightResultPayload.toJSON(message.setFightResultPayload)
         : undefined);
-    message.payload?.$case === 'setFightResultPayload' &&
-      (obj.setFightResultPayload = message.payload?.setFightResultPayload
-        ? SetFightResultPayload.toJSON(message.payload?.setFightResultPayload)
+    message.updateAcademyPayload !== undefined &&
+      (obj.updateAcademyPayload = message.updateAcademyPayload
+        ? UpdateAcademyPayload.toJSON(message.updateAcademyPayload)
         : undefined);
-    message.payload?.$case === 'updateAcademyPayload' &&
-      (obj.updateAcademyPayload = message.payload?.updateAcademyPayload
-        ? UpdateAcademyPayload.toJSON(message.payload?.updateAcademyPayload)
+    message.updateCompetionPropertiesPayload !== undefined &&
+      (obj.updateCompetionPropertiesPayload =
+        message.updateCompetionPropertiesPayload
+          ? UpdateCompetionPropertiesPayload.toJSON(
+              message.updateCompetionPropertiesPayload
+            )
+          : undefined);
+    message.updateCompetitorPayload !== undefined &&
+      (obj.updateCompetitorPayload = message.updateCompetitorPayload
+        ? UpdateCompetitorPayload.toJSON(message.updateCompetitorPayload)
         : undefined);
-    message.payload?.$case === 'updateCompetionPropertiesPayload' &&
-      (obj.updateCompetionPropertiesPayload = message.payload
-        ?.updateCompetionPropertiesPayload
-        ? UpdateCompetionPropertiesPayload.toJSON(
-            message.payload?.updateCompetionPropertiesPayload
-          )
-        : undefined);
-    message.payload?.$case === 'updateCompetitorPayload' &&
-      (obj.updateCompetitorPayload = message.payload?.updateCompetitorPayload
-        ? UpdateCompetitorPayload.toJSON(
-            message.payload?.updateCompetitorPayload
-          )
-        : undefined);
-    message.payload?.$case === 'updateRegistrationInfoPayload' &&
-      (obj.updateRegistrationInfoPayload = message.payload
-        ?.updateRegistrationInfoPayload
+    message.updateRegistrationInfoPayload !== undefined &&
+      (obj.updateRegistrationInfoPayload = message.updateRegistrationInfoPayload
         ? UpdateRegistrationInfoPayload.toJSON(
-            message.payload?.updateRegistrationInfoPayload
+            message.updateRegistrationInfoPayload
           )
         : undefined);
-    message.payload?.$case === 'updateStageStatusPayload' &&
-      (obj.updateStageStatusPayload = message.payload?.updateStageStatusPayload
-        ? UpdateStageStatusPayload.toJSON(
-            message.payload?.updateStageStatusPayload
-          )
+    message.updateStageStatusPayload !== undefined &&
+      (obj.updateStageStatusPayload = message.updateStageStatusPayload
+        ? UpdateStageStatusPayload.toJSON(message.updateStageStatusPayload)
         : undefined);
-    message.payload?.$case === 'bracketsGeneratedPayload' &&
-      (obj.bracketsGeneratedPayload = message.payload?.bracketsGeneratedPayload
-        ? BracketsGeneratedPayload.toJSON(
-            message.payload?.bracketsGeneratedPayload
-          )
+    message.bracketsGeneratedPayload !== undefined &&
+      (obj.bracketsGeneratedPayload = message.bracketsGeneratedPayload
+        ? BracketsGeneratedPayload.toJSON(message.bracketsGeneratedPayload)
         : undefined);
-    message.payload?.$case === 'categoryAddedPayload' &&
-      (obj.categoryAddedPayload = message.payload?.categoryAddedPayload
-        ? CategoryAddedPayload.toJSON(message.payload?.categoryAddedPayload)
+    message.categoryAddedPayload !== undefined &&
+      (obj.categoryAddedPayload = message.categoryAddedPayload
+        ? CategoryAddedPayload.toJSON(message.categoryAddedPayload)
         : undefined);
-    message.payload?.$case === 'competitionCreatedPayload' &&
-      (obj.competitionCreatedPayload = message.payload
-        ?.competitionCreatedPayload
-        ? CompetitionCreatedPayload.toJSON(
-            message.payload?.competitionCreatedPayload
-          )
+    message.competitionCreatedPayload !== undefined &&
+      (obj.competitionCreatedPayload = message.competitionCreatedPayload
+        ? CompetitionCreatedPayload.toJSON(message.competitionCreatedPayload)
         : undefined);
-    message.payload?.$case === 'competitionInfoPayload' &&
-      (obj.competitionInfoPayload = message.payload?.competitionInfoPayload
-        ? CompetitionInfoPayload.toJSON(message.payload?.competitionInfoPayload)
+    message.competitionInfoPayload !== undefined &&
+      (obj.competitionInfoPayload = message.competitionInfoPayload
+        ? CompetitionInfoPayload.toJSON(message.competitionInfoPayload)
         : undefined);
-    message.payload?.$case === 'competitionPropertiesUpdatedPayload' &&
-      (obj.competitionPropertiesUpdatedPayload = message.payload
-        ?.competitionPropertiesUpdatedPayload
-        ? CompetitionPropertiesUpdatedPayload.toJSON(
-            message.payload?.competitionPropertiesUpdatedPayload
-          )
+    message.competitionPropertiesUpdatedPayload !== undefined &&
+      (obj.competitionPropertiesUpdatedPayload =
+        message.competitionPropertiesUpdatedPayload
+          ? CompetitionPropertiesUpdatedPayload.toJSON(
+              message.competitionPropertiesUpdatedPayload
+            )
+          : undefined);
+    message.competitionStatusUpdatedPayload !== undefined &&
+      (obj.competitionStatusUpdatedPayload =
+        message.competitionStatusUpdatedPayload
+          ? CompetitionStatusUpdatedPayload.toJSON(
+              message.competitionStatusUpdatedPayload
+            )
+          : undefined);
+    message.competitorAddedPayload !== undefined &&
+      (obj.competitorAddedPayload = message.competitorAddedPayload
+        ? CompetitorAddedPayload.toJSON(message.competitorAddedPayload)
         : undefined);
-    message.payload?.$case === 'competitionStatusUpdatedPayload' &&
-      (obj.competitionStatusUpdatedPayload = message.payload
-        ?.competitionStatusUpdatedPayload
-        ? CompetitionStatusUpdatedPayload.toJSON(
-            message.payload?.competitionStatusUpdatedPayload
-          )
+    message.competitorRemovedPayload !== undefined &&
+      (obj.competitorRemovedPayload = message.competitorRemovedPayload
+        ? CompetitorRemovedPayload.toJSON(message.competitorRemovedPayload)
         : undefined);
-    message.payload?.$case === 'competitorAddedPayload' &&
-      (obj.competitorAddedPayload = message.payload?.competitorAddedPayload
-        ? CompetitorAddedPayload.toJSON(message.payload?.competitorAddedPayload)
+    message.competitorsPropagatedToStagePayload !== undefined &&
+      (obj.competitorsPropagatedToStagePayload =
+        message.competitorsPropagatedToStagePayload
+          ? CompetitorsPropagatedToStagePayload.toJSON(
+              message.competitorsPropagatedToStagePayload
+            )
+          : undefined);
+    message.competitorUpdatedPayload !== undefined &&
+      (obj.competitorUpdatedPayload = message.competitorUpdatedPayload
+        ? CompetitorUpdatedPayload.toJSON(message.competitorUpdatedPayload)
         : undefined);
-    message.payload?.$case === 'competitorRemovedPayload' &&
-      (obj.competitorRemovedPayload = message.payload?.competitorRemovedPayload
-        ? CompetitorRemovedPayload.toJSON(
-            message.payload?.competitorRemovedPayload
-          )
+    message.fightCompetitorsAssignedPayload !== undefined &&
+      (obj.fightCompetitorsAssignedPayload =
+        message.fightCompetitorsAssignedPayload
+          ? FightCompetitorsAssignedPayload.toJSON(
+              message.fightCompetitorsAssignedPayload
+            )
+          : undefined);
+    message.fightEditorChangesAppliedPayload !== undefined &&
+      (obj.fightEditorChangesAppliedPayload =
+        message.fightEditorChangesAppliedPayload
+          ? FightEditorChangesAppliedPayload.toJSON(
+              message.fightEditorChangesAppliedPayload
+            )
+          : undefined);
+    message.fightsAddedToStagePayload !== undefined &&
+      (obj.fightsAddedToStagePayload = message.fightsAddedToStagePayload
+        ? FightsAddedToStagePayload.toJSON(message.fightsAddedToStagePayload)
         : undefined);
-    message.payload?.$case === 'competitorsPropagatedToStagePayload' &&
-      (obj.competitorsPropagatedToStagePayload = message.payload
-        ?.competitorsPropagatedToStagePayload
-        ? CompetitorsPropagatedToStagePayload.toJSON(
-            message.payload?.competitorsPropagatedToStagePayload
-          )
-        : undefined);
-    message.payload?.$case === 'competitorUpdatedPayload' &&
-      (obj.competitorUpdatedPayload = message.payload?.competitorUpdatedPayload
-        ? CompetitorUpdatedPayload.toJSON(
-            message.payload?.competitorUpdatedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'fightCompetitorsAssignedPayload' &&
-      (obj.fightCompetitorsAssignedPayload = message.payload
-        ?.fightCompetitorsAssignedPayload
-        ? FightCompetitorsAssignedPayload.toJSON(
-            message.payload?.fightCompetitorsAssignedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'fightEditorChangesAppliedPayload' &&
-      (obj.fightEditorChangesAppliedPayload = message.payload
-        ?.fightEditorChangesAppliedPayload
-        ? FightEditorChangesAppliedPayload.toJSON(
-            message.payload?.fightEditorChangesAppliedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'fightsAddedToStagePayload' &&
-      (obj.fightsAddedToStagePayload = message.payload
-        ?.fightsAddedToStagePayload
-        ? FightsAddedToStagePayload.toJSON(
-            message.payload?.fightsAddedToStagePayload
-          )
-        : undefined);
-    message.payload?.$case === 'fightStartTimeUpdatedPayload' &&
-      (obj.fightStartTimeUpdatedPayload = message.payload
-        ?.fightStartTimeUpdatedPayload
+    message.fightStartTimeUpdatedPayload !== undefined &&
+      (obj.fightStartTimeUpdatedPayload = message.fightStartTimeUpdatedPayload
         ? FightStartTimeUpdatedPayload.toJSON(
-            message.payload?.fightStartTimeUpdatedPayload
+            message.fightStartTimeUpdatedPayload
           )
         : undefined);
-    message.payload?.$case === 'matsUpdatedPayload' &&
-      (obj.matsUpdatedPayload = message.payload?.matsUpdatedPayload
-        ? MatsUpdatedPayload.toJSON(message.payload?.matsUpdatedPayload)
+    message.matsUpdatedPayload !== undefined &&
+      (obj.matsUpdatedPayload = message.matsUpdatedPayload
+        ? MatsUpdatedPayload.toJSON(message.matsUpdatedPayload)
         : undefined);
-    message.payload?.$case === 'registrationGroupAddedPayload' &&
-      (obj.registrationGroupAddedPayload = message.payload
-        ?.registrationGroupAddedPayload
+    message.registrationGroupAddedPayload !== undefined &&
+      (obj.registrationGroupAddedPayload = message.registrationGroupAddedPayload
         ? RegistrationGroupAddedPayload.toJSON(
-            message.payload?.registrationGroupAddedPayload
+            message.registrationGroupAddedPayload
           )
         : undefined);
-    message.payload?.$case === 'registrationGroupCategoriesAssignedPayload' &&
-      (obj.registrationGroupCategoriesAssignedPayload = message.payload
-        ?.registrationGroupCategoriesAssignedPayload
-        ? RegistrationGroupCategoriesAssignedPayload.toJSON(
-            message.payload?.registrationGroupCategoriesAssignedPayload
-          )
+    message.registrationGroupCategoriesAssignedPayload !== undefined &&
+      (obj.registrationGroupCategoriesAssignedPayload =
+        message.registrationGroupCategoriesAssignedPayload
+          ? RegistrationGroupCategoriesAssignedPayload.toJSON(
+              message.registrationGroupCategoriesAssignedPayload
+            )
+          : undefined);
+    message.registrationGroupDeletedPayload !== undefined &&
+      (obj.registrationGroupDeletedPayload =
+        message.registrationGroupDeletedPayload
+          ? RegistrationGroupDeletedPayload.toJSON(
+              message.registrationGroupDeletedPayload
+            )
+          : undefined);
+    message.registrationInfoUpdatedPayload !== undefined &&
+      (obj.registrationInfoUpdatedPayload =
+        message.registrationInfoUpdatedPayload
+          ? RegistrationInfoUpdatedPayload.toJSON(
+              message.registrationInfoUpdatedPayload
+            )
+          : undefined);
+    message.registrationPeriodAddedPayload !== undefined &&
+      (obj.registrationPeriodAddedPayload =
+        message.registrationPeriodAddedPayload
+          ? RegistrationPeriodAddedPayload.toJSON(
+              message.registrationPeriodAddedPayload
+            )
+          : undefined);
+    message.registrationPeriodDeletedPayload !== undefined &&
+      (obj.registrationPeriodDeletedPayload =
+        message.registrationPeriodDeletedPayload
+          ? RegistrationPeriodDeletedPayload.toJSON(
+              message.registrationPeriodDeletedPayload
+            )
+          : undefined);
+    message.scheduleGeneratedPayload !== undefined &&
+      (obj.scheduleGeneratedPayload = message.scheduleGeneratedPayload
+        ? ScheduleGeneratedPayload.toJSON(message.scheduleGeneratedPayload)
         : undefined);
-    message.payload?.$case === 'registrationGroupDeletedPayload' &&
-      (obj.registrationGroupDeletedPayload = message.payload
-        ?.registrationGroupDeletedPayload
-        ? RegistrationGroupDeletedPayload.toJSON(
-            message.payload?.registrationGroupDeletedPayload
-          )
+    message.stageResultSetPayload !== undefined &&
+      (obj.stageResultSetPayload = message.stageResultSetPayload
+        ? StageResultSetPayload.toJSON(message.stageResultSetPayload)
         : undefined);
-    message.payload?.$case === 'registrationInfoUpdatedPayload' &&
-      (obj.registrationInfoUpdatedPayload = message.payload
-        ?.registrationInfoUpdatedPayload
-        ? RegistrationInfoUpdatedPayload.toJSON(
-            message.payload?.registrationInfoUpdatedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'registrationPeriodAddedPayload' &&
-      (obj.registrationPeriodAddedPayload = message.payload
-        ?.registrationPeriodAddedPayload
-        ? RegistrationPeriodAddedPayload.toJSON(
-            message.payload?.registrationPeriodAddedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'registrationPeriodDeletedPayload' &&
-      (obj.registrationPeriodDeletedPayload = message.payload
-        ?.registrationPeriodDeletedPayload
-        ? RegistrationPeriodDeletedPayload.toJSON(
-            message.payload?.registrationPeriodDeletedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'scheduleGeneratedPayload' &&
-      (obj.scheduleGeneratedPayload = message.payload?.scheduleGeneratedPayload
-        ? ScheduleGeneratedPayload.toJSON(
-            message.payload?.scheduleGeneratedPayload
-          )
-        : undefined);
-    message.payload?.$case === 'stageResultSetPayload' &&
-      (obj.stageResultSetPayload = message.payload?.stageResultSetPayload
-        ? StageResultSetPayload.toJSON(message.payload?.stageResultSetPayload)
-        : undefined);
-    message.payload?.$case === 'stageStatusUpdatedPayload' &&
-      (obj.stageStatusUpdatedPayload = message.payload
-        ?.stageStatusUpdatedPayload
-        ? StageStatusUpdatedPayload.toJSON(
-            message.payload?.stageStatusUpdatedPayload
-          )
+    message.stageStatusUpdatedPayload !== undefined &&
+      (obj.stageStatusUpdatedPayload = message.stageStatusUpdatedPayload
+        ? StageStatusUpdatedPayload.toJSON(message.stageStatusUpdatedPayload)
         : undefined);
     return obj;
   },
@@ -1881,674 +1442,339 @@ export const MessageInfo = {
     object: I
   ): MessageInfo {
     const message = createBaseMessageInfo();
-    message.id = object.id ?? '';
-    message.correlationId = object.correlationId ?? '';
-    message.competitionId = object.competitionId ?? '';
-    message.competitorId = object.competitorId ?? '';
-    message.categoryId = object.categoryId ?? '';
-    message.matId = object.matId ?? '';
-    if (
-      object.payload?.$case === 'addAcademyPayload' &&
-      object.payload?.addAcademyPayload !== undefined &&
-      object.payload?.addAcademyPayload !== null
-    ) {
-      message.payload = {
-        $case: 'addAcademyPayload',
-        addAcademyPayload: AddAcademyPayload.fromPartial(
-          object.payload.addAcademyPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'addCategoryPayload' &&
-      object.payload?.addCategoryPayload !== undefined &&
-      object.payload?.addCategoryPayload !== null
-    ) {
-      message.payload = {
-        $case: 'addCategoryPayload',
-        addCategoryPayload: AddCategoryPayload.fromPartial(
-          object.payload.addCategoryPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'addCompetitorPayload' &&
-      object.payload?.addCompetitorPayload !== undefined &&
-      object.payload?.addCompetitorPayload !== null
-    ) {
-      message.payload = {
-        $case: 'addCompetitorPayload',
-        addCompetitorPayload: AddCompetitorPayload.fromPartial(
-          object.payload.addCompetitorPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'addRegistrationGroupPayload' &&
-      object.payload?.addRegistrationGroupPayload !== undefined &&
-      object.payload?.addRegistrationGroupPayload !== null
-    ) {
-      message.payload = {
-        $case: 'addRegistrationGroupPayload',
-        addRegistrationGroupPayload: AddRegistrationGroupPayload.fromPartial(
-          object.payload.addRegistrationGroupPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'addRegistrationPeriodPayload' &&
-      object.payload?.addRegistrationPeriodPayload !== undefined &&
-      object.payload?.addRegistrationPeriodPayload !== null
-    ) {
-      message.payload = {
-        $case: 'addRegistrationPeriodPayload',
-        addRegistrationPeriodPayload: AddRegistrationPeriodPayload.fromPartial(
-          object.payload.addRegistrationPeriodPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'assignRegistrationGroupCategoriesPayload' &&
-      object.payload?.assignRegistrationGroupCategoriesPayload !== undefined &&
-      object.payload?.assignRegistrationGroupCategoriesPayload !== null
-    ) {
-      message.payload = {
-        $case: 'assignRegistrationGroupCategoriesPayload',
-        assignRegistrationGroupCategoriesPayload:
-          AssignRegistrationGroupCategoriesPayload.fromPartial(
-            object.payload.assignRegistrationGroupCategoriesPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'categoryRegistrationStatusChangePayload' &&
-      object.payload?.categoryRegistrationStatusChangePayload !== undefined &&
-      object.payload?.categoryRegistrationStatusChangePayload !== null
-    ) {
-      message.payload = {
-        $case: 'categoryRegistrationStatusChangePayload',
-        categoryRegistrationStatusChangePayload:
-          CategoryRegistrationStatusChangePayload.fromPartial(
-            object.payload.categoryRegistrationStatusChangePayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'changeCompetitorCategoryPayload' &&
-      object.payload?.changeCompetitorCategoryPayload !== undefined &&
-      object.payload?.changeCompetitorCategoryPayload !== null
-    ) {
-      message.payload = {
-        $case: 'changeCompetitorCategoryPayload',
-        changeCompetitorCategoryPayload:
-          ChangeCompetitorCategoryPayload.fromPartial(
-            object.payload.changeCompetitorCategoryPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'changeFightOrderPayload' &&
-      object.payload?.changeFightOrderPayload !== undefined &&
-      object.payload?.changeFightOrderPayload !== null
-    ) {
-      message.payload = {
-        $case: 'changeFightOrderPayload',
-        changeFightOrderPayload: ChangeFightOrderPayload.fromPartial(
-          object.payload.changeFightOrderPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitorCategoryAddedPayload' &&
-      object.payload?.competitorCategoryAddedPayload !== undefined &&
-      object.payload?.competitorCategoryAddedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitorCategoryAddedPayload',
-        competitorCategoryAddedPayload:
-          CompetitorCategoryAddedPayload.fromPartial(
-            object.payload.competitorCategoryAddedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'createCompetitionPayload' &&
-      object.payload?.createCompetitionPayload !== undefined &&
-      object.payload?.createCompetitionPayload !== null
-    ) {
-      message.payload = {
-        $case: 'createCompetitionPayload',
-        createCompetitionPayload: CreateCompetitionPayload.fromPartial(
-          object.payload.createCompetitionPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'createFakeCompetitorsPayload' &&
-      object.payload?.createFakeCompetitorsPayload !== undefined &&
-      object.payload?.createFakeCompetitorsPayload !== null
-    ) {
-      message.payload = {
-        $case: 'createFakeCompetitorsPayload',
-        createFakeCompetitorsPayload: CreateFakeCompetitorsPayload.fromPartial(
-          object.payload.createFakeCompetitorsPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'deleteRegistrationGroupPayload' &&
-      object.payload?.deleteRegistrationGroupPayload !== undefined &&
-      object.payload?.deleteRegistrationGroupPayload !== null
-    ) {
-      message.payload = {
-        $case: 'deleteRegistrationGroupPayload',
-        deleteRegistrationGroupPayload:
-          DeleteRegistrationGroupPayload.fromPartial(
-            object.payload.deleteRegistrationGroupPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'deleteRegistrationPeriodPayload' &&
-      object.payload?.deleteRegistrationPeriodPayload !== undefined &&
-      object.payload?.deleteRegistrationPeriodPayload !== null
-    ) {
-      message.payload = {
-        $case: 'deleteRegistrationPeriodPayload',
-        deleteRegistrationPeriodPayload:
-          DeleteRegistrationPeriodPayload.fromPartial(
-            object.payload.deleteRegistrationPeriodPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'fightEditorApplyChangesPayload' &&
-      object.payload?.fightEditorApplyChangesPayload !== undefined &&
-      object.payload?.fightEditorApplyChangesPayload !== null
-    ) {
-      message.payload = {
-        $case: 'fightEditorApplyChangesPayload',
-        fightEditorApplyChangesPayload:
-          FightEditorApplyChangesPayload.fromPartial(
-            object.payload.fightEditorApplyChangesPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'generateAbsoluteCategoryPayload' &&
-      object.payload?.generateAbsoluteCategoryPayload !== undefined &&
-      object.payload?.generateAbsoluteCategoryPayload !== null
-    ) {
-      message.payload = {
-        $case: 'generateAbsoluteCategoryPayload',
-        generateAbsoluteCategoryPayload:
-          GenerateAbsoluteCategoryPayload.fromPartial(
-            object.payload.generateAbsoluteCategoryPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'generateBracketsPayload' &&
-      object.payload?.generateBracketsPayload !== undefined &&
-      object.payload?.generateBracketsPayload !== null
-    ) {
-      message.payload = {
-        $case: 'generateBracketsPayload',
-        generateBracketsPayload: GenerateBracketsPayload.fromPartial(
-          object.payload.generateBracketsPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'generateCategoriesFromRestrictionsPayload' &&
-      object.payload?.generateCategoriesFromRestrictionsPayload !== undefined &&
-      object.payload?.generateCategoriesFromRestrictionsPayload !== null
-    ) {
-      message.payload = {
-        $case: 'generateCategoriesFromRestrictionsPayload',
-        generateCategoriesFromRestrictionsPayload:
-          GenerateCategoriesFromRestrictionsPayload.fromPartial(
-            object.payload.generateCategoriesFromRestrictionsPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'generateSchedulePayload' &&
-      object.payload?.generateSchedulePayload !== undefined &&
-      object.payload?.generateSchedulePayload !== null
-    ) {
-      message.payload = {
-        $case: 'generateSchedulePayload',
-        generateSchedulePayload: GenerateSchedulePayload.fromPartial(
-          object.payload.generateSchedulePayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'propagateCompetitorsPayload' &&
-      object.payload?.propagateCompetitorsPayload !== undefined &&
-      object.payload?.propagateCompetitorsPayload !== null
-    ) {
-      message.payload = {
-        $case: 'propagateCompetitorsPayload',
-        propagateCompetitorsPayload: PropagateCompetitorsPayload.fromPartial(
-          object.payload.propagateCompetitorsPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case ===
-        'registrationPeriodAddRegistrationGroupPayload' &&
-      object.payload?.registrationPeriodAddRegistrationGroupPayload !==
-        undefined &&
-      object.payload?.registrationPeriodAddRegistrationGroupPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationPeriodAddRegistrationGroupPayload',
-        registrationPeriodAddRegistrationGroupPayload:
-          RegistrationPeriodAddRegistrationGroupPayload.fromPartial(
-            object.payload.registrationPeriodAddRegistrationGroupPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'removeAcademyPayload' &&
-      object.payload?.removeAcademyPayload !== undefined &&
-      object.payload?.removeAcademyPayload !== null
-    ) {
-      message.payload = {
-        $case: 'removeAcademyPayload',
-        removeAcademyPayload: RemoveAcademyPayload.fromPartial(
-          object.payload.removeAcademyPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'removeCompetitorPayload' &&
-      object.payload?.removeCompetitorPayload !== undefined &&
-      object.payload?.removeCompetitorPayload !== null
-    ) {
-      message.payload = {
-        $case: 'removeCompetitorPayload',
-        removeCompetitorPayload: RemoveCompetitorPayload.fromPartial(
-          object.payload.removeCompetitorPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'setFightResultPayload' &&
-      object.payload?.setFightResultPayload !== undefined &&
-      object.payload?.setFightResultPayload !== null
-    ) {
-      message.payload = {
-        $case: 'setFightResultPayload',
-        setFightResultPayload: SetFightResultPayload.fromPartial(
-          object.payload.setFightResultPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'updateAcademyPayload' &&
-      object.payload?.updateAcademyPayload !== undefined &&
-      object.payload?.updateAcademyPayload !== null
-    ) {
-      message.payload = {
-        $case: 'updateAcademyPayload',
-        updateAcademyPayload: UpdateAcademyPayload.fromPartial(
-          object.payload.updateAcademyPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'updateCompetionPropertiesPayload' &&
-      object.payload?.updateCompetionPropertiesPayload !== undefined &&
-      object.payload?.updateCompetionPropertiesPayload !== null
-    ) {
-      message.payload = {
-        $case: 'updateCompetionPropertiesPayload',
-        updateCompetionPropertiesPayload:
-          UpdateCompetionPropertiesPayload.fromPartial(
-            object.payload.updateCompetionPropertiesPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'updateCompetitorPayload' &&
-      object.payload?.updateCompetitorPayload !== undefined &&
-      object.payload?.updateCompetitorPayload !== null
-    ) {
-      message.payload = {
-        $case: 'updateCompetitorPayload',
-        updateCompetitorPayload: UpdateCompetitorPayload.fromPartial(
-          object.payload.updateCompetitorPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'updateRegistrationInfoPayload' &&
-      object.payload?.updateRegistrationInfoPayload !== undefined &&
-      object.payload?.updateRegistrationInfoPayload !== null
-    ) {
-      message.payload = {
-        $case: 'updateRegistrationInfoPayload',
-        updateRegistrationInfoPayload:
-          UpdateRegistrationInfoPayload.fromPartial(
-            object.payload.updateRegistrationInfoPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'updateStageStatusPayload' &&
-      object.payload?.updateStageStatusPayload !== undefined &&
-      object.payload?.updateStageStatusPayload !== null
-    ) {
-      message.payload = {
-        $case: 'updateStageStatusPayload',
-        updateStageStatusPayload: UpdateStageStatusPayload.fromPartial(
-          object.payload.updateStageStatusPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'bracketsGeneratedPayload' &&
-      object.payload?.bracketsGeneratedPayload !== undefined &&
-      object.payload?.bracketsGeneratedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'bracketsGeneratedPayload',
-        bracketsGeneratedPayload: BracketsGeneratedPayload.fromPartial(
-          object.payload.bracketsGeneratedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'categoryAddedPayload' &&
-      object.payload?.categoryAddedPayload !== undefined &&
-      object.payload?.categoryAddedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'categoryAddedPayload',
-        categoryAddedPayload: CategoryAddedPayload.fromPartial(
-          object.payload.categoryAddedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitionCreatedPayload' &&
-      object.payload?.competitionCreatedPayload !== undefined &&
-      object.payload?.competitionCreatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitionCreatedPayload',
-        competitionCreatedPayload: CompetitionCreatedPayload.fromPartial(
-          object.payload.competitionCreatedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitionInfoPayload' &&
-      object.payload?.competitionInfoPayload !== undefined &&
-      object.payload?.competitionInfoPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitionInfoPayload',
-        competitionInfoPayload: CompetitionInfoPayload.fromPartial(
-          object.payload.competitionInfoPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitionPropertiesUpdatedPayload' &&
-      object.payload?.competitionPropertiesUpdatedPayload !== undefined &&
-      object.payload?.competitionPropertiesUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitionPropertiesUpdatedPayload',
-        competitionPropertiesUpdatedPayload:
-          CompetitionPropertiesUpdatedPayload.fromPartial(
-            object.payload.competitionPropertiesUpdatedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitionStatusUpdatedPayload' &&
-      object.payload?.competitionStatusUpdatedPayload !== undefined &&
-      object.payload?.competitionStatusUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitionStatusUpdatedPayload',
-        competitionStatusUpdatedPayload:
-          CompetitionStatusUpdatedPayload.fromPartial(
-            object.payload.competitionStatusUpdatedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitorAddedPayload' &&
-      object.payload?.competitorAddedPayload !== undefined &&
-      object.payload?.competitorAddedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitorAddedPayload',
-        competitorAddedPayload: CompetitorAddedPayload.fromPartial(
-          object.payload.competitorAddedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitorRemovedPayload' &&
-      object.payload?.competitorRemovedPayload !== undefined &&
-      object.payload?.competitorRemovedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitorRemovedPayload',
-        competitorRemovedPayload: CompetitorRemovedPayload.fromPartial(
-          object.payload.competitorRemovedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitorsPropagatedToStagePayload' &&
-      object.payload?.competitorsPropagatedToStagePayload !== undefined &&
-      object.payload?.competitorsPropagatedToStagePayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitorsPropagatedToStagePayload',
-        competitorsPropagatedToStagePayload:
-          CompetitorsPropagatedToStagePayload.fromPartial(
-            object.payload.competitorsPropagatedToStagePayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'competitorUpdatedPayload' &&
-      object.payload?.competitorUpdatedPayload !== undefined &&
-      object.payload?.competitorUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'competitorUpdatedPayload',
-        competitorUpdatedPayload: CompetitorUpdatedPayload.fromPartial(
-          object.payload.competitorUpdatedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'fightCompetitorsAssignedPayload' &&
-      object.payload?.fightCompetitorsAssignedPayload !== undefined &&
-      object.payload?.fightCompetitorsAssignedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'fightCompetitorsAssignedPayload',
-        fightCompetitorsAssignedPayload:
-          FightCompetitorsAssignedPayload.fromPartial(
-            object.payload.fightCompetitorsAssignedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'fightEditorChangesAppliedPayload' &&
-      object.payload?.fightEditorChangesAppliedPayload !== undefined &&
-      object.payload?.fightEditorChangesAppliedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'fightEditorChangesAppliedPayload',
-        fightEditorChangesAppliedPayload:
-          FightEditorChangesAppliedPayload.fromPartial(
-            object.payload.fightEditorChangesAppliedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'fightsAddedToStagePayload' &&
-      object.payload?.fightsAddedToStagePayload !== undefined &&
-      object.payload?.fightsAddedToStagePayload !== null
-    ) {
-      message.payload = {
-        $case: 'fightsAddedToStagePayload',
-        fightsAddedToStagePayload: FightsAddedToStagePayload.fromPartial(
-          object.payload.fightsAddedToStagePayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'fightStartTimeUpdatedPayload' &&
-      object.payload?.fightStartTimeUpdatedPayload !== undefined &&
-      object.payload?.fightStartTimeUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'fightStartTimeUpdatedPayload',
-        fightStartTimeUpdatedPayload: FightStartTimeUpdatedPayload.fromPartial(
-          object.payload.fightStartTimeUpdatedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'matsUpdatedPayload' &&
-      object.payload?.matsUpdatedPayload !== undefined &&
-      object.payload?.matsUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'matsUpdatedPayload',
-        matsUpdatedPayload: MatsUpdatedPayload.fromPartial(
-          object.payload.matsUpdatedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationGroupAddedPayload' &&
-      object.payload?.registrationGroupAddedPayload !== undefined &&
-      object.payload?.registrationGroupAddedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationGroupAddedPayload',
-        registrationGroupAddedPayload:
-          RegistrationGroupAddedPayload.fromPartial(
-            object.payload.registrationGroupAddedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationGroupCategoriesAssignedPayload' &&
-      object.payload?.registrationGroupCategoriesAssignedPayload !==
-        undefined &&
-      object.payload?.registrationGroupCategoriesAssignedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationGroupCategoriesAssignedPayload',
-        registrationGroupCategoriesAssignedPayload:
-          RegistrationGroupCategoriesAssignedPayload.fromPartial(
-            object.payload.registrationGroupCategoriesAssignedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationGroupDeletedPayload' &&
-      object.payload?.registrationGroupDeletedPayload !== undefined &&
-      object.payload?.registrationGroupDeletedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationGroupDeletedPayload',
-        registrationGroupDeletedPayload:
-          RegistrationGroupDeletedPayload.fromPartial(
-            object.payload.registrationGroupDeletedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationInfoUpdatedPayload' &&
-      object.payload?.registrationInfoUpdatedPayload !== undefined &&
-      object.payload?.registrationInfoUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationInfoUpdatedPayload',
-        registrationInfoUpdatedPayload:
-          RegistrationInfoUpdatedPayload.fromPartial(
-            object.payload.registrationInfoUpdatedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationPeriodAddedPayload' &&
-      object.payload?.registrationPeriodAddedPayload !== undefined &&
-      object.payload?.registrationPeriodAddedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationPeriodAddedPayload',
-        registrationPeriodAddedPayload:
-          RegistrationPeriodAddedPayload.fromPartial(
-            object.payload.registrationPeriodAddedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'registrationPeriodDeletedPayload' &&
-      object.payload?.registrationPeriodDeletedPayload !== undefined &&
-      object.payload?.registrationPeriodDeletedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'registrationPeriodDeletedPayload',
-        registrationPeriodDeletedPayload:
-          RegistrationPeriodDeletedPayload.fromPartial(
-            object.payload.registrationPeriodDeletedPayload
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'scheduleGeneratedPayload' &&
-      object.payload?.scheduleGeneratedPayload !== undefined &&
-      object.payload?.scheduleGeneratedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'scheduleGeneratedPayload',
-        scheduleGeneratedPayload: ScheduleGeneratedPayload.fromPartial(
-          object.payload.scheduleGeneratedPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'stageResultSetPayload' &&
-      object.payload?.stageResultSetPayload !== undefined &&
-      object.payload?.stageResultSetPayload !== null
-    ) {
-      message.payload = {
-        $case: 'stageResultSetPayload',
-        stageResultSetPayload: StageResultSetPayload.fromPartial(
-          object.payload.stageResultSetPayload
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'stageStatusUpdatedPayload' &&
-      object.payload?.stageStatusUpdatedPayload !== undefined &&
-      object.payload?.stageStatusUpdatedPayload !== null
-    ) {
-      message.payload = {
-        $case: 'stageStatusUpdatedPayload',
-        stageStatusUpdatedPayload: StageStatusUpdatedPayload.fromPartial(
-          object.payload.stageStatusUpdatedPayload
-        ),
-      };
-    }
+    message.id = object.id ?? undefined;
+    message.correlationId = object.correlationId ?? undefined;
+    message.competitionId = object.competitionId ?? undefined;
+    message.competitorId = object.competitorId ?? undefined;
+    message.categoryId = object.categoryId ?? undefined;
+    message.matId = object.matId ?? undefined;
+    message.addAcademyPayload =
+      object.addAcademyPayload !== undefined &&
+      object.addAcademyPayload !== null
+        ? AddAcademyPayload.fromPartial(object.addAcademyPayload)
+        : undefined;
+    message.addCategoryPayload =
+      object.addCategoryPayload !== undefined &&
+      object.addCategoryPayload !== null
+        ? AddCategoryPayload.fromPartial(object.addCategoryPayload)
+        : undefined;
+    message.addCompetitorPayload =
+      object.addCompetitorPayload !== undefined &&
+      object.addCompetitorPayload !== null
+        ? AddCompetitorPayload.fromPartial(object.addCompetitorPayload)
+        : undefined;
+    message.addRegistrationGroupPayload =
+      object.addRegistrationGroupPayload !== undefined &&
+      object.addRegistrationGroupPayload !== null
+        ? AddRegistrationGroupPayload.fromPartial(
+            object.addRegistrationGroupPayload
+          )
+        : undefined;
+    message.addRegistrationPeriodPayload =
+      object.addRegistrationPeriodPayload !== undefined &&
+      object.addRegistrationPeriodPayload !== null
+        ? AddRegistrationPeriodPayload.fromPartial(
+            object.addRegistrationPeriodPayload
+          )
+        : undefined;
+    message.assignRegistrationGroupCategoriesPayload =
+      object.assignRegistrationGroupCategoriesPayload !== undefined &&
+      object.assignRegistrationGroupCategoriesPayload !== null
+        ? AssignRegistrationGroupCategoriesPayload.fromPartial(
+            object.assignRegistrationGroupCategoriesPayload
+          )
+        : undefined;
+    message.categoryRegistrationStatusChangePayload =
+      object.categoryRegistrationStatusChangePayload !== undefined &&
+      object.categoryRegistrationStatusChangePayload !== null
+        ? CategoryRegistrationStatusChangePayload.fromPartial(
+            object.categoryRegistrationStatusChangePayload
+          )
+        : undefined;
+    message.changeCompetitorCategoryPayload =
+      object.changeCompetitorCategoryPayload !== undefined &&
+      object.changeCompetitorCategoryPayload !== null
+        ? ChangeCompetitorCategoryPayload.fromPartial(
+            object.changeCompetitorCategoryPayload
+          )
+        : undefined;
+    message.changeFightOrderPayload =
+      object.changeFightOrderPayload !== undefined &&
+      object.changeFightOrderPayload !== null
+        ? ChangeFightOrderPayload.fromPartial(object.changeFightOrderPayload)
+        : undefined;
+    message.competitorCategoryAddedPayload =
+      object.competitorCategoryAddedPayload !== undefined &&
+      object.competitorCategoryAddedPayload !== null
+        ? CompetitorCategoryAddedPayload.fromPartial(
+            object.competitorCategoryAddedPayload
+          )
+        : undefined;
+    message.createCompetitionPayload =
+      object.createCompetitionPayload !== undefined &&
+      object.createCompetitionPayload !== null
+        ? CreateCompetitionPayload.fromPartial(object.createCompetitionPayload)
+        : undefined;
+    message.createFakeCompetitorsPayload =
+      object.createFakeCompetitorsPayload !== undefined &&
+      object.createFakeCompetitorsPayload !== null
+        ? CreateFakeCompetitorsPayload.fromPartial(
+            object.createFakeCompetitorsPayload
+          )
+        : undefined;
+    message.deleteRegistrationGroupPayload =
+      object.deleteRegistrationGroupPayload !== undefined &&
+      object.deleteRegistrationGroupPayload !== null
+        ? DeleteRegistrationGroupPayload.fromPartial(
+            object.deleteRegistrationGroupPayload
+          )
+        : undefined;
+    message.deleteRegistrationPeriodPayload =
+      object.deleteRegistrationPeriodPayload !== undefined &&
+      object.deleteRegistrationPeriodPayload !== null
+        ? DeleteRegistrationPeriodPayload.fromPartial(
+            object.deleteRegistrationPeriodPayload
+          )
+        : undefined;
+    message.fightEditorApplyChangesPayload =
+      object.fightEditorApplyChangesPayload !== undefined &&
+      object.fightEditorApplyChangesPayload !== null
+        ? FightEditorApplyChangesPayload.fromPartial(
+            object.fightEditorApplyChangesPayload
+          )
+        : undefined;
+    message.generateAbsoluteCategoryPayload =
+      object.generateAbsoluteCategoryPayload !== undefined &&
+      object.generateAbsoluteCategoryPayload !== null
+        ? GenerateAbsoluteCategoryPayload.fromPartial(
+            object.generateAbsoluteCategoryPayload
+          )
+        : undefined;
+    message.generateBracketsPayload =
+      object.generateBracketsPayload !== undefined &&
+      object.generateBracketsPayload !== null
+        ? GenerateBracketsPayload.fromPartial(object.generateBracketsPayload)
+        : undefined;
+    message.generateCategoriesFromRestrictionsPayload =
+      object.generateCategoriesFromRestrictionsPayload !== undefined &&
+      object.generateCategoriesFromRestrictionsPayload !== null
+        ? GenerateCategoriesFromRestrictionsPayload.fromPartial(
+            object.generateCategoriesFromRestrictionsPayload
+          )
+        : undefined;
+    message.generateSchedulePayload =
+      object.generateSchedulePayload !== undefined &&
+      object.generateSchedulePayload !== null
+        ? GenerateSchedulePayload.fromPartial(object.generateSchedulePayload)
+        : undefined;
+    message.propagateCompetitorsPayload =
+      object.propagateCompetitorsPayload !== undefined &&
+      object.propagateCompetitorsPayload !== null
+        ? PropagateCompetitorsPayload.fromPartial(
+            object.propagateCompetitorsPayload
+          )
+        : undefined;
+    message.registrationPeriodAddRegistrationGroupPayload =
+      object.registrationPeriodAddRegistrationGroupPayload !== undefined &&
+      object.registrationPeriodAddRegistrationGroupPayload !== null
+        ? RegistrationPeriodAddRegistrationGroupPayload.fromPartial(
+            object.registrationPeriodAddRegistrationGroupPayload
+          )
+        : undefined;
+    message.removeAcademyPayload =
+      object.removeAcademyPayload !== undefined &&
+      object.removeAcademyPayload !== null
+        ? RemoveAcademyPayload.fromPartial(object.removeAcademyPayload)
+        : undefined;
+    message.removeCompetitorPayload =
+      object.removeCompetitorPayload !== undefined &&
+      object.removeCompetitorPayload !== null
+        ? RemoveCompetitorPayload.fromPartial(object.removeCompetitorPayload)
+        : undefined;
+    message.setFightResultPayload =
+      object.setFightResultPayload !== undefined &&
+      object.setFightResultPayload !== null
+        ? SetFightResultPayload.fromPartial(object.setFightResultPayload)
+        : undefined;
+    message.updateAcademyPayload =
+      object.updateAcademyPayload !== undefined &&
+      object.updateAcademyPayload !== null
+        ? UpdateAcademyPayload.fromPartial(object.updateAcademyPayload)
+        : undefined;
+    message.updateCompetionPropertiesPayload =
+      object.updateCompetionPropertiesPayload !== undefined &&
+      object.updateCompetionPropertiesPayload !== null
+        ? UpdateCompetionPropertiesPayload.fromPartial(
+            object.updateCompetionPropertiesPayload
+          )
+        : undefined;
+    message.updateCompetitorPayload =
+      object.updateCompetitorPayload !== undefined &&
+      object.updateCompetitorPayload !== null
+        ? UpdateCompetitorPayload.fromPartial(object.updateCompetitorPayload)
+        : undefined;
+    message.updateRegistrationInfoPayload =
+      object.updateRegistrationInfoPayload !== undefined &&
+      object.updateRegistrationInfoPayload !== null
+        ? UpdateRegistrationInfoPayload.fromPartial(
+            object.updateRegistrationInfoPayload
+          )
+        : undefined;
+    message.updateStageStatusPayload =
+      object.updateStageStatusPayload !== undefined &&
+      object.updateStageStatusPayload !== null
+        ? UpdateStageStatusPayload.fromPartial(object.updateStageStatusPayload)
+        : undefined;
+    message.bracketsGeneratedPayload =
+      object.bracketsGeneratedPayload !== undefined &&
+      object.bracketsGeneratedPayload !== null
+        ? BracketsGeneratedPayload.fromPartial(object.bracketsGeneratedPayload)
+        : undefined;
+    message.categoryAddedPayload =
+      object.categoryAddedPayload !== undefined &&
+      object.categoryAddedPayload !== null
+        ? CategoryAddedPayload.fromPartial(object.categoryAddedPayload)
+        : undefined;
+    message.competitionCreatedPayload =
+      object.competitionCreatedPayload !== undefined &&
+      object.competitionCreatedPayload !== null
+        ? CompetitionCreatedPayload.fromPartial(
+            object.competitionCreatedPayload
+          )
+        : undefined;
+    message.competitionInfoPayload =
+      object.competitionInfoPayload !== undefined &&
+      object.competitionInfoPayload !== null
+        ? CompetitionInfoPayload.fromPartial(object.competitionInfoPayload)
+        : undefined;
+    message.competitionPropertiesUpdatedPayload =
+      object.competitionPropertiesUpdatedPayload !== undefined &&
+      object.competitionPropertiesUpdatedPayload !== null
+        ? CompetitionPropertiesUpdatedPayload.fromPartial(
+            object.competitionPropertiesUpdatedPayload
+          )
+        : undefined;
+    message.competitionStatusUpdatedPayload =
+      object.competitionStatusUpdatedPayload !== undefined &&
+      object.competitionStatusUpdatedPayload !== null
+        ? CompetitionStatusUpdatedPayload.fromPartial(
+            object.competitionStatusUpdatedPayload
+          )
+        : undefined;
+    message.competitorAddedPayload =
+      object.competitorAddedPayload !== undefined &&
+      object.competitorAddedPayload !== null
+        ? CompetitorAddedPayload.fromPartial(object.competitorAddedPayload)
+        : undefined;
+    message.competitorRemovedPayload =
+      object.competitorRemovedPayload !== undefined &&
+      object.competitorRemovedPayload !== null
+        ? CompetitorRemovedPayload.fromPartial(object.competitorRemovedPayload)
+        : undefined;
+    message.competitorsPropagatedToStagePayload =
+      object.competitorsPropagatedToStagePayload !== undefined &&
+      object.competitorsPropagatedToStagePayload !== null
+        ? CompetitorsPropagatedToStagePayload.fromPartial(
+            object.competitorsPropagatedToStagePayload
+          )
+        : undefined;
+    message.competitorUpdatedPayload =
+      object.competitorUpdatedPayload !== undefined &&
+      object.competitorUpdatedPayload !== null
+        ? CompetitorUpdatedPayload.fromPartial(object.competitorUpdatedPayload)
+        : undefined;
+    message.fightCompetitorsAssignedPayload =
+      object.fightCompetitorsAssignedPayload !== undefined &&
+      object.fightCompetitorsAssignedPayload !== null
+        ? FightCompetitorsAssignedPayload.fromPartial(
+            object.fightCompetitorsAssignedPayload
+          )
+        : undefined;
+    message.fightEditorChangesAppliedPayload =
+      object.fightEditorChangesAppliedPayload !== undefined &&
+      object.fightEditorChangesAppliedPayload !== null
+        ? FightEditorChangesAppliedPayload.fromPartial(
+            object.fightEditorChangesAppliedPayload
+          )
+        : undefined;
+    message.fightsAddedToStagePayload =
+      object.fightsAddedToStagePayload !== undefined &&
+      object.fightsAddedToStagePayload !== null
+        ? FightsAddedToStagePayload.fromPartial(
+            object.fightsAddedToStagePayload
+          )
+        : undefined;
+    message.fightStartTimeUpdatedPayload =
+      object.fightStartTimeUpdatedPayload !== undefined &&
+      object.fightStartTimeUpdatedPayload !== null
+        ? FightStartTimeUpdatedPayload.fromPartial(
+            object.fightStartTimeUpdatedPayload
+          )
+        : undefined;
+    message.matsUpdatedPayload =
+      object.matsUpdatedPayload !== undefined &&
+      object.matsUpdatedPayload !== null
+        ? MatsUpdatedPayload.fromPartial(object.matsUpdatedPayload)
+        : undefined;
+    message.registrationGroupAddedPayload =
+      object.registrationGroupAddedPayload !== undefined &&
+      object.registrationGroupAddedPayload !== null
+        ? RegistrationGroupAddedPayload.fromPartial(
+            object.registrationGroupAddedPayload
+          )
+        : undefined;
+    message.registrationGroupCategoriesAssignedPayload =
+      object.registrationGroupCategoriesAssignedPayload !== undefined &&
+      object.registrationGroupCategoriesAssignedPayload !== null
+        ? RegistrationGroupCategoriesAssignedPayload.fromPartial(
+            object.registrationGroupCategoriesAssignedPayload
+          )
+        : undefined;
+    message.registrationGroupDeletedPayload =
+      object.registrationGroupDeletedPayload !== undefined &&
+      object.registrationGroupDeletedPayload !== null
+        ? RegistrationGroupDeletedPayload.fromPartial(
+            object.registrationGroupDeletedPayload
+          )
+        : undefined;
+    message.registrationInfoUpdatedPayload =
+      object.registrationInfoUpdatedPayload !== undefined &&
+      object.registrationInfoUpdatedPayload !== null
+        ? RegistrationInfoUpdatedPayload.fromPartial(
+            object.registrationInfoUpdatedPayload
+          )
+        : undefined;
+    message.registrationPeriodAddedPayload =
+      object.registrationPeriodAddedPayload !== undefined &&
+      object.registrationPeriodAddedPayload !== null
+        ? RegistrationPeriodAddedPayload.fromPartial(
+            object.registrationPeriodAddedPayload
+          )
+        : undefined;
+    message.registrationPeriodDeletedPayload =
+      object.registrationPeriodDeletedPayload !== undefined &&
+      object.registrationPeriodDeletedPayload !== null
+        ? RegistrationPeriodDeletedPayload.fromPartial(
+            object.registrationPeriodDeletedPayload
+          )
+        : undefined;
+    message.scheduleGeneratedPayload =
+      object.scheduleGeneratedPayload !== undefined &&
+      object.scheduleGeneratedPayload !== null
+        ? ScheduleGeneratedPayload.fromPartial(object.scheduleGeneratedPayload)
+        : undefined;
+    message.stageResultSetPayload =
+      object.stageResultSetPayload !== undefined &&
+      object.stageResultSetPayload !== null
+        ? StageResultSetPayload.fromPartial(object.stageResultSetPayload)
+        : undefined;
+    message.stageStatusUpdatedPayload =
+      object.stageStatusUpdatedPayload !== undefined &&
+      object.stageStatusUpdatedPayload !== null
+        ? StageStatusUpdatedPayload.fromPartial(
+            object.stageStatusUpdatedPayload
+          )
+        : undefined;
     return message;
   },
 };
@@ -2568,10 +1794,6 @@ type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & {
-      $case: T['$case'];
-    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

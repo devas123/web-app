@@ -10,7 +10,7 @@ import {Dictionary} from '@ngrx/entity';
 import {
   CategoryDescriptor,
   CategoryRestriction, CompetitionProperties, Competitor, FightDescription,
-  FightResultOption, MatDescription,
+  FightResultOption, ManagedCompetition, MatDescription,
   Period, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule,
   ScheduleRequirement, StageDescriptor,
   StageStatus
@@ -33,7 +33,6 @@ export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
 export const EVENT_MANAGER_ADD_COMPETITOR = 'ADD_COMPETITOR_COMMAND';
-export const EVENT_MANAGER_MOVE_COMPETITOR = 'MOVE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_REMOVE_COMPETITOR = 'REMOVE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
 export const EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND = 'CREATE_FAKE_COMPETITORS_COMMAND';
@@ -186,7 +185,7 @@ export const eventManagerDeleteRegistrationGroup = (competitionId: string, perio
 });
 
 
-export const myCompetitionsLoaded = (competitionProperties: CompetitionProperties[]) => ({
+export const myCompetitionsLoaded = (competitionProperties: ManagedCompetition[]) => ({
   type: EVENT_MANAGER_COMPETITIONS_LOADED,
   payload: competitionProperties
 });

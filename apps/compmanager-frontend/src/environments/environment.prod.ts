@@ -8,7 +8,7 @@ export const urls = {
   scheduleEndpoint: '/query/v1/schedule',
   categoriesEndpoint: '/query/v1/categories',
   competitorsEndpoint: '/query/v1/competitors',
-  defaultCategories: '/query/v1/defaultrestrictions',
+  defaultRestrictions: '/query/v1/defaultrestrictions',
   compProperties: '/query/v1/comprops',
   compInfoTemplate: '/query/v1/infotemplate',
   categoryState: '/query/v1/categorystate',

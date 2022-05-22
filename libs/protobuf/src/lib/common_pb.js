@@ -564,43 +564,43 @@ proto.compservice.model.protobuf.MessageInfo.prototype.serializeBinary = functio
  */
 proto.compservice.model.protobuf.MessageInfo.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getId();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 1));
+  if (f != null) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getCorrelationid();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 2));
+  if (f != null) {
     writer.writeString(
       2,
       f
     );
   }
-  f = message.getCompetitionid();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 3));
+  if (f != null) {
     writer.writeString(
       3,
       f
     );
   }
-  f = message.getCompetitorid();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 4));
+  if (f != null) {
     writer.writeString(
       4,
       f
     );
   }
-  f = message.getCategoryid();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 5));
+  if (f != null) {
     writer.writeString(
       5,
       f
     );
   }
-  f = message.getMatid();
-  if (f.length > 0) {
+  f = /** @type {string} */ (jspb.Message.getField(message, 6));
+  if (f != null) {
     writer.writeString(
       6,
       f
@@ -1047,7 +1047,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getId = function() {
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setId = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setField(this, 1, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearId = function() {
+  return jspb.Message.setField(this, 1, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasId = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 
@@ -1065,7 +1083,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getCorrelationid = functi
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setCorrelationid = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setField(this, 2, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearCorrelationid = function() {
+  return jspb.Message.setField(this, 2, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasCorrelationid = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 
@@ -1083,7 +1119,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getCompetitionid = functi
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setCompetitionid = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setField(this, 3, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearCompetitionid = function() {
+  return jspb.Message.setField(this, 3, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasCompetitionid = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1101,7 +1155,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getCompetitorid = functio
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setCompetitorid = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearCompetitorid = function() {
+  return jspb.Message.setField(this, 4, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasCompetitorid = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -1119,7 +1191,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getCategoryid = function(
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setCategoryid = function(value) {
-  return jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearCategoryid = function() {
+  return jspb.Message.setField(this, 5, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasCategoryid = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
@@ -1137,7 +1227,25 @@ proto.compservice.model.protobuf.MessageInfo.prototype.getMatid = function() {
  * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.setMatid = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
+  return jspb.Message.setField(this, 6, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.clearMatid = function() {
+  return jspb.Message.setField(this, 6, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.MessageInfo.prototype.hasMatid = function() {
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

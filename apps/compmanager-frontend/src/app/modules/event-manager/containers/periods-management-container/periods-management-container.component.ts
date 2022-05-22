@@ -5,12 +5,10 @@ import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reduce
 import {Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {dashboardDeleteState, dashboardRemovePeriod} from '../../redux/dashboard-actions';
 import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
-import {Period} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-periods-management-container',
@@ -35,10 +33,6 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
           name: 'Return',
           action: () => this.navigateBack()
         },
-        {
-          name: 'Reset progress',
-          action: () => this.sendDeleteDashboardStateCommand()
-        }
       ]
     }, menuService);
   }
@@ -57,17 +51,11 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
     return this.router.navigate(['..', '..', 'categories', categoryId], {relativeTo: this.route});
   }
 
-  removePeriod(period: Period) {
-    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardRemovePeriod(competitionId, period.id));
-  }
 
   selectPeriod(periodId: string) {
     this.router.navigate([periodId], {relativeTo: this.route}).catch(r => console.log(`Error selecting period: ${r}`));
   }
 
-  sendDeleteDashboardStateCommand() {
-    this.scheduleInfo.sendCommandFromCompetitionId(competitionId => dashboardDeleteState(competitionId));
-  }
 
   ngOnDestroy() {
     this.subs.unsubscribe();

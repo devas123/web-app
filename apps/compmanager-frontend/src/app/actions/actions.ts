@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
+import {CompetitionProperties, ManagedCompetition, RegistrationInfo} from "@frontend-nx/protobuf";
 
 // Commands
 export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';
@@ -22,7 +22,7 @@ export const COMPETITION_UNPUBLISHED = 'COMPETITION_UNPUBLISHED';
 export const ERROR_EVENT = 'ERROR_EVENT';
 
 export const errorEvent = (text: string) => ({type: ERROR_EVENT, payload: text} as Action);
-export const competitionsLoaded = (payload: CompetitionProperties[]) => ({type: COMPETITION_LIST_LOADED, payload});
+export const competitionsLoaded = (payload: ManagedCompetition[]) => ({type: COMPETITION_LIST_LOADED, payload});
 export const registrationInfoLoaded = (payload: RegistrationInfo) => ({type: REGISTRATION_INFO_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
 export const publishCompetition = (competitionId: string) => ({

@@ -5,7 +5,7 @@ import {select, Store} from '@ngrx/store';
 import {selectAllCompetitions} from '../../redux/reducers';
 import {map} from 'rxjs/operators';
 import * as allActions from '../../../../actions/actions';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
+import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-calendar',
@@ -13,9 +13,9 @@ import {CompetitionProperties} from "@frontend-nx/protobuf";
   styleUrls: ['./event-calendar.component.css']
 })
 export class EventCalendarComponent implements OnInit {
-  eventsList$: Observable<CompetitionProperties[]>;
+  eventsList$: Observable<ManagedCompetition[]>;
   constructor(private store: Store<AppState>) {
-    this.eventsList$ = this.store.pipe(select(selectAllCompetitions), map(data => data as CompetitionProperties[]));
+    this.eventsList$ = this.store.pipe(select(selectAllCompetitions), map(data => data as ManagedCompetition[]));
   }
 
 

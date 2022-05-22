@@ -7,10 +7,19 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
 import {AppState} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../../containers/event-manager-container/common-classes';
+import {
+  ComponentCommonMetadataProvider,
+  EventManagerRouterEntryComponent
+} from '../../containers/event-manager-container/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {selectUser} from '../../../competition/redux/reducers';
-import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
+import {
+  CompetitionProperties,
+  CompetitionStatus,
+  PromoCode,
+  RegistrationGroup,
+  RegistrationInfo, RegistrationPeriod
+} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-create-event',
@@ -18,7 +27,7 @@ import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
   styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
+export class CreateEventComponent extends EventManagerRouterEntryComponent implements OnDestroy {
 
   form: FormGroup;
   @Output()
@@ -45,6 +54,12 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
   get competitionName() {
     return this.form.get('competitionName');
   }
+  get startDate() {
+    return this.form.get('startDate');
+  }
+  setStartDate(value: Date) {
+    this.form.patchValue({startDate: value});
+  }
 
   // get registrationFee() {
   //   return this.form.get('registrationFee');
@@ -57,6 +72,7 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
   createForm() {
     this.form = this.fb.group({
       competitionName: ['', [Validators.required]],
+      startDate: [new Date(), [Validators.required]],
       // registrationFee: ['1500'],
       registrationOpen: [false]
     });
@@ -77,15 +93,25 @@ export class CreateEventComponent extends EventManagerRouterEntryComponent imple
       select(selectUser),
       take(1),
       map((user: Account) => {
-        const props = {} as CompetitionProperties;
-        const regInfo = {} as RegistrationInfo;
+        const props = <CompetitionProperties>{};
+        const regInfo = <RegistrationInfo>{};
         regInfo.registrationOpen = this.registrationOpen.value || false;
+        regInfo.id = '';
+        regInfo.registrationGroups = <{ [key: string]: RegistrationGroup }>{};
+        regInfo.registrationPeriods = <{ [key: string]: RegistrationPeriod }>{};
         props.creatorId = Number(user.userId).toString();
         props.competitionName = this.competitionName.value;
         // props.registrationFee = this.registrationFee.value || '1500';
         props.id = '';
         props.schedulePublished = false;
         props.bracketsPublished = false;
+        props.emailNotificationsEnabled = false;
+        props.staffIds = <string[]>[];
+        props.promoCodes = <PromoCode[]>[];
+        props.timeZone = 'UTC';
+        props.status = CompetitionStatus.COMPETITION_STATUS_CREATED;
+        props.creationTimestamp = new Date();
+        props.startDate = this.startDate.value
         return createCompetition(props, regInfo);
       }),
       tap(this.store))

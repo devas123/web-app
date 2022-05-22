@@ -1460,9 +1460,8 @@ export interface PromoCode {
 }
 
 export interface CompetitionProcessorNotification {
-  notification?:
-    | { $case: 'started'; started: CompetitionProcessingStarted }
-    | { $case: 'stopped'; stopped: CompetitionProcessingStopped };
+  started?: CompetitionProcessingStarted | undefined;
+  stopped?: CompetitionProcessingStopped | undefined;
 }
 
 export interface CompetitionProcessingStarted {
@@ -5321,7 +5320,7 @@ export const PromoCode = {
 };
 
 function createBaseCompetitionProcessorNotification(): CompetitionProcessorNotification {
-  return { notification: undefined };
+  return { started: undefined, stopped: undefined };
 }
 
 export const CompetitionProcessorNotification = {
@@ -5329,15 +5328,15 @@ export const CompetitionProcessorNotification = {
     message: CompetitionProcessorNotification,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.notification?.$case === 'started') {
+    if (message.started !== undefined) {
       CompetitionProcessingStarted.encode(
-        message.notification.started,
+        message.started,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.notification?.$case === 'stopped') {
+    if (message.stopped !== undefined) {
       CompetitionProcessingStopped.encode(
-        message.notification.stopped,
+        message.stopped,
         writer.uint32(18).fork()
       ).ldelim();
     }
@@ -5355,22 +5354,16 @@ export const CompetitionProcessorNotification = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.notification = {
-            $case: 'started',
-            started: CompetitionProcessingStarted.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.started = CompetitionProcessingStarted.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 2:
-          message.notification = {
-            $case: 'stopped',
-            stopped: CompetitionProcessingStopped.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.stopped = CompetitionProcessingStopped.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -5382,29 +5375,24 @@ export const CompetitionProcessorNotification = {
 
   fromJSON(object: any): CompetitionProcessorNotification {
     return {
-      notification: isSet(object.started)
-        ? {
-            $case: 'started',
-            started: CompetitionProcessingStarted.fromJSON(object.started),
-          }
-        : isSet(object.stopped)
-        ? {
-            $case: 'stopped',
-            stopped: CompetitionProcessingStopped.fromJSON(object.stopped),
-          }
+      started: isSet(object.started)
+        ? CompetitionProcessingStarted.fromJSON(object.started)
+        : undefined,
+      stopped: isSet(object.stopped)
+        ? CompetitionProcessingStopped.fromJSON(object.stopped)
         : undefined,
     };
   },
 
   toJSON(message: CompetitionProcessorNotification): unknown {
     const obj: any = {};
-    message.notification?.$case === 'started' &&
-      (obj.started = message.notification?.started
-        ? CompetitionProcessingStarted.toJSON(message.notification?.started)
+    message.started !== undefined &&
+      (obj.started = message.started
+        ? CompetitionProcessingStarted.toJSON(message.started)
         : undefined);
-    message.notification?.$case === 'stopped' &&
-      (obj.stopped = message.notification?.stopped
-        ? CompetitionProcessingStopped.toJSON(message.notification?.stopped)
+    message.stopped !== undefined &&
+      (obj.stopped = message.stopped
+        ? CompetitionProcessingStopped.toJSON(message.stopped)
         : undefined);
     return obj;
   },
@@ -5413,30 +5401,14 @@ export const CompetitionProcessorNotification = {
     I extends Exact<DeepPartial<CompetitionProcessorNotification>, I>
   >(object: I): CompetitionProcessorNotification {
     const message = createBaseCompetitionProcessorNotification();
-    if (
-      object.notification?.$case === 'started' &&
-      object.notification?.started !== undefined &&
-      object.notification?.started !== null
-    ) {
-      message.notification = {
-        $case: 'started',
-        started: CompetitionProcessingStarted.fromPartial(
-          object.notification.started
-        ),
-      };
-    }
-    if (
-      object.notification?.$case === 'stopped' &&
-      object.notification?.stopped !== undefined &&
-      object.notification?.stopped !== null
-    ) {
-      message.notification = {
-        $case: 'stopped',
-        stopped: CompetitionProcessingStopped.fromPartial(
-          object.notification.stopped
-        ),
-      };
-    }
+    message.started =
+      object.started !== undefined && object.started !== null
+        ? CompetitionProcessingStarted.fromPartial(object.started)
+        : undefined;
+    message.stopped =
+      object.stopped !== undefined && object.stopped !== null
+        ? CompetitionProcessingStopped.fromPartial(object.stopped)
+        : undefined;
     return message;
   },
 };
@@ -7054,10 +7026,6 @@ type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & {
-      $case: T['$case'];
-    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

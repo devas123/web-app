@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
 import {Router} from '@angular/router';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
+import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-card',
@@ -12,7 +12,7 @@ import {CompetitionProperties} from "@frontend-nx/protobuf";
 export class EventCardComponent implements AfterViewInit {
 
   @Input()
-  eventInfo: CompetitionProperties;
+  eventInfo: ManagedCompetition;
 
   public transitionController;
 

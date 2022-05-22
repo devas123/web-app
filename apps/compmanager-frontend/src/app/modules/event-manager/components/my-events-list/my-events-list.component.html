@@ -4,7 +4,6 @@
     <div class="content">
       <a class="header" (click)="editEvent(event.id)">{{event.competitionName}}</a>
       <div class="description">STATUS: {{event.status}}</div>
-      <div class="description" *ngIf="event?.registrationInfo?.registrationOpen">Registration Open!</div>
       <div class="action_buttons">
         <div class="ui icon button" (click)="editEvent(event.id)">
           <i class="edit icon"></i>

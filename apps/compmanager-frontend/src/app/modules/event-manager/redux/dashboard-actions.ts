@@ -17,10 +17,6 @@ export interface IDashboardFightScheduleChangedPayload {
 export const DASHBOARD_LOAD_MATS_COMMAND = 'DASHBOARD_LOAD_MATS_COMMAND';
 export const DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND = 'DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND';
 export const DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND';
-export const DASHBOARD_INIT_PERIOD_COMMAND = 'INIT_PERIOD_COMMAND';
-export const DASHBOARD_DELETE_PERIOD_COMMAND = 'DELETE_PERIOD_COMMAND';
-export const DASHBOARD_INIT_DASHBOARD_STATE_COMMAND = 'CREATE_DASHBOARD_COMMAND';
-export const DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND = 'DELETE_DASHBOARD_COMMAND';
 export const DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND = 'DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND';
 export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_COMMAND';
 
@@ -55,11 +51,6 @@ export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED}
 export const dashboardFightOrderChangeCommand = createAction(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
 export const dashboardSetFightResultCommand = createAction(DASHBOARD_SET_FIGHT_RESULT_COMMAND, props<IScoreboardFightResultSet>());
 
-export const dashboardRemovePeriod = (competitionId, periodId) => ({
-  type: DASHBOARD_DELETE_PERIOD_COMMAND,
-  competitionId,
-  periodId
-});
 
 export const dashboardPeriodSelected = (periodId, competitionId) => ({
   type: PERIOD_SELECTED,
@@ -107,13 +98,3 @@ export const dashboardFightUnselected = {
   type: DASHBOARD_FIGHT_UNSELECTED,
   payload: ''
 };
-
-export const dashboardInitState = (competitionId: string) => ({
-  type: DASHBOARD_INIT_DASHBOARD_STATE_COMMAND,
-  competitionId
-});
-
-export const dashboardDeleteState = (competitionId: string) => ({
-  type: DASHBOARD_DELETE_DASHBOARD_STATE_COMMAND,
-  competitionId
-});

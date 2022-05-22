@@ -46,95 +46,39 @@ export interface MatsQueryResult {
 }
 
 export interface QueryServiceResponse {
-  payload?:
-    | {
-        $case: 'getDefaultRestrictionsResponse';
-        getDefaultRestrictionsResponse: GetDefaultRestrictionsResponse;
-      }
-    | {
-        $case: 'getDefaultFightResultsResponse';
-        getDefaultFightResultsResponse: GetDefaultFightResultsResponse;
-      }
-    | {
-        $case: 'getAllCompetitionsResponse';
-        getAllCompetitionsResponse: GetAllCompetitionsResponse;
-      }
-    | {
-        $case: 'generateCategoriesFromRestrictionsResponse';
-        generateCategoriesFromRestrictionsResponse: GenerateCategoriesFromRestrictionsResponse;
-      }
-    | {
-        $case: 'getCompetitionPropertiesResponse';
-        getCompetitionPropertiesResponse: GetCompetitionPropertiesResponse;
-      }
-    | {
-        $case: 'getCompetitionInfoTemplateResponse';
-        getCompetitionInfoTemplateResponse: GetCompetitionInfoTemplateResponse;
-      }
-    | { $case: 'getScheduleResponse'; getScheduleResponse: GetScheduleResponse }
-    | {
-        $case: 'getCompetitorsResponse';
-        getCompetitorsResponse: GetCompetitorsResponse;
-      }
-    | {
-        $case: 'getCompetitorResponse';
-        getCompetitorResponse: GetCompetitorResponse;
-      }
-    | {
-        $case: 'getDashboardResponse';
-        getDashboardResponse: GetDashboardResponse;
-      }
-    | { $case: 'getMatsResponse'; getMatsResponse: GetMatsResponse }
-    | {
-        $case: 'getPeriodMatsResponse';
-        getPeriodMatsResponse: GetPeriodMatsResponse;
-      }
-    | { $case: 'getMatResponse'; getMatResponse: GetMatResponse }
-    | {
-        $case: 'getMatFightsResponse';
-        getMatFightsResponse: GetMatFightsResponse;
-      }
-    | {
-        $case: 'getRegistrationInfoResponse';
-        getRegistrationInfoResponse: GetRegistrationInfoResponse;
-      }
-    | {
-        $case: 'getCategoriesResponse';
-        getCategoriesResponse: GetCategoriesResponse;
-      }
-    | {
-        $case: 'getFightByIdResponse';
-        getFightByIdResponse: GetFightByIdResponse;
-      }
-    | {
-        $case: 'getFightIdsByCategoryIdsResponse';
-        getFightIdsByCategoryIdsResponse: GetFightIdsByCategoryIdsResponse;
-      }
-    | { $case: 'getCategoryResponse'; getCategoryResponse: GetCategoryResponse }
-    | {
-        $case: 'getPeriodFightsByMatsResponse';
-        getPeriodFightsByMatsResponse: GetPeriodFightsByMatsResponse;
-      }
-    | {
-        $case: 'getFightResulOptionsResponse';
-        getFightResulOptionsResponse: GetFightResulOptionsResponse;
-      }
-    | {
-        $case: 'getStagesForCategoryResponse';
-        getStagesForCategoryResponse: GetStagesForCategoryResponse;
-      }
-    | {
-        $case: 'getStageByIdResponse';
-        getStageByIdResponse: GetStageByIdResponse;
-      }
-    | {
-        $case: 'getStageFightsResponse';
-        getStageFightsResponse: GetStageFightsResponse;
-      }
-    | {
-        $case: 'getAcademiesResponse';
-        getAcademiesResponse: GetAcademiesResponse;
-      };
+  getDefaultRestrictionsResponse?: GetDefaultRestrictionsResponse | undefined;
+  getDefaultFightResultsResponse?: GetDefaultFightResultsResponse | undefined;
+  getAllCompetitionsResponse?: GetAllCompetitionsResponse | undefined;
+  generateCategoriesFromRestrictionsResponse?:
+    | GenerateCategoriesFromRestrictionsResponse
+    | undefined;
+  getCompetitionPropertiesResponse?:
+    | GetCompetitionPropertiesResponse
+    | undefined;
+  getCompetitionInfoTemplateResponse?:
+    | GetCompetitionInfoTemplateResponse
+    | undefined;
+  getScheduleResponse?: GetScheduleResponse | undefined;
+  getCompetitorsResponse?: GetCompetitorsResponse | undefined;
+  getCompetitorResponse?: GetCompetitorResponse | undefined;
+  getDashboardResponse?: GetDashboardResponse | undefined;
+  getMatsResponse?: GetMatsResponse | undefined;
+  getPeriodMatsResponse?: GetPeriodMatsResponse | undefined;
+  getMatResponse?: GetMatResponse | undefined;
+  getMatFightsResponse?: GetMatFightsResponse | undefined;
+  getRegistrationInfoResponse?: GetRegistrationInfoResponse | undefined;
+  getCategoriesResponse?: GetCategoriesResponse | undefined;
+  getFightByIdResponse?: GetFightByIdResponse | undefined;
+  getFightIdsByCategoryIdsResponse?:
+    | GetFightIdsByCategoryIdsResponse
+    | undefined;
+  getCategoryResponse?: GetCategoryResponse | undefined;
+  getPeriodFightsByMatsResponse?: GetPeriodFightsByMatsResponse | undefined;
+  getFightResulOptionsResponse?: GetFightResulOptionsResponse | undefined;
+  getStagesForCategoryResponse?: GetStagesForCategoryResponse | undefined;
+  getStageByIdResponse?: GetStageByIdResponse | undefined;
+  getStageFightsResponse?: GetStageFightsResponse | undefined;
+  getAcademiesResponse?: GetAcademiesResponse | undefined;
 }
 
 export interface GetDefaultRestrictionsResponse {
@@ -633,7 +577,33 @@ export const MatsQueryResult = {
 };
 
 function createBaseQueryServiceResponse(): QueryServiceResponse {
-  return { payload: undefined };
+  return {
+    getDefaultRestrictionsResponse: undefined,
+    getDefaultFightResultsResponse: undefined,
+    getAllCompetitionsResponse: undefined,
+    generateCategoriesFromRestrictionsResponse: undefined,
+    getCompetitionPropertiesResponse: undefined,
+    getCompetitionInfoTemplateResponse: undefined,
+    getScheduleResponse: undefined,
+    getCompetitorsResponse: undefined,
+    getCompetitorResponse: undefined,
+    getDashboardResponse: undefined,
+    getMatsResponse: undefined,
+    getPeriodMatsResponse: undefined,
+    getMatResponse: undefined,
+    getMatFightsResponse: undefined,
+    getRegistrationInfoResponse: undefined,
+    getCategoriesResponse: undefined,
+    getFightByIdResponse: undefined,
+    getFightIdsByCategoryIdsResponse: undefined,
+    getCategoryResponse: undefined,
+    getPeriodFightsByMatsResponse: undefined,
+    getFightResulOptionsResponse: undefined,
+    getStagesForCategoryResponse: undefined,
+    getStageByIdResponse: undefined,
+    getStageFightsResponse: undefined,
+    getAcademiesResponse: undefined,
+  };
 }
 
 export const QueryServiceResponse = {
@@ -641,155 +611,153 @@ export const QueryServiceResponse = {
     message: QueryServiceResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.payload?.$case === 'getDefaultRestrictionsResponse') {
+    if (message.getDefaultRestrictionsResponse !== undefined) {
       GetDefaultRestrictionsResponse.encode(
-        message.payload.getDefaultRestrictionsResponse,
+        message.getDefaultRestrictionsResponse,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getDefaultFightResultsResponse') {
+    if (message.getDefaultFightResultsResponse !== undefined) {
       GetDefaultFightResultsResponse.encode(
-        message.payload.getDefaultFightResultsResponse,
+        message.getDefaultFightResultsResponse,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getAllCompetitionsResponse') {
+    if (message.getAllCompetitionsResponse !== undefined) {
       GetAllCompetitionsResponse.encode(
-        message.payload.getAllCompetitionsResponse,
+        message.getAllCompetitionsResponse,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (
-      message.payload?.$case === 'generateCategoriesFromRestrictionsResponse'
-    ) {
+    if (message.generateCategoriesFromRestrictionsResponse !== undefined) {
       GenerateCategoriesFromRestrictionsResponse.encode(
-        message.payload.generateCategoriesFromRestrictionsResponse,
+        message.generateCategoriesFromRestrictionsResponse,
         writer.uint32(34).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCompetitionPropertiesResponse') {
+    if (message.getCompetitionPropertiesResponse !== undefined) {
       GetCompetitionPropertiesResponse.encode(
-        message.payload.getCompetitionPropertiesResponse,
+        message.getCompetitionPropertiesResponse,
         writer.uint32(42).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCompetitionInfoTemplateResponse') {
+    if (message.getCompetitionInfoTemplateResponse !== undefined) {
       GetCompetitionInfoTemplateResponse.encode(
-        message.payload.getCompetitionInfoTemplateResponse,
+        message.getCompetitionInfoTemplateResponse,
         writer.uint32(50).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getScheduleResponse') {
+    if (message.getScheduleResponse !== undefined) {
       GetScheduleResponse.encode(
-        message.payload.getScheduleResponse,
+        message.getScheduleResponse,
         writer.uint32(58).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCompetitorsResponse') {
+    if (message.getCompetitorsResponse !== undefined) {
       GetCompetitorsResponse.encode(
-        message.payload.getCompetitorsResponse,
+        message.getCompetitorsResponse,
         writer.uint32(66).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCompetitorResponse') {
+    if (message.getCompetitorResponse !== undefined) {
       GetCompetitorResponse.encode(
-        message.payload.getCompetitorResponse,
+        message.getCompetitorResponse,
         writer.uint32(74).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getDashboardResponse') {
+    if (message.getDashboardResponse !== undefined) {
       GetDashboardResponse.encode(
-        message.payload.getDashboardResponse,
+        message.getDashboardResponse,
         writer.uint32(82).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getMatsResponse') {
+    if (message.getMatsResponse !== undefined) {
       GetMatsResponse.encode(
-        message.payload.getMatsResponse,
+        message.getMatsResponse,
         writer.uint32(90).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getPeriodMatsResponse') {
+    if (message.getPeriodMatsResponse !== undefined) {
       GetPeriodMatsResponse.encode(
-        message.payload.getPeriodMatsResponse,
+        message.getPeriodMatsResponse,
         writer.uint32(98).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getMatResponse') {
+    if (message.getMatResponse !== undefined) {
       GetMatResponse.encode(
-        message.payload.getMatResponse,
+        message.getMatResponse,
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getMatFightsResponse') {
+    if (message.getMatFightsResponse !== undefined) {
       GetMatFightsResponse.encode(
-        message.payload.getMatFightsResponse,
+        message.getMatFightsResponse,
         writer.uint32(114).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getRegistrationInfoResponse') {
+    if (message.getRegistrationInfoResponse !== undefined) {
       GetRegistrationInfoResponse.encode(
-        message.payload.getRegistrationInfoResponse,
+        message.getRegistrationInfoResponse,
         writer.uint32(122).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCategoriesResponse') {
+    if (message.getCategoriesResponse !== undefined) {
       GetCategoriesResponse.encode(
-        message.payload.getCategoriesResponse,
+        message.getCategoriesResponse,
         writer.uint32(130).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getFightByIdResponse') {
+    if (message.getFightByIdResponse !== undefined) {
       GetFightByIdResponse.encode(
-        message.payload.getFightByIdResponse,
+        message.getFightByIdResponse,
         writer.uint32(138).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getFightIdsByCategoryIdsResponse') {
+    if (message.getFightIdsByCategoryIdsResponse !== undefined) {
       GetFightIdsByCategoryIdsResponse.encode(
-        message.payload.getFightIdsByCategoryIdsResponse,
+        message.getFightIdsByCategoryIdsResponse,
         writer.uint32(146).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getCategoryResponse') {
+    if (message.getCategoryResponse !== undefined) {
       GetCategoryResponse.encode(
-        message.payload.getCategoryResponse,
+        message.getCategoryResponse,
         writer.uint32(154).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getPeriodFightsByMatsResponse') {
+    if (message.getPeriodFightsByMatsResponse !== undefined) {
       GetPeriodFightsByMatsResponse.encode(
-        message.payload.getPeriodFightsByMatsResponse,
+        message.getPeriodFightsByMatsResponse,
         writer.uint32(162).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getFightResulOptionsResponse') {
+    if (message.getFightResulOptionsResponse !== undefined) {
       GetFightResulOptionsResponse.encode(
-        message.payload.getFightResulOptionsResponse,
+        message.getFightResulOptionsResponse,
         writer.uint32(170).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getStagesForCategoryResponse') {
+    if (message.getStagesForCategoryResponse !== undefined) {
       GetStagesForCategoryResponse.encode(
-        message.payload.getStagesForCategoryResponse,
+        message.getStagesForCategoryResponse,
         writer.uint32(178).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getStageByIdResponse') {
+    if (message.getStageByIdResponse !== undefined) {
       GetStageByIdResponse.encode(
-        message.payload.getStageByIdResponse,
+        message.getStageByIdResponse,
         writer.uint32(186).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getStageFightsResponse') {
+    if (message.getStageFightsResponse !== undefined) {
       GetStageFightsResponse.encode(
-        message.payload.getStageFightsResponse,
+        message.getStageFightsResponse,
         writer.uint32(194).fork()
       ).ldelim();
     }
-    if (message.payload?.$case === 'getAcademiesResponse') {
+    if (message.getAcademiesResponse !== undefined) {
       GetAcademiesResponse.encode(
-        message.payload.getAcademiesResponse,
+        message.getAcademiesResponse,
         writer.uint32(202).fork()
       ).ldelim();
     }
@@ -807,217 +775,135 @@ export const QueryServiceResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.payload = {
-            $case: 'getDefaultRestrictionsResponse',
-            getDefaultRestrictionsResponse:
-              GetDefaultRestrictionsResponse.decode(reader, reader.uint32()),
-          };
+          message.getDefaultRestrictionsResponse =
+            GetDefaultRestrictionsResponse.decode(reader, reader.uint32());
           break;
         case 2:
-          message.payload = {
-            $case: 'getDefaultFightResultsResponse',
-            getDefaultFightResultsResponse:
-              GetDefaultFightResultsResponse.decode(reader, reader.uint32()),
-          };
+          message.getDefaultFightResultsResponse =
+            GetDefaultFightResultsResponse.decode(reader, reader.uint32());
           break;
         case 3:
-          message.payload = {
-            $case: 'getAllCompetitionsResponse',
-            getAllCompetitionsResponse: GetAllCompetitionsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getAllCompetitionsResponse =
+            GetAllCompetitionsResponse.decode(reader, reader.uint32());
           break;
         case 4:
-          message.payload = {
-            $case: 'generateCategoriesFromRestrictionsResponse',
-            generateCategoriesFromRestrictionsResponse:
-              GenerateCategoriesFromRestrictionsResponse.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.generateCategoriesFromRestrictionsResponse =
+            GenerateCategoriesFromRestrictionsResponse.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 5:
-          message.payload = {
-            $case: 'getCompetitionPropertiesResponse',
-            getCompetitionPropertiesResponse:
-              GetCompetitionPropertiesResponse.decode(reader, reader.uint32()),
-          };
+          message.getCompetitionPropertiesResponse =
+            GetCompetitionPropertiesResponse.decode(reader, reader.uint32());
           break;
         case 6:
-          message.payload = {
-            $case: 'getCompetitionInfoTemplateResponse',
-            getCompetitionInfoTemplateResponse:
-              GetCompetitionInfoTemplateResponse.decode(
-                reader,
-                reader.uint32()
-              ),
-          };
+          message.getCompetitionInfoTemplateResponse =
+            GetCompetitionInfoTemplateResponse.decode(reader, reader.uint32());
           break;
         case 7:
-          message.payload = {
-            $case: 'getScheduleResponse',
-            getScheduleResponse: GetScheduleResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getScheduleResponse = GetScheduleResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 8:
-          message.payload = {
-            $case: 'getCompetitorsResponse',
-            getCompetitorsResponse: GetCompetitorsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getCompetitorsResponse = GetCompetitorsResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 9:
-          message.payload = {
-            $case: 'getCompetitorResponse',
-            getCompetitorResponse: GetCompetitorResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getCompetitorResponse = GetCompetitorResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 10:
-          message.payload = {
-            $case: 'getDashboardResponse',
-            getDashboardResponse: GetDashboardResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getDashboardResponse = GetDashboardResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 11:
-          message.payload = {
-            $case: 'getMatsResponse',
-            getMatsResponse: GetMatsResponse.decode(reader, reader.uint32()),
-          };
+          message.getMatsResponse = GetMatsResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 12:
-          message.payload = {
-            $case: 'getPeriodMatsResponse',
-            getPeriodMatsResponse: GetPeriodMatsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getPeriodMatsResponse = GetPeriodMatsResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 13:
-          message.payload = {
-            $case: 'getMatResponse',
-            getMatResponse: GetMatResponse.decode(reader, reader.uint32()),
-          };
+          message.getMatResponse = GetMatResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 14:
-          message.payload = {
-            $case: 'getMatFightsResponse',
-            getMatFightsResponse: GetMatFightsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getMatFightsResponse = GetMatFightsResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 15:
-          message.payload = {
-            $case: 'getRegistrationInfoResponse',
-            getRegistrationInfoResponse: GetRegistrationInfoResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getRegistrationInfoResponse =
+            GetRegistrationInfoResponse.decode(reader, reader.uint32());
           break;
         case 16:
-          message.payload = {
-            $case: 'getCategoriesResponse',
-            getCategoriesResponse: GetCategoriesResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getCategoriesResponse = GetCategoriesResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 17:
-          message.payload = {
-            $case: 'getFightByIdResponse',
-            getFightByIdResponse: GetFightByIdResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getFightByIdResponse = GetFightByIdResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 18:
-          message.payload = {
-            $case: 'getFightIdsByCategoryIdsResponse',
-            getFightIdsByCategoryIdsResponse:
-              GetFightIdsByCategoryIdsResponse.decode(reader, reader.uint32()),
-          };
+          message.getFightIdsByCategoryIdsResponse =
+            GetFightIdsByCategoryIdsResponse.decode(reader, reader.uint32());
           break;
         case 19:
-          message.payload = {
-            $case: 'getCategoryResponse',
-            getCategoryResponse: GetCategoryResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getCategoryResponse = GetCategoryResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 20:
-          message.payload = {
-            $case: 'getPeriodFightsByMatsResponse',
-            getPeriodFightsByMatsResponse: GetPeriodFightsByMatsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getPeriodFightsByMatsResponse =
+            GetPeriodFightsByMatsResponse.decode(reader, reader.uint32());
           break;
         case 21:
-          message.payload = {
-            $case: 'getFightResulOptionsResponse',
-            getFightResulOptionsResponse: GetFightResulOptionsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getFightResulOptionsResponse =
+            GetFightResulOptionsResponse.decode(reader, reader.uint32());
           break;
         case 22:
-          message.payload = {
-            $case: 'getStagesForCategoryResponse',
-            getStagesForCategoryResponse: GetStagesForCategoryResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getStagesForCategoryResponse =
+            GetStagesForCategoryResponse.decode(reader, reader.uint32());
           break;
         case 23:
-          message.payload = {
-            $case: 'getStageByIdResponse',
-            getStageByIdResponse: GetStageByIdResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getStageByIdResponse = GetStageByIdResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 24:
-          message.payload = {
-            $case: 'getStageFightsResponse',
-            getStageFightsResponse: GetStageFightsResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getStageFightsResponse = GetStageFightsResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 25:
-          message.payload = {
-            $case: 'getAcademiesResponse',
-            getAcademiesResponse: GetAcademiesResponse.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.getAcademiesResponse = GetAcademiesResponse.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -1029,322 +915,243 @@ export const QueryServiceResponse = {
 
   fromJSON(object: any): QueryServiceResponse {
     return {
-      payload: isSet(object.getDefaultRestrictionsResponse)
-        ? {
-            $case: 'getDefaultRestrictionsResponse',
-            getDefaultRestrictionsResponse:
-              GetDefaultRestrictionsResponse.fromJSON(
-                object.getDefaultRestrictionsResponse
-              ),
-          }
-        : isSet(object.getDefaultFightResultsResponse)
-        ? {
-            $case: 'getDefaultFightResultsResponse',
-            getDefaultFightResultsResponse:
-              GetDefaultFightResultsResponse.fromJSON(
-                object.getDefaultFightResultsResponse
-              ),
-          }
-        : isSet(object.getAllCompetitionsResponse)
-        ? {
-            $case: 'getAllCompetitionsResponse',
-            getAllCompetitionsResponse: GetAllCompetitionsResponse.fromJSON(
-              object.getAllCompetitionsResponse
-            ),
-          }
-        : isSet(object.generateCategoriesFromRestrictionsResponse)
-        ? {
-            $case: 'generateCategoriesFromRestrictionsResponse',
-            generateCategoriesFromRestrictionsResponse:
-              GenerateCategoriesFromRestrictionsResponse.fromJSON(
-                object.generateCategoriesFromRestrictionsResponse
-              ),
-          }
-        : isSet(object.getCompetitionPropertiesResponse)
-        ? {
-            $case: 'getCompetitionPropertiesResponse',
-            getCompetitionPropertiesResponse:
-              GetCompetitionPropertiesResponse.fromJSON(
-                object.getCompetitionPropertiesResponse
-              ),
-          }
-        : isSet(object.getCompetitionInfoTemplateResponse)
-        ? {
-            $case: 'getCompetitionInfoTemplateResponse',
-            getCompetitionInfoTemplateResponse:
-              GetCompetitionInfoTemplateResponse.fromJSON(
-                object.getCompetitionInfoTemplateResponse
-              ),
-          }
-        : isSet(object.getScheduleResponse)
-        ? {
-            $case: 'getScheduleResponse',
-            getScheduleResponse: GetScheduleResponse.fromJSON(
-              object.getScheduleResponse
-            ),
-          }
-        : isSet(object.getCompetitorsResponse)
-        ? {
-            $case: 'getCompetitorsResponse',
-            getCompetitorsResponse: GetCompetitorsResponse.fromJSON(
-              object.getCompetitorsResponse
-            ),
-          }
-        : isSet(object.getCompetitorResponse)
-        ? {
-            $case: 'getCompetitorResponse',
-            getCompetitorResponse: GetCompetitorResponse.fromJSON(
-              object.getCompetitorResponse
-            ),
-          }
-        : isSet(object.getDashboardResponse)
-        ? {
-            $case: 'getDashboardResponse',
-            getDashboardResponse: GetDashboardResponse.fromJSON(
-              object.getDashboardResponse
-            ),
-          }
-        : isSet(object.getMatsResponse)
-        ? {
-            $case: 'getMatsResponse',
-            getMatsResponse: GetMatsResponse.fromJSON(object.getMatsResponse),
-          }
-        : isSet(object.getPeriodMatsResponse)
-        ? {
-            $case: 'getPeriodMatsResponse',
-            getPeriodMatsResponse: GetPeriodMatsResponse.fromJSON(
-              object.getPeriodMatsResponse
-            ),
-          }
-        : isSet(object.getMatResponse)
-        ? {
-            $case: 'getMatResponse',
-            getMatResponse: GetMatResponse.fromJSON(object.getMatResponse),
-          }
-        : isSet(object.getMatFightsResponse)
-        ? {
-            $case: 'getMatFightsResponse',
-            getMatFightsResponse: GetMatFightsResponse.fromJSON(
-              object.getMatFightsResponse
-            ),
-          }
-        : isSet(object.getRegistrationInfoResponse)
-        ? {
-            $case: 'getRegistrationInfoResponse',
-            getRegistrationInfoResponse: GetRegistrationInfoResponse.fromJSON(
-              object.getRegistrationInfoResponse
-            ),
-          }
-        : isSet(object.getCategoriesResponse)
-        ? {
-            $case: 'getCategoriesResponse',
-            getCategoriesResponse: GetCategoriesResponse.fromJSON(
-              object.getCategoriesResponse
-            ),
-          }
-        : isSet(object.getFightByIdResponse)
-        ? {
-            $case: 'getFightByIdResponse',
-            getFightByIdResponse: GetFightByIdResponse.fromJSON(
-              object.getFightByIdResponse
-            ),
-          }
-        : isSet(object.getFightIdsByCategoryIdsResponse)
-        ? {
-            $case: 'getFightIdsByCategoryIdsResponse',
-            getFightIdsByCategoryIdsResponse:
-              GetFightIdsByCategoryIdsResponse.fromJSON(
-                object.getFightIdsByCategoryIdsResponse
-              ),
-          }
-        : isSet(object.getCategoryResponse)
-        ? {
-            $case: 'getCategoryResponse',
-            getCategoryResponse: GetCategoryResponse.fromJSON(
-              object.getCategoryResponse
-            ),
-          }
-        : isSet(object.getPeriodFightsByMatsResponse)
-        ? {
-            $case: 'getPeriodFightsByMatsResponse',
-            getPeriodFightsByMatsResponse:
-              GetPeriodFightsByMatsResponse.fromJSON(
-                object.getPeriodFightsByMatsResponse
-              ),
-          }
-        : isSet(object.getFightResulOptionsResponse)
-        ? {
-            $case: 'getFightResulOptionsResponse',
-            getFightResulOptionsResponse: GetFightResulOptionsResponse.fromJSON(
-              object.getFightResulOptionsResponse
-            ),
-          }
-        : isSet(object.getStagesForCategoryResponse)
-        ? {
-            $case: 'getStagesForCategoryResponse',
-            getStagesForCategoryResponse: GetStagesForCategoryResponse.fromJSON(
-              object.getStagesForCategoryResponse
-            ),
-          }
-        : isSet(object.getStageByIdResponse)
-        ? {
-            $case: 'getStageByIdResponse',
-            getStageByIdResponse: GetStageByIdResponse.fromJSON(
-              object.getStageByIdResponse
-            ),
-          }
-        : isSet(object.getStageFightsResponse)
-        ? {
-            $case: 'getStageFightsResponse',
-            getStageFightsResponse: GetStageFightsResponse.fromJSON(
-              object.getStageFightsResponse
-            ),
-          }
-        : isSet(object.getAcademiesResponse)
-        ? {
-            $case: 'getAcademiesResponse',
-            getAcademiesResponse: GetAcademiesResponse.fromJSON(
-              object.getAcademiesResponse
-            ),
-          }
+      getDefaultRestrictionsResponse: isSet(
+        object.getDefaultRestrictionsResponse
+      )
+        ? GetDefaultRestrictionsResponse.fromJSON(
+            object.getDefaultRestrictionsResponse
+          )
+        : undefined,
+      getDefaultFightResultsResponse: isSet(
+        object.getDefaultFightResultsResponse
+      )
+        ? GetDefaultFightResultsResponse.fromJSON(
+            object.getDefaultFightResultsResponse
+          )
+        : undefined,
+      getAllCompetitionsResponse: isSet(object.getAllCompetitionsResponse)
+        ? GetAllCompetitionsResponse.fromJSON(object.getAllCompetitionsResponse)
+        : undefined,
+      generateCategoriesFromRestrictionsResponse: isSet(
+        object.generateCategoriesFromRestrictionsResponse
+      )
+        ? GenerateCategoriesFromRestrictionsResponse.fromJSON(
+            object.generateCategoriesFromRestrictionsResponse
+          )
+        : undefined,
+      getCompetitionPropertiesResponse: isSet(
+        object.getCompetitionPropertiesResponse
+      )
+        ? GetCompetitionPropertiesResponse.fromJSON(
+            object.getCompetitionPropertiesResponse
+          )
+        : undefined,
+      getCompetitionInfoTemplateResponse: isSet(
+        object.getCompetitionInfoTemplateResponse
+      )
+        ? GetCompetitionInfoTemplateResponse.fromJSON(
+            object.getCompetitionInfoTemplateResponse
+          )
+        : undefined,
+      getScheduleResponse: isSet(object.getScheduleResponse)
+        ? GetScheduleResponse.fromJSON(object.getScheduleResponse)
+        : undefined,
+      getCompetitorsResponse: isSet(object.getCompetitorsResponse)
+        ? GetCompetitorsResponse.fromJSON(object.getCompetitorsResponse)
+        : undefined,
+      getCompetitorResponse: isSet(object.getCompetitorResponse)
+        ? GetCompetitorResponse.fromJSON(object.getCompetitorResponse)
+        : undefined,
+      getDashboardResponse: isSet(object.getDashboardResponse)
+        ? GetDashboardResponse.fromJSON(object.getDashboardResponse)
+        : undefined,
+      getMatsResponse: isSet(object.getMatsResponse)
+        ? GetMatsResponse.fromJSON(object.getMatsResponse)
+        : undefined,
+      getPeriodMatsResponse: isSet(object.getPeriodMatsResponse)
+        ? GetPeriodMatsResponse.fromJSON(object.getPeriodMatsResponse)
+        : undefined,
+      getMatResponse: isSet(object.getMatResponse)
+        ? GetMatResponse.fromJSON(object.getMatResponse)
+        : undefined,
+      getMatFightsResponse: isSet(object.getMatFightsResponse)
+        ? GetMatFightsResponse.fromJSON(object.getMatFightsResponse)
+        : undefined,
+      getRegistrationInfoResponse: isSet(object.getRegistrationInfoResponse)
+        ? GetRegistrationInfoResponse.fromJSON(
+            object.getRegistrationInfoResponse
+          )
+        : undefined,
+      getCategoriesResponse: isSet(object.getCategoriesResponse)
+        ? GetCategoriesResponse.fromJSON(object.getCategoriesResponse)
+        : undefined,
+      getFightByIdResponse: isSet(object.getFightByIdResponse)
+        ? GetFightByIdResponse.fromJSON(object.getFightByIdResponse)
+        : undefined,
+      getFightIdsByCategoryIdsResponse: isSet(
+        object.getFightIdsByCategoryIdsResponse
+      )
+        ? GetFightIdsByCategoryIdsResponse.fromJSON(
+            object.getFightIdsByCategoryIdsResponse
+          )
+        : undefined,
+      getCategoryResponse: isSet(object.getCategoryResponse)
+        ? GetCategoryResponse.fromJSON(object.getCategoryResponse)
+        : undefined,
+      getPeriodFightsByMatsResponse: isSet(object.getPeriodFightsByMatsResponse)
+        ? GetPeriodFightsByMatsResponse.fromJSON(
+            object.getPeriodFightsByMatsResponse
+          )
+        : undefined,
+      getFightResulOptionsResponse: isSet(object.getFightResulOptionsResponse)
+        ? GetFightResulOptionsResponse.fromJSON(
+            object.getFightResulOptionsResponse
+          )
+        : undefined,
+      getStagesForCategoryResponse: isSet(object.getStagesForCategoryResponse)
+        ? GetStagesForCategoryResponse.fromJSON(
+            object.getStagesForCategoryResponse
+          )
+        : undefined,
+      getStageByIdResponse: isSet(object.getStageByIdResponse)
+        ? GetStageByIdResponse.fromJSON(object.getStageByIdResponse)
+        : undefined,
+      getStageFightsResponse: isSet(object.getStageFightsResponse)
+        ? GetStageFightsResponse.fromJSON(object.getStageFightsResponse)
+        : undefined,
+      getAcademiesResponse: isSet(object.getAcademiesResponse)
+        ? GetAcademiesResponse.fromJSON(object.getAcademiesResponse)
         : undefined,
     };
   },
 
   toJSON(message: QueryServiceResponse): unknown {
     const obj: any = {};
-    message.payload?.$case === 'getDefaultRestrictionsResponse' &&
-      (obj.getDefaultRestrictionsResponse = message.payload
-        ?.getDefaultRestrictionsResponse
-        ? GetDefaultRestrictionsResponse.toJSON(
-            message.payload?.getDefaultRestrictionsResponse
-          )
+    message.getDefaultRestrictionsResponse !== undefined &&
+      (obj.getDefaultRestrictionsResponse =
+        message.getDefaultRestrictionsResponse
+          ? GetDefaultRestrictionsResponse.toJSON(
+              message.getDefaultRestrictionsResponse
+            )
+          : undefined);
+    message.getDefaultFightResultsResponse !== undefined &&
+      (obj.getDefaultFightResultsResponse =
+        message.getDefaultFightResultsResponse
+          ? GetDefaultFightResultsResponse.toJSON(
+              message.getDefaultFightResultsResponse
+            )
+          : undefined);
+    message.getAllCompetitionsResponse !== undefined &&
+      (obj.getAllCompetitionsResponse = message.getAllCompetitionsResponse
+        ? GetAllCompetitionsResponse.toJSON(message.getAllCompetitionsResponse)
         : undefined);
-    message.payload?.$case === 'getDefaultFightResultsResponse' &&
-      (obj.getDefaultFightResultsResponse = message.payload
-        ?.getDefaultFightResultsResponse
-        ? GetDefaultFightResultsResponse.toJSON(
-            message.payload?.getDefaultFightResultsResponse
-          )
+    message.generateCategoriesFromRestrictionsResponse !== undefined &&
+      (obj.generateCategoriesFromRestrictionsResponse =
+        message.generateCategoriesFromRestrictionsResponse
+          ? GenerateCategoriesFromRestrictionsResponse.toJSON(
+              message.generateCategoriesFromRestrictionsResponse
+            )
+          : undefined);
+    message.getCompetitionPropertiesResponse !== undefined &&
+      (obj.getCompetitionPropertiesResponse =
+        message.getCompetitionPropertiesResponse
+          ? GetCompetitionPropertiesResponse.toJSON(
+              message.getCompetitionPropertiesResponse
+            )
+          : undefined);
+    message.getCompetitionInfoTemplateResponse !== undefined &&
+      (obj.getCompetitionInfoTemplateResponse =
+        message.getCompetitionInfoTemplateResponse
+          ? GetCompetitionInfoTemplateResponse.toJSON(
+              message.getCompetitionInfoTemplateResponse
+            )
+          : undefined);
+    message.getScheduleResponse !== undefined &&
+      (obj.getScheduleResponse = message.getScheduleResponse
+        ? GetScheduleResponse.toJSON(message.getScheduleResponse)
         : undefined);
-    message.payload?.$case === 'getAllCompetitionsResponse' &&
-      (obj.getAllCompetitionsResponse = message.payload
-        ?.getAllCompetitionsResponse
-        ? GetAllCompetitionsResponse.toJSON(
-            message.payload?.getAllCompetitionsResponse
-          )
+    message.getCompetitorsResponse !== undefined &&
+      (obj.getCompetitorsResponse = message.getCompetitorsResponse
+        ? GetCompetitorsResponse.toJSON(message.getCompetitorsResponse)
         : undefined);
-    message.payload?.$case === 'generateCategoriesFromRestrictionsResponse' &&
-      (obj.generateCategoriesFromRestrictionsResponse = message.payload
-        ?.generateCategoriesFromRestrictionsResponse
-        ? GenerateCategoriesFromRestrictionsResponse.toJSON(
-            message.payload?.generateCategoriesFromRestrictionsResponse
-          )
+    message.getCompetitorResponse !== undefined &&
+      (obj.getCompetitorResponse = message.getCompetitorResponse
+        ? GetCompetitorResponse.toJSON(message.getCompetitorResponse)
         : undefined);
-    message.payload?.$case === 'getCompetitionPropertiesResponse' &&
-      (obj.getCompetitionPropertiesResponse = message.payload
-        ?.getCompetitionPropertiesResponse
-        ? GetCompetitionPropertiesResponse.toJSON(
-            message.payload?.getCompetitionPropertiesResponse
-          )
+    message.getDashboardResponse !== undefined &&
+      (obj.getDashboardResponse = message.getDashboardResponse
+        ? GetDashboardResponse.toJSON(message.getDashboardResponse)
         : undefined);
-    message.payload?.$case === 'getCompetitionInfoTemplateResponse' &&
-      (obj.getCompetitionInfoTemplateResponse = message.payload
-        ?.getCompetitionInfoTemplateResponse
-        ? GetCompetitionInfoTemplateResponse.toJSON(
-            message.payload?.getCompetitionInfoTemplateResponse
-          )
+    message.getMatsResponse !== undefined &&
+      (obj.getMatsResponse = message.getMatsResponse
+        ? GetMatsResponse.toJSON(message.getMatsResponse)
         : undefined);
-    message.payload?.$case === 'getScheduleResponse' &&
-      (obj.getScheduleResponse = message.payload?.getScheduleResponse
-        ? GetScheduleResponse.toJSON(message.payload?.getScheduleResponse)
+    message.getPeriodMatsResponse !== undefined &&
+      (obj.getPeriodMatsResponse = message.getPeriodMatsResponse
+        ? GetPeriodMatsResponse.toJSON(message.getPeriodMatsResponse)
         : undefined);
-    message.payload?.$case === 'getCompetitorsResponse' &&
-      (obj.getCompetitorsResponse = message.payload?.getCompetitorsResponse
-        ? GetCompetitorsResponse.toJSON(message.payload?.getCompetitorsResponse)
+    message.getMatResponse !== undefined &&
+      (obj.getMatResponse = message.getMatResponse
+        ? GetMatResponse.toJSON(message.getMatResponse)
         : undefined);
-    message.payload?.$case === 'getCompetitorResponse' &&
-      (obj.getCompetitorResponse = message.payload?.getCompetitorResponse
-        ? GetCompetitorResponse.toJSON(message.payload?.getCompetitorResponse)
+    message.getMatFightsResponse !== undefined &&
+      (obj.getMatFightsResponse = message.getMatFightsResponse
+        ? GetMatFightsResponse.toJSON(message.getMatFightsResponse)
         : undefined);
-    message.payload?.$case === 'getDashboardResponse' &&
-      (obj.getDashboardResponse = message.payload?.getDashboardResponse
-        ? GetDashboardResponse.toJSON(message.payload?.getDashboardResponse)
-        : undefined);
-    message.payload?.$case === 'getMatsResponse' &&
-      (obj.getMatsResponse = message.payload?.getMatsResponse
-        ? GetMatsResponse.toJSON(message.payload?.getMatsResponse)
-        : undefined);
-    message.payload?.$case === 'getPeriodMatsResponse' &&
-      (obj.getPeriodMatsResponse = message.payload?.getPeriodMatsResponse
-        ? GetPeriodMatsResponse.toJSON(message.payload?.getPeriodMatsResponse)
-        : undefined);
-    message.payload?.$case === 'getMatResponse' &&
-      (obj.getMatResponse = message.payload?.getMatResponse
-        ? GetMatResponse.toJSON(message.payload?.getMatResponse)
-        : undefined);
-    message.payload?.$case === 'getMatFightsResponse' &&
-      (obj.getMatFightsResponse = message.payload?.getMatFightsResponse
-        ? GetMatFightsResponse.toJSON(message.payload?.getMatFightsResponse)
-        : undefined);
-    message.payload?.$case === 'getRegistrationInfoResponse' &&
-      (obj.getRegistrationInfoResponse = message.payload
-        ?.getRegistrationInfoResponse
+    message.getRegistrationInfoResponse !== undefined &&
+      (obj.getRegistrationInfoResponse = message.getRegistrationInfoResponse
         ? GetRegistrationInfoResponse.toJSON(
-            message.payload?.getRegistrationInfoResponse
+            message.getRegistrationInfoResponse
           )
         : undefined);
-    message.payload?.$case === 'getCategoriesResponse' &&
-      (obj.getCategoriesResponse = message.payload?.getCategoriesResponse
-        ? GetCategoriesResponse.toJSON(message.payload?.getCategoriesResponse)
+    message.getCategoriesResponse !== undefined &&
+      (obj.getCategoriesResponse = message.getCategoriesResponse
+        ? GetCategoriesResponse.toJSON(message.getCategoriesResponse)
         : undefined);
-    message.payload?.$case === 'getFightByIdResponse' &&
-      (obj.getFightByIdResponse = message.payload?.getFightByIdResponse
-        ? GetFightByIdResponse.toJSON(message.payload?.getFightByIdResponse)
+    message.getFightByIdResponse !== undefined &&
+      (obj.getFightByIdResponse = message.getFightByIdResponse
+        ? GetFightByIdResponse.toJSON(message.getFightByIdResponse)
         : undefined);
-    message.payload?.$case === 'getFightIdsByCategoryIdsResponse' &&
-      (obj.getFightIdsByCategoryIdsResponse = message.payload
-        ?.getFightIdsByCategoryIdsResponse
-        ? GetFightIdsByCategoryIdsResponse.toJSON(
-            message.payload?.getFightIdsByCategoryIdsResponse
-          )
+    message.getFightIdsByCategoryIdsResponse !== undefined &&
+      (obj.getFightIdsByCategoryIdsResponse =
+        message.getFightIdsByCategoryIdsResponse
+          ? GetFightIdsByCategoryIdsResponse.toJSON(
+              message.getFightIdsByCategoryIdsResponse
+            )
+          : undefined);
+    message.getCategoryResponse !== undefined &&
+      (obj.getCategoryResponse = message.getCategoryResponse
+        ? GetCategoryResponse.toJSON(message.getCategoryResponse)
         : undefined);
-    message.payload?.$case === 'getCategoryResponse' &&
-      (obj.getCategoryResponse = message.payload?.getCategoryResponse
-        ? GetCategoryResponse.toJSON(message.payload?.getCategoryResponse)
-        : undefined);
-    message.payload?.$case === 'getPeriodFightsByMatsResponse' &&
-      (obj.getPeriodFightsByMatsResponse = message.payload
-        ?.getPeriodFightsByMatsResponse
+    message.getPeriodFightsByMatsResponse !== undefined &&
+      (obj.getPeriodFightsByMatsResponse = message.getPeriodFightsByMatsResponse
         ? GetPeriodFightsByMatsResponse.toJSON(
-            message.payload?.getPeriodFightsByMatsResponse
+            message.getPeriodFightsByMatsResponse
           )
         : undefined);
-    message.payload?.$case === 'getFightResulOptionsResponse' &&
-      (obj.getFightResulOptionsResponse = message.payload
-        ?.getFightResulOptionsResponse
+    message.getFightResulOptionsResponse !== undefined &&
+      (obj.getFightResulOptionsResponse = message.getFightResulOptionsResponse
         ? GetFightResulOptionsResponse.toJSON(
-            message.payload?.getFightResulOptionsResponse
+            message.getFightResulOptionsResponse
           )
         : undefined);
-    message.payload?.$case === 'getStagesForCategoryResponse' &&
-      (obj.getStagesForCategoryResponse = message.payload
-        ?.getStagesForCategoryResponse
+    message.getStagesForCategoryResponse !== undefined &&
+      (obj.getStagesForCategoryResponse = message.getStagesForCategoryResponse
         ? GetStagesForCategoryResponse.toJSON(
-            message.payload?.getStagesForCategoryResponse
+            message.getStagesForCategoryResponse
           )
         : undefined);
-    message.payload?.$case === 'getStageByIdResponse' &&
-      (obj.getStageByIdResponse = message.payload?.getStageByIdResponse
-        ? GetStageByIdResponse.toJSON(message.payload?.getStageByIdResponse)
+    message.getStageByIdResponse !== undefined &&
+      (obj.getStageByIdResponse = message.getStageByIdResponse
+        ? GetStageByIdResponse.toJSON(message.getStageByIdResponse)
         : undefined);
-    message.payload?.$case === 'getStageFightsResponse' &&
-      (obj.getStageFightsResponse = message.payload?.getStageFightsResponse
-        ? GetStageFightsResponse.toJSON(message.payload?.getStageFightsResponse)
+    message.getStageFightsResponse !== undefined &&
+      (obj.getStageFightsResponse = message.getStageFightsResponse
+        ? GetStageFightsResponse.toJSON(message.getStageFightsResponse)
         : undefined);
-    message.payload?.$case === 'getAcademiesResponse' &&
-      (obj.getAcademiesResponse = message.payload?.getAcademiesResponse
-        ? GetAcademiesResponse.toJSON(message.payload?.getAcademiesResponse)
+    message.getAcademiesResponse !== undefined &&
+      (obj.getAcademiesResponse = message.getAcademiesResponse
+        ? GetAcademiesResponse.toJSON(message.getAcademiesResponse)
         : undefined);
     return obj;
   },
@@ -1353,314 +1160,151 @@ export const QueryServiceResponse = {
     object: I
   ): QueryServiceResponse {
     const message = createBaseQueryServiceResponse();
-    if (
-      object.payload?.$case === 'getDefaultRestrictionsResponse' &&
-      object.payload?.getDefaultRestrictionsResponse !== undefined &&
-      object.payload?.getDefaultRestrictionsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getDefaultRestrictionsResponse',
-        getDefaultRestrictionsResponse:
-          GetDefaultRestrictionsResponse.fromPartial(
-            object.payload.getDefaultRestrictionsResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getDefaultFightResultsResponse' &&
-      object.payload?.getDefaultFightResultsResponse !== undefined &&
-      object.payload?.getDefaultFightResultsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getDefaultFightResultsResponse',
-        getDefaultFightResultsResponse:
-          GetDefaultFightResultsResponse.fromPartial(
-            object.payload.getDefaultFightResultsResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getAllCompetitionsResponse' &&
-      object.payload?.getAllCompetitionsResponse !== undefined &&
-      object.payload?.getAllCompetitionsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getAllCompetitionsResponse',
-        getAllCompetitionsResponse: GetAllCompetitionsResponse.fromPartial(
-          object.payload.getAllCompetitionsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'generateCategoriesFromRestrictionsResponse' &&
-      object.payload?.generateCategoriesFromRestrictionsResponse !==
-        undefined &&
-      object.payload?.generateCategoriesFromRestrictionsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'generateCategoriesFromRestrictionsResponse',
-        generateCategoriesFromRestrictionsResponse:
-          GenerateCategoriesFromRestrictionsResponse.fromPartial(
-            object.payload.generateCategoriesFromRestrictionsResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCompetitionPropertiesResponse' &&
-      object.payload?.getCompetitionPropertiesResponse !== undefined &&
-      object.payload?.getCompetitionPropertiesResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCompetitionPropertiesResponse',
-        getCompetitionPropertiesResponse:
-          GetCompetitionPropertiesResponse.fromPartial(
-            object.payload.getCompetitionPropertiesResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCompetitionInfoTemplateResponse' &&
-      object.payload?.getCompetitionInfoTemplateResponse !== undefined &&
-      object.payload?.getCompetitionInfoTemplateResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCompetitionInfoTemplateResponse',
-        getCompetitionInfoTemplateResponse:
-          GetCompetitionInfoTemplateResponse.fromPartial(
-            object.payload.getCompetitionInfoTemplateResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getScheduleResponse' &&
-      object.payload?.getScheduleResponse !== undefined &&
-      object.payload?.getScheduleResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getScheduleResponse',
-        getScheduleResponse: GetScheduleResponse.fromPartial(
-          object.payload.getScheduleResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCompetitorsResponse' &&
-      object.payload?.getCompetitorsResponse !== undefined &&
-      object.payload?.getCompetitorsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCompetitorsResponse',
-        getCompetitorsResponse: GetCompetitorsResponse.fromPartial(
-          object.payload.getCompetitorsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCompetitorResponse' &&
-      object.payload?.getCompetitorResponse !== undefined &&
-      object.payload?.getCompetitorResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCompetitorResponse',
-        getCompetitorResponse: GetCompetitorResponse.fromPartial(
-          object.payload.getCompetitorResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getDashboardResponse' &&
-      object.payload?.getDashboardResponse !== undefined &&
-      object.payload?.getDashboardResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getDashboardResponse',
-        getDashboardResponse: GetDashboardResponse.fromPartial(
-          object.payload.getDashboardResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getMatsResponse' &&
-      object.payload?.getMatsResponse !== undefined &&
-      object.payload?.getMatsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getMatsResponse',
-        getMatsResponse: GetMatsResponse.fromPartial(
-          object.payload.getMatsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getPeriodMatsResponse' &&
-      object.payload?.getPeriodMatsResponse !== undefined &&
-      object.payload?.getPeriodMatsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getPeriodMatsResponse',
-        getPeriodMatsResponse: GetPeriodMatsResponse.fromPartial(
-          object.payload.getPeriodMatsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getMatResponse' &&
-      object.payload?.getMatResponse !== undefined &&
-      object.payload?.getMatResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getMatResponse',
-        getMatResponse: GetMatResponse.fromPartial(
-          object.payload.getMatResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getMatFightsResponse' &&
-      object.payload?.getMatFightsResponse !== undefined &&
-      object.payload?.getMatFightsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getMatFightsResponse',
-        getMatFightsResponse: GetMatFightsResponse.fromPartial(
-          object.payload.getMatFightsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getRegistrationInfoResponse' &&
-      object.payload?.getRegistrationInfoResponse !== undefined &&
-      object.payload?.getRegistrationInfoResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getRegistrationInfoResponse',
-        getRegistrationInfoResponse: GetRegistrationInfoResponse.fromPartial(
-          object.payload.getRegistrationInfoResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCategoriesResponse' &&
-      object.payload?.getCategoriesResponse !== undefined &&
-      object.payload?.getCategoriesResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCategoriesResponse',
-        getCategoriesResponse: GetCategoriesResponse.fromPartial(
-          object.payload.getCategoriesResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getFightByIdResponse' &&
-      object.payload?.getFightByIdResponse !== undefined &&
-      object.payload?.getFightByIdResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getFightByIdResponse',
-        getFightByIdResponse: GetFightByIdResponse.fromPartial(
-          object.payload.getFightByIdResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getFightIdsByCategoryIdsResponse' &&
-      object.payload?.getFightIdsByCategoryIdsResponse !== undefined &&
-      object.payload?.getFightIdsByCategoryIdsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getFightIdsByCategoryIdsResponse',
-        getFightIdsByCategoryIdsResponse:
-          GetFightIdsByCategoryIdsResponse.fromPartial(
-            object.payload.getFightIdsByCategoryIdsResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getCategoryResponse' &&
-      object.payload?.getCategoryResponse !== undefined &&
-      object.payload?.getCategoryResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getCategoryResponse',
-        getCategoryResponse: GetCategoryResponse.fromPartial(
-          object.payload.getCategoryResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getPeriodFightsByMatsResponse' &&
-      object.payload?.getPeriodFightsByMatsResponse !== undefined &&
-      object.payload?.getPeriodFightsByMatsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getPeriodFightsByMatsResponse',
-        getPeriodFightsByMatsResponse:
-          GetPeriodFightsByMatsResponse.fromPartial(
-            object.payload.getPeriodFightsByMatsResponse
-          ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getFightResulOptionsResponse' &&
-      object.payload?.getFightResulOptionsResponse !== undefined &&
-      object.payload?.getFightResulOptionsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getFightResulOptionsResponse',
-        getFightResulOptionsResponse: GetFightResulOptionsResponse.fromPartial(
-          object.payload.getFightResulOptionsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getStagesForCategoryResponse' &&
-      object.payload?.getStagesForCategoryResponse !== undefined &&
-      object.payload?.getStagesForCategoryResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getStagesForCategoryResponse',
-        getStagesForCategoryResponse: GetStagesForCategoryResponse.fromPartial(
-          object.payload.getStagesForCategoryResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getStageByIdResponse' &&
-      object.payload?.getStageByIdResponse !== undefined &&
-      object.payload?.getStageByIdResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getStageByIdResponse',
-        getStageByIdResponse: GetStageByIdResponse.fromPartial(
-          object.payload.getStageByIdResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getStageFightsResponse' &&
-      object.payload?.getStageFightsResponse !== undefined &&
-      object.payload?.getStageFightsResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getStageFightsResponse',
-        getStageFightsResponse: GetStageFightsResponse.fromPartial(
-          object.payload.getStageFightsResponse
-        ),
-      };
-    }
-    if (
-      object.payload?.$case === 'getAcademiesResponse' &&
-      object.payload?.getAcademiesResponse !== undefined &&
-      object.payload?.getAcademiesResponse !== null
-    ) {
-      message.payload = {
-        $case: 'getAcademiesResponse',
-        getAcademiesResponse: GetAcademiesResponse.fromPartial(
-          object.payload.getAcademiesResponse
-        ),
-      };
-    }
+    message.getDefaultRestrictionsResponse =
+      object.getDefaultRestrictionsResponse !== undefined &&
+      object.getDefaultRestrictionsResponse !== null
+        ? GetDefaultRestrictionsResponse.fromPartial(
+            object.getDefaultRestrictionsResponse
+          )
+        : undefined;
+    message.getDefaultFightResultsResponse =
+      object.getDefaultFightResultsResponse !== undefined &&
+      object.getDefaultFightResultsResponse !== null
+        ? GetDefaultFightResultsResponse.fromPartial(
+            object.getDefaultFightResultsResponse
+          )
+        : undefined;
+    message.getAllCompetitionsResponse =
+      object.getAllCompetitionsResponse !== undefined &&
+      object.getAllCompetitionsResponse !== null
+        ? GetAllCompetitionsResponse.fromPartial(
+            object.getAllCompetitionsResponse
+          )
+        : undefined;
+    message.generateCategoriesFromRestrictionsResponse =
+      object.generateCategoriesFromRestrictionsResponse !== undefined &&
+      object.generateCategoriesFromRestrictionsResponse !== null
+        ? GenerateCategoriesFromRestrictionsResponse.fromPartial(
+            object.generateCategoriesFromRestrictionsResponse
+          )
+        : undefined;
+    message.getCompetitionPropertiesResponse =
+      object.getCompetitionPropertiesResponse !== undefined &&
+      object.getCompetitionPropertiesResponse !== null
+        ? GetCompetitionPropertiesResponse.fromPartial(
+            object.getCompetitionPropertiesResponse
+          )
+        : undefined;
+    message.getCompetitionInfoTemplateResponse =
+      object.getCompetitionInfoTemplateResponse !== undefined &&
+      object.getCompetitionInfoTemplateResponse !== null
+        ? GetCompetitionInfoTemplateResponse.fromPartial(
+            object.getCompetitionInfoTemplateResponse
+          )
+        : undefined;
+    message.getScheduleResponse =
+      object.getScheduleResponse !== undefined &&
+      object.getScheduleResponse !== null
+        ? GetScheduleResponse.fromPartial(object.getScheduleResponse)
+        : undefined;
+    message.getCompetitorsResponse =
+      object.getCompetitorsResponse !== undefined &&
+      object.getCompetitorsResponse !== null
+        ? GetCompetitorsResponse.fromPartial(object.getCompetitorsResponse)
+        : undefined;
+    message.getCompetitorResponse =
+      object.getCompetitorResponse !== undefined &&
+      object.getCompetitorResponse !== null
+        ? GetCompetitorResponse.fromPartial(object.getCompetitorResponse)
+        : undefined;
+    message.getDashboardResponse =
+      object.getDashboardResponse !== undefined &&
+      object.getDashboardResponse !== null
+        ? GetDashboardResponse.fromPartial(object.getDashboardResponse)
+        : undefined;
+    message.getMatsResponse =
+      object.getMatsResponse !== undefined && object.getMatsResponse !== null
+        ? GetMatsResponse.fromPartial(object.getMatsResponse)
+        : undefined;
+    message.getPeriodMatsResponse =
+      object.getPeriodMatsResponse !== undefined &&
+      object.getPeriodMatsResponse !== null
+        ? GetPeriodMatsResponse.fromPartial(object.getPeriodMatsResponse)
+        : undefined;
+    message.getMatResponse =
+      object.getMatResponse !== undefined && object.getMatResponse !== null
+        ? GetMatResponse.fromPartial(object.getMatResponse)
+        : undefined;
+    message.getMatFightsResponse =
+      object.getMatFightsResponse !== undefined &&
+      object.getMatFightsResponse !== null
+        ? GetMatFightsResponse.fromPartial(object.getMatFightsResponse)
+        : undefined;
+    message.getRegistrationInfoResponse =
+      object.getRegistrationInfoResponse !== undefined &&
+      object.getRegistrationInfoResponse !== null
+        ? GetRegistrationInfoResponse.fromPartial(
+            object.getRegistrationInfoResponse
+          )
+        : undefined;
+    message.getCategoriesResponse =
+      object.getCategoriesResponse !== undefined &&
+      object.getCategoriesResponse !== null
+        ? GetCategoriesResponse.fromPartial(object.getCategoriesResponse)
+        : undefined;
+    message.getFightByIdResponse =
+      object.getFightByIdResponse !== undefined &&
+      object.getFightByIdResponse !== null
+        ? GetFightByIdResponse.fromPartial(object.getFightByIdResponse)
+        : undefined;
+    message.getFightIdsByCategoryIdsResponse =
+      object.getFightIdsByCategoryIdsResponse !== undefined &&
+      object.getFightIdsByCategoryIdsResponse !== null
+        ? GetFightIdsByCategoryIdsResponse.fromPartial(
+            object.getFightIdsByCategoryIdsResponse
+          )
+        : undefined;
+    message.getCategoryResponse =
+      object.getCategoryResponse !== undefined &&
+      object.getCategoryResponse !== null
+        ? GetCategoryResponse.fromPartial(object.getCategoryResponse)
+        : undefined;
+    message.getPeriodFightsByMatsResponse =
+      object.getPeriodFightsByMatsResponse !== undefined &&
+      object.getPeriodFightsByMatsResponse !== null
+        ? GetPeriodFightsByMatsResponse.fromPartial(
+            object.getPeriodFightsByMatsResponse
+          )
+        : undefined;
+    message.getFightResulOptionsResponse =
+      object.getFightResulOptionsResponse !== undefined &&
+      object.getFightResulOptionsResponse !== null
+        ? GetFightResulOptionsResponse.fromPartial(
+            object.getFightResulOptionsResponse
+          )
+        : undefined;
+    message.getStagesForCategoryResponse =
+      object.getStagesForCategoryResponse !== undefined &&
+      object.getStagesForCategoryResponse !== null
+        ? GetStagesForCategoryResponse.fromPartial(
+            object.getStagesForCategoryResponse
+          )
+        : undefined;
+    message.getStageByIdResponse =
+      object.getStageByIdResponse !== undefined &&
+      object.getStageByIdResponse !== null
+        ? GetStageByIdResponse.fromPartial(object.getStageByIdResponse)
+        : undefined;
+    message.getStageFightsResponse =
+      object.getStageFightsResponse !== undefined &&
+      object.getStageFightsResponse !== null
+        ? GetStageFightsResponse.fromPartial(object.getStageFightsResponse)
+        : undefined;
+    message.getAcademiesResponse =
+      object.getAcademiesResponse !== undefined &&
+      object.getAcademiesResponse !== null
+        ? GetAcademiesResponse.fromPartial(object.getAcademiesResponse)
+        : undefined;
     return message;
   },
 };
@@ -3570,10 +3214,6 @@ type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & {
-      $case: T['$case'];
-    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

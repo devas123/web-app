@@ -18,7 +18,6 @@ import {
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
-  EVENT_MANAGER_MOVE_COMPETITOR,
   EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
   eventManagerDefaultFightResultsLoaded,
@@ -37,7 +36,11 @@ import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
+import {
+  CompetitionProperties,
+  GenerateCategoriesFromRestrictionsPayload,
+  ManagedCompetition
+} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class EventManagerEffects {
@@ -61,11 +64,11 @@ export class EventManagerEffects {
     mergeMap((action: CommonAction) => {
       return this.infoService.getCompetitions(action.payload.creatorId, action.payload.status).pipe(catchError(error => observableOf(errorEvent(error))));
     }),
-    map((payload: any) => {
+    map(payload => {
       if (Array.isArray(payload)) {
-        return myCompetitionsLoaded(payload as CompetitionProperties[]);
+        return myCompetitionsLoaded(payload as ManagedCompetition[]);
       } else {
-        return errorEvent(payload);
+        return errorEvent(payload as any);
       }
     })));
 
@@ -111,20 +114,29 @@ export class EventManagerEffects {
     ofType(
       EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
       EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-      EVENT_MANAGER_MOVE_COMPETITOR,
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
       GENERATE_CATEGORIES_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
-    mergeMap((command: CommonAction) => this.infoService.sendCommand(command, command.competitionId).pipe(catchError(error => observableOf(errorEvent(error)))))),
+    mergeMap((action: CommonAction) => {
+      const command = InfoService.createCommandWithPayload(action);
+      return this.infoService.sendCommand(command, action.competitionId).pipe(catchError(error => observableOf(errorEvent(error))))
+    })),
     {dispatch: false});
 
   loadGeneratedCategories$ = createEffect(() => this.actions$.pipe(
     ofType(GENERATE_PREVIEW_CATEGORIES_COMMAND),
-    switchMap((command: CommonAction) => this.infoService.generatePreliminaryCategories(command, command.competitionId).pipe(
-      map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response }))
-    )),
+    switchMap((command: CommonAction) => {
+      const payload = <GenerateCategoriesFromRestrictionsPayload>{};
+      const commandAsAny = command as any;
+      payload.idTrees = commandAsAny.idTrees;
+      payload.restrictions = commandAsAny.restrictions;
+      payload.restrictionNames = commandAsAny.restrictionNames;
+      return this.infoService.generatePreliminaryCategories(payload, command.competitionId).pipe(
+        map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response }))
+      )
+    }),
   ));
 
   connectSocket$ = createEffect(() => this.actions$.pipe(
