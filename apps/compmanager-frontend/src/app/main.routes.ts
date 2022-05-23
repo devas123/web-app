@@ -9,6 +9,10 @@ import {AuthGuard} from './modules/account/auth.guard';
 export const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {
+    path: 'academies',
+    loadChildren: () => import('./modules/academies/academies.module').then(mod => mod.AcademiesModule)
+  },
+  {
     path: 'events',
     loadChildren: () => import('./modules/competition/competition.module').then(mod => mod.CompetitionModule)
   },

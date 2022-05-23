@@ -45,6 +45,10 @@ export class MainMenuComponent {
     this.navigate.next(['/eventmanager']);
   }
 
+  academiesPage() {
+    this.navigate.next(['/academies']);
+  }
+
 
   doLogout() {
     this.logout.next();

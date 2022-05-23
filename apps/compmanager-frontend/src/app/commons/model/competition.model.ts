@@ -12,8 +12,9 @@ import {
   Competitor,
   FightDescription,
   FightResultOption,
-  FullAcademyInfo,
-  GroupChangeType, RegistrationGroup, RegistrationPeriod,
+  GroupChangeType,
+  RegistrationGroup,
+  RegistrationPeriod,
   StageDescriptor
 } from "@frontend-nx/protobuf";
 
@@ -127,13 +128,6 @@ export interface CompetitorsCollection extends EntityState<Competitor> {
   pageNumber: number;
 }
 
-export interface AcademiesCollection extends EntityState<FullAcademyInfo> {
-  selectedAcademyId: string | null;
-  total: number;
-  pageSize: number;
-  pageNumber: number;
-}
-
 export interface MenuItem {
   name: string;
   class?: string | { [p: string]: any };
@@ -171,10 +165,6 @@ export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAd
   sortComparer: false
 });
 
-export const academyEntityAdapter: EntityAdapter<FullAcademyInfo> = createEntityAdapter<FullAcademyInfo>({
-  selectId: (c: FullAcademyInfo) => c.id,
-  sortComparer: false
-});
 
 export const fightEntityAdapter: EntityAdapter<FightDescription> = createEntityAdapter<FightDescription>({
   selectId: (fight: FightDescription) => fight.id,
@@ -201,13 +191,6 @@ export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityA
   selectedStageId: null,
   fightsAreLoading: false,
   selectedStageFights: fightsInitialState
-});
-
-export const academiesInitialState: AcademiesCollection = academyEntityAdapter.getInitialState({
-  selectedAcademyId: null,
-  total: 0,
-  pageSize: 15,
-  pageNumber: 1
 });
 
 export const initialCategoryConstructorState: CategoryConstructorState = {

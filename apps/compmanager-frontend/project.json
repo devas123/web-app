@@ -6,7 +6,7 @@
     }
   },
   "sourceRoot": "apps/compmanager-frontend/src",
-  "prefix": "frontend-nx",
+  "prefix": "compmanager-frontend",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:webpack-browser",
