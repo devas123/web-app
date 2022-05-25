@@ -1,10 +1,10 @@
-import {CommonsModule} from './commons.module';
+import {CompetitionManagerCommonsModule} from './competition-manager-commons.module';
 
 describe('CommonsModule', () => {
-  let commonsModule: CommonsModule;
+  let commonsModule: CompetitionManagerCommonsModule;
 
   beforeEach(() => {
-    commonsModule = new CommonsModule();
+    commonsModule = new CompetitionManagerCommonsModule();
   });
 
   it('should create an instance', () => {

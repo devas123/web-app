@@ -11,7 +11,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {CompetitionMainInfoComponent} from './components/competition-main-info/competition-main-info.component';
 import {CompetitionDescriptionComponent} from './components/competition-main-info/competition-description/competition-description.component';
 
-import {CommonsModule} from '../../commons/commons.module';
+import {CompetitionManagerCommonsModule} from '../../commons/competition-manager-commons.module';
 import {CommonModule} from '@angular/common';
 import {BracketsContainerComponent} from './containers/brackets-container/brackets-container.component';
 import {StoreModule} from '@ngrx/store';
@@ -25,7 +25,7 @@ import {CategoryInfoContainerComponent} from './containers/category-info-contain
 
 @NgModule({
   imports: [
-    CommonsModule,
+    CompetitionManagerCommonsModule,
     CommonModule,
     StoreModule.forFeature(featureKey, competitionListReducer),
     EffectsModule.forFeature([CompetitorsEffects, FightsEffects]),

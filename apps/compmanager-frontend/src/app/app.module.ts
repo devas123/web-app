@@ -23,7 +23,7 @@ import {SignUpGuard} from './modules/account/components/authorization/sign-up.gu
 import {AuthGuard} from './modules/account/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
-import {CommonsModule} from './commons/commons.module';
+import {CompetitionManagerCommonsModule} from './commons/competition-manager-commons.module';
 import {MenuService} from './components/main-menu/menu.service';
 import {MiscEffects} from './effects/misc';
 import {CommonBracketsInfoContainer} from './commons/classes/common-brackets-container.component';
@@ -37,7 +37,7 @@ import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-s
     PagenotfoundComponent,
     HomeComponent],
   imports: [
-    CommonsModule,
+    CompetitionManagerCommonsModule,
     BrowserModule,
     BrowserAnimationsModule,
     SuiModule,

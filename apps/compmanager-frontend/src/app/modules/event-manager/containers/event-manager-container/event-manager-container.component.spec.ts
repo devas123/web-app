@@ -15,7 +15,7 @@ import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {InfoService} from '../../../../service/info.service';
 import {EventManagerMenuComponent} from './event-manager-menu.component';
 import {DynamicHeaderDirective} from './dynamic.header.directive';
-import {FlexibleColumnDirective} from './flexible.column.directive';
+import {FlexibleColumnDirective} from '../../../../commons/directives/flexible.column.directive';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 

@@ -26,11 +26,13 @@ import {MultipleGroupsDisplayComponent} from '../components/brackets-editor/grou
 import {ScheduleEntryDisplayComponent} from '../components/schedule-display/schedule-entry-display.component';
 import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedule-mat-display.component';
 import {StageResultDisplayComponent} from '../components/stage-result-display/stage-result-display.component';
+import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
     ScheduleDisplayComponent,
+    FlexibleColumnDirective,
     CategoryEditorComponent,
     FightersEditorComponent,
     FightersContainerComponent, BracketPartComponent, StageDisplayComponent,
@@ -54,8 +56,9 @@ import {StageResultDisplayComponent} from '../components/stage-result-display/st
     CommonFightsEditorComponent,
     GroupDisplayComponent,
     StageResultDisplayComponent,
+    FlexibleColumnDirective,
     MultipleGroupsDisplayComponent],
   imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
 })
-export class CommonsModule {
+export class CompetitionManagerCommonsModule {
 }

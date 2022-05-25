@@ -12,7 +12,7 @@ import {RouterModule} from '@angular/router';
 import {accountRoutes} from './account.routes';
 import {BrowserModule} from '@angular/platform-browser';
 import {AccountRootComponent} from './components/account-root/account-root.component';
-import {CommonsModule} from '../../commons/commons.module';
+import {CompetitionManagerCommonsModule} from '../../commons/competition-manager-commons.module';
 // import {AvatarModule} from 'ngx-avatar';
 
 
@@ -27,7 +27,7 @@ import {CommonsModule} from '../../commons/commons.module';
     RouterModule.forChild(accountRoutes),
     // AvatarModule,
     SuiModalModule,
-    CommonsModule
+    CompetitionManagerCommonsModule
   ],
   declarations: [
     SignInComponent,

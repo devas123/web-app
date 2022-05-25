@@ -6,8 +6,8 @@ IN_DIR="./libs/protobuf"
 PROTOC="$(yarn bin)/grpc_tools_node_protoc"
 PROTOC_GEN_TS_PATH="$(yarn bin)/protoc-gen-ts_proto"
 
-rm -rf "$OUT_DIR"
-mkdir -p "$OUT_DIR"
+#rm -rf "$OUT_DIR"
+#mkdir -p "$OUT_DIR"
 
 $PROTOC \
     -I="$IN_DIR" \
