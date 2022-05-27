@@ -6,10 +6,9 @@ import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 @Component({
   selector: 'app-fighters-editor',
   templateUrl: './fighters-editor.component.html',
-  styleUrls: ['./fighters-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FightersEditorComponent  {
+export class FightersEditorComponent {
 
   @Output()
   fighterClicked = new EventEmitter<Competitor>();
@@ -34,9 +33,6 @@ export class FightersEditorComponent  {
 
   @Input()
   collectionSize: number;
-
-  @Input()
-  total: number;
 
   @Input()
   set pageNumber(value: number) {

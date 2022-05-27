@@ -4,7 +4,7 @@ import {Competitor} from "@frontend-nx/protobuf";
 @Component({
   selector: 'compmanager-frontend-fighter-card',
   template: `
-    <div class="ui basic segment customline">
+    <compmanager-frontend-common-card>
       <a class="ui header link" (click)="sendHeaderClicked()">{{fighter?.firstName}} {{fighter?.lastName}}</a>
       <ng-container *ngIf="showPersonalData">
         <div class="description">Email: {{fighter?.email}}</div>
@@ -21,7 +21,7 @@ import {Competitor} from "@frontend-nx/protobuf";
           <i class="trash icon"></i>
         </div>
       </div>
-    </div>
+    </compmanager-frontend-common-card>
   `,
   styles: [`
     a.ui.header.link {

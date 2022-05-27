@@ -33,7 +33,6 @@
   [fighters]="competitors$ | async"
   [category]="category$ | async"
   [competitionId]="competitionId$ | async"
-  [total]="totalCompetitors$ | async"
   (fighterDeleted)="deleteFighter($event)"
   (pageChanged)="changePage($event)"
   (fighterClicked)="navigateToFighterProfilePage($event)"></app-fighters-editor>

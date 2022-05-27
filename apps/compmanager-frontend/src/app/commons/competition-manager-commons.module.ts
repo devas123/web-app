@@ -36,8 +36,12 @@ import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
 import {DynamicHeaderDirective} from "./directives/dynamic.header.directive";
 import {EventManagerMenuComponent} from "./components/event-manager-menu.component";
 import {FighterCardComponent} from "./components/fighter-card-component";
+import {CommonContainerWithPaginationComponent} from "./components/custom-container-with-pagination-component";
+import {CommonCardComponent} from "./components/common-card-component";
+import {CommonPaginationComponent} from "./components/common-pagination-component";
 
 const importsExports = [
+  CommonContainerWithPaginationComponent,
   ItemInputDirective,
   BracketPartComponent,
   WordbreakPipe,
@@ -65,6 +69,8 @@ const importsExports = [
   GroupDisplayComponent,
   StageResultDisplayComponent,
   FlexibleColumnDirective,
+  CommonCardComponent,
+  CommonPaginationComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({

@@ -1,4 +1,4 @@
-<div class="ui customcontainer" *ngIf="fighters && fighters.length > 0">
+<compmanager-frontend-common-container-with-pagination *ngIf="fighters && fighters.length > 0">
   <compmanager-frontend-fighter-card *ngFor="let fighter of fighters"
                                      [editMode]="editMode"
                                      [fighter]="fighter"
@@ -9,14 +9,10 @@
                                      (deleteClicked)="deleteFighter($event)"
                                      (headerClicked)="gotoFighterProfile($event)"
   ></compmanager-frontend-fighter-card>
-  <div class="ui basic segment customline pagination_line">
-    <sui-pagination [collectionSize]="collectionSize"
-                    [pageSize]="pageSize"
-                    [maxSize]="5"
-                    [page]="pageNumber"
-                    [hasEllipses]="true"
-                    (pageChange)="selectPage($event)" #pagination>
-    </sui-pagination>
-    <div class="total">Total: {{total}}</div>
-  </div>
-</div>
+  <compmanager-frontend-common-pagination pagination
+    [collectionSize]="collectionSize"
+    [pageSize]="pageSize"
+    [pageNumber]="pageNumber"
+    (pageChanged)="selectPage($event)"
+  ></compmanager-frontend-common-pagination>
+</compmanager-frontend-common-container-with-pagination>

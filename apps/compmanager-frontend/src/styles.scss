@@ -9,6 +9,17 @@ $mat_border_color: #3c3f41;
 $error_color: #ffb6b6;
 $text_color: #ff0000;
 
+.total {
+  display: inline;
+  padding: 1rem;
+}
+
+.pagination_line {
+  grid-column: 1/4;
+}
+
+
+
 .compman_clickable {
   cursor: pointer !important;
 }
