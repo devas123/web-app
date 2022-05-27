@@ -10,7 +10,7 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
@@ -28,7 +28,7 @@ import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
       </app-category-summary>`,
   styleUrls: ['./category-summary-container.component.css']
 })
-export class CategorySummaryContainerComponent extends EventManagerRouterEntryComponent  {
+export class CategorySummaryContainerComponent extends CompetitionManagerModuleRouterEntryComponent  {
 
   categoryState$: Observable<CategoryState>;
 

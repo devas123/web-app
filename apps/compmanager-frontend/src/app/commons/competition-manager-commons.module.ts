@@ -12,7 +12,13 @@ import {BracketComponent} from '../components/brackets-editor/bracket/bracket.co
 import {BracketRoundComponent} from '../components/brackets-editor/bracketround/bracketround.component';
 import {ScheduleDisplayComponent} from '../components/schedule-display/schedule-display.component';
 import {CommonModule} from '@angular/common';
-import {SuiAccordionModule, SuiCheckboxModule, SuiCollapseModule, SuiPaginationModule, SuiPopupModule} from '@frontend-nx/ng2-semantic-ui';
+import {
+  SuiAccordionModule,
+  SuiCheckboxModule,
+  SuiCollapseModule,
+  SuiPaginationModule,
+  SuiPopupModule
+} from '@frontend-nx/ng2-semantic-ui';
 import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
 import {RouterModule} from '@angular/router';
 import {FightersEditorComponent} from '../components/fighters-editor/fighters-editor.component';
@@ -27,6 +33,7 @@ import {ScheduleEntryDisplayComponent} from '../components/schedule-display/sche
 import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedule-mat-display.component';
 import {StageResultDisplayComponent} from '../components/stage-result-display/stage-result-display.component';
 import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
+import {DynamicHeaderDirective} from "./directives/dynamic.header.directive";
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -35,6 +42,7 @@ import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
     FlexibleColumnDirective,
     CategoryEditorComponent,
     FightersEditorComponent,
+    DynamicHeaderDirective,
     FightersContainerComponent, BracketPartComponent, StageDisplayComponent,
     TagListComponent,
     CommonFightsEditorComponent,
@@ -51,6 +59,7 @@ import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
     CategoryEditorComponent,
     FightersEditorComponent,
     FightersContainerComponent,
+    DynamicHeaderDirective,
     StageDisplayComponent,
     TagListComponent,
     CommonFightsEditorComponent,

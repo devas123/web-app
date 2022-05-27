@@ -14,7 +14,7 @@ import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {InfoService} from '../../../../service/info.service';
 import {EventManagerMenuComponent} from './event-manager-menu.component';
-import {DynamicHeaderDirective} from './dynamic.header.directive';
+import {DynamicHeaderDirective} from '../../../../commons/directives/dynamic.header.directive';
 import {FlexibleColumnDirective} from '../../../../commons/directives/flexible.column.directive';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';

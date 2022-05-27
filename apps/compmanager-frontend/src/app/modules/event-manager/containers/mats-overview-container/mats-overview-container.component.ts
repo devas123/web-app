@@ -12,8 +12,8 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {filter, map, take, tap} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
@@ -25,7 +25,7 @@ import {FightDescription, MatDescription, Period} from "@frontend-nx/protobuf";
   templateUrl: './mats-overview-container.component.html',
   styleUrls: ['./mats-overview-container.component.css']
 })
-export class MatsOverviewContainerComponent extends EventManagerRouterEntryComponent  {
+export class MatsOverviewContainerComponent extends CompetitionManagerModuleRouterEntryComponent  {
   selectedPeriod$: Observable<Period>;
   selectedPeriodMats$: Observable<MatDescription[]>;
   competitionId$: Observable<string>;

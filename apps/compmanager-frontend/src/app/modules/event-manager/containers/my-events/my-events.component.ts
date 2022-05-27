@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
 
@@ -14,7 +14,7 @@ import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
   templateUrl: './my-events.component.html',
   styleUrls: ['./my-events.component.css']
 })
-export class MyEventsComponent extends EventManagerRouterEntryComponent  {
+export class MyEventsComponent extends CompetitionManagerModuleRouterEntryComponent  {
 
   events$: Observable<ManagedCompetition[]>;
 

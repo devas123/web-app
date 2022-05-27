@@ -22,7 +22,7 @@ import {
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 
@@ -31,7 +31,7 @@ import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
   templateUrl: './fighter-profile-container.component.html',
   styleUrls: ['./fighter-profile-container.component.css']
 })
-export class FighterProfileContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
+export class FighterProfileContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
 
   eventFighter$: Observable<Competitor>;
   category$: Observable<CategoryDescriptor>;

@@ -7,8 +7,8 @@ import {ActivatedRoute} from '@angular/router';
 import {competitionSelected, eventManagerCompetitionUnselected} from '../../redux/event-manager-actions';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 
 
@@ -18,7 +18,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
       <router-outlet></router-outlet>`,
   styleUrls: ['./event-container.component.css']
 })
-export class EventContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
+export class EventContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
   private readonly compIdSubscription: Subscription;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, menuService: MenuService) {

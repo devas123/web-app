@@ -1,5 +1,4 @@
 import {
-  CommonAction,
   competitionPropertiesEntitiesAdapter,
   competitionPropertiesEntitiesInitialState,
   eventManagerGetSelectedEventSchedule,
@@ -23,8 +22,6 @@ import {
   EVENT_MANAGER_COMPETITION_UNSELECTED,
   EVENT_MANAGER_COMPETITIONS_LOADED,
   EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
-  EVENT_MANAGER_HEADER_REMOVE,
-  EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED
 } from './event-manager-actions';
@@ -40,14 +37,13 @@ import {
   EventManagerState,
   fightEntityAdapter,
   fightsInitialState,
-  HeaderDescription,
-  initialCategoryConstructorState, RegistrationPeriodCollection,
+  initialCategoryConstructorState,
+  RegistrationPeriodCollection,
   stagesEntityAdapter
 } from '../../../commons/model/competition.model';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
 import {COMPETITION_PROPERTIES_LOADED} from '../../../actions/misc';
-import {InfoService} from '../../../service/info.service';
 import {collectingReducer} from '../../account/utils';
 import produce from 'immer';
 import * as _ from 'lodash';
@@ -55,7 +51,6 @@ import {CompetitionProperties} from "@frontend-nx/protobuf";
 
 export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
-export const eventManagerGetHeaderDescription = createSelector(getEventManagerState, state => state.header);
 export const eventManagerCategoryConstructorState = createSelector(getEventManagerState, state => state.categoryConstructorState);
 export const eventManagerDefaultCategoryRestrictions = createSelector(eventManagerCategoryConstructorState, state => state.defaultRestrictions);
 export const eventManagerCategoryRestrictions = createSelector(eventManagerCategoryConstructorState, state => state.restrictions);
@@ -127,18 +122,6 @@ export function myEventsReducer(state: EventPropsEntities = competitionPropertie
       return state;
     }
   }
-}
-
-export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
-  switch (action.type) {
-    case EVENT_MANAGER_HEADER_SET: {
-      return action.payload as HeaderDescription;
-    }
-    case EVENT_MANAGER_HEADER_REMOVE: {
-      return null;
-    }
-  }
-  return state;
 }
 
 export const dashboardReducers = combineReducers({
@@ -246,7 +229,6 @@ export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
     myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
     dashboardState: dashboardReducers,
-    header: headerReducer,
     categoryConstructorState: categoryConstructorStateReducer
   };
 }

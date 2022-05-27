@@ -26,7 +26,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {
   BasicCompetitionInfoContainer,
   ComponentCommonMetadataProvider
-} from '../event-manager-container/common-classes';
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {

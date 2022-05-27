@@ -19,8 +19,8 @@ import {
 } from '../../../../commons/model/competition.model';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../../containers/event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {
   eventManagerCategoriesCleared,
@@ -79,7 +79,7 @@ import {CategoryDescriptor, CategoryRestriction} from "@frontend-nx/protobuf";
   styleUrls: ['./create-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateCategoryComponent extends EventManagerRouterEntryComponent implements OnInit {
+export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntryComponent implements OnInit {
 
   defaultRestrictions$: Observable<CategoryRestriction[]>;
   defaultRestrictionsNames$: Observable<string[]>;

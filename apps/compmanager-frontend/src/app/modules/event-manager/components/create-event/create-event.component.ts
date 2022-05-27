@@ -9,8 +9,8 @@ import {AppState} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../../containers/event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {selectUser} from '../../../competition/redux/reducers';
 import {
@@ -27,7 +27,7 @@ import {
   styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent extends EventManagerRouterEntryComponent implements OnDestroy {
+export class CreateEventComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   form: FormGroup;
   @Output()

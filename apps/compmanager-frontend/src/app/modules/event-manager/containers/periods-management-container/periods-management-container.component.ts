@@ -5,7 +5,7 @@ import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reduce
 import {Subscription} from 'rxjs';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../event-manager-container/common-classes';
+import {BasicCompetitionInfoContainer, ComponentCommonMetadataProvider} from '../../../../commons/directives/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';

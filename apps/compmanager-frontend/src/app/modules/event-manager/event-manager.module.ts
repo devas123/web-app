@@ -59,7 +59,7 @@ import {RegistrationInfoEditorComponent} from './components/registration-info-ed
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {RegistrationGroupEditorComponent} from './components/registration-group-editor/registration-group-editor.component';
 import {EventManagerMenuComponent} from './containers/event-manager-container/event-manager-menu.component';
-import {DynamicHeaderDirective} from './containers/event-manager-container/dynamic.header.directive';
+import {DynamicHeaderDirective} from '../../commons/directives/dynamic.header.directive';
 import {AddRegistrationPeriodFormComponent} from './components/registration-info-editor/add-registration-period-form.component';
 import {AddGroupFormComponent} from './components/registration-info-editor/add-group-form.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -134,7 +134,6 @@ import {AppAutocompleteDirective} from './components/category-constructor/autoco
         AppAutocompleteDirective,
         AddGroupFormComponent,
         AddRegistrationPeriodFormComponent,
-        DynamicHeaderDirective,
         EventManagerMenuComponent,
         RegistrationGroupEditorComponent,
         RegistrationInfoEditorContainerComponent,

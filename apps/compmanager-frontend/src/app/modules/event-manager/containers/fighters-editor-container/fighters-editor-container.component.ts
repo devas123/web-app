@@ -15,7 +15,7 @@ import {eventManagerCompetitionFightersPageChanged, eventManagerRemoveCompetitor
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {filter, map, take} from 'rxjs/operators';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
@@ -25,7 +25,7 @@ import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
   templateUrl: './fighters-editor-container.component.html',
   styleUrls: ['./fighters-editor-container.component.css']
 })
-export class FightersEditorContainerComponent extends EventManagerRouterEntryComponent  {
+export class FightersEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent  {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
   competitors$: Observable<Competitor[]>;

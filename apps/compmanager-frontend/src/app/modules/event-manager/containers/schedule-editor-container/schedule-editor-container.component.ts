@@ -13,7 +13,7 @@ import {
   loadScheduleCommand,
   schedulePeriodsUpdated
 } from '../../redux/event-manager-actions';
-import {ComponentCommonMetadataProvider, EventManagerRouterEntryComponent} from '../event-manager-container/common-classes';
+import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonScheduleInfoContainerService} from '../../../../commons/classes/common-schedule-info-container.service';
@@ -25,7 +25,7 @@ import {Period, ScheduleRequirement} from "@frontend-nx/protobuf";
   styleUrls: ['./schedule-editor-container.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScheduleEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class ScheduleEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnInit, OnDestroy {
   showEditor = false;
   subs = new Subscription();
 

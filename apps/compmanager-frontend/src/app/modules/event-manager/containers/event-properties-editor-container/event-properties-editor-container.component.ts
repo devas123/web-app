@@ -12,8 +12,8 @@ import {
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -27,7 +27,7 @@ import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
                                           [registrationInfo]="registrationInfo$ | async"
                                           [properties]="competitionProperties$ | async"></app-event-properties-editor>`
 })
-export class EventPropertiesEditorContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
+export class EventPropertiesEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
 
   competitionProperties$: Observable<CompetitionProperties>;
   registrationInfo$: Observable<RegistrationInfo>;

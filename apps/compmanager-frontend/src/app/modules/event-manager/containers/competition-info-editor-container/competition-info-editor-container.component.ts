@@ -1,8 +1,8 @@
 import {Component, OnDestroy} from '@angular/core';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {filter, map} from 'rxjs/operators';
@@ -19,7 +19,7 @@ type TabOption = 'template' | 'contacts';
   templateUrl: './competition-info-editor-container.component.html',
   styleUrls: ['./competition-info-editor-container.component.scss']
 })
-export class CompetitionInfoEditorContainerComponent extends EventManagerRouterEntryComponent implements  OnDestroy {
+export class CompetitionInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
     super(store, <ComponentCommonMetadataProvider>{

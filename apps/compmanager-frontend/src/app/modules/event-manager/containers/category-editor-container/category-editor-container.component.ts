@@ -22,7 +22,7 @@ import {
 import {
   BasicCompetitionInfoContainer,
   ComponentCommonMetadataProvider
-} from '../event-manager-container/common-classes';
+} from '../../../../commons/directives/common-classes';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";

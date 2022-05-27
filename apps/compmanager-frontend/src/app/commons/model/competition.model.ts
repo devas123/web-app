@@ -156,7 +156,6 @@ export interface EventManagerState {
   dashboardState: DashboardState;
   categoryConstructorState: CategoryConstructorState;
   socketConnected: boolean;
-  header: HeaderDescription;
 }
 
 

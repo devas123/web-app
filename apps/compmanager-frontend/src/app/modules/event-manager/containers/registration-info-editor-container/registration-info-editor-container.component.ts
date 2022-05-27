@@ -20,8 +20,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {
   AddGroupModal,
@@ -42,7 +42,7 @@ import {CategoryDescriptor, RegistrationInfo} from "@frontend-nx/protobuf";
   templateUrl: './registration-info-editor-container.component.html',
   styleUrls: ['./registration-info-editor-container.component.css']
 })
-export class RegistrationInfoEditorContainerComponent extends EventManagerRouterEntryComponent implements OnInit, OnDestroy {
+export class RegistrationInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnInit, OnDestroy {
 
   registrationInfo$: Observable<RegistrationInfo>;
   competitionId$: Observable<string>;

@@ -1,20 +1,20 @@
 import {Directive, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventTimeZone
-} from '../../redux/event-manager-reducers';
-import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../redux/event-manager-actions';
+} from '../../modules/event-manager/redux/event-manager-reducers';
+import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../modules/event-manager/redux/event-manager-actions';
 import {filter, take} from 'rxjs/operators';
-import {HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
-import {MenuService} from '../../../../components/main-menu/menu.service';
+import {HeaderDescription, MenuItem} from '../model/competition.model';
+import {MenuService} from '../../components/main-menu/menu.service';
 import {CategoryDescriptor} from "@frontend-nx/protobuf";
 
 @Directive({})
-export abstract class EventManagerRouterEntryComponent implements OnDestroy {
+export abstract class CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   protected constructor(protected store: Store<AppState>, protected metadataProvider: ComponentCommonMetadataProvider, protected menuService: MenuService) {
     setTimeout(() => this.init(metadataProvider));
@@ -33,8 +33,8 @@ export abstract class EventManagerRouterEntryComponent implements OnDestroy {
   }
 
   private init(metadataProvider: ComponentCommonMetadataProvider) {
-    EventManagerRouterEntryComponent.processSyncOrAsync(metadataProvider.menu, i => this.menuService.menu = i);
-    EventManagerRouterEntryComponent.processSyncOrAsync(metadataProvider.header, i => this.store.dispatch(eventManagerHeaderSet(i)));
+    CompetitionManagerModuleRouterEntryComponent.processSyncOrAsync(metadataProvider.menu, i => this.menuService.menu = i);
+    CompetitionManagerModuleRouterEntryComponent.processSyncOrAsync(metadataProvider.header, i => this.store.dispatch(eventManagerHeaderSet(i)));
   }
 
   ngOnDestroy(): void {
@@ -52,7 +52,7 @@ export interface ComponentCommonMetadataProvider {
   menu?: SyncOrAsync<MenuItem[]>;
 }
 
-export abstract class BasicCompetitionInfoContainer extends EventManagerRouterEntryComponent {
+export abstract class BasicCompetitionInfoContainer extends CompetitionManagerModuleRouterEntryComponent {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
   categories$: Observable<CategoryDescriptor[]>;

@@ -30,8 +30,8 @@ import {
 } from '../../redux/event-manager-reducers';
 import {
   ComponentCommonMetadataProvider,
-  EventManagerRouterEntryComponent
-} from '../event-manager-container/common-classes';
+  CompetitionManagerModuleRouterEntryComponent
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {CategoryDescriptor, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
@@ -40,7 +40,7 @@ import {CategoryDescriptor, Competitor, FightDescription, FightResultOption} fro
   templateUrl: './scoreboard-container.component.html',
   styleUrls: ['./scoreboard-container.component.scss']
 })
-export class ScoreboardContainerComponent extends EventManagerRouterEntryComponent implements OnDestroy {
+export class ScoreboardContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   subs = new Subscription();
 

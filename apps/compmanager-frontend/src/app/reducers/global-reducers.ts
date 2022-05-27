@@ -21,6 +21,7 @@ import {
   fightEntityAdapter,
   FightsCollection,
   fightsInitialState,
+  HeaderDescription,
   stagesEntityAdapter,
   stagesInitialState
 } from '../commons/model/competition.model';
@@ -51,6 +52,8 @@ import {
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
   EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
+  EVENT_MANAGER_HEADER_REMOVE,
+  EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
   EVENT_MANAGER_PERIOD_REMOVED,
   EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED,
@@ -97,6 +100,7 @@ import {
 export interface AppState {
   accountState: AccountState;
   selectedEventState: CompetitionState;
+  header: HeaderDescription;
 }
 
 export interface CommonAction extends Action {
@@ -187,7 +191,8 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 
 export const reducers: ActionReducerMap<AppState> = {
   accountState: accountStateReducer,
-  selectedEventState: competitionStateReducer
+  selectedEventState: competitionStateReducer,
+  header: headerReducer,
 };
 
 export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState> {
@@ -202,6 +207,19 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
+
+export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
+  switch (action.type) {
+    case EVENT_MANAGER_HEADER_SET: {
+      return action.payload as HeaderDescription;
+    }
+    case EVENT_MANAGER_HEADER_REMOVE: {
+      return null;
+    }
+  }
+  return state;
+}
+
 
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce(st, state => {
@@ -848,3 +866,4 @@ export const dashboardGetSelectedPeriodSelectedFight = createSelector(dashboardG
   (id, entities) => id && entities[id]);
 export const getSelectedEventSelectedPeriod = createSelector(getSelectedEventSelectedPeriodId,
   selectPeriodsDictionary, (periodId, entities) => periodId && entities[periodId]);
+export const eventManagerGetHeaderDescription = createSelector(state => state, (state: AppState) => state.header);
