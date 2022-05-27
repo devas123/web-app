@@ -34,6 +34,7 @@ import {ScheduleMatDisplayComponent} from '../components/schedule-display/schedu
 import {StageResultDisplayComponent} from '../components/stage-result-display/stage-result-display.component';
 import {FlexibleColumnDirective} from "./directives/flexible.column.directive";
 import {DynamicHeaderDirective} from "./directives/dynamic.header.directive";
+import {EventManagerMenuComponent} from "./components/event-manager-menu.component";
 
 @NgModule({
   declarations: [ItemInputDirective, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
@@ -50,9 +51,11 @@ import {DynamicHeaderDirective} from "./directives/dynamic.header.directive";
     MultipleGroupsDisplayComponent,
     ScheduleMatDisplayComponent,
     ScheduleEntryDisplayComponent,
+    EventManagerMenuComponent,
     StageResultDisplayComponent],
   exports: [ItemInputDirective, BracketPartComponent, WordbreakPipe, TruncatePipe, GetNamePipe, EncodeIdPipe, ReversePipe, ZonedDatePipe, DisplayCategoryPipe, GetAcademyPipe, BracketComponent,
     BracketRoundComponent,
+    EventManagerMenuComponent,
     ScheduleMatDisplayComponent,
     ScheduleEntryDisplayComponent,
     ScheduleDisplayComponent,

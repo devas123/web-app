@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output, ViewChild, ViewContainerRef} from '@angular/core';
-import {MenuItem} from '../../../../commons/model/competition.model';
+import {MenuItem} from '../model/competition.model';
 
 @Component({
   selector: 'app-eventmanager-menu',
