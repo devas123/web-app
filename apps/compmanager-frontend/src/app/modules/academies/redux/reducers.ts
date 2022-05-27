@@ -21,7 +21,7 @@ export function academyListReducer(state: AcademiesEntities = academiesEntitiesI
     }
     case ACADEMIES_LOADED: {
       const academies = action.academies as FullAcademyInfo[];
-      const pageInfo = action.academies as PageInfo;
+      const pageInfo = action.pageInfo as PageInfo;
       return academyInfoEntityAdapter.setAll(academies, {...state, pageInfo});
     }
     default:

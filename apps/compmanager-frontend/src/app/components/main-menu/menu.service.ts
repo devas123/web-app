@@ -4,6 +4,7 @@ import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuItem} from '../../commons/model/competition.model';
 import {IImplicitContext, SuiSidebar} from '@frontend-nx/ng2-semantic-ui';
+import {Location} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,12 @@ export class MenuService {
   private readonly _displaySidebar$: Observable<boolean>;
 
   private _menu: MenuItem[] = [];
+  defaultMenu: MenuItem[] = [
+    {
+      name: 'Back',
+      action: () => this._location.back()
+    }
+  ];
 
   private _menu$ = new BehaviorSubject<MenuItem[]>([]);
 
@@ -19,7 +26,7 @@ export class MenuService {
 
   private embeddedViews: EmbeddedViewRef<any>[] = [];
 
-  constructor(private observer: BreakpointObserver) {
+  constructor(private observer: BreakpointObserver, private _location: Location) {
     this._displaySidebar$ = observer.observe([Breakpoints.Handset, Breakpoints.Small, Breakpoints.Medium]).pipe(map(p => p.matches));
   }
 
@@ -38,7 +45,7 @@ export class MenuService {
   }
 
   public get menu(): MenuItem[] {
-    return this._menu || [];
+    return this._menu || this.defaultMenu;
   }
 
   public set menu(value: MenuItem[]) {

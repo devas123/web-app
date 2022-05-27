@@ -3,6 +3,7 @@ const commands = "/competition/command"
 const urls = {
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
+  academiesEndpoint: `/academy`,
   eventQueue: `/state/events`,
   errorQueue: `/state/errors`,
   webSocketUrl: `/query/v1/ws`,

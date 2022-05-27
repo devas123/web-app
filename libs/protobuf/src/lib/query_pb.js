@@ -1364,7 +1364,8 @@ proto.compservice.model.protobuf.PageInfo.prototype.toObject = function(opt_incl
 proto.compservice.model.protobuf.PageInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     total: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    page: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    page: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    resultsonpage: jspb.Message.getFieldWithDefault(msg, 3, 0)
   };
 
   if (includeInstance) {
@@ -1409,6 +1410,10 @@ proto.compservice.model.protobuf.PageInfo.deserializeBinaryFromReader = function
       var value = /** @type {number} */ (reader.readInt32());
       msg.setPage(value);
       break;
+    case 3:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setResultsonpage(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1452,6 +1457,13 @@ proto.compservice.model.protobuf.PageInfo.serializeBinaryToWriter = function(mes
       f
     );
   }
+  f = /** @type {number} */ (jspb.Message.getField(message, 3));
+  if (f != null) {
+    writer.writeInt32(
+      3,
+      f
+    );
+  }
 };
 
 
@@ -1488,6 +1500,42 @@ proto.compservice.model.protobuf.PageInfo.prototype.getPage = function() {
  */
 proto.compservice.model.protobuf.PageInfo.prototype.setPage = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional int32 resultsOnPage = 3;
+ * @return {number}
+ */
+proto.compservice.model.protobuf.PageInfo.prototype.getResultsonpage = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.compservice.model.protobuf.PageInfo} returns this
+ */
+proto.compservice.model.protobuf.PageInfo.prototype.setResultsonpage = function(value) {
+  return jspb.Message.setField(this, 3, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.PageInfo} returns this
+ */
+proto.compservice.model.protobuf.PageInfo.prototype.clearResultsonpage = function() {
+  return jspb.Message.setField(this, 3, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.PageInfo.prototype.hasResultsonpage = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -6903,7 +6951,8 @@ proto.compservice.model.protobuf.GetAcademiesResponse.prototype.toObject = funct
 proto.compservice.model.protobuf.GetAcademiesResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     academiesList: jspb.Message.toObjectList(msg.getAcademiesList(),
-    model_pb.FullAcademyInfo.toObject, includeInstance)
+    model_pb.FullAcademyInfo.toObject, includeInstance),
+    pageinfo: (f = msg.getPageinfo()) && proto.compservice.model.protobuf.PageInfo.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -6945,6 +6994,11 @@ proto.compservice.model.protobuf.GetAcademiesResponse.deserializeBinaryFromReade
       reader.readMessage(value,model_pb.FullAcademyInfo.deserializeBinaryFromReader);
       msg.addAcademies(value);
       break;
+    case 2:
+      var value = new proto.compservice.model.protobuf.PageInfo;
+      reader.readMessage(value,proto.compservice.model.protobuf.PageInfo.deserializeBinaryFromReader);
+      msg.setPageinfo(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -6980,6 +7034,14 @@ proto.compservice.model.protobuf.GetAcademiesResponse.serializeBinaryToWriter = 
       1,
       f,
       model_pb.FullAcademyInfo.serializeBinaryToWriter
+    );
+  }
+  f = message.getPageinfo();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      proto.compservice.model.protobuf.PageInfo.serializeBinaryToWriter
     );
   }
 };
@@ -7020,6 +7082,43 @@ proto.compservice.model.protobuf.GetAcademiesResponse.prototype.addAcademies = f
  */
 proto.compservice.model.protobuf.GetAcademiesResponse.prototype.clearAcademiesList = function() {
   return this.setAcademiesList([]);
+};
+
+
+/**
+ * optional PageInfo pageInfo = 2;
+ * @return {?proto.compservice.model.protobuf.PageInfo}
+ */
+proto.compservice.model.protobuf.GetAcademiesResponse.prototype.getPageinfo = function() {
+  return /** @type{?proto.compservice.model.protobuf.PageInfo} */ (
+    jspb.Message.getWrapperField(this, proto.compservice.model.protobuf.PageInfo, 2));
+};
+
+
+/**
+ * @param {?proto.compservice.model.protobuf.PageInfo|undefined} value
+ * @return {!proto.compservice.model.protobuf.GetAcademiesResponse} returns this
+*/
+proto.compservice.model.protobuf.GetAcademiesResponse.prototype.setPageinfo = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.compservice.model.protobuf.GetAcademiesResponse} returns this
+ */
+proto.compservice.model.protobuf.GetAcademiesResponse.prototype.clearPageinfo = function() {
+  return this.setPageinfo(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.GetAcademiesResponse.prototype.hasPageinfo = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

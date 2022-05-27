@@ -38,6 +38,7 @@ export interface MatFightsQueryResult {
 export interface PageInfo {
   total: number;
   page: number;
+  resultsOnPage?: number | undefined;
 }
 
 export interface MatsQueryResult {
@@ -190,6 +191,7 @@ export interface GetStageFightsResponse {
 
 export interface GetAcademiesResponse {
   academies: FullAcademyInfo[];
+  pageInfo?: PageInfo;
 }
 
 function createBaseGenerateCategoriesFromRestrictionsRequest(): GenerateCategoriesFromRestrictionsRequest {
@@ -438,7 +440,7 @@ export const MatFightsQueryResult = {
 };
 
 function createBasePageInfo(): PageInfo {
-  return { total: 0, page: 0 };
+  return { total: 0, page: 0, resultsOnPage: undefined };
 }
 
 export const PageInfo = {
@@ -451,6 +453,9 @@ export const PageInfo = {
     }
     if (message.page !== 0) {
       writer.uint32(16).int32(message.page);
+    }
+    if (message.resultsOnPage !== undefined) {
+      writer.uint32(24).int32(message.resultsOnPage);
     }
     return writer;
   },
@@ -468,6 +473,9 @@ export const PageInfo = {
         case 2:
           message.page = reader.int32();
           break;
+        case 3:
+          message.resultsOnPage = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -480,6 +488,9 @@ export const PageInfo = {
     return {
       total: isSet(object.total) ? Number(object.total) : 0,
       page: isSet(object.page) ? Number(object.page) : 0,
+      resultsOnPage: isSet(object.resultsOnPage)
+        ? Number(object.resultsOnPage)
+        : undefined,
     };
   },
 
@@ -487,6 +498,8 @@ export const PageInfo = {
     const obj: any = {};
     message.total !== undefined && (obj.total = Math.round(message.total));
     message.page !== undefined && (obj.page = Math.round(message.page));
+    message.resultsOnPage !== undefined &&
+      (obj.resultsOnPage = Math.round(message.resultsOnPage));
     return obj;
   },
 
@@ -494,6 +507,7 @@ export const PageInfo = {
     const message = createBasePageInfo();
     message.total = object.total ?? 0;
     message.page = object.page ?? 0;
+    message.resultsOnPage = object.resultsOnPage ?? undefined;
     return message;
   },
 };
@@ -3132,7 +3146,7 @@ export const GetStageFightsResponse = {
 };
 
 function createBaseGetAcademiesResponse(): GetAcademiesResponse {
-  return { academies: [] };
+  return { academies: [], pageInfo: undefined };
 }
 
 export const GetAcademiesResponse = {
@@ -3142,6 +3156,9 @@ export const GetAcademiesResponse = {
   ): _m0.Writer {
     for (const v of message.academies) {
       FullAcademyInfo.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pageInfo !== undefined) {
+      PageInfo.encode(message.pageInfo, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -3161,6 +3178,9 @@ export const GetAcademiesResponse = {
             FullAcademyInfo.decode(reader, reader.uint32())
           );
           break;
+        case 2:
+          message.pageInfo = PageInfo.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3174,6 +3194,9 @@ export const GetAcademiesResponse = {
       academies: Array.isArray(object?.academies)
         ? object.academies.map((e: any) => FullAcademyInfo.fromJSON(e))
         : [],
+      pageInfo: isSet(object.pageInfo)
+        ? PageInfo.fromJSON(object.pageInfo)
+        : undefined,
     };
   },
 
@@ -3186,6 +3209,10 @@ export const GetAcademiesResponse = {
     } else {
       obj.academies = [];
     }
+    message.pageInfo !== undefined &&
+      (obj.pageInfo = message.pageInfo
+        ? PageInfo.toJSON(message.pageInfo)
+        : undefined);
     return obj;
   },
 
@@ -3195,6 +3222,10 @@ export const GetAcademiesResponse = {
     const message = createBaseGetAcademiesResponse();
     message.academies =
       object.academies?.map((e) => FullAcademyInfo.fromPartial(e)) || [];
+    message.pageInfo =
+      object.pageInfo !== undefined && object.pageInfo !== null
+        ? PageInfo.fromPartial(object.pageInfo)
+        : undefined;
     return message;
   },
 };

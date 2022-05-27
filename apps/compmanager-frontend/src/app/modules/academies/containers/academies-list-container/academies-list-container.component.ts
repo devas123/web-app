@@ -1,15 +1,50 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
+} from "../../../../commons/directives/common-classes";
+import {select, Store} from "@ngrx/store";
+import {AppState} from "../../../../reducers/global-reducers";
+import {MenuService} from "../../../../components/main-menu/menu.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Observable} from "rxjs";
+import {FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
+import {getAllAcademies, selectAcademiesPageInfo} from "../../redux/selectors";
+import {loadAcademies} from "../../redux/actions";
 
 @Component({
   selector: 'compmanager-frontend-academies-list-container',
   template: `
-    <div class="event_manager_header">
-      <h2 class="ui header">Academies</h2>
-    </div>
-    <compmanager-frontend-academies-list-component [academies]="[]"></compmanager-frontend-academies-list-component>
+    <compmanager-frontend-academies-list-component
+      [pageInfo]="pageInfo$ | async"
+      [academies]="academies$ | async"></compmanager-frontend-academies-list-component>
   `,
   styles: [],
 })
-export class AcademiesListContainerComponent  {
-  constructor() {}
+export class AcademiesListContainerComponent extends CompetitionManagerModuleRouterEntryComponent {
+  academies$: Observable<FullAcademyInfo[]>;
+  pageInfo$: Observable<PageInfo>;
+
+  constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
+    super(store,
+      <ComponentCommonMetadataProvider>{
+        includeDefaultMenu: true,
+        menu: [
+          {
+            name: 'Add academy',
+            action: () => router.navigate(['add'], {relativeTo: route})
+          }
+        ],
+        header: {
+          header: 'Academy list',
+        }
+      }, menuService);
+    this.store.dispatch(loadAcademies({pageInfo: <PageInfo>{page: 0}}))
+    this.academies$ = this.store.pipe(
+      select(getAllAcademies)
+    );
+    this.pageInfo$ = this.store.pipe(
+      select(selectAcademiesPageInfo)
+    );
+  }
 }

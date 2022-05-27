@@ -13,10 +13,11 @@ import {HeaderDescription, MenuItem} from "../../../../commons/model/competition
 @Component({
   selector: 'compmanager-frontend-academies-root-container',
   template: `
+    <p></p>
     <div class="event_manager_container">
       <div class="event_manager_header" app-dynamic-header [hederDescription]="header$ | async"></div>
       <div class="menu_row">
-        <app-eventmanager-menu *ngIf="(shrinkMainContent$ | async) !== true" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
+        <app-eventmanager-menu *ngIf="(displayAsSidebar$ | async) !== true" [menu]="menu$ | async" (itemClicked)="$event.action()" [displayMenu]="shrinkMainContent$ | async"></app-eventmanager-menu>
         <div appFlexCol [shrink]="shrinkMainContent$ | async" class="maincontent">
           <router-outlet></router-outlet>
         </div>

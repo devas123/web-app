@@ -1,22 +1,28 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FullAcademyInfo} from "@frontend-nx/protobuf";
+import {generateUuid} from "../../../account/utils";
 
 @Component({
   selector: 'compmanager-frontend-add-academy-component',
   template: `
-    <form class="ui form" [formGroup]="academyForm">
-      <div class="field">
-        <label>Name</label>
-        <div class="two fields">
+    <div class="ui segment">
+      <form class="ui form" [formGroup]="academyForm">
+        <div class="field">
           <div class="field">
-            <input type="text" name="name" placeholder="Academy Name">
+            <label>Academy name</label>
+            <input type="text" name="academyName" placeholder="Academy Name" formControlName="academyName">
           </div>
           <div class="field">
-            <input type="text" name="shipping[last-name]" placeholder="Last Name">
+            <label>Academy manager</label>
+            <input type="text" name="academyManager" placeholder="Academy manager" formControlName="academyManager">
           </div>
         </div>
-      </div>
-    </form>`,
+        <div class="ui positive submit button" [ngClass]="{disabled: academyForm.invalid}" (click)="submitForm()">
+          Create
+        </div>
+      </form>
+    </div>`,
   styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -24,6 +30,36 @@ export class AddAcademyComponentComponent {
 
   academyForm: FormGroup;
 
-  constructor() {
+  @Input()
+  userId: number
+
+  @Output()
+  academyAdded: EventEmitter<FullAcademyInfo> = new EventEmitter<FullAcademyInfo>();
+
+  constructor(private fb: FormBuilder) {
+    this.academyForm = fb.group({
+      academyName: ['', [Validators.required]],
+      academyManager: ['', [Validators.required]]
+    })
+  }
+
+  get academyName() {
+    return this.academyForm.get('academyName')
+  }
+  get academyManager() {
+    return this.academyForm.get('academyManager')
+  }
+
+  submitForm() {
+    const academy = <FullAcademyInfo>{
+      id: generateUuid(),
+      coaches: [this.academyManager.value],
+      name: this.academyName.value,
+      contactEmail: 'devas123@bk.ru', //TODO - take email from profile.
+      contactUserId: Number(this.userId).toString(),
+      created: new Date(),
+      updated: new Date()
+    };
+    this.academyAdded.next(academy);
   }
 }

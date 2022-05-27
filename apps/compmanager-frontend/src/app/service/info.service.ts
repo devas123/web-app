@@ -1,5 +1,5 @@
 import {Observable, of, throwError, timer} from 'rxjs';
-import {catchError, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
+import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -13,6 +13,7 @@ import {parseISO} from 'date-fns';
 import {format, utcToZonedTime} from 'date-fns-tz';
 import {generateUuid} from "../modules/account/utils";
 import {
+  AddAcademyPayload,
   AddCategoryPayload,
   AddCompetitorPayload,
   AddRegistrationPeriodPayload,
@@ -33,11 +34,13 @@ import {
   GenerateCategoriesFromRestrictionsPayload,
   GenerateCategoriesFromRestrictionsResponse,
   GenerateSchedulePayload,
+  GetAcademiesResponse,
   GetCompetitorsResponse,
   ManagedCompetition,
   MatFightsQueryResult,
   MatsQueryResult,
   MessageInfo,
+  PageInfo,
   QueryServiceResponse,
   RegistrationInfo,
   RemoveCompetitorPayload,
@@ -67,6 +70,7 @@ import {CommandCallback, CommandExecutionResult} from "../../../../../libs/proto
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
 const {
+  academiesEndpoint,
   commandsEndpoint,
   commandsSyncEndpoint,
   generateCategoriesEndpoint,
@@ -128,6 +132,7 @@ export class InfoService {
 
   constructor(private http: HttpClient) {
   }
+
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -489,6 +494,12 @@ export class InfoService {
       case   allActions.UNPUBLISH_COMPETITION_COMMAND:
         cmd.type = CommandType.UNPUBLISH_COMPETITION_COMMAND
         break;
+      case CommandType.ADD_ACADEMY_COMMAND:
+        cmd.type = <CommandType>action.type;
+        messageInfo.addAcademyPayload = <AddAcademyPayload>{
+          ...action.payload
+        }
+        break;
     }
     cmd.messageInfo = messageInfo;
     return cmd
@@ -497,7 +508,7 @@ export class InfoService {
   sendCommand(command: Command, competitionId: string): Observable<any> {
     const id = generateUuid();
     const normalizedCommand = {...command, id};
-    return this.sendCommandToEndpoint(normalizedCommand, `${commandsEndpoint}?competitionId=${competitionId}`);
+    return this.sendCommandToEndpoint(normalizedCommand, this.withCompetitionId(commandsEndpoint)(competitionId));
   }
 
   private defaultTimeout = 15000;
@@ -554,16 +565,19 @@ export class InfoService {
       );
   }
 
+  withCompetitionId = (endpoint: string) => (competitionId: string) => !!competitionId ? `${endpoint}?competitionId=${competitionId}` : endpoint;
+
   sendCommandSync(command: Command): Observable<Action[]> {
     const id = generateUuid()
     const competitionId = command.messageInfo.competitionId;
     return this.sendCommandToEndpoint({
       ...command,
       messageInfo: {...command.messageInfo, competitionId, id}
-    }, `${commandsSyncEndpoint}?competitionId=${competitionId}`)
+    }, this.withCompetitionId(commandsSyncEndpoint)(competitionId))
       .pipe(
         map(callbackBytes => CommandCallback.decode(new Uint8Array(callbackBytes))),
-        tap(cc => console.log("Command callback: ",cc)),
+        tap(cc => console.log("Command callback: ", cc)),
+        filter(cc => !!cc),
         mergeMap(callback => {
           if (callback.result == CommandExecutionResult.COMMAND_EXECUTION_RESULT_SUCCESS) {
             return of(callback.events)
@@ -577,7 +591,7 @@ export class InfoService {
 
   getCategoryStageFights(competitionId: string, categoryId: string, stageId: string): Observable<FightDescription[]> {
     if (!competitionId || !categoryId || !stageId) {
-      return throwError(`something is smissing: ${competitionId}, ${categoryId}, ${stageId}`);
+      return throwError(`something is missing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
       headers: this.headers
@@ -604,6 +618,24 @@ export class InfoService {
     })
       .pipe(
         map(r => r.getDefaultFightResultsResponse.fightResultOptions)
+      );
+  }
+
+  loadAcademies(pageInfo: PageInfo): Observable<GetAcademiesResponse> {
+    const pn = pageInfo.page || 1
+    const ps = pageInfo.resultsOnPage || 0
+    const startAt = (pn - 1) * ps
+    const limit = ps
+    let params: any = {
+      startAt,
+      limit
+    }
+    return this.httpGet(academiesEndpoint, {
+      params: params,
+      headers: this.headers
+    })
+      .pipe(
+        map(r => r.getAcademiesResponse)
       );
   }
 }

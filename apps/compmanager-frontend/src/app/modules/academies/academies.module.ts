@@ -22,6 +22,8 @@ import {AcademyCardComponent} from './components/academy-card/academy-card.compo
 import {ReactiveFormsModule} from "@angular/forms";
 import {CompetitionManagerCommonsModule} from "../../commons/competition-manager-commons.module";
 import {CommonModule} from "@angular/common";
+import {EffectsModule} from "@ngrx/effects";
+import {AcademiesEffects} from "./redux/effects";
 
 @NgModule({
 
@@ -40,6 +42,7 @@ import {CommonModule} from "@angular/common";
     CompetitionManagerCommonsModule,
     StoreModule.forFeature(academiesFeatureKey, academyListReducer),
     RouterModule.forChild(academiesRoutes),
+    EffectsModule.forFeature([AcademiesEffects]),
     ReactiveFormsModule
   ],
   providers: [AcademySelectedResolver],

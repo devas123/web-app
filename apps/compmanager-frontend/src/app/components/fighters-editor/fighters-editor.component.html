@@ -1,22 +1,14 @@
 <div class="ui customcontainer" *ngIf="fighters && fighters.length > 0">
-  <div class="ui basic segment customline" *ngFor="let fighter of fighters">
-    <a class="ui header link" (click)="gotoFighterProfile(fighter)">{{fighter?.firstName}} {{fighter?.lastName}}</a>
-    <ng-container *ngIf="showPersonalData">
-      <div class="description">Email: {{fighter?.email}}</div>
-      <div class="description">Birth date: {{fighter?.birthDate | zdate:false}}</div>
-    </ng-container>
-    <div class="description">Academy: {{fighter?.academy?.name}}</div>
-    <div *ngFor="let cat of fighter?.categories" class="description">Category: {{getCategoryName(cat)}}</div>
-    <div class="description" *ngIf="showRegistrationStatus">Registration status: {{fighter?.registrationStatus}}</div>
-    <div class="action_buttons" *ngIf="editMode">
-      <div class="ui icon button" (click)="gotoFighterProfile(fighter)">
-        <i class="edit icon"></i>
-      </div>
-      <div class="ui icon button" (click)="deleteFighter(fighter)">
-        <i class="trash icon"></i>
-      </div>
-    </div>
-  </div>
+  <compmanager-frontend-fighter-card *ngFor="let fighter of fighters"
+                                     [editMode]="editMode"
+                                     [fighter]="fighter"
+                                     [getCategoryName]="getCategoryName"
+                                     [showPersonalData]="showPersonalData"
+                                     [showRegistrationStatus]="showRegistrationStatus"
+                                     (editClicked)="gotoFighterProfile($event)"
+                                     (deleteClicked)="deleteFighter($event)"
+                                     (headerClicked)="gotoFighterProfile($event)"
+  ></compmanager-frontend-fighter-card>
   <div class="ui basic segment customline pagination_line">
     <sui-pagination [collectionSize]="collectionSize"
                     [pageSize]="pageSize"

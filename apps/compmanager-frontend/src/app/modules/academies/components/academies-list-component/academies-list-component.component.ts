@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {FullAcademyInfo} from "@frontend-nx/protobuf";
+import {FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'compmanager-frontend-academies-list-component',
@@ -15,6 +15,9 @@ export class AcademiesListComponentComponent {
 
   @Input()
   academies: FullAcademyInfo[]
+
+  @Input()
+  pageInfo: PageInfo
 
   constructor() {
   }

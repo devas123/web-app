@@ -71,4 +71,3 @@ export class FightsEffects {
               private registrationService: RegistrationService) {
   }
 }
-

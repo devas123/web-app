@@ -7,6 +7,7 @@ const commands = "/competition/command"
 
 export const environment = {
   production: false,
+  academiesEndpoint: `/query/v1/academy`,
   dashboardErrorQueue: `/state/dashboard/errors`,
   dashboardEventQueue: `/state/dashboard/events`,
   eventQueue: `/state/events`,

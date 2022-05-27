@@ -33,7 +33,7 @@ export abstract class CompetitionManagerModuleRouterEntryComponent implements On
   }
 
   private init(metadataProvider: ComponentCommonMetadataProvider) {
-    CompetitionManagerModuleRouterEntryComponent.processSyncOrAsync(metadataProvider.menu, i => this.menuService.menu = i);
+    CompetitionManagerModuleRouterEntryComponent.processSyncOrAsync(metadataProvider.menu, i => this.menuService.menu = metadataProvider.includeDefaultMenu ? [...this.menuService.defaultMenu, ...i] : i);
     CompetitionManagerModuleRouterEntryComponent.processSyncOrAsync(metadataProvider.header, i => this.store.dispatch(eventManagerHeaderSet(i)));
   }
 
@@ -50,6 +50,7 @@ type SyncOrAsync<A> = A | Observable<A> | Promise<A>;
 export interface ComponentCommonMetadataProvider {
   header?: SyncOrAsync<HeaderDescription>;
   menu?: SyncOrAsync<MenuItem[]>;
+  includeDefaultMenu?: boolean;
 }
 
 export abstract class BasicCompetitionInfoContainer extends CompetitionManagerModuleRouterEntryComponent {

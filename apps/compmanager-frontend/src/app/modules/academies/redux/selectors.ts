@@ -1,7 +1,9 @@
 import {academiesListState, academyInfoEntityAdapter} from "./state";
+import {createSelector} from "@ngrx/store";
 
 export const {
   selectAll: getAllAcademies
 } = academyInfoEntityAdapter.getSelectors(academiesListState);
 
-export const selectAllAcademies = getAllAcademies;
+
+export const selectAcademiesPageInfo = createSelector(academiesListState, state => state && state.pageInfo)
