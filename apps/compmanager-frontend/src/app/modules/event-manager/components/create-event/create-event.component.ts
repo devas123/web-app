@@ -5,14 +5,13 @@ import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {createCompetition} from '../../../../actions/actions';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, selectUser} from '../../../../reducers/global-reducers';
 import {Account} from '../../../account/model/Account';
 import {
   ComponentCommonMetadataProvider,
   CompetitionManagerModuleRouterEntryComponent
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {selectUser} from '../../../competition/redux/reducers';
 import {
   CompetitionProperties,
   CompetitionStatus,

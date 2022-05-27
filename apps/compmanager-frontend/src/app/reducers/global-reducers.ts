@@ -6,7 +6,7 @@ import {environment} from '../../environments/environment';
  * ensure that none of the reducers accidentally mutates the state.
  */
 import {storeFreeze} from 'ngrx-store-freeze';
-import {AccountState} from '../modules/account/flux/account.state';
+import {AccountState, initialAccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
 import * as _ from 'lodash';
@@ -29,8 +29,10 @@ import {
   CATEGORY_ADDED,
   CATEGORY_DELETED,
   CATEGORY_STATE_DELETED,
+  COMPETITION_CREATED,
   COMPETITION_PROPERTIES_UPDATED,
   COMPETITION_SELECTED,
+  COMPETITION_UNSELECTED,
   EVENT_MANAGER_ALL_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORIES_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
@@ -41,7 +43,6 @@ import {
   EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_CATEGORY_UNSELECTED,
-  EVENT_MANAGER_COMPETITION_UNSELECTED,
   EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
@@ -69,7 +70,13 @@ import {
   SCHEDULE_GENERATED
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce from 'immer';
-import {COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED, REGISTRATION_INFO_LOADED} from '../actions/actions';
+import {
+  COMPETITION_DELETED,
+  COMPETITION_LIST_LOADED,
+  COMPETITION_PUBLISHED,
+  COMPETITION_UNPUBLISHED,
+  REGISTRATION_INFO_LOADED
+} from '../actions/actions';
 import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {
@@ -98,6 +105,7 @@ import {
 } from "@frontend-nx/protobuf";
 
 export interface AppState {
+  events: EventPropsEntities;
   accountState: AccountState;
   selectedEventState: CompetitionState;
   header: HeaderDescription;
@@ -131,7 +139,6 @@ export interface InternalScheduleState {
   undispatchedRequirements: ScheduleRequirement[];
   fightIdsBycategoryId: Dictionary<string[]>;
 }
-
 
 
 export interface CompetitionState {
@@ -190,6 +197,7 @@ export const competitionPropertiesEntitiesInitialState: EventPropsEntities = com
 });
 
 export const reducers: ActionReducerMap<AppState> = {
+  events: competitionListReducer,
   accountState: accountStateReducer,
   selectedEventState: competitionStateReducer,
   header: headerReducer,
@@ -208,6 +216,37 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
   : [];
 
+export function competitionListReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
+  switch (action.type) {
+    case COMPETITION_LIST_LOADED:
+      const payload = action.payload as ManagedCompetition[];
+      return competitionPropertiesEntitiesAdapter.setAll(payload, state);
+    case COMPETITION_SELECTED: {
+      return {...state, selectedEventId: action.competitionId};
+    }
+    case COMPETITION_UNSELECTED:
+      return {
+        ...state,
+        selectedEventId: null
+      };
+
+    case COMPETITION_PUBLISHED:
+    case COMPETITION_UNPUBLISHED: {
+      const payload = action.payload as CompetitionProperties;
+      const update = {id: action.competitionId, changes: {...payload}};
+      return competitionPropertiesEntitiesAdapter.updateOne(update, state);
+    }
+    case COMPETITION_CREATED:
+      return competitionPropertiesEntitiesAdapter.addOne(action.payload.properties, state);
+    case COMPETITION_DELETED:
+      return competitionPropertiesEntitiesAdapter.removeOne(action.competitionId, state);
+
+
+    default:
+      return state;
+  }
+}
+
 export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {
     case EVENT_MANAGER_HEADER_SET: {
@@ -224,7 +263,7 @@ export function headerReducer(state: HeaderDescription = null, action: CommonAct
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce(st, state => {
     switch (action.type) {
-      case EVENT_MANAGER_COMPETITION_UNSELECTED: {
+      case COMPETITION_UNSELECTED: {
         return initialCompetitionState;
       }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
@@ -550,20 +589,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED: {
         if (action.competitionId === state.competitionProperties.id) {
-          const {data, total, page, replace} = action.payload;
-          if (replace) {
-            state.selectedEventCompetitors = competitorEntityAdapter.setAll(data, {
-              ...competitorsInitialState,
-              total,
-              pageNumber: +page + 1
-            });
-          } else {
-            state.selectedEventCompetitors = competitorEntityAdapter.setAll(data, {
-              ...state.selectedEventCompetitors,
-              total,
-              pageNumber: +page + 1
-            });
-          }
+          const {pageInfo, competitors} = action.payload;
+          state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, {
+            ...competitorsInitialState,
+            total: pageInfo.total,
+            pageNumber: pageInfo.page + 1
+          });
         }
         break;
       }
@@ -841,7 +872,6 @@ export const getSelectedEventSelectedPeriodId = createSelector(eventManagerGetSe
 export const {
   selectEntities: getSelectedEventMatsDictionary,
   selectAll: getSelectedEventAllMats,
-  selectIds: getSelectedEventAllMatIds
 } = matEntityAdapter.getSelectors(getSelectedEventMatsCollection);
 export const getSelectedEventMats = getSelectedEventAllMats;
 export const dashboardGetSelectedPeriodMats = createSelector(getSelectedEventAllMats, getSelectedEventSelectedPeriodId,
@@ -867,3 +897,22 @@ export const dashboardGetSelectedPeriodSelectedFight = createSelector(dashboardG
 export const getSelectedEventSelectedPeriod = createSelector(getSelectedEventSelectedPeriodId,
   selectPeriodsDictionary, (periodId, entities) => periodId && entities[periodId]);
 export const eventManagerGetHeaderDescription = createSelector(state => state, (state: AppState) => state.header);
+
+export const eventsListState = createSelector(state => state, (state: AppState) => state.events);
+const selectCategoriesEntities = createSelector(getSelectedEventState, state => state && state.selectedEventCategories);
+export const selectAccountState = createSelector(state => state, (state: AppState) => (state && state.accountState) || initialAccountState);
+export const selectUser = createSelector(selectAccountState, state => state && state.user);
+export const selectUserId = createSelector(selectUser, state => state && state.userId);
+
+export const {
+  selectAll: getAllCompetitions
+} = competitionPropertiesEntitiesAdapter.getSelectors(eventsListState);
+
+export const selectAllCompetitions = getAllCompetitions;
+
+export const {
+  // select the array of users
+  selectAll: getAllCategories
+} = categoryEntityAdapter.getSelectors(selectCategoriesEntities);
+
+export const getSelectedCompetitionCategories = getAllCategories;

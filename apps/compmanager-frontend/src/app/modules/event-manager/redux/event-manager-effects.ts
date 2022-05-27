@@ -25,7 +25,7 @@ import {
   eventManagerDisconnectSocket, eventManagerPreviewCategoriesGenerated,
   FIGHTS_EDITOR_APPLY_CHANGE,
   GENERATE_CATEGORIES_COMMAND,
-  myCompetitionsLoaded,
+  cometitionListLoaded,
   GENERATE_PREVIEW_CATEGORIES_COMMAND,
   UPDATE_STAGE_STATUS_COMMAND
 } from './event-manager-actions';
@@ -68,7 +68,7 @@ export class EventManagerEffects {
     }),
     map(payload => {
       if (Array.isArray(payload)) {
-        return myCompetitionsLoaded(payload as ManagedCompetition[]);
+        return cometitionListLoaded(payload as ManagedCompetition[]);
       } else {
         return errorEvent(payload as any);
       }

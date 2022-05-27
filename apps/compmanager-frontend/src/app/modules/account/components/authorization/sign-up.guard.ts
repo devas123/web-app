@@ -13,8 +13,7 @@ import {
 
 import {select, Store} from '@ngrx/store';
 import {HttpAuthService} from '../../service/AuthService';
-import {AppState} from '../../../../reducers/global-reducers';
-import {selectUser} from '../../../competition/redux/reducers';
+import {AppState, selectUser} from '../../../../reducers/global-reducers';
 
 @Injectable()
 export class SignUpGuard implements CanActivate, CanActivateChild, CanLoad {

@@ -4,7 +4,7 @@ import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../../../reducers/global-reducers';
 import {ActivatedRoute} from '@angular/router';
-import {competitionSelected, eventManagerCompetitionUnselected} from '../../redux/event-manager-actions';
+import {competitionSelected, competitionUnselected} from '../../redux/event-manager-actions';
 import {
   ComponentCommonMetadataProvider,
   CompetitionManagerModuleRouterEntryComponent
@@ -31,7 +31,7 @@ export class EventContainerComponent extends CompetitionManagerModuleRouterEntry
       this.compIdSubscription.unsubscribe();
     }
     this.menuService.clear();
-    this.store.dispatch(eventManagerCompetitionUnselected);
+    this.store.dispatch(competitionUnselected);
     super.ngOnDestroy();
   }
 }

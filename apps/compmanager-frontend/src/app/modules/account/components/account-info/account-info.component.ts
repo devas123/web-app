@@ -4,9 +4,8 @@ import {Component, OnInit} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, selectAccountState} from '../../../../reducers/global-reducers';
 import {Account} from '../../model/Account';
-import {selectAccountState} from '../../../competition/redux/reducers';
 
 @Component({
   selector: 'app-account-info',

@@ -1,14 +1,5 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output
-} from '@angular/core';
-import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ManagedCompetition} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-my-events-list',
@@ -16,7 +7,7 @@ import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
   styleUrls: ['./my-events-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MyEventsListComponent implements OnInit, AfterViewInit {
+export class MyEventsListComponent {
 
   @Input()
   events: ManagedCompetition[];
@@ -36,25 +27,6 @@ export class MyEventsListComponent implements OnInit, AfterViewInit {
 
   @Output()
   eventUnpublished: EventEmitter<ManagedCompetition> = new EventEmitter<ManagedCompetition>();
-
-
-  loaded = false;
-
-  constructor(private cd: ChangeDetectorRef) {
-    this.loaded = false;
-  }
-
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.loaded = true;
-      this.cd.reattach();
-      this.cd.markForCheck();
-    });
-  }
-
-  ngOnInit() {
-    this.cd.detach();
-  }
 
   deleteEvent(event: ManagedCompetition) {
     this.eventDeleted.next(event);

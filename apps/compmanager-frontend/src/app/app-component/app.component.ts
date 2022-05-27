@@ -1,13 +1,12 @@
 import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../reducers/global-reducers';
+import {AppState, selectUser} from '../reducers/global-reducers';
 import {authorizeToken, logout} from '../modules/account/flux/actions';
 import {Observable, Subscription} from 'rxjs';
 import {Account} from '../modules/account/model/Account';
 import {map, tap} from 'rxjs/operators';
 import {MenuService} from '../components/main-menu/menu.service';
 import {MenuItem} from '../commons/model/competition.model';
-import {selectUser} from '../modules/competition/redux/reducers';
 import {Router} from '@angular/router';
 
 @Component({

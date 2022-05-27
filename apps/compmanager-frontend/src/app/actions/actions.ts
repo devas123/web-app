@@ -33,7 +33,7 @@ export const unpublishCompetition = (competitionId: string) => ({
   type: UNPUBLISH_COMPETITION_COMMAND,
   competitionId: competitionId
 });
-export const deleteCompetition = (competitionProperties: CompetitionProperties) => ({
+export const deleteCompetition = (competitionProperties: ManagedCompetition) => ({
   type: DELETE_COMPETITION_COMMAND,
   competitionId: competitionProperties.id,
   payload: competitionProperties

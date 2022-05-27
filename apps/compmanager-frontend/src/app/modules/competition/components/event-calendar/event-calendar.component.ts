@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, selectAllCompetitions} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {selectAllCompetitions} from '../../redux/reducers';
 import {map} from 'rxjs/operators';
 import * as allActions from '../../../../actions/actions';
 import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";

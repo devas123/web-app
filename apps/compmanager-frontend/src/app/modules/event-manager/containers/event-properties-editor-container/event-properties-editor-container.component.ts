@@ -1,8 +1,5 @@
 import {Component, OnDestroy} from '@angular/core';
-import {
-  AppState,
-  getSelectedEventProperties,
-} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventProperties,} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {
@@ -11,8 +8,8 @@ import {
 } from '../../redux/event-manager-reducers';
 import {eventManagerHeaderClear, updateCompetitionProperties} from '../../redux/event-manager-actions';
 import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {filter, map} from 'rxjs/operators';
 import {Location} from '@angular/common';
@@ -22,7 +19,6 @@ import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
-  selector: 'app-event-properties-editor-container',
   template: `<app-event-properties-editor (propertiesUpdated)="updateProperties($event)"
                                           [registrationInfo]="registrationInfo$ | async"
                                           [properties]="competitionProperties$ | async"></app-event-properties-editor>`

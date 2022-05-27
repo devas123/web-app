@@ -1,17 +1,13 @@
 import {
-  competitionPropertiesEntitiesAdapter,
-  competitionPropertiesEntitiesInitialState,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventSchedulePeriodsCollection,
-  EventPropsEntities,
   getSelectedEventProperties,
   getSelectedEventScheduleFightsByCategoryId,
   getSelectedEventState,
   periodEntityAdapter,
 } from '../../../reducers/global-reducers';
 import {
-  COMPETITION_CREATED,
-  COMPETITION_SELECTED,
+  COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_ADDED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_GROUP_ADDED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_GROUP_REMOVED,
@@ -19,14 +15,11 @@ import {
   EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED,
   EVENT_MANAGER_CATEGORY_ROOT_ADDED,
-  EVENT_MANAGER_COMPETITION_UNSELECTED,
-  EVENT_MANAGER_COMPETITIONS_LOADED,
   EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,
   EVENT_MANAGER_SOCKET_CONNECTED,
   EVENT_MANAGER_SOCKET_DISCONNECTED
 } from './event-manager-actions';
 import {ActionReducerMap, combineReducers, createSelector} from '@ngrx/store';
-import {COMPETITION_DELETED, COMPETITION_PUBLISHED, COMPETITION_UNPUBLISHED} from '../../../actions/actions';
 import {
   AdjacencyList,
   categoriesInitialState,
@@ -43,26 +36,16 @@ import {
 } from '../../../commons/model/competition.model';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
-import {COMPETITION_PROPERTIES_LOADED} from '../../../actions/misc';
 import {collectingReducer} from '../../account/utils';
 import produce from 'immer';
 import * as _ from 'lodash';
-import {CompetitionProperties} from "@frontend-nx/protobuf";
 
-export const eventManagerGetMyEventsCollection = createSelector(getEventManagerState, state => state && state.myEvents);
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);
 export const eventManagerCategoryConstructorState = createSelector(getEventManagerState, state => state.categoryConstructorState);
 export const eventManagerDefaultCategoryRestrictions = createSelector(eventManagerCategoryConstructorState, state => state.defaultRestrictions);
 export const eventManagerCategoryRestrictions = createSelector(eventManagerCategoryConstructorState, state => state.restrictions);
 export const eventManagerCategoryConstructorAdjacentLists = createSelector(eventManagerCategoryConstructorState, state => state.adjacentLists);
 export const eventManagerCategoryConstructorRestrictionNames = createSelector(eventManagerCategoryConstructorState, state => state.orderedNames);
-
-export const {
-  selectEntities: selectMyCompetitions,
-
-  selectAll: getAllMyCompetitions
-} = competitionPropertiesEntitiesAdapter.getSelectors(eventManagerGetMyEventsCollection);
-
 
 export function socketStateReducer(state: boolean = false, action): boolean {
   switch (action.type) {
@@ -72,55 +55,6 @@ export function socketStateReducer(state: boolean = false, action): boolean {
       return false;
     default:
       return state;
-  }
-}
-
-export function myEventsReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
-  switch (action.type) {
-    case EVENT_MANAGER_COMPETITIONS_LOADED: {
-      const compStates = action.payload;
-      if (Array.isArray(compStates)) {
-        const removedState = competitionPropertiesEntitiesAdapter.removeAll(state);
-        return competitionPropertiesEntitiesAdapter.addMany(compStates, removedState);
-      }
-      return state;
-    }
-    case COMPETITION_SELECTED: {
-      return {
-        ...state,
-        selectedEventId: action.competitionId
-      };
-    }
-    case COMPETITION_PROPERTIES_LOADED: {
-      const newState = {
-        ...state,
-        selectedEventId: action.competitionId
-      };
-      return competitionPropertiesEntitiesAdapter.updateOne({
-        id: action.payload.id,
-        changes: {...action.payload} as Partial<CompetitionProperties>
-      }, newState);
-    }
-    case COMPETITION_PUBLISHED:
-    case COMPETITION_UNPUBLISHED: {
-      const payload = action.payload as CompetitionProperties;
-      const update = {id: action.competitionId, changes: {...payload}};
-      return competitionPropertiesEntitiesAdapter.updateOne(update, state);
-    }
-    case EVENT_MANAGER_COMPETITION_UNSELECTED: {
-      return {
-        ...state,
-        selectedEventId: null
-      };
-    }
-    case COMPETITION_CREATED:
-      return competitionPropertiesEntitiesAdapter.addOne(action.payload.properties, state);
-    case COMPETITION_DELETED:
-      return competitionPropertiesEntitiesAdapter.removeOne(action.competitionId, state);
-
-    default: {
-      return state;
-    }
   }
 }
 
@@ -157,7 +91,7 @@ function addConnections(state: CategoryConstructorState, root: string, parent: a
 function categoryConstructorStateReducer(st: CategoryConstructorState = initialCategoryConstructorState, action: any): CategoryConstructorState {
   return produce(st, state => {
     switch (action.type) {
-      case EVENT_MANAGER_COMPETITION_UNSELECTED: {
+      case COMPETITION_UNSELECTED: {
         return initialCategoryConstructorState;
       }
       case EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED: {
@@ -226,7 +160,6 @@ function categoryConstructorStateReducer(st: CategoryConstructorState = initialC
 
 export function eventManagerReducers(): ActionReducerMap<EventManagerState> {
   return {
-    myEvents: myEventsReducer,
     socketConnected: socketStateReducer,
     dashboardState: dashboardReducers,
     categoryConstructorState: categoryConstructorStateReducer
@@ -238,7 +171,6 @@ export const EVENT_MANAGER_REDUCERS: InjectionToken<ActionReducerMap<EventManage
     factory: eventManagerReducers
   });
 
-export const eventManagerGetMyEventsProperties = getAllMyCompetitions;
 export const eventManagerGetSelectedEventDefaultFightResults = createSelector(getSelectedEventState, state => state && state.selectedEventDefaultFightResultOptions);
 
 export const eventManagerGetSelectedEventRegistrationInfo = createSelector(getSelectedEventState, event => event && event.registrationInfo);

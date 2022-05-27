@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, selectAllCompetitions} from '../../../../reducers/global-reducers';
 import {Observable} from 'rxjs';
-import {eventManagerGetMyEventsProperties} from '../../redux/event-manager-reducers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
@@ -30,18 +29,18 @@ export class MyEventsComponent extends CompetitionManagerModuleRouterEntryCompon
         header: 'Event list'
       }
     }, menuService);
-    this.events$ = store.pipe(select(eventManagerGetMyEventsProperties));
+    this.events$ = store.pipe(select(selectAllCompetitions));
   }
 
-  sendDeleteCommand(props: CompetitionProperties) {
+  sendDeleteCommand(props: ManagedCompetition) {
     this.store.dispatch(deleteCompetition(props));
   }
 
-  sendPublishCommand(props: CompetitionProperties) {
+  sendPublishCommand(props: ManagedCompetition) {
     this.store.dispatch(publishCompetition(props.id));
   }
 
-  sendUnpublishCommand(props: CompetitionProperties) {
+  sendUnpublishCommand(props: ManagedCompetition) {
     this.store.dispatch(unpublishCompetition(props.id));
   }
 

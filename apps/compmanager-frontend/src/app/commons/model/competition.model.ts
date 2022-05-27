@@ -2,7 +2,6 @@ import {DashboardState} from '../../modules/event-manager/redux/dashboard-reduce
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {Observable} from 'rxjs';
 import {EmbeddedViewRef, ViewContainerRef} from '@angular/core';
-import {EventPropsEntities} from '../../reducers/global-reducers';
 import * as _ from 'lodash';
 import {
   CategoryDescriptor,
@@ -133,6 +132,7 @@ export interface MenuItem {
   class?: string | { [p: string]: any };
   style?: string;
   action?: () => any;
+  link?: string;
   label?: string;
   showCondition?: () => Observable<boolean>;
   itemDisplayAction?: (container: ViewContainerRef) => EmbeddedViewRef<any>;
@@ -152,7 +152,6 @@ export interface CategoryConstructorState {
 }
 
 export interface EventManagerState {
-  myEvents: EventPropsEntities;
   dashboardState: DashboardState;
   categoryConstructorState: CategoryConstructorState;
   socketConnected: boolean;

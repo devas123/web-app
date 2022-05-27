@@ -15,6 +15,7 @@ import {
   ScheduleRequirement, StageDescriptor,
   StageStatus
 } from "@frontend-nx/protobuf";
+import {COMPETITION_LIST_LOADED} from "../../../actions/actions";
 
 export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
@@ -67,7 +68,6 @@ export const EVENT_MANAGER_CATEGORIES_LOADED = 'EVENT_MANAGER_CATEGORIES_LOADED'
 export const EVENT_MANAGER_SCHEDULE_LOADED = 'EVENT_MANAGER_SCHEDULE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STATE_LOADED = 'EVENT_MANAGER_CATEGORY_STATE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STAGES_LOADED = 'EVENT_MANAGER_CATEGORY_STAGES_LOADED';
-export const EVENT_MANAGER_COMPETITIONS_LOADED = 'EVENT_MANAGER_COMPETITIONS_LOADED';
 export const FIGHT_IDS_BY_CATEGORY_ID_LOADED = 'FIGHT_IDS_BY_CATEGORY_ID_LOADED';
 export const COMPETITION_SELECTED = 'COMPETITION_SELECTED';
 export const EVENT_MANAGER_FIGHTER_SELECTED = 'EVENT_MANAGER_FIGHTER_SELECTED';
@@ -79,7 +79,7 @@ export const EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED = 'EVENT_MANAGER_PREVIEW_C
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED';
 export const EVENT_MANAGER_CATEGORY_UNSELECTED = 'EVENT_MANAGER_CATEGORY_UNSELECTED';
-export const EVENT_MANAGER_COMPETITION_UNSELECTED = 'EVENT_MANAGER_COMPETITION_UNSELECTED';
+export const COMPETITION_UNSELECTED = 'COMPETITION_UNSELECTED';
 
 export const EVENT_MANAGER_HEADER_SET = 'EVENT_MANAGER_HEADER_HTML_SET';
 export const EVENT_MANAGER_HEADER_REMOVE = 'EVENT_MANAGER_HEADER_HTML_REMOVE';
@@ -185,8 +185,8 @@ export const eventManagerDeleteRegistrationGroup = (competitionId: string, perio
 });
 
 
-export const myCompetitionsLoaded = (competitionProperties: ManagedCompetition[]) => ({
-  type: EVENT_MANAGER_COMPETITIONS_LOADED,
+export const cometitionListLoaded = (competitionProperties: ManagedCompetition[]) => ({
+  type: COMPETITION_LIST_LOADED,
   payload: competitionProperties
 });
 
@@ -309,8 +309,8 @@ export const eventManagerCategoryUnselected = (competitionId: string) => ({
   competitionId
 });
 
-export const eventManagerCompetitionUnselected = ({
-  type: EVENT_MANAGER_COMPETITION_UNSELECTED
+export const competitionUnselected = ({
+  type: COMPETITION_UNSELECTED
 });
 
 export const eventManagerRemoveCompetitor = (competitor: Competitor) => ({
