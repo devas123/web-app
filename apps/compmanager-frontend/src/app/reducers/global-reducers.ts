@@ -104,6 +104,9 @@ import {
   ScheduleRequirement
 } from "@frontend-nx/protobuf";
 
+export type SuccessCallback = (actions: Action[]) => any
+export type ErrorCallback = (error: any) => any
+
 export interface AppState {
   events: EventPropsEntities;
   accountState: AccountState;

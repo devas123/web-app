@@ -9,16 +9,22 @@ import {MenuService} from "../../../../components/main-menu/menu.service";
 import {Observable} from "rxjs";
 import {FullAcademyInfo} from "@frontend-nx/protobuf";
 import {addAcademy} from "../../redux/actions";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'compmanager-frontend-add-academy-container',
-  template: `<compmanager-frontend-add-academy-component [userId]="userId$ | async" (academyAdded)="dispatchAcademyAddedEvent($event)"></compmanager-frontend-add-academy-component> `,
+  template: `
+    <compmanager-frontend-add-academy-component [userId]="userId$ | async"
+                                                (academyAdded)="dispatchAcademyAddedEvent($event)"></compmanager-frontend-add-academy-component> `,
   styles: [],
 })
 export class AddAcademyContainerComponent extends CompetitionManagerModuleRouterEntryComponent {
   userId$: Observable<number>;
+
   constructor(
-    store: Store<AppState>, menuService: MenuService
+    store: Store<AppState>, menuService: MenuService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     super(store, <ComponentCommonMetadataProvider>{
       includeDefaultMenu: true,
@@ -33,6 +39,10 @@ export class AddAcademyContainerComponent extends CompetitionManagerModuleRouter
   }
 
   dispatchAcademyAddedEvent(academy: FullAcademyInfo) {
-    this.store.dispatch(addAcademy({academy}))
+    this.store.dispatch(addAcademy({
+      academy,
+      successCallback: () => this.router.navigate(['..'], {relativeTo: this.activatedRoute}).catch(console.error),
+      errorCallback: console.error
+    }))
   }
 }
