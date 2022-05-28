@@ -126,9 +126,11 @@ export class SuiDatepickerInputDirective {
             return this.datepicker.writeValue(undefined);
         }
 
-        const parsed = this.parser.parse(value, this.datepicker.selectedDate);
-        if (!isNaN(parsed.getTime()) && value === this.parser.format(parsed)) {
+        if (this.datepicker.selectedDate) {
+          const parsed = this.parser.parse(value, this.datepicker.selectedDate);
+          if (!isNaN(parsed.getTime()) && value === this.parser.format(parsed)) {
             return this.datepicker.writeValue(parsed);
+          }
         }
         return this.datepicker.writeValue(undefined);
     }

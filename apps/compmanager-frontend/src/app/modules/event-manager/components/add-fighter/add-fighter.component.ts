@@ -1,9 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
-import {select, Store} from '@ngrx/store';
 import {addCompetitor} from '../../redux/event-manager-actions';
 import {
   Academy,
@@ -21,7 +19,7 @@ import {map} from "rxjs/operators";
   templateUrl: './add-fighter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddFighterComponent implements OnDestroy {
+export class AddFighterComponent  {
 
   @Input()
   collapsed = false;
@@ -35,7 +33,9 @@ export class AddFighterComponent implements OnDestroy {
 
   @Output()
   fighterAdded = new EventEmitter<any>();
-  private compIdSubscription;
+
+  @Input()
+  competitionId: string;
 
 
   static displayCategory(cat: CategoryDescriptor) {
@@ -48,7 +48,6 @@ export class AddFighterComponent implements OnDestroy {
   formatter = (option: CategoryDescriptor, _query?: string) => AddFighterComponent.displayCategory(option);
   academyFormatter = (option: FullAcademyInfo, _query?: string) => option?.name.trim();
   academyLookup: LookupFn<FullAcademyInfo> = (query: string, _initial?: FullAcademyInfo) => {
-    console.log("lookup");
     if (_initial) {
       return Promise.resolve(_initial)
     } else {
@@ -70,7 +69,7 @@ export class AddFighterComponent implements OnDestroy {
   }
 
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private fb: FormBuilder, private infoService: InfoService) {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private infoService: InfoService) {
     this.createForm();
   }
 
@@ -90,23 +89,12 @@ export class AddFighterComponent implements OnDestroy {
     return this.form.get('category');
   }
 
-  get competitionId() {
-    return this.form.get('competitionId');
-  }
-
   get registrationStatus() {
     return this.form.get('registrationStatus');
   }
 
   get promo() {
     return this.form.get('promo');
-  }
-
-
-  ngOnDestroy() {
-    if (this.compIdSubscription) {
-      this.compIdSubscription.unsubscribe();
-    }
   }
 
   setCategoryIds(categories: CategoryDescriptor[]) {
@@ -130,11 +118,9 @@ export class AddFighterComponent implements OnDestroy {
       birthDate: ['', [Validators.required]],
       academy: [''],
       category: ['', [Validators.required]],
-      competitionId: ['', [Validators.required]],
       registrationStatus: [CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING],
       promo: ['']
     });
-    this.compIdSubscription = this.store.pipe(select(getSelectedEventId)).subscribe(competitionId => this.form.patchValue({competitionId}));
   }
 
   submitForm() {
@@ -150,9 +136,9 @@ export class AddFighterComponent implements OnDestroy {
       lastName: this.lastName.value,
       promo: this.promo.value,
       registrationStatus: this.registrationStatus.value,
-      competitionId: this.competitionId.value
+      competitionId: this.competitionId
     } as Competitor;
-    this.fighterAdded.next(addCompetitor(this.competitionId.value, competitor));
+    this.fighterAdded.next(addCompetitor(this.competitionId, competitor));
     this.form.reset({
       competitionId: competitor.competitionId,
       category: categoryIds
