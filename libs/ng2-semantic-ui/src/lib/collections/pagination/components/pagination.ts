@@ -1,4 +1,5 @@
 import { Component, Input, Output, OnChanges, EventEmitter, HostBinding } from "@angular/core";
+import {isNumeric} from "rxjs/internal-compatibility";
 
 @Component({
     selector: "sui-pagination",
@@ -153,9 +154,11 @@ export class SuiPagination implements OnChanges {
 
         const [start, end] = this.applyPagination();
 
-        this._pages = Array<number>(end - start)
+        if (start && isNumeric(start) && end && isNumeric(end) && end >= start) {
+          this._pages = Array<number>(end - start)
             .fill(start + 1)
             .map((s, i) => s + i);
+        }
     }
 
     private applyPagination():[number, number] {

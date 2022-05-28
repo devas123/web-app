@@ -17,6 +17,7 @@ import {loadAcademies, removeAcademy} from "../../redux/actions";
   template: `
     <compmanager-frontend-academies-list-component
       (deleteAcademy)="sendDeleteAcademyCommand($event)"
+      (academySelected)="selectAcademy($event)"
       (selectPage)="changePage($event)"
       [pageInfo]="pageInfo$ | async"
 
@@ -57,5 +58,9 @@ export class AcademiesListContainerComponent extends CompetitionManagerModuleRou
 
   changePage(pageInfo: PageInfo) {
     this.store.dispatch(loadAcademies({pageInfo}))
+  }
+
+  selectAcademy(id: string) {
+    this.router.navigate([id], {relativeTo: this.route}).catch(console.error);
   }
 }

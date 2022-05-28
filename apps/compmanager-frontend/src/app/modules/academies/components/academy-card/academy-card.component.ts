@@ -6,7 +6,7 @@ import {FullAcademyInfo} from "@frontend-nx/protobuf";
   template: `
     <compmanager-frontend-common-card>
       <!--        <img class="right floated mini ui image" src="/images/avatar/large/elliot.jpg">-->
-      <a class="ui header link">
+      <a class="ui header link" (click)="editClicked.next()">
         {{fullAcademyInfo?.name}}
       </a>
       <div class="meta">

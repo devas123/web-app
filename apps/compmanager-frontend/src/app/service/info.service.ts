@@ -34,7 +34,7 @@ import {
   GenerateCategoriesFromRestrictionsPayload,
   GenerateCategoriesFromRestrictionsResponse,
   GenerateSchedulePayload,
-  GetAcademiesResponse,
+  GetAcademiesResponse, GetAcademyResponse,
   GetCompetitorsResponse,
   ManagedCompetition,
   MatFightsQueryResult,
@@ -642,6 +642,15 @@ export class InfoService {
     })
       .pipe(
         map(r => r.getAcademiesResponse)
+      );
+  }
+
+  loadAcademy(id: string): Observable<GetAcademyResponse> {
+    return this.httpGet(`${academiesEndpoint}/${id}`, {
+      headers: this.headers
+    })
+      .pipe(
+        map(r => r.getAcademyResponse)
       );
   }
 }

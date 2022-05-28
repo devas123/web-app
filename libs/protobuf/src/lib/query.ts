@@ -80,6 +80,7 @@ export interface QueryServiceResponse {
   getStageByIdResponse?: GetStageByIdResponse | undefined;
   getStageFightsResponse?: GetStageFightsResponse | undefined;
   getAcademiesResponse?: GetAcademiesResponse | undefined;
+  getAcademyResponse?: GetAcademyResponse | undefined;
 }
 
 export interface GetDefaultRestrictionsResponse {
@@ -192,6 +193,10 @@ export interface GetStageFightsResponse {
 export interface GetAcademiesResponse {
   academies: FullAcademyInfo[];
   pageInfo?: PageInfo;
+}
+
+export interface GetAcademyResponse {
+  academy?: FullAcademyInfo | undefined;
 }
 
 function createBaseGenerateCategoriesFromRestrictionsRequest(): GenerateCategoriesFromRestrictionsRequest {
@@ -617,6 +622,7 @@ function createBaseQueryServiceResponse(): QueryServiceResponse {
     getStageByIdResponse: undefined,
     getStageFightsResponse: undefined,
     getAcademiesResponse: undefined,
+    getAcademyResponse: undefined,
   };
 }
 
@@ -775,6 +781,12 @@ export const QueryServiceResponse = {
         writer.uint32(202).fork()
       ).ldelim();
     }
+    if (message.getAcademyResponse !== undefined) {
+      GetAcademyResponse.encode(
+        message.getAcademyResponse,
+        writer.uint32(210).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -919,6 +931,12 @@ export const QueryServiceResponse = {
             reader.uint32()
           );
           break;
+        case 26:
+          message.getAcademyResponse = GetAcademyResponse.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1035,6 +1053,9 @@ export const QueryServiceResponse = {
         : undefined,
       getAcademiesResponse: isSet(object.getAcademiesResponse)
         ? GetAcademiesResponse.fromJSON(object.getAcademiesResponse)
+        : undefined,
+      getAcademyResponse: isSet(object.getAcademyResponse)
+        ? GetAcademyResponse.fromJSON(object.getAcademyResponse)
         : undefined,
     };
   },
@@ -1166,6 +1187,10 @@ export const QueryServiceResponse = {
     message.getAcademiesResponse !== undefined &&
       (obj.getAcademiesResponse = message.getAcademiesResponse
         ? GetAcademiesResponse.toJSON(message.getAcademiesResponse)
+        : undefined);
+    message.getAcademyResponse !== undefined &&
+      (obj.getAcademyResponse = message.getAcademyResponse
+        ? GetAcademyResponse.toJSON(message.getAcademyResponse)
         : undefined);
     return obj;
   },
@@ -1318,6 +1343,11 @@ export const QueryServiceResponse = {
       object.getAcademiesResponse !== undefined &&
       object.getAcademiesResponse !== null
         ? GetAcademiesResponse.fromPartial(object.getAcademiesResponse)
+        : undefined;
+    message.getAcademyResponse =
+      object.getAcademyResponse !== undefined &&
+      object.getAcademyResponse !== null
+        ? GetAcademyResponse.fromPartial(object.getAcademyResponse)
         : undefined;
     return message;
   },
@@ -3225,6 +3255,71 @@ export const GetAcademiesResponse = {
     message.pageInfo =
       object.pageInfo !== undefined && object.pageInfo !== null
         ? PageInfo.fromPartial(object.pageInfo)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseGetAcademyResponse(): GetAcademyResponse {
+  return { academy: undefined };
+}
+
+export const GetAcademyResponse = {
+  encode(
+    message: GetAcademyResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.academy !== undefined) {
+      FullAcademyInfo.encode(
+        message.academy,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetAcademyResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetAcademyResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.academy = FullAcademyInfo.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetAcademyResponse {
+    return {
+      academy: isSet(object.academy)
+        ? FullAcademyInfo.fromJSON(object.academy)
+        : undefined,
+    };
+  },
+
+  toJSON(message: GetAcademyResponse): unknown {
+    const obj: any = {};
+    message.academy !== undefined &&
+      (obj.academy = message.academy
+        ? FullAcademyInfo.toJSON(message.academy)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetAcademyResponse>, I>>(
+    object: I
+  ): GetAcademyResponse {
+    const message = createBaseGetAcademyResponse();
+    message.academy =
+      object.academy !== undefined && object.academy !== null
+        ? FullAcademyInfo.fromPartial(object.academy)
         : undefined;
     return message;
   },

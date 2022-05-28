@@ -7,3 +7,4 @@ export const {
 
 
 export const selectAcademiesPageInfo = createSelector(academiesListState, state => state && state.pageInfo)
+export const getSelectedAcademy = createSelector(academiesListState, state => state && state.selectedAcademy && state.entities[state.selectedAcademy])

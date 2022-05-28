@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {academySelected} from "./redux/actions";
+import {academySelected, loadAcademy} from "./redux/actions";
 import {AppState} from "../../reducers/global-reducers";
 
 @Injectable()
@@ -10,6 +10,7 @@ export class AcademySelectedResolver implements Resolve<any> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
     const academyId = route.paramMap.get('id');
     if (academyId) {
+      this.store.dispatch(loadAcademy({id: academyId}));
       this.store.dispatch(academySelected({id: academyId}));
     }
     return Promise.resolve({});

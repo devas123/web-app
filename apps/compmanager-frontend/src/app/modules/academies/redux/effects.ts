@@ -4,7 +4,7 @@ import {catchError, mergeMap, switchMap, tap} from "rxjs/operators";
 import {from, of, throwError} from "rxjs";
 import {CommandType} from "@frontend-nx/protobuf";
 import {InfoService} from "../../../service/info.service";
-import {academiesLoaded, LOAD_ACADEMIES} from "./actions";
+import {academiesLoaded, academyLoaded, LOAD_ACADEMIES, LOAD_ACADEMY} from "./actions";
 
 @Injectable()
 export class AcademiesEffects {
@@ -40,6 +40,16 @@ export class AcademiesEffects {
         .loadAcademies(action.pageInfo)
         .pipe(
           mergeMap(({academies, pageInfo}) => of(academiesLoaded({academies, pageInfo})))
+        );
+    }))
+  )
+  loadAcademy$ = createEffect(() => this.actions$.pipe(
+    ofType(LOAD_ACADEMY),
+    switchMap((action: any) => {
+      return this.infoService
+        .loadAcademy(action.id)
+        .pipe(
+          mergeMap(({academy}) => of(academyLoaded({academy})))
         );
     }))
   )

@@ -6,6 +6,7 @@ import {FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
   template: `
     <compmanager-frontend-common-container-with-pagination *ngIf="academies && academies.length > 0">
       <compmanager-frontend-academy-card *ngFor="let academy of academies"
+                                         (editClicked)="academySelected.next(academy.id)"
                                          (deleteClicked)="sendDeleteAcademyCommand(academy.id)"
                                          [editMode]="true"
                                          [fullAcademyInfo]="academy"></compmanager-frontend-academy-card>
@@ -32,6 +33,9 @@ export class AcademiesListComponentComponent {
 
   @Output()
   deleteAcademy = new EventEmitter<string>();
+
+  @Output()
+  academySelected = new EventEmitter<string>();
 
   get resultsOnPage() {
     if (this.pageInfo.resultsOnPage > 0) {

@@ -1,6 +1,6 @@
 import {Event, EventType, FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
 import {AcademiesEntities, academiesEntitiesInitialState, academyInfoEntityAdapter} from "./state";
-import {ACADEMIES_LOADED, ACADEMY_SELECTED} from "./actions";
+import {ACADEMIES_LOADED, ACADEMY_LOADED, ACADEMY_SELECTED} from "./actions";
 
 export function academyListReducer(state: AcademiesEntities = academiesEntitiesInitialState, action): AcademiesEntities {
   switch (action.type) {
@@ -23,6 +23,10 @@ export function academyListReducer(state: AcademiesEntities = academiesEntitiesI
       const academies = action.academies as FullAcademyInfo[];
       const pageInfo = action.pageInfo as PageInfo;
       return academyInfoEntityAdapter.setAll(academies, {...state, pageInfo});
+    }
+    case ACADEMY_LOADED: {
+      const academy = action.academy as FullAcademyInfo;
+      return academyInfoEntityAdapter.addOne(academy, state);
     }
     default:
       return state;
