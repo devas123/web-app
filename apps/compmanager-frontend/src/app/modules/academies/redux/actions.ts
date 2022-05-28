@@ -9,7 +9,7 @@ export const LOAD_ACADEMIES = 'LOAD_ACADEMIES';
 export const LOAD_ACADEMY = 'LOAD_ACADEMY';
 
 export const academySelected = createAction(ACADEMY_SELECTED, props<{ id: string }>())
-export const loadAcademies = createAction(LOAD_ACADEMIES, props<{ pageInfo: PageInfo }>())
+export const loadAcademies = createAction(LOAD_ACADEMIES, props<{ pageInfo: PageInfo, searchString?: string }>())
 export const loadAcademy = createAction(LOAD_ACADEMY, props<{ id: string }>())
 export const academiesLoaded = createAction(ACADEMIES_LOADED, props<{ academies: FullAcademyInfo[], pageInfo: PageInfo }>())
 export const academyLoaded = createAction(ACADEMY_LOADED, props<{ academy: FullAcademyInfo }>())

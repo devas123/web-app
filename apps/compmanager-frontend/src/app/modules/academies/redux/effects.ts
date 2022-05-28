@@ -37,7 +37,7 @@ export class AcademiesEffects {
     ofType(LOAD_ACADEMIES),
     switchMap((action: any) => {
       return this.infoService
-        .loadAcademies(action.pageInfo)
+        .loadAcademies(action.pageInfo, action.searchString)
         .pipe(
           mergeMap(({academies, pageInfo}) => of(academiesLoaded({academies, pageInfo})))
         );

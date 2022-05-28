@@ -1,31 +1,30 @@
 <form class="ui large form" [suiCollapse]="collapsed" [formGroup]="form"
       [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
 
-  <div class="field"
-       [ngClass]="{error: email.invalid && (email.touched || email.dirty)}">
-    <div class="ui input">
-      <input type="text" name="email" placeholder="E-mail" formControlName="email">
-    </div>
-  </div>
-  <div class="field"
-       [ngClass]="{error: userId.invalid && (userId.touched || userId.dirty)}">
-    <div class="ui input">
-      <input type="text" name="userId" placeholder="User ID (leave blank if user is not registered)"
-             formControlName="userId">
-    </div>
-  </div>
-  <div class="field"
-       [ngClass]="{error: firstName.invalid && (firstName.touched || firstName.dirty)}">
-    <div class="ui input">
-      <input type="text" name="firstName" placeholder="First Name" formControlName="firstName">
-    </div>
-  </div>
-  <div class="field"
-       [ngClass]="{error: lastName.invalid && (lastName.touched || lastName.dirty)}">
-    <div class="ui input">
-      <input type="text" name="lastName" placeholder="Last Name" formControlName="lastName">
-    </div>
-  </div>
+  <compmanager-frontend-form-field
+    [control]="email"
+    [type]="'text'"
+    [name]="'email'"
+    [placeholder]="'E-mail'"
+  ></compmanager-frontend-form-field>
+  <compmanager-frontend-form-field
+    [control]="userId"
+    [type]="'text'"
+    [name]="'userId'"
+    [placeholder]="'User ID'"
+  ></compmanager-frontend-form-field>
+  <compmanager-frontend-form-field
+    [control]="firstName"
+    [type]="'text'"
+    [name]="'firstName'"
+    [placeholder]="'First Name'"
+  ></compmanager-frontend-form-field>
+  <compmanager-frontend-form-field
+    [control]="lastName"
+    [type]="'text'"
+    [name]="'lastName'"
+    [placeholder]="'Last Name'"
+  ></compmanager-frontend-form-field>
   <div class="field"
        [ngClass]="{error: birthDate.invalid && (birthDate.touched || birthDate.dirty)}">
     <div class="ui input">
@@ -40,20 +39,16 @@
   <div class="field"
        [ngClass]="{error: academy.invalid && (academy.touched || academy.dirty)}">
     <sui-select class="selection" placeholder="Academy"
-                      (selectedOptionChange)="setAcademy($event)"
-                      [options]="academies"
-                      [isSearchable]="true"
-                      [isDisabled]="false"
-                      [optionsFilter]="academyOptionsFilter"
-                      [optionFormatter]="academyFormatter"
-                      #selectAcademy>
+                (selectedOptionChange)="setAcademy($event)"
+                [isSearchable]="true"
+                [isDisabled]="false"
+                [optionFormatter]="academyFormatter"
+                [optionsLookup]="academyLookup"
+                #selectAcademy>
       <sui-select-option *ngFor="let option of selectAcademy.filteredOptions"
                          [value]="option">
       </sui-select-option>
     </sui-select>
-    <div class="ui input">
-      <input type="text" name="academy" placeholder="Academy" formControlName="academy">
-    </div>
   </div>
   <div class="field"
        [ngClass]="{error: category.invalid && (category.touched || category.dirty)}">
@@ -78,56 +73,46 @@
   <p></p>
   <sui-message class="error" [isDismissable]="false" *ngIf="(form.touched || form.dirty) && form.invalid">
     <div class="ui relaxed list">
-      <div class="item" *ngIf="email?.errors">
-        <div class="content">
-          <div class="header">Email: {{email?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="userId?.errors">
-        <div class="content">
-          <div class="header">UserId: {{userId?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="firstName?.errors">
-        <div class="content">
-          <div class="header">First name: {{firstName?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="lastName?.errors">
-        <div class="content">
-          <div class="header">Last name: {{lastName?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="birthDate?.errors">
-        <div class="content">
-          <div class="header">Birth date: {{birthDate?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="academy?.errors">
-        <div class="content">
-          <div class="header">Academy: {{academy?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="category?.errors">
-        <div class="content">
-          <div class="header">Category: {{category?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="competitionId?.errors">
-        <div class="content">
-          <div class="header">Competition Id: {{competitionId?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="registrationStatus?.errors">
-        <div class="content">
-          <div class="header">Registration status: {{registrationStatus?.errors | json}}</div>
-        </div>
-      </div>
-      <div class="item" *ngIf="promo?.errors">
-        <div class="content">
-          <div class="header">Promo: {{promo?.errors | json}}</div>
-        </div>
-      </div>
+      <compmanager-frontend-form-error-message
+        [control]="email"
+        [name]="'Email'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="userId"
+        [name]="'User ID'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="firstName"
+        [name]="'First Name'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="lastName"
+        [name]="'Last Name'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="birthDate"
+        [name]="'Birth date'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="academy"
+        [name]="'Academy'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="category"
+        [name]="'Category'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="competitionId"
+        [name]="'Competition ID'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="registrationStatus"
+        [name]="'Registration Status'">
+      </compmanager-frontend-form-error-message>
+      <compmanager-frontend-form-error-message
+        [control]="promo"
+        [name]="'Promo Code'">
+      </compmanager-frontend-form-error-message>
     </div>
   </sui-message>
 </form>

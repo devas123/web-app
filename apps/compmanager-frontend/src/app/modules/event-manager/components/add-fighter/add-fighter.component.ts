@@ -1,20 +1,27 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {displayCategory} from '../../../../commons/model/competition.model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {addCompetitor} from '../../redux/event-manager-actions';
-import {generateUuid} from "../../../account/utils";
-import {Academy, CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {
+  Academy,
+  CategoryDescriptor,
+  Competitor,
+  CompetitorRegistrationStatus,
+  FullAcademyInfo
+} from "@frontend-nx/protobuf";
+import {InfoService} from "../../../../service/info.service";
+import {LookupFn} from "@frontend-nx/ng2-semantic-ui";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-add-fighter',
   templateUrl: './add-fighter.component.html',
-  styleUrls: ['./add-fighter.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddFighterComponent implements  OnDestroy {
+export class AddFighterComponent implements OnDestroy {
 
   @Input()
   collapsed = false;
@@ -22,9 +29,6 @@ export class AddFighterComponent implements  OnDestroy {
   form: FormGroup;
   @Input()
   categories: CategoryDescriptor[];
-
-  @Input()
-  academies: Academy[];
 
   @Output()
   closeClicked = new EventEmitter();
@@ -34,37 +38,44 @@ export class AddFighterComponent implements  OnDestroy {
   private compIdSubscription;
 
 
-
   static displayCategory(cat: CategoryDescriptor) {
     return displayCategory(cat);
   }
 
 
-
   optionsFilter = (options: CategoryDescriptor[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
-  academyOptionsFilter = (options: Academy[], filter: string) => options.filter(acad => acad.id && acad.name?.toLowerCase()?.includes(filter.toLowerCase()));
+  academyOptionsFilter = (options: FullAcademyInfo[], filter: string) => options.filter(acad => acad.id && acad.name?.toLowerCase()?.includes(filter.toLowerCase()));
   formatter = (option: CategoryDescriptor, _query?: string) => AddFighterComponent.displayCategory(option);
-  academyFormatter = (option: Academy, _query?: string) => option?.name.trim();
-
+  academyFormatter = (option: FullAcademyInfo, _query?: string) => option?.name.trim();
+  academyLookup: LookupFn<FullAcademyInfo> = (query: string, _initial?: FullAcademyInfo) => {
+    console.log("lookup");
+    if (_initial) {
+      return Promise.resolve(_initial)
+    } else {
+      return this.infoService.lookupAcademy(query).pipe(
+        map(res => res.academies)
+      ).toPromise()
+    }
+  }
   get email() {
-    return this.form.get('email');
+    return this.form.get('email') as FormControl;
   }
 
   get userId() {
-    return this.form.get('userId');
+    return this.form.get('userId') as FormControl;
   }
 
   get firstName() {
-    return this.form.get('firstName');
+    return this.form.get('firstName') as FormControl;
   }
 
 
-  constructor(private store: Store<AppState>, private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(private store: Store<AppState>, private route: ActivatedRoute, private fb: FormBuilder, private infoService: InfoService) {
     this.createForm();
   }
 
   get lastName() {
-    return this.form.get('lastName');
+    return this.form.get('lastName') as FormControl;
   }
 
   get birthDate() {
@@ -104,7 +115,7 @@ export class AddFighterComponent implements  OnDestroy {
     });
   }
 
-  setAcademy(academy: Academy) {
+  setAcademy(academy: FullAcademyInfo) {
     this.form.patchValue({
       academy: academy
     });
@@ -120,7 +131,7 @@ export class AddFighterComponent implements  OnDestroy {
       academy: [''],
       category: ['', [Validators.required]],
       competitionId: ['', [Validators.required]],
-      registrationStatus: ['UNKNOWN'],
+      registrationStatus: [CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING],
       promo: ['']
     });
     this.compIdSubscription = this.store.pipe(select(getSelectedEventId)).subscribe(competitionId => this.form.patchValue({competitionId}));
@@ -132,7 +143,7 @@ export class AddFighterComponent implements  OnDestroy {
       id: '',
       email: this.email.value,
       userId: this.userId.value,
-      academy: <Academy>{name: this.academy.value, id: generateUuid()},
+      academy: <Academy>{name: this.academy.value.name, id: this.academy.value.id},
       birthDate: this.birthDate.value,
       categories: categoryIds,
       firstName: this.firstName.value,

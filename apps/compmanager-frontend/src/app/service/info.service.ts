@@ -467,7 +467,7 @@ export class InfoService {
       case   eventManagerActions.EVENT_MANAGER_ADD_COMPETITOR:
         cmd.type = CommandType.ADD_COMPETITOR_COMMAND
         messageInfo.addCompetitorPayload = <AddCompetitorPayload>{
-          ...action.payload
+          competitor: action.payload.competitor
         }
         break;
       case   eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR:
@@ -627,7 +627,7 @@ export class InfoService {
       );
   }
 
-  loadAcademies(pageInfo: PageInfo): Observable<GetAcademiesResponse> {
+  loadAcademies(pageInfo: PageInfo, searchString: string): Observable<GetAcademiesResponse> {
     const pn = pageInfo.page || 1
     const ps = pageInfo.resultsOnPage || 0
     const startAt = (pn - 1) * ps
@@ -636,6 +636,12 @@ export class InfoService {
       startAt,
       limit
     }
+    if (searchString && searchString.length > 0) {
+      params = {
+        ...params,
+        searchString
+      }
+    }
     return this.httpGet(academiesEndpoint, {
       params: params,
       headers: this.headers
@@ -643,6 +649,14 @@ export class InfoService {
       .pipe(
         map(r => r.getAcademiesResponse)
       );
+  }
+
+  lookupAcademy(searchString: string): Observable<GetAcademiesResponse> {
+    const pageInfo = <PageInfo>{
+      page: 1,
+      resultsOnPage: 5
+    }
+    return this.loadAcademies(pageInfo, searchString);
   }
 
   loadAcademy(id: string): Observable<GetAcademyResponse> {

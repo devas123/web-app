@@ -39,6 +39,9 @@ import {FighterCardComponent} from "./components/fighter-card-component";
 import {CommonContainerWithPaginationComponent} from "./components/custom-container-with-pagination-component";
 import {CommonCardComponent} from "./components/common-card-component";
 import {CommonPaginationComponent} from "./components/common-pagination-component";
+import {FormFieldComponent} from "./components/form-field-component";
+import {ReactiveFormsModule} from "@angular/forms";
+import {FormErrorMessageComponent} from "./components/form-error-message-component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -71,12 +74,14 @@ const importsExports = [
   FlexibleColumnDirective,
   CommonCardComponent,
   CommonPaginationComponent,
+  FormFieldComponent,
+  FormErrorMessageComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({
   declarations: importsExports,
   exports: importsExports,
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule]
+  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule, ReactiveFormsModule]
 })
 export class CompetitionManagerCommonsModule {
 }
