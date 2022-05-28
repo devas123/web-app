@@ -10,13 +10,16 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
 import {getAllAcademies, selectAcademiesPageInfo} from "../../redux/selectors";
-import {loadAcademies} from "../../redux/actions";
+import {loadAcademies, removeAcademy} from "../../redux/actions";
 
 @Component({
   selector: 'compmanager-frontend-academies-list-container',
   template: `
     <compmanager-frontend-academies-list-component
+      (deleteAcademy)="sendDeleteAcademyCommand($event)"
+      (selectPage)="changePage($event)"
       [pageInfo]="pageInfo$ | async"
+
       [academies]="academies$ | async"></compmanager-frontend-academies-list-component>
   `,
   styles: [],
@@ -46,5 +49,13 @@ export class AcademiesListContainerComponent extends CompetitionManagerModuleRou
     this.pageInfo$ = this.store.pipe(
       select(selectAcademiesPageInfo)
     );
+  }
+
+  sendDeleteAcademyCommand(academyId: string) {
+    this.store.dispatch(removeAcademy({academyId}));
+  }
+
+  changePage(pageInfo: PageInfo) {
+    this.store.dispatch(loadAcademies({pageInfo}))
   }
 }

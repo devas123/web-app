@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
     <div class="ui customcontainer">
       <ng-content></ng-content>
       <div class="ui basic segment customline pagination_line">
-        <ng-content select="[pagination]"></ng-content>
+        <ng-content select="compmanager-frontend-common-pagination"></ng-content>
       </div>
     </div>
   `

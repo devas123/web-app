@@ -6,13 +6,14 @@ import {FullAcademyInfo, PageInfo} from "@frontend-nx/protobuf";
   template: `
     <compmanager-frontend-common-container-with-pagination *ngIf="academies && academies.length > 0">
       <compmanager-frontend-academy-card *ngFor="let academy of academies"
+                                         (deleteClicked)="sendDeleteAcademyCommand(academy.id)"
                                          [editMode]="true"
                                          [fullAcademyInfo]="academy"></compmanager-frontend-academy-card>
-      <compmanager-frontend-common-pagination pagination
+      <compmanager-frontend-common-pagination
         [collectionSize]="pageInfo.total"
         [pageSize]="resultsOnPage"
         [pageNumber]="pageInfo.page"
-        (pageChanged)="selectPage.next($event)"
+        (pageChanged)="changePage($event)"
       ></compmanager-frontend-common-pagination>
     </compmanager-frontend-common-container-with-pagination>`,
   styles: [],
@@ -27,7 +28,10 @@ export class AcademiesListComponentComponent {
   pageInfo: PageInfo
 
   @Output()
-  selectPage = new EventEmitter<number>();
+  selectPage = new EventEmitter<PageInfo>();
+
+  @Output()
+  deleteAcademy = new EventEmitter<string>();
 
   get resultsOnPage() {
     if (this.pageInfo.resultsOnPage > 0) {
@@ -42,4 +46,11 @@ export class AcademiesListComponentComponent {
   constructor() {
   }
 
+  sendDeleteAcademyCommand(id: string) {
+    this.deleteAcademy.next(id)
+  }
+
+  changePage(page: number) {
+    this.selectPage.next({...this.pageInfo, page});
+  }
 }

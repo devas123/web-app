@@ -9,10 +9,9 @@ import {academiesLoaded, LOAD_ACADEMIES} from "./actions";
 @Injectable()
 export class AcademiesEffects {
   forwardAddAcademyCommand$ = createEffect(() => this.actions$.pipe(
-    ofType(CommandType.ADD_ACADEMY_COMMAND),
-    switchMap((action: any) => {
+    ofType(CommandType.ADD_ACADEMY_COMMAND, CommandType.REMOVE_ACADEMY_COMMAND),
+      switchMap((action: any) => {
       const command = InfoService.createCommandWithPayload(action);
-
       return this.infoService
         .sendCommandSync(command)
         .pipe(

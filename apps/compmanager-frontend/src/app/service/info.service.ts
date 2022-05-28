@@ -42,7 +42,7 @@ import {
   MessageInfo,
   PageInfo,
   QueryServiceResponse,
-  RegistrationInfo,
+  RegistrationInfo, RemoveAcademyPayload,
   RemoveCompetitorPayload,
   Schedule,
   SetFightResultPayload,
@@ -497,6 +497,12 @@ export class InfoService {
       case CommandType.ADD_ACADEMY_COMMAND:
         cmd.type = <CommandType>action.type;
         messageInfo.addAcademyPayload = <AddAcademyPayload>{
+          ...action.payload
+        }
+        break;
+      case CommandType.REMOVE_ACADEMY_COMMAND:
+        cmd.type = <CommandType>action.type;
+        messageInfo.removeAcademyPayload = <RemoveAcademyPayload>{
           ...action.payload
         }
         break;
