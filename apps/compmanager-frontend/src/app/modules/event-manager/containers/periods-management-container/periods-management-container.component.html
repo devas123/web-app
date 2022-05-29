@@ -14,7 +14,11 @@
     <div class="content">
       <a class="header" (click)="selectPeriod(period?.id)">Period {{period?.name}}</a>
       <div class="header" *ngIf="period?.isActive">ACTIVE</div>
-      <div class="meta">Begins {{period?.startTime | zdate:true:(timeZone$ | async)}}</div>
+      <compmanager-frontend-date-field
+        [date]="period?.startTime"
+        [timeZone]="timeZone$ | async"
+        [text]="'Begins '"
+      ></compmanager-frontend-date-field>
       <div class="meta">{{(getPeriodMatsLength(period.id) | async) + ' mats'}}</div>
     </div>
   </div>

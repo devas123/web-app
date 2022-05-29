@@ -28,7 +28,11 @@
               <div class="meta">
                 <span>{{getPeriodMats(period.id)?.length}} {{getPeriodMats(period.id)?.length === 1 ? 'area' : 'areas'}}</span>
               </div>
-              <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+              <compmanager-frontend-date-field
+                class="meta"
+                [date]="period?.startTime"
+                [text]="'Begins '"
+              ></compmanager-frontend-date-field>
               <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">Add Pause</button>
               <app-requirements-display
                 *ngIf="getPeriodMats(period?.id)?.length > 1 || getPeriodMats(period?.id)?.length === 0"

@@ -404,7 +404,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     }
   }
 
-  addPauseToPeriod(periodId: string, periodStartTime: string) {
+  addPauseToPeriod(periodId: string, periodStartTime: Date) {
     this.modalService.open(new AddSchedulePauseModal(this.competitionId, periodId, periodStartTime,
       this.timeZone, this.mats.filter(m => m.periodId === periodId)))
       .onApprove((result: IAddSchedulePauseResult) => {

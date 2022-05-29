@@ -5,7 +5,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
 import {ScheduleDisplayComponent} from '../../../../components/schedule-display/schedule-display.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
@@ -15,7 +14,7 @@ describe('ScheduleEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScheduleEditorComponent, ScheduleDisplayComponent, ZonedDatePipe],
+      declarations: [ScheduleEditorComponent, ScheduleDisplayComponent],
       imports: [ReactiveFormsModule, SuiModule, RouterTestingModule, DragDropModule]
     })
       .compileComponents();

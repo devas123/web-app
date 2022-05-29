@@ -470,10 +470,10 @@ export class InfoService {
           competitor: action.payload.competitor
         }
         break;
-      case   eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR:
+      case   CommandType.REMOVE_COMPETITOR_COMMAND:
         cmd.type = CommandType.REMOVE_COMPETITOR_COMMAND
         messageInfo.removeCompetitorPayload = <RemoveCompetitorPayload>{
-          ...action.payload
+          competitorId: action.payload.competitorId
         }
         break;
       case   eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND:

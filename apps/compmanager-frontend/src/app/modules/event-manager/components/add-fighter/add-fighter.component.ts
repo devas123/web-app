@@ -112,7 +112,7 @@ export class AddFighterComponent  {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       birthDate: ['', [Validators.required]],
-      academy: [''],
+      academy: ['', [Validators.required]],
       category: ['', [Validators.required]],
       registrationStatus: [CompetitorRegistrationStatus.COMPETITOR_REGISTRATION_STATUS_PAYMENT_PENDING],
       promo: ['']
@@ -125,7 +125,7 @@ export class AddFighterComponent  {
       id: '',
       email: this.email.value,
       userId: this.userId.value,
-      academy: <Academy>{name: this.academy.value.name, id: this.academy.value.id},
+      academy: <Academy>{name: this.academy.value?.name, id: this.academy.value?.id},
       birthDate: this.birthDate.value,
       categories: categoryIds,
       firstName: this.firstName.value,
@@ -135,12 +135,6 @@ export class AddFighterComponent  {
       competitionId: this.competitionId
     } as Competitor;
     this.fighterAdded.next({competitionId: this.competitionId, competitor});
-    this.form.reset({
-      competitionId: competitor.competitionId,
-      category: categoryIds
-    });
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
   }
 
   updateBirthDate(date: Date) {

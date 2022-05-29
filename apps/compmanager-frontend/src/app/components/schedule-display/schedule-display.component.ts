@@ -14,7 +14,13 @@ import {InternalScheduleState} from "../../reducers/global-reducers";
         <div class="card" *ngFor="let period of schedulePeriods">
           <div class="content">
             <div class="header">{{period?.name}}</div>
-            <div class="meta">Begins {{period?.startTime | zdate:true:timeZone}}</div>
+            <compmanager-frontend-date-field
+              class="meta"
+              [date]="period?.startTime"
+              [showTime]="true"
+              [text]="'Begins '"
+              [timeZone]="timeZone"
+            ></compmanager-frontend-date-field>
             <div class="ui toggle checkbox margin-vertical">
               <input type="checkbox" name="public" [value]="matsView[period?.id]" (click)="toggleMatsView(period.id)">
               <label>{{matsView[period?.id] ? 'Hide mats' : 'Show mats' }}</label>

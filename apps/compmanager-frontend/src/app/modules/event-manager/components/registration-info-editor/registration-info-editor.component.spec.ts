@@ -1,7 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RegistrationInfoEditorComponent } from './registration-info-editor.component';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
+import {RegistrationInfoEditorComponent} from './registration-info-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SuiDatepickerModule, SuiModalModule} from '@frontend-nx/ng2-semantic-ui';
 
@@ -11,7 +10,7 @@ describe('RegistrationInfoEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegistrationInfoEditorComponent, ZonedDatePipe ],
+      declarations: [ RegistrationInfoEditorComponent ],
       imports: [ReactiveFormsModule, SuiDatepickerModule, SuiModalModule]
     })
     .compileComponents();

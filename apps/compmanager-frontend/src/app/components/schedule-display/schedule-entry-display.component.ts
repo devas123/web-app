@@ -22,9 +22,31 @@ import {ScheduleEntry, ScheduleEntryType} from "@frontend-nx/protobuf";
             <div class="description">{{scheduleEntry?.fightScheduleInfo.length}} fights</div>
           </ng-container>
           <div class="description">{{getEntryMatId(scheduleEntry)}}</div>
-          <div class="description" *ngIf="!isPause(scheduleEntry)">Starts at {{scheduleEntry?.startTime | zdate:true:timeZone}}</div>
+          <compmanager-frontend-date-field
+            *ngIf="!isPause(scheduleEntry)"
+            class="description"
+            [date]="scheduleEntry?.startTime"
+            [showTime]="true"
+            [text]="'Starts at '"
+            [timeZone]="timeZone"
+          ></compmanager-frontend-date-field>
           <div class="description" *ngIf="isRelativePause(scheduleEntry)">{{scheduleEntry.duration}} min</div>
-          <div class="description" *ngIf="isFixedPause(scheduleEntry)">{{scheduleEntry?.startTime | zdate:true:timeZone}} - {{scheduleEntry?.endTime | zdate:true:timeZone}}</div>
+          <ng-container *ngIf="isFixedPause(scheduleEntry)">
+            <compmanager-frontend-date-field
+              class="description"
+              [date]="scheduleEntry?.startTime"
+              [showTime]="true"
+              [text]="'Starts at '"
+              [timeZone]="timeZone"
+            ></compmanager-frontend-date-field>
+            <compmanager-frontend-date-field
+              class="description"
+              [date]="scheduleEntry?.endTime"
+              [showTime]="true"
+              [text]="'Ends at '"
+              [timeZone]="timeZone"
+            ></compmanager-frontend-date-field>
+          </ng-container>
         </div>
       </a>
     </div>

@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
-import {Competitor} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {AddFighterComponent} from "../../modules/event-manager/components/add-fighter/add-fighter.component";
 
 @Component({
   selector: 'compmanager-frontend-fighter-card',
@@ -8,7 +9,12 @@ import {Competitor} from "@frontend-nx/protobuf";
       <a class="ui header link" (click)="sendHeaderClicked()">{{fighter?.firstName}} {{fighter?.lastName}}</a>
       <ng-container *ngIf="showPersonalData">
         <div class="description">Email: {{fighter?.email}}</div>
-        <div class="description">Birth date: {{fighter?.birthDate | zdate:false}}</div>
+        <compmanager-frontend-date-field
+          class="description"
+          [date]="fighter?.birthDate"
+          [showTime]="false"
+          [text]="'Birth date '"
+        ></compmanager-frontend-date-field>
       </ng-container>
       <div class="description">Academy: {{fighter?.academy?.name}}</div>
       <div *ngFor="let cat of fighter?.categories" class="description">Category: {{getCategoryName(cat)}}</div>
@@ -34,7 +40,7 @@ export class FighterCardComponent {
   fighter: Competitor
 
   @Input()
-  getCategoryName: (category: string) => string
+  categories: CategoryDescriptor[]
 
   @Input()
   showPersonalData: boolean
@@ -62,5 +68,13 @@ export class FighterCardComponent {
   }
   sendEditClicked() {
     this.editClicked.next(this.fighter);
+  }
+
+  getCategoryName(categoryId: string): string {
+    const cat = this.categories?.find(c => c.id === categoryId);
+    if (cat) {
+      return AddFighterComponent.displayCategory(cat);
+    }
+    return categoryId;
   }
 }

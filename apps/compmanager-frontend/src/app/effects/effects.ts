@@ -77,7 +77,6 @@ export class Effects {
       eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
       eventManagerActions.ADD_CATEGORY_COMMAND,
       eventManagerActions.DELETE_CATEGORY_COMMAND,
-      eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR,
       eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
@@ -89,6 +88,7 @@ export class Effects {
     })), {dispatch: false});
 
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
+      CommandType.REMOVE_COMPETITOR_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),
     mergeMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)

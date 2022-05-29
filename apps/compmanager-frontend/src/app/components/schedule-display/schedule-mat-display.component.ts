@@ -27,7 +27,14 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
             </ng-container>
             <ng-container *ngIf="entry.entryType === 'FIXED_PAUSE'">
               <span>Pause</span>
-              <span>From {{entry.startTime | zdate:true:timeZone:false}} till {{entry.endTime | zdate:true:timeZone:false}} </span>
+              <compmanager-frontend-date-range
+                [startDate]="entry.startTime"
+                [endDate]="entry.endTime"
+                [format]="'hh:mm'"
+                [timeZone]="timeZone"
+                [delimeter]="'till'"
+                [prefix]="'From '"
+              ></compmanager-frontend-date-range>
             </ng-container>
           </div>
         </div>

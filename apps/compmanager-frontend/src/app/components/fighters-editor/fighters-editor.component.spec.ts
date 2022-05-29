@@ -2,7 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {FightersEditorComponent} from './fighters-editor.component';
 import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
-import {ZonedDatePipe} from '../../pipes/zoned-date-pipe';
 
 
 describe('FightersEditorComponent', () => {
@@ -11,7 +10,7 @@ describe('FightersEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FightersEditorComponent, ZonedDatePipe],
+      declarations: [FightersEditorComponent],
       imports: [SuiModule]
     })
       .compileComponents();

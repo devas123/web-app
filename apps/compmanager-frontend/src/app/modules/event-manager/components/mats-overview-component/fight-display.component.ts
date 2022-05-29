@@ -12,7 +12,7 @@ import {CategoryDescriptor, Competitor, FightDescription} from "@frontend-nx/pro
       </div>
       <div class="centered">
         {{fight?.numberOnMat + 1}}
-        <p>{{ fight?.startTime | zdate:true:undefined:false }}</p>
+        <compmanager-frontend-date-field [date]="fight?.startTime" [format]="'hh:mm'"></compmanager-frontend-date-field>
       </div>
       <ng-container *ngFor="let score of fightScores; last as isLast">
         <div>
@@ -29,7 +29,7 @@ import {CategoryDescriptor, Competitor, FightDescription} from "@frontend-nx/pro
   styleUrls: ['mats-overview-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FightDisplayComponent  {
+export class FightDisplayComponent {
 
   constructor() {
   }
@@ -48,7 +48,6 @@ export class FightDisplayComponent  {
 
   @Input()
   categories: CategoryDescriptor[];
-
 
 
   displayCategory(id: string) {

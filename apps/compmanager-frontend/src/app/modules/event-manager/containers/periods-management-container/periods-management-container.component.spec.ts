@@ -10,7 +10,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 
@@ -20,7 +19,7 @@ describe('PeriodsManagementContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PeriodsManagementContainerComponent, ScheduleDisplayComponent, ZonedDatePipe],
+      declarations: [PeriodsManagementContainerComponent, ScheduleDisplayComponent],
       imports: [SuiModule,         StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

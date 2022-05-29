@@ -7,7 +7,7 @@ import {MatDescription, ScheduleRequirement, ScheduleRequirementType} from "@fro
 export interface IAddSchedulePauseContext {
   competitionId: string;
   periodId: string;
-  periodStartTime: string;
+  periodStartTime: Date;
   timeZone: string;
   mats: MatDescription[];
 }
@@ -18,7 +18,7 @@ export interface IAddSchedulePauseResult {
 }
 
 export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePauseContext, IAddSchedulePauseResult, void> {
-  constructor(competitionId: string, periodId: string, periodStartTime: string, timeZone: string, mats, size = ModalSize.Small) {
+  constructor(competitionId: string, periodId: string, periodStartTime: Date, timeZone: string, mats, size = ModalSize.Small) {
     super(AddSchedulePauseFormComponent, {periodId, competitionId, timeZone, periodStartTime, mats});
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -129,7 +129,7 @@ export class AddSchedulePauseFormComponent implements OnInit {
     switch (entryType) {
       case 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE': {
         if (startTime && endTime) {
-          const periodStartTime = InfoService.parseDate(this.modal.context.periodStartTime);
+          const periodStartTime = this.modal.context.periodStartTime;
           const s = InfoService.parseDate(startTime);
           const e = InfoService.parseDate(endTime);
           if (s.getTime() >= e.getTime()) {

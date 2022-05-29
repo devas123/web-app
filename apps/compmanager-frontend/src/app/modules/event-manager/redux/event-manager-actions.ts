@@ -9,10 +9,21 @@ import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 import {
   CategoryDescriptor,
-  CategoryRestriction, CommandType, CompetitionProperties, Competitor, FightDescription,
-  FightResultOption, ManagedCompetition, MatDescription,
-  Period, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule,
-  ScheduleRequirement, StageDescriptor,
+  CategoryRestriction,
+  CommandType,
+  CompetitionProperties,
+  Competitor,
+  FightDescription,
+  FightResultOption,
+  ManagedCompetition,
+  MatDescription,
+  Period,
+  RegistrationGroup,
+  RegistrationInfo,
+  RegistrationPeriod,
+  Schedule,
+  ScheduleRequirement,
+  StageDescriptor,
   StageStatus
 } from "@frontend-nx/protobuf";
 import {COMPETITION_LIST_LOADED} from "../../../actions/actions";
@@ -34,7 +45,6 @@ export const EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION
 export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
-export const EVENT_MANAGER_REMOVE_COMPETITOR = 'REMOVE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
 export const EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND = 'CREATE_FAKE_COMPETITORS_COMMAND';
 export const EVENT_MANAGER_GENERATE_BRACKETS_COMMAND = 'GENERATE_BRACKETS_COMMAND';
@@ -99,7 +109,6 @@ export const CATEGORY_STATE_DELETED = 'CATEGORY_STATE_DELETED';
 export const SCHEDULE_GENERATED = 'SCHEDULE_GENERATED';
 export const FIGHTS_START_TIME_UPDATED = 'FIGHTS_START_TIME_UPDATED';
 export const EVENT_MANAGER_COMPETITOR_ADDED = 'COMPETITOR_ADDED';
-export const EVENT_MANAGER_COMPETITOR_REMOVED = 'COMPETITOR_REMOVED';
 export const COMPETITION_PROPERTIES_UPDATED = 'COMPETITION_PROPERTIES_UPDATED';
 export const EVENT_MANAGER_PERIOD_ADDED = 'EVENT_MANAGER_PERIOD_ADDED';
 export const EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED = 'EVENT_MANAGER_PERIODS_UPDATED';
@@ -116,9 +125,11 @@ export const eventManagerHeaderClear = {
 export const eventManagerCategoriesCleared = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED);
 export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: CategoryDescriptor[] }>());
 export const generateCategoriesCommand = createAction(GENERATE_CATEGORIES_COMMAND, props<{
-  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[] }>());
+  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[]
+}>());
 export const generatePreviewCategoriesCommand = createAction(GENERATE_PREVIEW_CATEGORIES_COMMAND, props<{
-  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[] }>());
+  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[]
+}>());
 export const eventManagerCategoryRestrictionUnlinked = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_UNLINKED, props<{ restrictionId: string, root: string, parent: string }>());
 export const eventManagerCategoryRestrictionLinked = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_LINKED, props<{ restrictionId: string, root: string, parent: string[] }>());
 export const eventManagerCategoryRestrictionAdded = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_ADDED, props<{ payload: CategoryRestriction }>());
@@ -308,13 +319,7 @@ export const eventManagerCategoryUnselected = (competitionId: string) => ({
 export const competitionUnselected = ({
   type: COMPETITION_UNSELECTED
 });
-
-export const eventManagerRemoveCompetitor = (competitor: Competitor) => ({
-  type: EVENT_MANAGER_REMOVE_COMPETITOR,
-  competitionId: competitor.competitionId,
-  categoryId: competitor.categories[0],
-  payload: {competitorId: competitor.id}
-});
+export const eventManagerRemoveCompetitor = createAction(CommandType.REMOVE_COMPETITOR_COMMAND, props<{ competitorId: string, competitionId: string }>())
 
 export const eventManagerLoadFightersForCompetition = (competitionId, categoryId, pageNumber, pageSize, searchString?, replace?: boolean) => ({
   type: EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,

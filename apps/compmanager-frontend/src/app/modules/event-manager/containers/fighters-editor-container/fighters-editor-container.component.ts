@@ -91,7 +91,10 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
 
 
   deleteFighter(competitor: Competitor) {
-    this.store.dispatch(eventManagerRemoveCompetitor(competitor));
+    this.store.dispatch(eventManagerRemoveCompetitor({
+      competitorId: competitor.id,
+      competitionId: competitor.competitionId,
+    }));
   }
 
   changePage(info: any) {

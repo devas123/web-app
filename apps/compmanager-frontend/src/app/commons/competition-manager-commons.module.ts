@@ -5,7 +5,6 @@ import {TruncatePipe} from '../pipes/truncate.pipe';
 import {GetNamePipe} from '../pipes/get-name.pipe';
 import {ReversePipe} from '../pipes/ReversePipe';
 import {EncodeIdPipe} from '../pipes/encode.id.pipe';
-import {ZonedDatePipe} from '../pipes/zoned-date-pipe';
 import {DisplayCategoryPipe} from '../pipes/display-category.pipe';
 import {GetAcademyPipe} from '../pipes/get-academy.pipe';
 import {BracketComponent} from '../components/brackets-editor/bracket/bracket.component';
@@ -45,6 +44,8 @@ import {FormErrorMessageComponent} from "./components/form-error-message-compone
 import {FormFieldComponent} from "./components/form-field-component";
 import {SubmitButtonComponent} from "./components/submit-button.component";
 import {ButtonComponent} from "./components/button-component";
+import {DateFieldComponent} from "./components/date-field-component";
+import {DateRangeComponent} from "./components/date-range-component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -55,7 +56,6 @@ const importsExports = [
   GetNamePipe,
   EncodeIdPipe,
   ReversePipe,
-  ZonedDatePipe,
   DisplayCategoryPipe,
   GetAcademyPipe,
   BracketComponent,
@@ -82,6 +82,8 @@ const importsExports = [
   FormFieldComponent,
   SubmitButtonComponent,
   ButtonComponent,
+  DateFieldComponent,
+  DateRangeComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({

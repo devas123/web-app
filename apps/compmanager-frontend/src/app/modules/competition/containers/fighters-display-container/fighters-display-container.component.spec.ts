@@ -7,7 +7,6 @@ import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {RouterTestingModule} from '@angular/router/testing';
 import {initialAccountState} from '../../../account/flux/account.state';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {FightersDisplayContainerComponent} from './fighters-display-container.component';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
@@ -21,7 +20,7 @@ describe('FightersDisplayContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FightersDisplayContainerComponent, AddFighterComponent, FightersEditorComponent, ZonedDatePipe],
+      declarations: [FightersDisplayContainerComponent, AddFighterComponent, FightersEditorComponent],
       imports: [SuiModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

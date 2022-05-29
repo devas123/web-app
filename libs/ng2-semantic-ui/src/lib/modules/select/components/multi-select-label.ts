@@ -24,7 +24,7 @@ export class SuiMultiSelectLabel<T> extends SuiTransition {
     @HostBinding("class.label")
     public readonly hasClasses:boolean;
 
-    private _transitionController:TransitionController;
+    private readonly _transitionController:TransitionController;
 
     @Input()
     public value:T;

@@ -2,7 +2,7 @@
   <compmanager-frontend-fighter-card *ngFor="let fighter of fighters"
                                      [editMode]="editMode"
                                      [fighter]="fighter"
-                                     [getCategoryName]="getCategoryName"
+                                     [categories]="categories"
                                      [showPersonalData]="showPersonalData"
                                      [showRegistrationStatus]="showRegistrationStatus"
                                      (editClicked)="gotoFighterProfile($event)"

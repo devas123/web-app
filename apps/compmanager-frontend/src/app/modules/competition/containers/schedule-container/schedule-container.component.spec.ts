@@ -6,7 +6,6 @@ import {ScheduleDisplayComponent} from '../../../../components/schedule-display/
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {RouterTestingModule} from '@angular/router/testing';
 import {competitionListReducer} from '../../redux/reducers';
@@ -21,7 +20,7 @@ describe('ScheduleContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ScheduleContainerComponent, ScheduleDisplayComponent, ZonedDatePipe],
+      declarations: [ScheduleContainerComponent, ScheduleDisplayComponent],
       imports: [ReactiveFormsModule, SuiModule, DragDropModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

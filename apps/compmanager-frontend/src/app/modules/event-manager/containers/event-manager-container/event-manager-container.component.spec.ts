@@ -11,7 +11,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {InfoService} from '../../../../service/info.service';
 import {EventManagerMenuComponent} from '../../../../commons/components/event-manager-menu.component';
 import {DynamicHeaderDirective} from '../../../../commons/directives/dynamic.header.directive';
@@ -25,7 +24,7 @@ describe('EventManagerContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventManagerContainerComponent, TruncatePipe, ZonedDatePipe, EventManagerMenuComponent, DynamicHeaderDirective, FlexibleColumnDirective],
+      declarations: [EventManagerContainerComponent, TruncatePipe, EventManagerMenuComponent, DynamicHeaderDirective, FlexibleColumnDirective],
       imports: [SuiModule, RouterTestingModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

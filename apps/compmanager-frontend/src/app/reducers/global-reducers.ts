@@ -44,7 +44,6 @@ import {
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_CATEGORY_UNSELECTED,
   EVENT_MANAGER_COMPETITOR_ADDED,
-  EVENT_MANAGER_COMPETITOR_REMOVED,
   EVENT_MANAGER_COMPETITOR_UPDATED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
@@ -94,7 +93,9 @@ import {generateUuid} from "../modules/account/utils";
 import {
   CategoryDescriptor,
   CompetitionProperties,
-  Competitor, Event,
+  Competitor,
+  Event,
+  EventType,
   FightDescription,
   FightResultOption,
   ManagedCompetition,
@@ -103,7 +104,6 @@ import {
   RegistrationInfo,
   ScheduleRequirement
 } from "@frontend-nx/protobuf";
-import {academyInfoEntityAdapter} from "../modules/academies/redux/state";
 
 export type SuccessCallback = (actions: Action[]) => any
 export type ErrorCallback = (error: any) => any
@@ -296,17 +296,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           return {
             ...state,
             selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors)
-          };
-        } else {
-          return state;
-        }
-      }
-      case competitorsActions.COMPETITOR_REMOVED: {
-        const {fighterId} = action.payload;
-        if (state.competitionProperties.id === action.competitionId) {
-          return {
-            ...state,
-            selectedEventCompetitors: competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
           };
         } else {
           return state;
@@ -632,11 +621,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-      case EVENT_MANAGER_COMPETITOR_REMOVED: {
-        if (action.competitionId === state.competitionProperties.id && action.id) {
+      case EventType.COMPETITOR_REMOVED: {
+        const event = action as Event
+        if (event.messageInfo?.competitionId === state.competitionProperties.id) {
           return {
             ...state,
-            selectedEventCompetitors: competitorEntityAdapter.removeOne(action.payload.competitorId, state.selectedEventCompetitors)
+            selectedEventCompetitors: competitorEntityAdapter.removeOne(event.messageInfo.competitorRemovedPayload.fighterId, state.selectedEventCompetitors)
           };
         }
         return state;
@@ -917,7 +907,5 @@ export const selectAllCompetitions = getAllCompetitions;
 
 export const {
   // select the array of users
-  selectAll: getAllCategories
+  selectAll: getSelectedCompetitionCategories
 } = categoryEntityAdapter.getSelectors(selectCategoriesEntities);
-
-export const getSelectedCompetitionCategories = getAllCategories;

@@ -17,7 +17,11 @@ import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
     <div class="margin-vertical list-container" *ngIf="_fixedPauses?.length > 0">
       <p>Fixed pauses.</p>
       <div class="item schedule_page flex-container small-line pause" *ngFor="let fp of _fixedPauses; last as isLast">
-        <span>{{fp.startTime | zdate:true:null:true}}-{{fp.endTime | zdate:true:null:true}}</span>
+        <compmanager-frontend-date-range
+          [startDate]="fp.startTime"
+          [endDate]="fp.endTime"
+          [delimeter]="'-'"
+        ></compmanager-frontend-date-range>
         <div class="filler"></div>
         <a class="right-floated"><i class="ui trash icon" (click)="requirementRemoved.next(fp)"></i></a>
       </div>

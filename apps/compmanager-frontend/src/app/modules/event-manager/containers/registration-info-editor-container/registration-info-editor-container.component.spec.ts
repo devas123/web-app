@@ -1,10 +1,13 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {RegistrationInfoEditorContainerComponent} from './registration-info-editor-container.component';
-import {RegistrationInfoEditorComponent} from '../../components/registration-info-editor/registration-info-editor.component';
-import {RegistrationGroupEditorComponent} from '../../components/registration-group-editor/registration-group-editor.component';
+import {
+  RegistrationInfoEditorComponent
+} from '../../components/registration-info-editor/registration-info-editor.component';
+import {
+  RegistrationGroupEditorComponent
+} from '../../components/registration-group-editor/registration-group-editor.component';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {SuiDatepickerModule, SuiModalModule} from '@frontend-nx/ng2-semantic-ui';
 import {ReactiveFormsModule} from '@angular/forms';
 import {combineReducers, StoreModule} from '@ngrx/store';
@@ -24,7 +27,7 @@ describe('RegistrationInfoEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RegistrationInfoEditorContainerComponent, RegistrationInfoEditorComponent, RegistrationGroupEditorComponent, TruncatePipe, ZonedDatePipe, DisplayCategoryPipe],
+      declarations: [RegistrationInfoEditorContainerComponent, RegistrationInfoEditorComponent, RegistrationGroupEditorComponent, TruncatePipe, DisplayCategoryPipe],
       imports: [        StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

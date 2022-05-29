@@ -4,7 +4,6 @@ import {EventPropertiesEditorComponent} from './event-properties-editor.componen
 import {ReactiveFormsModule} from '@angular/forms';
 import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 
 describe('EventPropertiesEditorComponent', () => {
@@ -13,7 +12,7 @@ describe('EventPropertiesEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventPropertiesEditorComponent, ZonedDatePipe, TruncatePipe],
+      declarations: [EventPropertiesEditorComponent, TruncatePipe],
       imports: [ReactiveFormsModule, SuiModule, RouterTestingModule]})
       .compileComponents();
   }));

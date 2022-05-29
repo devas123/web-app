@@ -3,7 +3,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CompetitionMainInfoComponent} from './competition-main-info.component';
 import {CompetitionDescriptionComponent} from './competition-description/competition-description.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {combineReducers, StoreModule} from '@ngrx/store';
 import {competitionPropertiesEntitiesInitialState, reducers} from '../../../../reducers/global-reducers';
 import {eventManagerReducers} from '../../../event-manager/redux/event-manager-reducers';
@@ -18,7 +17,7 @@ describe('CompetitionMainInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CompetitionMainInfoComponent, CompetitionDescriptionComponent, ZonedDatePipe ],
+      declarations: [ CompetitionMainInfoComponent, CompetitionDescriptionComponent],
       imports: [RouterTestingModule,         StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

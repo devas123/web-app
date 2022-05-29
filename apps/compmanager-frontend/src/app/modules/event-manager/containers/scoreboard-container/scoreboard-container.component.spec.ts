@@ -13,7 +13,6 @@ import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {TimerComponent} from '../../components/scoreboard-component/timer-component';
@@ -26,12 +25,11 @@ describe('ScoreboardContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScoreboardContainerComponent, FightDisplayComponent, ScoreboardComponentComponent, GetNamePipe, TruncatePipe,
-        ZonedDatePipe, TimerComponent, TimerControlsComponent, NumberControlsComponent],
-      imports: [        StoreModule.forRoot({
+      declarations: [ScoreboardContainerComponent, FightDisplayComponent, ScoreboardComponentComponent, GetNamePipe, TruncatePipe, TimerComponent, TimerControlsComponent, NumberControlsComponent],
+      imports: [StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
-          events: competitionListReducer
+        events: competitionListReducer
       }, {
         initialState: {
           events: competitionPropertiesEntitiesInitialState,
@@ -48,7 +46,7 @@ describe('ScoreboardContainerComponent', () => {
         }
       }), RouterTestingModule, HotkeyModule.forRoot(), DragDropModule]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -80,16 +80,6 @@ export class FightersEditorComponent {
     this.fighterDeleted.next(fighter);
   }
 
-  getCategoryName(categoryId: string): string {
-    if (this.categories) {
-      const cat = this.categories.find(c => c.id === categoryId);
-      if (cat) {
-        return AddFighterComponent.displayCategory(cat);
-      }
-    }
-    return categoryId;
-  }
-
   selectPage(pageNumber: number) {
     if (this._pageNumber !== pageNumber) {
       const categoryId = (this.category && this.category.id) || undefined;

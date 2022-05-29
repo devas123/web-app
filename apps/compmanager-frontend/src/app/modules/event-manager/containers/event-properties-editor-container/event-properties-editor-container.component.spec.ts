@@ -1,7 +1,9 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventPropertiesEditorContainerComponent} from './event-properties-editor-container.component';
-import {EventPropertiesEditorComponent} from '../../components/event-properties-editor/event-properties-editor.component';
+import {
+  EventPropertiesEditorComponent
+} from '../../components/event-properties-editor/event-properties-editor.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SuiModule} from '@frontend-nx/ng2-semantic-ui';
 import {combineReducers, StoreModule} from '@ngrx/store';
@@ -10,7 +12,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {eventManagerReducers} from '../../redux/event-manager-reducers';
 import {initialAccountState} from '../../../account/flux/account.state';
 import {periodsInitialState} from '../../redux/dashboard-reducers';
-import {ZonedDatePipe} from '../../../../pipes/zoned-date-pipe';
 import {TruncatePipe} from '../../../../pipes/truncate.pipe';
 import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
@@ -22,7 +23,7 @@ describe('EventPropertiesEditorContainerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventPropertiesEditorContainerComponent, EventPropertiesEditorComponent, ZonedDatePipe, TruncatePipe],
+      declarations: [EventPropertiesEditorContainerComponent, EventPropertiesEditorComponent, TruncatePipe],
       imports: [ReactiveFormsModule, SuiModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),

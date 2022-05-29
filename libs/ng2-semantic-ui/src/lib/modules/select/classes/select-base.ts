@@ -1,10 +1,26 @@
-import { ViewChild, HostBinding, ElementRef, HostListener, Input, ContentChildren, QueryList, AfterContentInit, TemplateRef, ViewContainerRef, ContentChild, EventEmitter, Output, OnDestroy, Directive } from "@angular/core";
-import { DropdownService, SuiDropdownMenu } from "../../dropdown/internal";
-import { SearchService, LookupFn, FilterFn } from "../../search/internal";
-import { Util, ITemplateRefContext, HandledEvent, KeyCode, IFocusEvent } from "../../../misc/util/internal";
-import { ISelectLocaleValues, RecursivePartial, SuiLocalizationService } from "../../../behaviors/localization/internal";
-import { SuiSelectOption } from "../components/select-option";
-import { SuiSelectSearch } from "../directives/select-search";
+import {
+  AfterViewInit,
+  ContentChild,
+  ContentChildren,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef
+} from "@angular/core";
+import {DropdownService, SuiDropdownMenu} from "../../dropdown/internal";
+import {FilterFn, LookupFn, SearchService} from "../../search/internal";
+import {HandledEvent, IFocusEvent, ITemplateRefContext, KeyCode, Util} from "../../../misc/util/internal";
+import {ISelectLocaleValues, RecursivePartial, SuiLocalizationService} from "../../../behaviors/localization/internal";
+import {SuiSelectOption} from "../components/select-option";
+import {SuiSelectSearch} from "../directives/select-search";
 
 export interface IOptionContext<T> extends ITemplateRefContext<T> {
     query?:string;
@@ -13,7 +29,7 @@ export interface IOptionContext<T> extends ITemplateRefContext<T> {
 // We use generic type T to specify the type of the options we are working with,
 // and U to specify the type of the property of the option used as the value.
 @Directive()
-export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy {
+export abstract class SuiSelectBase<T, U> implements AfterViewInit, OnDestroy {
     public dropdownService:DropdownService;
     public searchService:SearchService<T, U>;
 
@@ -225,7 +241,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
     @Output("touched")
     public onTouched:EventEmitter<void>;
 
-    constructor(private _element:ElementRef, protected _localizationService:SuiLocalizationService) {
+    protected constructor(private _element:ElementRef, protected _localizationService:SuiLocalizationService) {
         this.dropdownService = new DropdownService();
         // We do want an empty query to return all results.
         this.searchService = new SearchService<T, U>(true);
@@ -245,7 +261,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
         this.hasClasses = true;
     }
 
-    public ngAfterContentInit():void {
+    public ngAfterViewInit():void {
         this._menu.service = this.dropdownService;
         // We manually specify the menu items to the menu because the @ContentChildren doesn't pick up our dynamically rendered items.
         this._menu.items = this._renderedOptions;
@@ -333,7 +349,7 @@ export abstract class SuiSelectBase<T, U> implements AfterContentInit, OnDestroy
         return options.find(o => value === this.valueGetter(o));
     }
 
-    public onCaretClick(e:HandledEvent):void {
+    public onCaretClick(e: HandledEvent):void {
         if (!e.eventHandled) {
             e.eventHandled = true;
 

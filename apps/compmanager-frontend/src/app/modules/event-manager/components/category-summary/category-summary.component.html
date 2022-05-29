@@ -48,9 +48,7 @@
                 Starts at
               </div>
               <p></p>
-              <div class="text value">
-                {{categoryStartTime | zdate:true}}
-              </div>
+              <compmanager-frontend-date-field class="text value" [date]="categoryStartTime"></compmanager-frontend-date-field>
             </ng-container>
             <ng-container *ngIf="!categoryStartTime">
               <div class="text value">

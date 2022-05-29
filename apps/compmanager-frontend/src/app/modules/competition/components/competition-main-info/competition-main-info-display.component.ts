@@ -10,7 +10,12 @@ import {MenuItem, RegistrationPeriodCollection} from "../../../../commons/model/
         <div class="reg_info_grid">
           <div class="ui  basic segment margins_container">
             <a class="ui green big left ribbon label"> Starts </a>
-            <div class="ui huge header">{{properties?.startDate | zdate:false:null:true}}</div>
+            <compmanager-frontend-date-field
+              class="ui huge header"
+              [date]="properties?.startDate"
+              [showTime]="false"
+              [timeZone]="properties?.timeZone"
+            ></compmanager-frontend-date-field>
           </div>
           <div class="ui  basic segment">
             <ng-container
@@ -18,12 +23,20 @@ import {MenuItem, RegistrationPeriodCollection} from "../../../../commons/model/
               <section>
                 <a class="ui right small ribbon label"
                    [ngClass]="{blue: isFirst, red: (!isFirst && isLast), yellow: (!isFirst && !isLast)}">{{(registrationPeriods?.length < 2) ? 'Registration start' : period?.name}}</a>
-                <p>{{period?.start | zdate:false:null:true}}</p>
+                <compmanager-frontend-date-field
+                  [date]="period?.start"
+                  [showTime]="false"
+                  [timeZone]="properties?.timeZone"
+                ></compmanager-frontend-date-field>
               </section>
               <div class="ui divider" *ngIf="!isLast || registrationPeriods?.length < 2"></div>
               <section *ngIf="registrationPeriods?.length < 2">
                 <a class="ui red right small ribbon  label">{{'Registration end'}}</a>
-                <p>{{period?.end | zdate:false:null:true}}</p>
+                <compmanager-frontend-date-field
+                  [date]="period?.end"
+                  [showTime]="false"
+                  [timeZone]="properties?.timeZone"
+                ></compmanager-frontend-date-field>
               </section>
             </ng-container>
           </div>

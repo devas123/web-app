@@ -51,7 +51,7 @@
     <div class="row-content">
       <div class="left floated content ">
         <div class="description">Start Date</div>
-        <div class="header">{{(properties?.startDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
+        <compmanager-frontend-date-field class="header" [date]="properties?.startDate" [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -84,7 +84,7 @@
     <div class="row-content">
       <div class="left floated content ">
         <div class="description">End Date</div>
-        <div class="header">{{(properties?.endDate | zdate:true:properties?.timeZone) || 'Not set'}}</div>
+        <compmanager-frontend-date-field class="header" [date]="properties?.endDate" [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -118,7 +118,7 @@
     <div class="left floated content">
       <div class="description">Status</div>
       <div class="header">
-         {{properties?.status}}
+        {{properties?.status}}
       </div>
     </div>
   </div>
