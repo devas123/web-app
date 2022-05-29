@@ -7,7 +7,6 @@ import {HttpAuthService} from '../modules/account/service/AuthService';
 import * as env from '../../environments/environment';
 import produce from 'immer';
 import * as allActions from '../actions/actions';
-import {CREATE_COMPETITION_COMMAND} from '../actions/actions';
 import {Action} from '@ngrx/store';
 import {parseISO} from 'date-fns';
 import {format, utcToZonedTime} from 'date-fns-tz';
@@ -328,21 +327,13 @@ export class InfoService {
     return encodedRequest.buffer.slice(offset, offset + length);
   }
 
-  sendCreateCompetitionCommand(action: CommonAction): Observable<any> {
+  sendCreateCompetitionCommand(action: CommonAction): Observable<Action[]> {
     let competitionId = generateUuid();
     let id = generateUuid();
     let command = InfoService.createCommandWithPayload(action)
     command.messageInfo.competitionId = competitionId;
     command.messageInfo.id = id;
     return this.sendCommandSync(command)
-    // const encodedRequest = Command.encode(command).finish();
-    // const userRequestArrayBuffer = InfoService.toBytes(encodedRequest);
-    // return this.http.post(`${commandsEndpoint}?competitionId=${competitionId}`, userRequestArrayBuffer, {
-    //   headers: new HttpHeaders({
-    //     'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    //     'Content-Type': 'application/x-protobuf'
-    //   })
-    // });
   }
 
   private sendCommandToEndpoint(payload: Command, endpoint: string): Observable<any> {
@@ -380,10 +371,11 @@ export class InfoService {
     };
     let cmd = <Command>{};
     switch (action.type) {
-      case CREATE_COMPETITION_COMMAND:
+      case CommandType.CREATE_COMPETITION_COMMAND:
         cmd.type = CommandType.CREATE_COMPETITION_COMMAND;
         messageInfo.createCompetitionPayload = <CreateCompetitionPayload>{
-          ...action.payload
+          reginfo: action.payload.regInfo,
+          properties: action.payload.properties
         }
         break;
       case DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND:
@@ -440,7 +432,7 @@ export class InfoService {
       case allActions.START_COMPETITION_COMMAND:
         cmd.type = CommandType.START_COMPETITION_COMMAND
         break;
-      case   allActions.DELETE_COMPETITION_COMMAND:
+      case   CommandType.DELETE_COMPETITION_COMMAND:
         cmd.type = CommandType.DELETE_COMPETITION_COMMAND
         break;
       case   eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND:

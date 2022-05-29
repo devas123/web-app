@@ -1,48 +1,67 @@
 <form class="ui large form" [formGroup]="form" [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
-  <div class="ui basic segment">
-    <div class="field"
-         [ngClass]="{error: competitionName.invalid && (competitionName.touched || competitionName.dirty)}">
-      <div class="ui label">
-        Competition Name
-      </div>
-      <div class="ui input">
-        <input type="text" id="competitionName" placeholder="Competition Name" formControlName="competitionName"
-               required>
-      </div>
-    </div>
-    <div class="field"
-         [ngClass]="{error: startDate.invalid && (startDate.touched || startDate.dirty)}">
-      <div class="ui label">
-        Start date
-      </div>
-      <div class="ui input small">
-        <input suiDatepicker
-               name="startDate"
-               (pickerSelectedDateChange)="setStartDate($event)"
-               [pickerFirstDayOfWeek]="1">
-      </div>
-    </div>
-    <!--<div class="field"-->
-    <!--[ngClass]="{error: registrationFee.invalid && (registrationFee.touched || registrationFee.dirty)}">-->
-    <!--<div class="ui input">-->
-    <!--<input type="number" id="registrationFee" placeholder="Registration Fee" formControlName="registrationFee"-->
-    <!--required>-->
-    <!--</div>-->
-    <!--</div>-->
-    <div class="field">
-      <label for="registrationOpen">
-        <sui-checkbox id="registrationOpen" type="checkbox" formControlName="registrationOpen">Registration open?</sui-checkbox></label>
-    </div>
-    <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
-      Create
-    </div>
-
-    <div class="ui error message " *ngIf="displayErrorList()">
-      <ul class="list">
-        <li *ngIf="competitionName.invalid && (competitionName.touched || competitionName.dirty)">Enter competition
-          name
-        </li>
-      </ul>
-    </div>
-  </div>
+  <compmanager-frontend-form-simple-field
+    [control]="competitionName"
+    [name]="'competitionName'"
+    [labelName]="'Competition Name'"
+    [placeholder]="'e.g. Vodokachka Open'"
+  >
+  </compmanager-frontend-form-simple-field>
+  <compmanager-frontend-form-generic-field
+    [control]="startDate"
+  >
+    <label>Start date</label>
+    <input suiDatepicker
+           input
+           name="startDate"
+           (pickerSelectedDateChange)="setStartDate($event)"
+           [pickerFirstDayOfWeek]="1">
+  </compmanager-frontend-form-generic-field>
+  <compmanager-frontend-form-generic-field
+    [control]="timeZone"
+  >
+    <label>Time Zone</label>
+    <sui-select
+      input
+      class="selection" placeholder="Time Zone"
+      (selectedOptionChange)="setTimeZone($event)"
+      [isSearchable]="true"
+      [optionFormatter]="timeZoneFormatter"
+      [optionsFilter]="timeZoneFilter"
+      [options]="timeZones"
+      #selectTimeZone>
+      <sui-select-option *ngFor="let option of selectTimeZone.filteredOptions"
+                         [value]="option">
+      </sui-select-option>
+    </sui-select>
+  </compmanager-frontend-form-generic-field>
+  <compmanager-frontend-form-generic-field
+    [control]="registrationOpen"
+  >
+    <label></label>
+    <sui-checkbox input id="registrationOpen" type="checkbox" formControlName="registrationOpen">Registration open?
+    </sui-checkbox>
+  </compmanager-frontend-form-generic-field>
+  <p></p>
+  <compmanager-frontend-submit-button
+    [name]="'Create'"
+    [disabled]="form.invalid"
+    (click)="submitForm()"
+  ></compmanager-frontend-submit-button>
+  <compmanager-frontend-form-error-list [isDismissable]="false" *ngIf="displayErrorList()">
+    <compmanager-frontend-form-error-message
+      [name]="'Enter competition name'"
+      [control]="competitionName"
+    >
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [name]="'Time zone missing'"
+      [control]="timeZone"
+    >
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [name]="'Start date missing'"
+      [control]="startDate"
+    >
+    </compmanager-frontend-form-error-message>
+  </compmanager-frontend-form-error-list>
 </form>

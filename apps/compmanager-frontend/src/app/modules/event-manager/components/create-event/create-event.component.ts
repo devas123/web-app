@@ -1,123 +1,100 @@
-import {map, take, tap} from 'rxjs/operators';
-import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {select, Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
-import {createCompetition} from '../../../../actions/actions';
-import {AppState, selectUser} from '../../../../reducers/global-reducers';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Account} from '../../../account/model/Account';
-import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
-} from '../../../../commons/directives/common-classes';
-import {MenuService} from '../../../../components/main-menu/menu.service';
 import {
   CompetitionProperties,
   CompetitionStatus,
   PromoCode,
   RegistrationGroup,
-  RegistrationInfo, RegistrationPeriod
+  RegistrationInfo,
+  RegistrationPeriod
 } from "@frontend-nx/protobuf";
+import {TimeZone} from "@vvo/tzdb";
+import {FilterFn} from "@frontend-nx/ng2-semantic-ui";
+
 
 @Component({
-  selector: 'app-create-event',
+  selector: 'compmanager-frontend-create-event',
   templateUrl: './create-event.component.html',
-  styleUrls: ['./create-event.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateEventComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
-
+export class CreateEventComponent {
   form: FormGroup;
+
   @Output()
-  createCompetition: EventEmitter<CompetitionProperties>;
-  private createCompetitionSubscription = new Subscription();
+  createCompetition = new EventEmitter<{ competitionProperties: CompetitionProperties, regInfo: RegistrationInfo }>();
 
+  @Input()
+  user: Account
 
-  constructor(private fb: FormBuilder, store: Store<AppState>, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
-    super(store, <ComponentCommonMetadataProvider>{
-      menu: [
-        {
-          name: 'Return',
-          action: () => this.goBack()
-        }
-      ],
-      header: {
-        header: 'Create event'
-      }
-    }, menuService);
+  @Input()
+  timeZones: TimeZone[];
+
+  timeZoneFormatter = (option: TimeZone, _query?: string) => option.name;
+  timeZoneFilter: FilterFn<TimeZone> = (options: TimeZone[], query: string) => options.filter(o => o.name.includes(query));
+
+  constructor(private fb: FormBuilder) {
     this.createForm();
   }
 
 
   get competitionName() {
-    return this.form.get('competitionName');
+    return this.form.get('competitionName') as FormControl;
   }
+
   get startDate() {
-    return this.form.get('startDate');
+    return this.form.get('startDate') as FormControl;
   }
+
   setStartDate(value: Date) {
     this.form.patchValue({startDate: value});
   }
 
-  // get registrationFee() {
-  //   return this.form.get('registrationFee');
-  // }
+  get timeZone() {
+    return this.form.get('timeZone') as FormControl;
+  }
+
+  setTimeZone(value: TimeZone) {
+    this.form.patchValue({timeZone: value});
+  }
 
   get registrationOpen() {
-    return this.form.get('registrationOpen');
+    return this.form.get('registrationOpen') as FormControl;
   }
 
   createForm() {
     this.form = this.fb.group({
       competitionName: ['', [Validators.required]],
-      startDate: [new Date(), [Validators.required]],
-      // registrationFee: ['1500'],
+      startDate: [undefined, [Validators.required]],
+      timeZone: [undefined, [Validators.required]],
       registrationOpen: [false]
     });
   }
 
   displayErrorList() {
-    // return displayErrors(this.userForm)
-
+    return this.form.invalid && this.form.touched && this.form.dirty
   }
 
-  ngOnDestroy() {
-    super.ngOnDestroy();
-    this.createCompetitionSubscription.unsubscribe();
-  }
 
   submitForm() {
-    this.createCompetitionSubscription.add(this.store.pipe(
-      select(selectUser),
-      take(1),
-      map((user: Account) => {
-        const props = <CompetitionProperties>{};
-        const regInfo = <RegistrationInfo>{};
-        regInfo.registrationOpen = this.registrationOpen.value || false;
-        regInfo.id = '';
-        regInfo.registrationGroups = <{ [key: string]: RegistrationGroup }>{};
-        regInfo.registrationPeriods = <{ [key: string]: RegistrationPeriod }>{};
-        props.creatorId = Number(user.userId).toString();
-        props.competitionName = this.competitionName.value;
-        // props.registrationFee = this.registrationFee.value || '1500';
-        props.id = '';
-        props.schedulePublished = false;
-        props.bracketsPublished = false;
-        props.emailNotificationsEnabled = false;
-        props.staffIds = <string[]>[];
-        props.promoCodes = <PromoCode[]>[];
-        props.timeZone = 'UTC';
-        props.status = CompetitionStatus.COMPETITION_STATUS_CREATED;
-        props.creationTimestamp = new Date();
-        props.startDate = this.startDate.value
-        return createCompetition(props, regInfo);
-      }),
-      tap(this.store))
-      .subscribe(() => this.goBack()));
-  }
-
-  private goBack() {
-    this.router.navigate(['..'], {relativeTo: this.route}).catch(r => console.log(`Navigation error, ${r}`));
+    const props = <CompetitionProperties>{};
+    const regInfo = <RegistrationInfo>{};
+    regInfo.registrationOpen = this.registrationOpen.value || false;
+    regInfo.id = '';
+    regInfo.registrationGroups = <{ [key: string]: RegistrationGroup }>{};
+    regInfo.registrationPeriods = <{ [key: string]: RegistrationPeriod }>{};
+    props.creatorId = Number(this.user.userId).toString();
+    props.competitionName = this.competitionName.value;
+    props.id = '';
+    props.schedulePublished = false;
+    props.bracketsPublished = false;
+    props.emailNotificationsEnabled = false;
+    props.staffIds = <string[]>[];
+    props.promoCodes = <PromoCode[]>[];
+    props.timeZone = this.timeZone.value?.name || 'UTC';
+    props.status = CompetitionStatus.COMPETITION_STATUS_CREATED;
+    props.creationTimestamp = new Date();
+    props.startDate = this.startDate.value
+    this.createCompetition.next({competitionProperties: props, regInfo})
   }
 }

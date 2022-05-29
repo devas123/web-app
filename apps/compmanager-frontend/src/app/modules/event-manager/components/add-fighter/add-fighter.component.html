@@ -75,44 +75,42 @@
   (click)="submitForm()"
   >
   </compmanager-frontend-submit-button>
-  <sui-message class="error" [isDismissable]="false" *ngIf="(form.touched || form.dirty) && form.invalid">
-    <div class="ui relaxed list">
-      <compmanager-frontend-form-error-message
-        [control]="email"
-        [name]="'Email'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="userId"
-        [name]="'User ID'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="firstName"
-        [name]="'First Name'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="lastName"
-        [name]="'Last Name'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="birthDate"
-        [name]="'Birth date'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="academy"
-        [name]="'Academy'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="category"
-        [name]="'Category'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="registrationStatus"
-        [name]="'Registration Status'">
-      </compmanager-frontend-form-error-message>
-      <compmanager-frontend-form-error-message
-        [control]="promo"
-        [name]="'Promo Code'">
-      </compmanager-frontend-form-error-message>
-    </div>
-  </sui-message>
+  <compmanager-frontend-form-error-list [isDismissable]="false">
+    <compmanager-frontend-form-error-message
+      [control]="email"
+      [name]="'Email'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="userId"
+      [name]="'User ID'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="firstName"
+      [name]="'First Name'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="lastName"
+      [name]="'Last Name'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="birthDate"
+      [name]="'Birth date'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="academy"
+      [name]="'Academy'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="category"
+      [name]="'Category'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="registrationStatus"
+      [name]="'Registration Status'">
+    </compmanager-frontend-form-error-message>
+    <compmanager-frontend-form-error-message
+      [control]="promo"
+      [name]="'Promo Code'">
+    </compmanager-frontend-form-error-message>
+  </compmanager-frontend-form-error-list>
 </form>

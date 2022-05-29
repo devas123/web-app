@@ -29,7 +29,6 @@ import {
   CATEGORY_ADDED,
   CATEGORY_DELETED,
   CATEGORY_STATE_DELETED,
-  COMPETITION_CREATED,
   COMPETITION_PROPERTIES_UPDATED,
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
@@ -70,7 +69,6 @@ import {
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce from 'immer';
 import {
-  COMPETITION_DELETED,
   COMPETITION_LIST_LOADED,
   COMPETITION_PUBLISHED,
   COMPETITION_UNPUBLISHED,
@@ -91,7 +89,7 @@ import {
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid} from "../modules/account/utils";
 import {
-  CategoryDescriptor,
+  CategoryDescriptor, CommandType,
   CompetitionProperties,
   Competitor,
   Event,
@@ -240,12 +238,26 @@ export function competitionListReducer(state: EventPropsEntities = competitionPr
       const update = {id: action.competitionId, changes: {...payload}};
       return competitionPropertiesEntitiesAdapter.updateOne(update, state);
     }
-    case COMPETITION_CREATED:
-      return competitionPropertiesEntitiesAdapter.addOne(action.payload.properties, state);
-    case COMPETITION_DELETED:
-      return competitionPropertiesEntitiesAdapter.removeOne(action.competitionId, state);
-
-
+    case EventType.COMPETITION_CREATED: {
+      const event = action as Event;
+      const properties = event.messageInfo.competitionCreatedPayload?.properties;
+      const newCompetition = <ManagedCompetition>{
+        id: properties.id,
+        startsAt: properties.startDate,
+        competitionName: properties.competitionName,
+        createdAt: properties.creationTimestamp,
+        endsAt: properties.endDate,
+        status: properties.status,
+        creatorId: properties.creatorId,
+        eventsTopic: '',
+        timeZone: properties.timeZone
+      }
+      return competitionPropertiesEntitiesAdapter.addOne(newCompetition, state);
+    }
+    case EventType.COMPETITION_DELETED: {
+      const event = action as Event;
+      return competitionPropertiesEntitiesAdapter.removeOne(event.messageInfo.competitionId, state);
+    }
     default:
       return state;
   }
@@ -682,7 +694,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_PERIOD_ADDED: {
-        console.log('Period added');
         if (action.competitionId === state.competitionProperties.id) {
           const {period, mats} = action.payload;
           if (period && mats) {

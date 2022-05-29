@@ -14,7 +14,7 @@ import {CommonModule} from '@angular/common';
 import {
   SuiAccordionModule,
   SuiCheckboxModule,
-  SuiCollapseModule,
+  SuiCollapseModule, SuiMessageModule,
   SuiPaginationModule,
   SuiPopupModule
 } from '@frontend-nx/ng2-semantic-ui';
@@ -46,6 +46,7 @@ import {SubmitButtonComponent} from "./components/submit-button.component";
 import {ButtonComponent} from "./components/button-component";
 import {DateFieldComponent} from "./components/date-field-component";
 import {DateRangeComponent} from "./components/date-range-component";
+import {FormErrorListComponent} from "./components/form-error-list-component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -79,6 +80,7 @@ const importsExports = [
   CommonPaginationComponent,
   FormSimpleFieldComponent,
   FormErrorMessageComponent,
+  FormErrorListComponent,
   FormFieldComponent,
   SubmitButtonComponent,
   ButtonComponent,
@@ -89,7 +91,7 @@ const importsExports = [
 @NgModule({
   declarations: importsExports,
   exports: importsExports,
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule, ReactiveFormsModule]
+  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule, ReactiveFormsModule, SuiMessageModule]
 })
 export class CompetitionManagerCommonsModule {
 }

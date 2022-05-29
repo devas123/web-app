@@ -72,7 +72,6 @@ export class Effects {
 
   globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       allActions.START_COMPETITION_COMMAND,
-      allActions.DELETE_COMPETITION_COMMAND,
       eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
       eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
       eventManagerActions.ADD_CATEGORY_COMMAND,
@@ -89,6 +88,7 @@ export class Effects {
 
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       CommandType.REMOVE_COMPETITOR_COMMAND,
+      CommandType.DELETE_COMPETITION_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),
     mergeMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)
@@ -100,8 +100,14 @@ export class Effects {
         );
     })));
 
-  createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
-    tap(action => this.infoService.sendCreateCompetitionCommand(action).subscribe())), {dispatch: false});
+  createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(CommandType.CREATE_COMPETITION_COMMAND),
+    mergeMap(action =>
+      this.infoService.sendCreateCompetitionCommand(action)
+        .pipe(
+          tap(executeSuccessCallbacks(action)),
+          mergeMap((actions) => from(actions)),
+          catchError(executeErrorCallbacks(action))
+        ))));
 
 
   competitionSelected$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(COMPETITION_SELECTED),

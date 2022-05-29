@@ -5,7 +5,7 @@ import {FormControl} from "@angular/forms";
   selector: 'compmanager-frontend-form-simple-field',
   template: `
     <compmanager-frontend-form-generic-field [control]="control">
-      <label>{{placeholder}}</label>
+      <label>{{labelName || placeholder}}</label>
       <input input [type]="type" [name]="name" [placeholder]="placeholder" [formControl]="control">
     </compmanager-frontend-form-generic-field>
   `,
@@ -18,6 +18,8 @@ export class FormSimpleFieldComponent {
   name: string
   @Input()
   placeholder: string
+  @Input()
+  labelName: string
   @Input()
   type: string
 

@@ -4,7 +4,7 @@ import {FormControl} from "@angular/forms";
 @Component({
   selector: 'compmanager-frontend-form-generic-field',
   template: `
-    <div class="field"
+    <div class="ui field"
          [ngClass]="{error: control.invalid && (control.touched || control.dirty)}">
       <ng-content select="label"></ng-content>
       <div class="ui input">

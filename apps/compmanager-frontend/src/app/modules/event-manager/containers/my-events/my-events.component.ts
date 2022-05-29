@@ -6,7 +6,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {deleteCompetition, publishCompetition, unpublishCompetition} from '../../../../actions/actions';
 import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {CompetitionProperties, ManagedCompetition} from "@frontend-nx/protobuf";
+import {ManagedCompetition} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-my-events',
@@ -33,7 +33,7 @@ export class MyEventsComponent extends CompetitionManagerModuleRouterEntryCompon
   }
 
   sendDeleteCommand(props: ManagedCompetition) {
-    this.store.dispatch(deleteCompetition(props));
+    this.store.dispatch(deleteCompetition({competitionId: props.id}));
   }
 
   sendPublishCommand(props: ManagedCompetition) {

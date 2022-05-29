@@ -4,7 +4,7 @@ import {FormControl} from "@angular/forms";
 @Component({
   selector: 'compmanager-frontend-button',
   template: `
-    <div class="ui button" [ngClass]="{disabled}" (click)="click.next($event)">
+    <div class="ui button" [ngClass]="{disabled}" (click)="onClick($event)">
       {{name}}
     </div>
   `,
