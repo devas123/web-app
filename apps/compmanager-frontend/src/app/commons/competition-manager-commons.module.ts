@@ -39,9 +39,12 @@ import {FighterCardComponent} from "./components/fighter-card-component";
 import {CommonContainerWithPaginationComponent} from "./components/custom-container-with-pagination-component";
 import {CommonCardComponent} from "./components/common-card-component";
 import {CommonPaginationComponent} from "./components/common-pagination-component";
-import {FormFieldComponent} from "./components/form-field-component";
+import {FormSimpleFieldComponent} from "./components/form-simple-field-component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {FormErrorMessageComponent} from "./components/form-error-message-component";
+import {FormFieldComponent} from "./components/form-field-component";
+import {SubmitButtonComponent} from "./components/submit-button.component";
+import {ButtonComponent} from "./components/button-component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -74,8 +77,11 @@ const importsExports = [
   FlexibleColumnDirective,
   CommonCardComponent,
   CommonPaginationComponent,
-  FormFieldComponent,
+  FormSimpleFieldComponent,
   FormErrorMessageComponent,
+  FormFieldComponent,
+  SubmitButtonComponent,
+  ButtonComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({

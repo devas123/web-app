@@ -94,7 +94,7 @@ import {generateUuid} from "../modules/account/utils";
 import {
   CategoryDescriptor,
   CompetitionProperties,
-  Competitor,
+  Competitor, Event,
   FightDescription,
   FightResultOption,
   ManagedCompetition,
@@ -103,6 +103,7 @@ import {
   RegistrationInfo,
   ScheduleRequirement
 } from "@frontend-nx/protobuf";
+import {academyInfoEntityAdapter} from "../modules/academies/redux/state";
 
 export type SuccessCallback = (actions: Action[]) => any
 export type ErrorCallback = (error: any) => any
@@ -277,8 +278,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case competitorsActions.COMPETITOR_ADDED: {
-        const {competitor} = action.payload;
-        if (state.competitionProperties && (state.competitionProperties.id === action.competitionId)) {
+        const event = action as Event;
+        const {competitor} = event.messageInfo.competitorAddedPayload;
+        if (state.competitionProperties && (state.competitionProperties.id === event.messageInfo.competitionId)) {
           return {
             ...state,
             selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)

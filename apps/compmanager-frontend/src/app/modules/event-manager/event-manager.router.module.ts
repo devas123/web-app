@@ -23,6 +23,9 @@ import {PeriodManagementContainerComponent} from './containers/period-management
 import {RegistrationInfoEditorContainerComponent} from './containers/registration-info-editor-container/registration-info-editor-container.component';
 import {FightersContainerComponent} from '../../components/fighters-container/fighters-container.component';
 import {CompetitionInfoEditorContainerComponent} from './containers/competition-info-editor-container/competition-info-editor-container.component';
+import {
+  AddCompetitorContainerComponent
+} from "./containers/add-competitor-container/add-competitor-container.component";
 
 export const eventManagerRoutes: Routes = [
   {
@@ -68,6 +71,10 @@ export const eventManagerRoutes: Routes = [
               {
                 path: '',
                 component: FightersEditorContainerComponent,
+              },
+              {
+                path: 'add',
+                component: AddCompetitorContainerComponent,
               },
               {
                 path: ':fighterId',

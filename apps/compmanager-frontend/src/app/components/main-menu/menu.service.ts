@@ -4,7 +4,7 @@ import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuItem} from '../../commons/model/competition.model';
 import {IImplicitContext, SuiSidebar} from '@frontend-nx/ng2-semantic-ui';
-import {Location} from "@angular/common";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class MenuService {
   defaultMenu: MenuItem[] = [
     {
       name: 'Back',
-      action: () => this._location.back()
+      action: () => this.goBack()
     }
   ];
 
@@ -26,7 +26,7 @@ export class MenuService {
 
   private embeddedViews: EmbeddedViewRef<any>[] = [];
 
-  constructor(private observer: BreakpointObserver, private _location: Location) {
+  constructor(private observer: BreakpointObserver, private router: Router, private route: ActivatedRoute) {
     this._displaySidebar$ = observer.observe([Breakpoints.Handset, Breakpoints.Small, Breakpoints.Medium]).pipe(map(p => p.matches));
   }
 
@@ -75,5 +75,13 @@ export class MenuService {
       });
       this.embeddedViews = [];
     }
+  }
+
+  public goBack() {
+    this.goRelative('..', this.route);
+  }
+
+  public goRelative(path: string, route: ActivatedRoute) {
+    this.router.navigate([path], {relativeTo: route}).catch(console.error);
   }
 }

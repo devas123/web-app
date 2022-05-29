@@ -464,7 +464,7 @@ export class InfoService {
       case   eventManagerActions.DELETE_CATEGORY_COMMAND:
         cmd.type = CommandType.DELETE_CATEGORY_COMMAND
         break;
-      case   eventManagerActions.EVENT_MANAGER_ADD_COMPETITOR:
+      case   CommandType.ADD_COMPETITOR_COMMAND:
         cmd.type = CommandType.ADD_COMPETITOR_COMMAND
         messageInfo.addCompetitorPayload = <AddCompetitorPayload>{
           competitor: action.payload.competitor

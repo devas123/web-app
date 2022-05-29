@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {displayCategory} from '../../../../commons/model/competition.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {addCompetitor} from '../../redux/event-manager-actions';
 import {
   Academy,
   CategoryDescriptor,
@@ -21,9 +20,6 @@ import {map} from "rxjs/operators";
 })
 export class AddFighterComponent  {
 
-  @Input()
-  collapsed = false;
-
   form: FormGroup;
   @Input()
   categories: CategoryDescriptor[];
@@ -32,7 +28,7 @@ export class AddFighterComponent  {
   closeClicked = new EventEmitter();
 
   @Output()
-  fighterAdded = new EventEmitter<any>();
+  fighterAdded = new EventEmitter<{ competitionId: string, competitor: Competitor }>();
 
   @Input()
   competitionId: string;
@@ -78,15 +74,15 @@ export class AddFighterComponent  {
   }
 
   get birthDate() {
-    return this.form.get('birthDate');
+    return this.form.get('birthDate') as FormControl;
   }
 
   get academy() {
-    return this.form.get('academy');
+    return this.form.get('academy') as FormControl;
   }
 
   get category() {
-    return this.form.get('category');
+    return this.form.get('category') as FormControl;
   }
 
   get registrationStatus() {
@@ -138,7 +134,7 @@ export class AddFighterComponent  {
       registrationStatus: this.registrationStatus.value,
       competitionId: this.competitionId
     } as Competitor;
-    this.fighterAdded.next(addCompetitor(this.competitionId, competitor));
+    this.fighterAdded.next({competitionId: this.competitionId, competitor});
     this.form.reset({
       competitionId: competitor.competitionId,
       category: categoryIds

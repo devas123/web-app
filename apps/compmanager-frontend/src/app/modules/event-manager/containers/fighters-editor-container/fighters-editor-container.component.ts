@@ -1,5 +1,5 @@
 import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
@@ -11,11 +11,17 @@ import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCategory
 } from '../../redux/event-manager-reducers';
-import {eventManagerCompetitionFightersPageChanged, eventManagerRemoveCompetitor} from '../../redux/event-manager-actions';
+import {
+  eventManagerCompetitionFightersPageChanged,
+  eventManagerRemoveCompetitor
+} from '../../redux/event-manager-actions';
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {filter, map, take} from 'rxjs/operators';
-import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
+import {
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
+} from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
@@ -25,7 +31,7 @@ import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
   templateUrl: './fighters-editor-container.component.html',
   styleUrls: ['./fighters-editor-container.component.css']
 })
-export class FightersEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent  {
+export class FightersEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
   competitors$: Observable<Competitor[]>;
@@ -34,7 +40,6 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
   pageNumber$: Observable<number>;
   categories$: Observable<CategoryDescriptor[]>;
   category$: Observable<CategoryDescriptor>;
-  addFighterOpen = false;
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
   subs = new Subscription();
@@ -48,7 +53,7 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
-        header: 'Fighters',
+        header: 'Competitors',
         subheader: name
       }))),
       menu: [
@@ -57,14 +62,8 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
           action: () => this.navigateBack()
         },
         {
-          name: 'Add fighter',
-          showCondition: () => of(!this.addFighterOpen),
-          action: () => this.addFighterOpen = true
-        },
-        {
-          name: 'Close editor',
-          showCondition: () => of(this.addFighterOpen),
-          action: () => this.addFighterOpen = false
+          name: 'Add competitor',
+          action: () => this.menuService.goRelative('add', this.route),
         },
         {
           name: 'Select category',
@@ -103,7 +102,11 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
   private addQueryParam(paramName: string, paramValue: string, queryParamsHandling?: QueryParamsHandling) {
     const queryParams = {};
     queryParams[paramName] = paramValue;
-    this.router.navigate(['.'], {relativeTo: this.route, queryParams, queryParamsHandling: queryParamsHandling || ''}).catch(console.log);
+    this.router.navigate(['.'], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: queryParamsHandling || ''
+    }).catch(console.log);
   }
 
   navigateToFighterProfilePage(fighter: Competitor) {
@@ -122,10 +125,6 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
     this.addQueryParam('query', searchString, 'merge');
   }
 
-  dispatchAddFighterAction(action: any) {
-    this.store.dispatch(action);
-    this.addFighterOpen = false;
-  }
 
   navigateBack() {
     this.store.pipe(select(getSelectedEventId), filter(id => !!id), take(1)).subscribe(id => {

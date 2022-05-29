@@ -9,13 +9,14 @@ import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 import {
   CategoryDescriptor,
-  CategoryRestriction, CompetitionProperties, Competitor, FightDescription,
+  CategoryRestriction, CommandType, CompetitionProperties, Competitor, FightDescription,
   FightResultOption, ManagedCompetition, MatDescription,
   Period, RegistrationGroup, RegistrationInfo, RegistrationPeriod, Schedule,
   ScheduleRequirement, StageDescriptor,
   StageStatus
 } from "@frontend-nx/protobuf";
 import {COMPETITION_LIST_LOADED} from "../../../actions/actions";
+import {ErrorCallback, SuccessCallback} from "../../../reducers/global-reducers";
 
 export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
 export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
@@ -33,7 +34,6 @@ export const EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION
 export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
-export const EVENT_MANAGER_ADD_COMPETITOR = 'ADD_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_REMOVE_COMPETITOR = 'REMOVE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
 export const EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND = 'CREATE_FAKE_COMPETITORS_COMMAND';
@@ -256,11 +256,7 @@ export const updateCompetitionProperties = (compprops: CompetitionProperties) =>
   }
 });
 
-export const addCompetitor = (competitionId: string, competitor: Competitor) => ({
-  type: EVENT_MANAGER_ADD_COMPETITOR,
-  competitionId: competitionId,
-  payload: { competitor }
-});
+export const addCompetitor = createAction(CommandType.ADD_COMPETITOR_COMMAND, props<{ competitionId: string, competitor: Competitor, successCallback: SuccessCallback, errorCallback: ErrorCallback }>())
 
 export const eventManagerCreateFakeCompetitorsCommand = (competitionId: string, categoryId: string, numberOfCompetitors: number, numberOfAcademies: number) => ({
   type: EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,

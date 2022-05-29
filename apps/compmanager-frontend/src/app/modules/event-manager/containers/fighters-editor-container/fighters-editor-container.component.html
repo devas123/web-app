@@ -21,12 +21,6 @@
   </div>
 </ng-template>
 
-<app-add-fighter
-  [competitionId]="competitionId$ | async"
-  [collapsed]="!addFighterOpen"
-  [categories]="categories$ | async"
-  (fighterAdded)="dispatchAddFighterAction($event)"
-  (closeClicked)="addFighterOpen = false"></app-add-fighter>
 <app-fighters-editor
   [categories]="categories$ | async"
   [pageNumber]="pageNumber$ | async"

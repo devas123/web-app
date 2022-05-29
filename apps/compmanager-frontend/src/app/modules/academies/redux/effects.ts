@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {catchError, mergeMap, switchMap, tap} from "rxjs/operators";
-import {from, of, throwError} from "rxjs";
+import {from, of} from "rxjs";
 import {CommandType} from "@frontend-nx/protobuf";
 import {InfoService} from "../../../service/info.service";
 import {academiesLoaded, academyLoaded, LOAD_ACADEMIES, LOAD_ACADEMY} from "./actions";
+import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
 
 @Injectable()
 export class AcademiesEffects {
@@ -15,20 +16,9 @@ export class AcademiesEffects {
       return this.infoService
         .sendCommandSync(command)
         .pipe(
-          tap(commands => {
-            const {successCallback} = action
-            if (!!successCallback) {
-              successCallback(commands)
-            }
-          }),
+          tap(executeSuccessCallbacks(action)),
           mergeMap((actions) => from(actions)),
-          catchError((err) => {
-            const {errorCallback} = action
-            if (!!errorCallback) {
-              errorCallback(err)
-            }
-            return throwError(err);
-          })
+          catchError(executeErrorCallbacks(action))
         );
     }))
   )

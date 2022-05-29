@@ -1,7 +1,7 @@
 import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
-import {Observable, of as observableOf, of} from 'rxjs';
+import {from, Observable, of as observableOf, of} from 'rxjs';
 import {Action} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as allActions from '../actions/actions';
@@ -35,13 +35,14 @@ import {
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Dictionary} from '@ngrx/entity';
 import {
-  CompetitionProperties,
+  CommandType,
   Competitor,
   FightDescription,
   ManagedCompetition,
   RegistrationInfo,
   Schedule
 } from "@frontend-nx/protobuf";
+import {executeErrorCallbacks, executeSuccessCallbacks} from "../reducers/compmanager-utils";
 
 @Injectable()
 export class Effects {
@@ -76,7 +77,6 @@ export class Effects {
       eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
       eventManagerActions.ADD_CATEGORY_COMMAND,
       eventManagerActions.DELETE_CATEGORY_COMMAND,
-      eventManagerActions.EVENT_MANAGER_ADD_COMPETITOR,
       eventManagerActions.EVENT_MANAGER_REMOVE_COMPETITOR,
       eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
@@ -87,6 +87,18 @@ export class Effects {
       let cmd = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommand(cmd, action.competitionId)
     })), {dispatch: false});
+
+  globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
+      CommandType.ADD_COMPETITOR_COMMAND),
+    mergeMap((action: CommonAction) => {
+      let cmd = InfoService.createCommandWithPayload(action)
+      return this.infoService.sendCommandSync(cmd)
+        .pipe(
+          tap(executeSuccessCallbacks(action)),
+          mergeMap((actions) => from(actions)),
+          catchError(executeErrorCallbacks(action))
+        );
+    })));
 
   createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(allActions.CREATE_COMPETITION_COMMAND),
     tap(action => this.infoService.sendCreateCompetitionCommand(action).subscribe())), {dispatch: false});

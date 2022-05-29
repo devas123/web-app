@@ -1,13 +1,14 @@
 import {ChangeDetectionStrategy, Component, Input} from "@angular/core";
-import {AbstractControl, FormControl} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 
 @Component({
-  selector: 'compmanager-frontend-form-field',
+  selector: 'compmanager-frontend-form-generic-field',
   template: `
     <div class="field"
          [ngClass]="{error: control.invalid && (control.touched || control.dirty)}">
+      <ng-content select="label"></ng-content>
       <div class="ui input">
-        <input [type]="type" [name]="name" [placeholder]="placeholder" [formControl]="control">
+        <ng-content select="[input]"></ng-content>
       </div>
     </div>
   `,
@@ -16,11 +17,4 @@ import {AbstractControl, FormControl} from "@angular/forms";
 export class FormFieldComponent {
   @Input()
   control: FormControl
-  @Input()
-  name: string
-  @Input()
-  placeholder: string
-  @Input()
-  type: string
-
 }

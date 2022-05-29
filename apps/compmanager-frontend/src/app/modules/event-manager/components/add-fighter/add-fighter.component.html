@@ -1,58 +1,57 @@
-<form class="ui large form" [suiCollapse]="collapsed" [formGroup]="form"
+<form class="ui large form" [formGroup]="form"
       [ngClass]="{error: (form.touched || form.dirty) && form.invalid}">
-
-  <compmanager-frontend-form-field
+  <compmanager-frontend-form-simple-field
     [control]="email"
     [type]="'text'"
     [name]="'email'"
     [placeholder]="'E-mail'"
-  ></compmanager-frontend-form-field>
-  <compmanager-frontend-form-field
+  ></compmanager-frontend-form-simple-field>
+  <compmanager-frontend-form-simple-field
     [control]="userId"
     [type]="'text'"
     [name]="'userId'"
     [placeholder]="'User ID'"
-  ></compmanager-frontend-form-field>
-  <compmanager-frontend-form-field
+  ></compmanager-frontend-form-simple-field>
+  <compmanager-frontend-form-simple-field
     [control]="firstName"
     [type]="'text'"
     [name]="'firstName'"
     [placeholder]="'First Name'"
-  ></compmanager-frontend-form-field>
-  <compmanager-frontend-form-field
+  ></compmanager-frontend-form-simple-field>
+  <compmanager-frontend-form-simple-field
     [control]="lastName"
     [type]="'text'"
     [name]="'lastName'"
     [placeholder]="'Last Name'"
-  ></compmanager-frontend-form-field>
-  <div class="field"
-       [ngClass]="{error: birthDate.invalid && (birthDate.touched || birthDate.dirty)}">
-    <div class="ui input">
-      <input suiDatepicker
-             name="birthDate"
-             placeholder="Birth Date"
-             [pickerMode]="'date'"
-             [pickerUseNativeOnMobile]="false"
-             (pickerSelectedDateChange)="updateBirthDate($event)">
-    </div>
-  </div>
-  <div class="field"
-       [ngClass]="{error: academy.invalid && (academy.touched || academy.dirty)}">
-    <sui-select class="selection" placeholder="Academy"
-                (selectedOptionChange)="setAcademy($event)"
-                [isSearchable]="true"
-                [isDisabled]="false"
-                [optionFormatter]="academyFormatter"
-                [optionsLookup]="academyLookup"
-                #selectAcademy>
+  ></compmanager-frontend-form-simple-field>
+  <compmanager-frontend-form-generic-field [control]="birthDate">
+    <label>Birth Date</label>
+    <input suiDatepicker
+           input
+           name="birthDate"
+           placeholder="Birth Date"
+           [pickerMode]="'date'"
+           [pickerUseNativeOnMobile]="false"
+           (pickerSelectedDateChange)="updateBirthDate($event)">
+  </compmanager-frontend-form-generic-field>
+  <compmanager-frontend-form-generic-field [control]="academy">
+    <label>Academy</label>
+    <sui-select
+      input
+      class="selection" placeholder="Academy"
+      (selectedOptionChange)="setAcademy($event)"
+      [isSearchable]="true"
+      [optionFormatter]="academyFormatter"
+      [optionsLookup]="academyLookup"
+      #selectAcademy>
       <sui-select-option *ngFor="let option of selectAcademy.filteredOptions"
                          [value]="option">
       </sui-select-option>
     </sui-select>
-  </div>
-  <div class="field"
-       [ngClass]="{error: category.invalid && (category.touched || category.dirty)}">
-    <sui-multi-select class="selection" placeholder="Category"
+  </compmanager-frontend-form-generic-field>
+  <compmanager-frontend-form-generic-field [control]="category">
+    <label>Category</label>
+    <sui-multi-select input class="selection" placeholder="Category"
                       (selectedOptionsChange)="setCategoryIds($event)"
                       [options]="categories"
                       [isSearchable]="true"
@@ -64,13 +63,18 @@
                          [value]="option">
       </sui-select-option>
     </sui-multi-select>
-  </div>
-
-  <div class="ui button" (click)="closeClicked.next()">Close</div>
-  <div class="ui positive submit button" [ngClass]="{disabled: form.invalid}" (click)="submitForm()">
-    Create
-  </div>
+  </compmanager-frontend-form-generic-field>
   <p></p>
+  <compmanager-frontend-button
+    [name]="'Close'"
+    (click)="closeClicked.next()"
+  ></compmanager-frontend-button>
+  <compmanager-frontend-submit-button
+  [name]="'Create'"
+  [disabled]="form.invalid"
+  (click)="submitForm()"
+  >
+  </compmanager-frontend-submit-button>
   <sui-message class="error" [isDismissable]="false" *ngIf="(form.touched || form.dirty) && form.invalid">
     <div class="ui relaxed list">
       <compmanager-frontend-form-error-message

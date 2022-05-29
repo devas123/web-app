@@ -23,9 +23,9 @@ export abstract class CompetitionManagerModuleRouterEntryComponent implements On
   static processSyncOrAsync<A>(item: SyncOrAsync<A>, action: (i: A) => any) {
     if (item) {
       if (item instanceof Observable) {
-        item.pipe(filter(i => !!i), take(1)).subscribe(next => action(next), error => console.log(error));
+        item.pipe(filter(i => !!i), take(1)).subscribe(action, console.log);
       } else if (item instanceof Promise) {
-        item.then(next => action(next)).catch(error => console.log(error));
+        item.then(next => action(next)).catch(console.log);
       } else {
         action(item);
       }
