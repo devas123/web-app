@@ -16,17 +16,23 @@ import {Location} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
-import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
+import {CompetitionProperties, CompetitionStatus, RegistrationInfo} from "@frontend-nx/protobuf";
+import {availableTimeZones} from "../../../../reducers/compmanager-utils";
 
 @Component({
   template: `<app-event-properties-editor (propertiesUpdated)="updateProperties($event)"
                                           [registrationInfo]="registrationInfo$ | async"
+                                          [statusOptions]="statusOptions"
+                                          [timeZones]="timeZones"
                                           [properties]="competitionProperties$ | async"></app-event-properties-editor>`
 })
 export class EventPropertiesEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
 
   competitionProperties$: Observable<CompetitionProperties>;
   registrationInfo$: Observable<RegistrationInfo>;
+  statusOptions = Object.values(CompetitionStatus);
+  timeZones = availableTimeZones();
+
 
 
   constructor(store: Store<AppState>, private location: Location, private router: Router, private route: ActivatedRoute, menuService: MenuService) {
@@ -81,7 +87,7 @@ export class EventPropertiesEditorContainerComponent extends CompetitionManagerM
   }
 
   updateProperties(properties: CompetitionProperties) {
-    this.store.dispatch(updateCompetitionProperties(properties));
+    this.store.dispatch(updateCompetitionProperties({competitionProperties: properties, competitionId: properties.id }));
   }
 
   navigateBack() {

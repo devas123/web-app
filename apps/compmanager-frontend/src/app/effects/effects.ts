@@ -72,7 +72,6 @@ export class Effects {
 
   globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       allActions.START_COMPETITION_COMMAND,
-      eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND,
       eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
       eventManagerActions.ADD_CATEGORY_COMMAND,
       eventManagerActions.DELETE_CATEGORY_COMMAND,
@@ -87,6 +86,7 @@ export class Effects {
     })), {dispatch: false});
 
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
+      CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND,
       CommandType.REMOVE_COMPETITOR_COMMAND,
       CommandType.DELETE_COMPETITION_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),

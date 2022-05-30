@@ -30,7 +30,6 @@ import {COMPETITION_LIST_LOADED} from "../../../actions/actions";
 import {ErrorCallback, SuccessCallback} from "../../../reducers/global-reducers";
 
 export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
-export const UPDATE_COMPETITION_PROPERTIES_COMMAND = 'UPDATE_COMPETITION_PROPERTIES_COMMAND';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
@@ -108,7 +107,6 @@ export const CATEGORY_STATE_DELETED = 'CATEGORY_STATE_DELETED';
 export const SCHEDULE_GENERATED = 'SCHEDULE_GENERATED';
 export const FIGHTS_START_TIME_UPDATED = 'FIGHTS_START_TIME_UPDATED';
 export const EVENT_MANAGER_COMPETITOR_ADDED = 'COMPETITOR_ADDED';
-export const COMPETITION_PROPERTIES_UPDATED = 'COMPETITION_PROPERTIES_UPDATED';
 export const EVENT_MANAGER_PERIOD_ADDED = 'EVENT_MANAGER_PERIOD_ADDED';
 export const EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED = 'EVENT_MANAGER_PERIODS_UPDATED';
 export const EVENT_MANAGER_PERIOD_REMOVED = 'EVENT_MANAGER_PERIOD_REMOVED';
@@ -258,13 +256,7 @@ export const eventManagerDefaultRestrictionsLoaded = (competitionId, restriction
   payload: restrictions
 });
 
-export const updateCompetitionProperties = (compprops: CompetitionProperties) => ({
-  type: UPDATE_COMPETITION_PROPERTIES_COMMAND,
-  competitionId: compprops.id,
-  payload: {
-    competitionProperties: compprops
-  }
-});
+export const updateCompetitionProperties = createAction(CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND, props<{competitionId: string, competitionProperties: CompetitionProperties}>());
 
 export const addCompetitor = createAction(CommandType.ADD_COMPETITOR_COMMAND, props<{ competitionId: string, competitor: Competitor, successCallback: SuccessCallback, errorCallback: ErrorCallback }>())
 

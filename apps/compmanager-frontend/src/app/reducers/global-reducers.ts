@@ -29,7 +29,6 @@ import {
   CATEGORY_ADDED,
   CATEGORY_DELETED,
   CATEGORY_STATE_DELETED,
-  COMPETITION_PROPERTIES_UPDATED,
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_ALL_BRACKETS_DROPPED,
@@ -89,7 +88,7 @@ import {
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid} from "../modules/account/utils";
 import {
-  CategoryDescriptor, CommandType,
+  CategoryDescriptor,
   CompetitionProperties,
   Competitor,
   Event,
@@ -238,6 +237,25 @@ export function competitionListReducer(state: EventPropsEntities = competitionPr
       const update = {id: action.competitionId, changes: {...payload}};
       return competitionPropertiesEntitiesAdapter.updateOne(update, state);
     }
+    case EventType.COMPETITION_PROPERTIES_UPDATED: {
+      const event = action as Event;
+      const properties = event.messageInfo.competitionPropertiesUpdatedPayload?.properties;
+      const newCompetition = <ManagedCompetition>{
+        id: properties.id,
+        startsAt: properties.startDate,
+        competitionName: properties.competitionName,
+        createdAt: properties.creationTimestamp,
+        endsAt: properties.endDate,
+        status: properties.status,
+        creatorId: properties.creatorId,
+        eventsTopic: '',
+        timeZone: properties.timeZone
+      }
+      return competitionPropertiesEntitiesAdapter.updateOne(<Update<ManagedCompetition>>{
+        id: properties.id,
+        changes: newCompetition
+      }, state);
+    }
     case EventType.COMPETITION_CREATED: {
       const event = action as Event;
       const properties = event.messageInfo.competitionCreatedPayload?.properties;
@@ -351,16 +369,14 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
-      case COMPETITION_PROPERTIES_UPDATED: {
-        const competitionId = action.competitionId;
+      case EventType.COMPETITION_PROPERTIES_UPDATED: {
+        const event = action as Event;
+        const competitionId = event.messageInfo.competitionId;
         if (competitionId === state.competitionProperties.id) {
           return {
             ...state,
-            ...action.payload.properties,
-            startDate: action.payload.properties.startDate && new Date(action.payload.properties.startDate),
-            endDate: action.payload.properties.endDate && new Date(action.payload.properties.endDate)
+            competitionProperties: event.messageInfo.competitionPropertiesUpdatedPayload.properties,
           };
-
         }
         return state;
       }

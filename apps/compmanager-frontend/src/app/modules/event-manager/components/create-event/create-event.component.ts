@@ -11,6 +11,7 @@ import {
 } from "@frontend-nx/protobuf";
 import {TimeZone} from "@vvo/tzdb";
 import {FilterFn} from "@frontend-nx/ng2-semantic-ui";
+import {compmanagerTimeZoneFilter, compmanagerTimeZoneFormatter} from "../../../../reducers/compmanager-utils";
 
 
 @Component({
@@ -30,8 +31,8 @@ export class CreateEventComponent {
   @Input()
   timeZones: TimeZone[];
 
-  timeZoneFormatter = (option: TimeZone, _query?: string) => option.name;
-  timeZoneFilter: FilterFn<TimeZone> = (options: TimeZone[], query: string) => options.filter(o => o.name.includes(query));
+  timeZoneFormatter = compmanagerTimeZoneFormatter;
+  timeZoneFilter = compmanagerTimeZoneFilter;
 
   constructor(private fb: FormBuilder) {
     this.createForm();

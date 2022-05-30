@@ -435,7 +435,7 @@ export class InfoService {
       case   CommandType.DELETE_COMPETITION_COMMAND:
         cmd.type = CommandType.DELETE_COMPETITION_COMMAND
         break;
-      case   eventManagerActions.UPDATE_COMPETITION_PROPERTIES_COMMAND:
+      case   CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND:
         cmd.type = CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND
         messageInfo.updateCompetionPropertiesPayload = <UpdateCompetionPropertiesPayload>{
           competitionProperties: action.payload.competitionProperties

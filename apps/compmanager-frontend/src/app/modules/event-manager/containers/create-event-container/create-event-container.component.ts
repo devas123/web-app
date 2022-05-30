@@ -9,9 +9,10 @@ import {MenuService} from "../../../../components/main-menu/menu.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 import {createCompetition} from "../../../../actions/actions";
-import {getTimeZones, TimeZone} from "@vvo/tzdb";
+import {TimeZone} from "@vvo/tzdb";
 import {Observable} from "rxjs";
 import {Account} from "../../../account/model/Account";
+import {availableTimeZones} from "../../../../reducers/compmanager-utils";
 
 @Component({
   template: `
@@ -42,7 +43,7 @@ export class CreateEventContainerComponent extends CompetitionManagerModuleRoute
     this.user$ = this.store.pipe(
       select(selectUser)
     )
-    this.timeZones = getTimeZones();
+    this.timeZones = availableTimeZones();
   }
 
   private goBack() {

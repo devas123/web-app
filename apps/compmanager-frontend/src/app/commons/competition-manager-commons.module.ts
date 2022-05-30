@@ -14,7 +14,8 @@ import {CommonModule} from '@angular/common';
 import {
   SuiAccordionModule,
   SuiCheckboxModule,
-  SuiCollapseModule, SuiMessageModule,
+  SuiCollapseModule,
+  SuiMessageModule,
   SuiPaginationModule,
   SuiPopupModule
 } from '@frontend-nx/ng2-semantic-ui';

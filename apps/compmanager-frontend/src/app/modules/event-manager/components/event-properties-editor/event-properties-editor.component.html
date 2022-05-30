@@ -51,7 +51,8 @@
     <div class="row-content">
       <div class="left floated content ">
         <div class="description">Start Date</div>
-        <compmanager-frontend-date-field class="header" [date]="properties?.startDate" [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+        <compmanager-frontend-date-field class="header" [date]="properties?.startDate"
+                                         [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -84,7 +85,8 @@
     <div class="row-content">
       <div class="left floated content ">
         <div class="description">End Date</div>
-        <compmanager-frontend-date-field class="header" [date]="properties?.endDate" [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+        <compmanager-frontend-date-field class="header" [date]="properties?.endDate"
+                                         [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
       </div>
       <div class="right floated content">
         <i class="edit link teal tiny  icon  show-input-btn"></i>
@@ -114,12 +116,77 @@
       </div>
     </div>
   </div>
-  <div class="item">
-    <div class="left floated content">
-      <div class="description">Status</div>
-      <div class="header">
-        {{properties?.status}}
+  <div class="item" itemInput (contentEdited)="submitForm()">
+
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent  right floated input">
+          <div class="description">Time Zone:<span>&nbsp;&nbsp;</span></div>
+          <sui-select
+            class="selection" placeholder="Time Zone"
+            (selectedOptionChange)="setTimeZone($event)"
+            [isSearchable]="true"
+            [optionFormatter]="timeZoneFormatter"
+            [optionsFilter]="timeZoneFilter"
+            [options]="timeZones"
+            #selectTimeZone>
+            <sui-select-option *ngFor="let option of selectTimeZone.filteredOptions"
+                               [value]="option">
+            </sui-select-option>
+          </sui-select>
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
       </div>
     </div>
+    <!---------->
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Time zone</div>
+        <div class="header">{{properties?.timeZone}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
+  </div>
+  <div class="item" itemInput (contentEdited)="submitForm()">
+    <!--input  hidden field-->
+    <div class="input-content">
+      <div class="left floated content  ">
+        <div class="ui transparent  right floated input">
+          <div class="description">Status:<span>&nbsp;&nbsp;</span></div>
+          <sui-select class="selection" placeholder="Type"
+                      (selectedOptionChange)="setStatus($event)"
+                      [options]="statusOptions"
+                      [isSearchable]="false"
+                      [isDisabled]="false"
+                      #select>
+            <sui-select-option *ngFor="let option of select.filteredOptions"
+                               [value]="option">
+            </sui-select-option>
+          </sui-select>
+        </div>
+      </div>
+      <div class="right floated content ">
+        <i class="check link green icon hide-input-btn "></i>
+      </div>
+    </div>
+    <!---------->
+    <!--visible content-->
+    <div class="row-content">
+      <div class="left floated content ">
+        <div class="description">Status</div>
+        <div class="header">{{properties?.status}}</div>
+      </div>
+      <div class="right floated content">
+        <i class="edit link teal tiny  icon  show-input-btn"></i>
+      </div>
+    </div>
+    <!---------->
   </div>
 </div>

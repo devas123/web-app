@@ -1,6 +1,8 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
+import {CompetitionProperties, CompetitionStatus, RegistrationInfo} from "@frontend-nx/protobuf";
+import {TimeZone} from "@vvo/tzdb";
+import {compmanagerTimeZoneFilter, compmanagerTimeZoneFormatter} from "../../../../reducers/compmanager-utils";
 
 @Component({
   selector: 'app-event-properties-editor',
@@ -8,9 +10,15 @@ import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
   styleUrls: ['./event-properties-editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventPropertiesEditorComponent implements OnChanges {
+export class EventPropertiesEditorComponent implements OnChanges, OnInit {
 
   form: FormGroup;
+
+  @Input()
+  statusOptions: CompetitionStatus[];
+
+  @Input()
+  timeZones: TimeZone[];
 
   @Input()
   properties: CompetitionProperties;
@@ -21,8 +29,11 @@ export class EventPropertiesEditorComponent implements OnChanges {
   @Output()
   propertiesUpdated: EventEmitter<CompetitionProperties> = new EventEmitter<CompetitionProperties>();
 
+  timeZoneFormatter = compmanagerTimeZoneFormatter;
+  timeZoneFilter = compmanagerTimeZoneFilter;
+
+
   constructor(private fb: FormBuilder) {
-    this.createForm();
   }
 
   get competitionId() {
@@ -38,6 +49,7 @@ export class EventPropertiesEditorComponent implements OnChanges {
       'startDate': value
     })
   }
+
   set endDate(value: Date) {
     this.form.patchValue({
       'endDate': value
@@ -64,38 +76,36 @@ export class EventPropertiesEditorComponent implements OnChanges {
     return this.form.get('endDate').value;
   }
 
-  get registrationOpen() {
-    return this.form.get('registrationOpen');
+  get timeZone() {
+    return this.form.get('timeZone');
   }
 
   createForm() {
     this.form = this.fb.group({
-      competitionId: ['', [Validators.required]],
-      competitionName: ['', [Validators.required]],
-      startDate: [''],
-      endDate: [''],
-      timeZone: [''],
-      schedulePublished: [false, [Validators.required]],
-      bracketsPublished: [false, [Validators.required]],
-      status: ['', [Validators.required]],
-      registrationOpen: [false, [Validators.required]]
+      competitionId: [this.properties.id, [Validators.required]],
+      competitionName: [this.properties.competitionName, [Validators.required]],
+      startDate: [this.properties.startDate],
+      endDate: [this.properties.endDate],
+      timeZone: [<TimeZone>{name: this.properties.timeZone || 'UTC'}],
+      schedulePublished: [this.properties.schedulePublished, [Validators.required]],
+      bracketsPublished: [this.properties.bracketsPublished, [Validators.required]],
+      status: [this.properties.status, [Validators.required]],
     });
   }
 
   updateForm() {
-    console.log("Updating form ", this.properties, this.form)
-    if (this.properties) {
+    if (this.properties && this.form) {
+      console.log("Updating form ", this.properties, this.form)
       this.form.patchValue({
         competitionId: this.properties.id,
         competitionName: this.properties.competitionName,
         // registrationFee: this.properties.registrationFee,
         startDate: this.properties.startDate,
-        timeZone: this.properties.timeZone || 'UNKNOWN',
+        timeZone:  <TimeZone>{name: this.properties.timeZone || 'UTC'},
         schedulePublished: this.properties.schedulePublished || false,
         bracketsPublished: this.properties.bracketsPublished || false,
-        status: this.properties.status || 'UNKNOWN',
+        status: this.properties.status || "COMPETITION_STATUS_UNKNOWN",
         endDate: this.properties.endDate,
-        registrationOpen: (this.registrationInfo && this.registrationInfo.registrationOpen) || false,
       });
     }
   }
@@ -104,8 +114,8 @@ export class EventPropertiesEditorComponent implements OnChanges {
     this.updateForm();
   }
 
-  navigateToDashboard() {
-    // window.location.href = this.location.path(false) + '/dashboard';
+  ngOnInit() {
+    this.createForm();
   }
 
   submitForm() {
@@ -116,8 +126,22 @@ export class EventPropertiesEditorComponent implements OnChanges {
       competitionName: this.competitionName.value,
       startDate: sd,
       endDate: ed,
-      registrationOpen: this.registrationOpen.value,
+      status: this.status.value,
+      timeZone: this.timeZone.value?.name
     } as CompetitionProperties;
     this.propertiesUpdated.next(properties);
   }
+
+  setStatus(status: CompetitionStatus) {
+    this.form.patchValue({
+      status
+    });
+  }
+
+  setTimeZone(timeZone: TimeZone) {
+    this.form.patchValue({
+      timeZone
+    });
+  }
+
 }
