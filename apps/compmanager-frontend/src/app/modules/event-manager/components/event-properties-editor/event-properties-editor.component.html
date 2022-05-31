@@ -1,192 +1,108 @@
 <div class="ui top aligned large divided list" [formGroup]="form">
-  <div class="item" itemInput (contentEdited)="submitForm()">
-
-    <!--input  hidden field-->
-    <div class="input-content">
-      <div class="left floated content">
-        <div class="ui transparent right floated input">
-          <div class="description">Competition Name:<span>&nbsp;&nbsp;</span></div>
-          <input type="text" formControlName="competitionName">
-        </div>
-      </div>
-      <div class="right floated content ">
-        <i class="check link green icon hide-input-btn "></i>
-      </div>
-    </div>
-    <!---------->
-
-    <!--visible content-->
-    <div class="row-content">
-      <div class="left floated content">
-        <div class="description">Competition Name</div>
-        <div class="header">{{properties?.competitionName}}</div>
-      </div>
-      <div class="right floated content">
-        <i class="edit link teal tiny  icon  show-input-btn"></i>
-      </div>
-    </div>
-    <!---------->
-  </div>
-  <div class="item" itemInput (contentEdited)="submitForm()">
-
-    <!--input  hidden field-->
-    <div class="input-content">
-      <div class="left floated content  ">
-        <div class="ui transparent  right floated input">
-          <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
-          <input suiDatepicker
-                 name="startDate"
-                 (pickerSelectedDateChange)="startDate = $event"
-                 [pickerMode]="'datetime'"
-                 [pickerUseNativeOnMobile]="false">
-        </div>
-      </div>
-      <div class="right floated content ">
-        <i class="check link green icon hide-input-btn "></i>
-      </div>
-    </div>
-    <!---------->
-
-    <!--visible content-->
-    <div class="row-content">
-      <div class="left floated content ">
-        <div class="description">Start Date</div>
-        <compmanager-frontend-date-field class="header" [date]="properties?.startDate"
-                                         [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
-      </div>
-      <div class="right floated content">
-        <i class="edit link teal tiny  icon  show-input-btn"></i>
-      </div>
-    </div>
-    <!---------->
-  </div>
-
-  <div class="item" itemInput (contentEdited)="submitForm()">
-
-    <!--input  hidden field-->
-    <div class="input-content">
-      <div class="left floated content  ">
-        <div class="ui transparent  right floated input">
-          <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
-          <input suiDatepicker
-                 name="endDate"
-                 (pickerSelectedDateChange)="endDate = $event"
-                 [pickerMode]="'datetime'"
-                 [pickerUseNativeOnMobile]="false">
-        </div>
-      </div>
-      <div class="right floated content ">
-        <i class="check link green icon hide-input-btn "></i>
-      </div>
-    </div>
-    <!---------->
-
-    <!--visible content-->
-    <div class="row-content">
-      <div class="left floated content ">
-        <div class="description">End Date</div>
-        <compmanager-frontend-date-field class="header" [date]="properties?.endDate"
-                                         [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
-      </div>
-      <div class="right floated content">
-        <i class="edit link teal tiny  icon  show-input-btn"></i>
-      </div>
-    </div>
-    <!---------->
+  <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+    <compmanager-frontend-left-floated-text-input
+      edit-section
+      [control]="competitionName"
+      [name]="'Competition Name'"
+    ></compmanager-frontend-left-floated-text-input>
+    <compmanager-frontend-left-floated-display
+      display-section
+      [value]="properties?.competitionName"
+      [name]="'Competition Name'"
+    ></compmanager-frontend-left-floated-display>
+  </compmanager-frontend-editable-field>
+  <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+    <compmanager-frontend-left-floated-container edit-section>
+      <compmanager-frontend-transparent-right-floated-container>
+        <div class="description">Start Date:<span>&nbsp;&nbsp;</span></div>
+        <input suiDatepicker
+               name="startDate"
+               (pickerSelectedDateChange)="startDate = $event"
+               [pickerMode]="'datetime'"
+               [pickerUseNativeOnMobile]="false">
+      </compmanager-frontend-transparent-right-floated-container>
+    </compmanager-frontend-left-floated-container>
+    <compmanager-frontend-left-floated-container
+      display-section
+    >
+      <div class="description">Start Date</div>
+      <compmanager-frontend-date-field class="header" [date]="properties?.startDate"
+                                       [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+    </compmanager-frontend-left-floated-container>
+  </compmanager-frontend-editable-field>
+  <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+    <compmanager-frontend-left-floated-container edit-section>
+      <compmanager-frontend-transparent-right-floated-container>
+        <div class="description">End Date:<span>&nbsp;&nbsp;</span></div>
+        <input suiDatepicker
+               name="endDate"
+               (pickerSelectedDateChange)="endDate = $event"
+               [pickerMode]="'datetime'"
+               [pickerUseNativeOnMobile]="false">
+      </compmanager-frontend-transparent-right-floated-container>
+    </compmanager-frontend-left-floated-container>
+    <compmanager-frontend-left-floated-container
+      display-section
+    >
+      <div class="description">End Date</div>
+      <compmanager-frontend-date-field class="header" [date]="properties?.endDate"
+                                       [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+    </compmanager-frontend-left-floated-container>
+  </compmanager-frontend-editable-field>
+  <div class="item">
+    <compmanager-frontend-left-floated-display
+      [name]="'Schedule'"
+      [value]="properties?.schedulePublished ? 'Schedule is generated.' : 'Schedule is not generated.'"
+    ></compmanager-frontend-left-floated-display>
   </div>
   <div class="item">
-    <div class="left floated content">
-      <div class="description">Schedule</div>
-      <div class="header" *ngIf="properties?.schedulePublished">
-        Schedule is generated.
-      </div>
-      <div class="header" *ngIf="!properties?.schedulePublished">
-        Schedule is not generated.
-      </div>
-    </div>
+    <compmanager-frontend-left-floated-display
+      [name]="'Brackets'"
+      [value]="properties?.bracketsPublished ? 'Brackets are generated.' : 'Brackets are not generated.'"
+    ></compmanager-frontend-left-floated-display>
   </div>
-  <div class="item">
-    <div class="left floated content">
-      <div class="description">Brackets</div>
-      <div class="header" *ngIf="properties?.bracketsPublished">
-        Brackets are generated.
-      </div>
-      <div class="header" *ngIf="!properties?.bracketsPublished">
-        Brackets are not generated.
-      </div>
-    </div>
-  </div>
-  <div class="item" itemInput (contentEdited)="submitForm()">
-
-    <!--input  hidden field-->
-    <div class="input-content">
-      <div class="left floated content  ">
-        <div class="ui transparent  right floated input">
-          <div class="description">Time Zone:<span>&nbsp;&nbsp;</span></div>
-          <sui-select
-            class="selection" placeholder="Time Zone"
-            (selectedOptionChange)="setTimeZone($event)"
-            [isSearchable]="true"
-            [optionFormatter]="timeZoneFormatter"
-            [optionsFilter]="timeZoneFilter"
-            [options]="timeZones"
-            #selectTimeZone>
-            <sui-select-option *ngFor="let option of selectTimeZone.filteredOptions"
-                               [value]="option">
-            </sui-select-option>
-          </sui-select>
-        </div>
-      </div>
-      <div class="right floated content ">
-        <i class="check link green icon hide-input-btn "></i>
-      </div>
-    </div>
-    <!---------->
-    <!--visible content-->
-    <div class="row-content">
-      <div class="left floated content ">
-        <div class="description">Time zone</div>
-        <div class="header">{{properties?.timeZone}}</div>
-      </div>
-      <div class="right floated content">
-        <i class="edit link teal tiny  icon  show-input-btn"></i>
-      </div>
-    </div>
-    <!---------->
-  </div>
-  <div class="item" itemInput (contentEdited)="submitForm()">
-    <!--input  hidden field-->
-    <div class="input-content">
-      <div class="left floated content  ">
-        <div class="ui transparent  right floated input">
-          <div class="description">Status:<span>&nbsp;&nbsp;</span></div>
-          <sui-select class="selection" placeholder="Type"
-                      (selectedOptionChange)="setStatus($event)"
-                      [options]="statusOptions"
-                      [isSearchable]="false"
-                      [isDisabled]="false"
-                      #select>
-            <sui-select-option *ngFor="let option of select.filteredOptions"
-                               [value]="option">
-            </sui-select-option>
-          </sui-select>
-        </div>
-      </div>
-      <div class="right floated content ">
-        <i class="check link green icon hide-input-btn "></i>
-      </div>
-    </div>
-    <!---------->
-    <!--visible content-->
-    <div class="row-content">
-      <div class="left floated content ">
-        <div class="description">Status</div>
-        <div class="header">{{properties?.status}}</div>
-      </div>
-      <div class="right floated content">
-        <i class="edit link teal tiny  icon  show-input-btn"></i>
-      </div>
-    </div>
-    <!---------->
-  </div>
+  <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+    <compmanager-frontend-left-floated-container edit-section>
+      <compmanager-frontend-transparent-right-floated-container>
+        <div class="description">Time Zone:<span>&nbsp;&nbsp;</span></div>
+        <sui-select
+          class="selection" placeholder="Time Zone"
+          (selectedOptionChange)="setTimeZone($event)"
+          [isSearchable]="true"
+          [optionFormatter]="timeZoneFormatter"
+          [optionsFilter]="timeZoneFilter"
+          [options]="timeZones"
+          #selectTimeZone>
+          <sui-select-option *ngFor="let option of selectTimeZone.filteredOptions"
+                             [value]="option">
+          </sui-select-option>
+        </sui-select>
+      </compmanager-frontend-transparent-right-floated-container>
+    </compmanager-frontend-left-floated-container>
+    <compmanager-frontend-left-floated-display display-section
+      [name]="'Time Zone'"
+      [value]="properties?.timeZone"
+    ></compmanager-frontend-left-floated-display>
+  </compmanager-frontend-editable-field>
+  <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+    <compmanager-frontend-left-floated-container edit-section>
+      <compmanager-frontend-transparent-right-floated-container>
+        <div class="description">Status:<span>&nbsp;&nbsp;</span></div>
+        <sui-select class="selection" placeholder="Type"
+                    (selectedOptionChange)="setStatus($event)"
+                    [options]="statusOptions"
+                    [isSearchable]="false"
+                    [isDisabled]="false"
+                    #select>
+          <sui-select-option *ngFor="let option of select.filteredOptions"
+                             [value]="option">
+          </sui-select-option>
+        </sui-select>
+      </compmanager-frontend-transparent-right-floated-container>
+    </compmanager-frontend-left-floated-container>
+    <compmanager-frontend-left-floated-display display-section
+      [name]="'Status'"
+      [value]="properties?.status"
+    ></compmanager-frontend-left-floated-display>
+  </compmanager-frontend-editable-field>
 </div>

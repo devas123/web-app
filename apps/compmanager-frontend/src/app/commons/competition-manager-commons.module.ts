@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {ItemInputDirective} from '../modules/account/components/account-info/item-input.directive';
+import {ItemInputDirective} from './directives/item-input.directive';
 import {WordbreakPipe} from '../pipes/wordbreak.pipe';
 import {TruncatePipe} from '../pipes/truncate.pipe';
 import {GetNamePipe} from '../pipes/get-name.pipe';
@@ -48,10 +48,16 @@ import {ButtonComponent} from "./components/button-component";
 import {DateFieldComponent} from "./components/date-field-component";
 import {DateRangeComponent} from "./components/date-range-component";
 import {FormErrorListComponent} from "./components/form-error-list-component";
+import {EditableFieldComponent} from "./components/editable-field/editable-field.component";
+import {LeftFloatedTextInputComponent} from "./components/editable-field/left-floated-text-input.component";
+import {LeftFloatedValueDisplayComponent} from "./components/editable-field/left-floated-value-display.component";
+import {LeftFloatedContainerComponent} from "./components/editable-field/left-floated-container.component";
+import {
+  TransparentRightFloatedContainerComponent
+} from "./components/editable-field/transparent-right-floated-container.component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
-  ItemInputDirective,
   BracketPartComponent,
   WordbreakPipe,
   TruncatePipe,
@@ -87,6 +93,12 @@ const importsExports = [
   ButtonComponent,
   DateFieldComponent,
   DateRangeComponent,
+  ItemInputDirective,
+  EditableFieldComponent,
+  LeftFloatedTextInputComponent,
+  LeftFloatedValueDisplayComponent,
+  LeftFloatedContainerComponent,
+  TransparentRightFloatedContainerComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({

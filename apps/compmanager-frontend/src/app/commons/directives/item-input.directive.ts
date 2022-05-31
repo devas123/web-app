@@ -14,7 +14,6 @@ export class ItemInputDirective implements OnInit {
   public editModeEntered = new EventEmitter<any>();
 
 
-
   ngOnInit(): void {
     this.el.nativeElement.querySelector('.input-content').style.display = 'none';
     const self = this;
@@ -45,10 +44,4 @@ export class ItemInputDirective implements OnInit {
   onMouseLeave() {
     this.renderer.addClass(this.el.nativeElement.querySelector('.row-content').querySelector('.show-input-btn'), 'tiny');
   }
-
-
-  private highlight(color: string) {
-    this.el.nativeElement.style.backgroundColor = color;
-  }
-
 }

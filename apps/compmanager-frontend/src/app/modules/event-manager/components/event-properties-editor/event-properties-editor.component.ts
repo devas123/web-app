@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CompetitionProperties, CompetitionStatus, RegistrationInfo} from "@frontend-nx/protobuf";
 import {TimeZone} from "@vvo/tzdb";
 import {compmanagerTimeZoneFilter, compmanagerTimeZoneFormatter} from "../../../../reducers/compmanager-utils";
@@ -41,7 +41,7 @@ export class EventPropertiesEditorComponent implements OnChanges, OnInit {
   }
 
   get competitionName() {
-    return this.form.get('competitionName');
+    return this.form.get('competitionName') as FormControl;
   }
 
   set startDate(value: Date) {
