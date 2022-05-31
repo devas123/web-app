@@ -276,7 +276,7 @@ export const eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRound
   createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights, fights => fights && fights.filter(f => f.round === 0 && f.roundType !== 'STAGE_ROUND_TYPE_LOSER_BRACKETS'));
 
 export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(getSelectedEventState, state => {
-  return (state && state.selectedEventCompetitors) || competitorsInitialState;
+  return state?.selectedEventCompetitors || competitorsInitialState;
 });
 
 export const {

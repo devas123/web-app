@@ -34,19 +34,6 @@ export class CompetitorsEffects {
         );
     }));
 
-  @Effect()
-  updateCompetitor$ = this.actions$.pipe(
-    ofType(competitorsActions.UPDATE_COMPETITOR),
-    switchMap((action: any) => {
-      const competitor = action.payload;
-      return this.registrationService
-        .updateCompetitor(competitor, action.competitionId)
-        .pipe(
-          map(() => ({type: competitorsActions.COMPETITOR_UPDATED, payload: competitor, competitionId: action.competitionId})),
-          catchError(error => of(competitorsActions.competitorsError(error, action.competitionId)))
-        );
-    }));
-
   constructor(private actions$: Actions,
               private registrationService: RegistrationService) {
   }

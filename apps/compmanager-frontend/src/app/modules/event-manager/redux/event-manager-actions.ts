@@ -52,8 +52,6 @@ export const EVENT_MANAGER_DROP_SCHEDULE_COMMAND = 'DROP_SCHEDULE_COMMAND';
 export const EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND = 'DROP_CATEGORY_BRACKETS_COMMAND';
 export const EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND = 'DROP_ALL_BRACKETS_COMMAND';
 export const EVENT_MANAGER_LOAD_FIGHTER_COMMAND = 'EVENT_MANAGER_LOAD_FIGHTER_COMMAND';
-export const EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND = 'CHANGE_COMPETITOR_CATEGORY_COMMAND';
-export const EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND = 'UPDATE_COMPETITOR_COMMAND';
 export const EVENT_MANAGER_UPDATE_REGISTRATION_INFO = 'UPDATE_REGISTRATION_INFO_COMMAND';
 export const EVENT_MANAGER_LOAD_REGISTRATION_INFO = 'EVENT_MANAGER_LOAD_REGISTRATION_INFO';
 export const EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS = 'EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS';
@@ -66,7 +64,6 @@ export const EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED = 'EVENT_MANAGER_DEFAULT_
 export const EVENT_MANAGER_REGISTRATION_GROUP_CREATED = 'REGISTRATION_GROUP_ADDED';
 export const EVENT_MANAGER_REGISTRATION_GROUP_DELETED = 'REGISTRATION_GROUP_DELETED';
 export const REGISTRATION_INFO_UPDATED = 'REGISTRATION_INFO_UPDATED';
-export const EVENT_MANAGER_COMPETITOR_UPDATED = 'COMPETITOR_UPDATED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED = 'CATEGORY_BRACKETS_DROPPED';
 export const EVENT_MANAGER_SCHEDULE_DROPPED = 'SCHEDULE_DROPPED';
 export const EVENT_MANAGER_ALL_BRACKETS_DROPPED = 'ALL_BRACKETS_DROPPED';
@@ -337,24 +334,20 @@ export const eventManagerFightersForCompetitionLoaded = (competitionId, payload,
   payload: {...payload, replace}
 });
 
-export const eventManagerFighterSelected = (competitionId, categoryId, fighterId) => ({
+export const eventManagerFighterSelected = (fighterId) => ({
   type: EVENT_MANAGER_FIGHTER_SELECTED,
-  competitionId,
-  categoryId,
   payload: fighterId
 });
 
-export const eventManagerLoadFighterCommand = (competitionId, categoryId, fighterId) => ({
+export const eventManagerLoadFighterCommand = (competitionId, fighterId) => ({
   type: EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
   competitionId,
-  categoryId,
   payload: fighterId
 });
 
 export const eventManagerFighterLoaded = (competitor: Competitor) => ({
   type: EVENT_MANAGER_FIGHTER_LOADED,
   competitionId: competitor.competitionId,
-  categoryId: competitor.categories,
   payload: competitor
 });
 
@@ -364,7 +357,7 @@ export const eventManagerFighterUnselected = (competitionId) => ({
 });
 
 export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor, newCategories: string[], oldCategories: string[]) => ({
-  type: EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
+  type: CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND,
   competitionId: fighter.competitionId,
   payload: {
     fighterId: fighter.id,
@@ -372,14 +365,10 @@ export const eventManagerChangeCompetitorCategoryCommand = (fighter: Competitor,
     oldCategories
   }
 });
-export const eventManagerUpdateCompetitorCommand = (competitor: Competitor, categoryId: string) => ({
-  type: EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
-  competitionId: competitor.competitionId,
-  categoryId,
-  payload: {
-    competitor
-  }
-});
+export const eventManagerUpdateCompetitorCommand = createAction(CommandType.UPDATE_COMPETITOR_COMMAND, props<{
+  competitor: Competitor,
+  competitionId: string
+}>())
 
 export const eventManagerDropScheduleCommand = (competitionId: string) => ({
   type: EVENT_MANAGER_DROP_SCHEDULE_COMMAND,

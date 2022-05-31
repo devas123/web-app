@@ -42,7 +42,6 @@ import {
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_CATEGORY_UNSELECTED,
   EVENT_MANAGER_COMPETITOR_ADDED,
-  EVENT_MANAGER_COMPETITOR_UPDATED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -319,17 +318,17 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           return state;
         }
       }
-      case competitorsActions.COMPETITOR_UPDATED: {
-        const {competitor} = action.payload;
-        if (state.competitionProperties.id === action.competitionId) {
-          const update = {id: competitor.email, changes: competitor};
+      case EventType.COMPETITOR_UPDATED: {
+        const event = action as Event;
+        const {competitor} = event.messageInfo.competitorUpdatedPayload;
+        if (state.competitionProperties.id === event.messageInfo.competitionId) {
+          const update = {id: competitor.id, changes: competitor};
           return {
             ...state,
             selectedEventCompetitors: competitorEntityAdapter.updateOne(update, state.selectedEventCompetitors)
           };
-        } else {
-          return state;
         }
+        return state;
       }
       case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
         if (state.competitionProperties.id === action.competitionId
@@ -614,6 +613,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const {pageInfo, competitors} = action.payload;
           state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, {
             ...competitorsInitialState,
+            selectedCompetitorId: state.selectedEventCompetitors?.selectedCompetitorId,
             total: pageInfo.total,
             pageNumber: pageInfo.page + 1
           });
@@ -621,21 +621,32 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_COMPETITOR_ADDED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          let newEventCompetitors = state.selectedEventCompetitors;
-          if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
-            newEventCompetitors = competitorEntityAdapter.addOne(action.payload, state.selectedEventCompetitors);
-          }
-          newEventCompetitors = {
-            ...newEventCompetitors,
-            total: newEventCompetitors.total + 1
-          };
-          return {
-            ...state,
-            selectedEventCompetitors: newEventCompetitors
-          };
+        const event = action as Event;
+        let newEventCompetitors = state.selectedEventCompetitors;
+        if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
+          const competitor = event.messageInfo.competitorAddedPayload.competitor;
+          newEventCompetitors = competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors);
         }
-        return state;
+        newEventCompetitors = {
+          ...newEventCompetitors,
+          total: newEventCompetitors.total + 1
+        };
+        return {
+          ...state,
+          selectedEventCompetitors: newEventCompetitors
+        };
+      }
+      case EventType.COMPETITOR_CATEGORY_CHANGED: {
+        const event = action as Event;
+        const payload = event.messageInfo.changeCompetitorCategoryPayload
+        const updates = <Update<Competitor>>{
+          id: payload.fighterId,
+          changes: {
+            categories: payload.newCategories
+          }
+        }
+        competitorEntityAdapter.updateOne(updates, state.selectedEventCompetitors);
+        break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
         if (action.competitionId === state.competitionProperties.id) {
@@ -778,17 +789,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_FIGHTER_SELECTED: {
-        const {competitionId, payload} = action;
-        if (state.competitionProperties.id === competitionId && payload) {
-          return {
-            ...state,
-            selectedEventCompetitors: {
-              ...state.selectedEventCompetitors,
-              selectedCompetitorId: payload
-            }
-          };
-        }
-        return state;
+        const {payload} = action;
+        state.selectedEventCompetitors.selectedCompetitorId = payload;
+        break;
       }
       case EVENT_MANAGER_FIGHTER_UNSELECTED: {
         const {competitionId} = action;
@@ -804,19 +807,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case EVENT_MANAGER_FIGHTER_LOADED: {
-        if (action.competitionId === state.competitionProperties.id && action.payload) {
-          const competitor = action.payload as Competitor;
-          const ids = state.selectedEventCompetitors.ids as string[];
-          if (state && state.selectedEventCompetitors && ids.indexOf(competitor.email) < 0) {
-            return {
-              ...state,
-              selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
-            };
-          }
-          return state;
-        }
-
-        return state;
+        const competitor = action.payload as Competitor;
+        state.selectedEventCompetitors = competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
+        break;
       }
       case CATEGORY_ADDED: {
         const category = action.payload.categoryId as CategoryDescriptor;
@@ -849,20 +842,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           }
         }
         break;
-      }
-      case EVENT_MANAGER_COMPETITOR_UPDATED: {
-        if (action.competitionId === state.competitionProperties.id && action.payload) {
-          const {fighter} = action.payload;
-          return {
-            ...state,
-            selectedEventCompetitors: competitorEntityAdapter.updateOne({
-              id: fighter.email,
-              changes: fighter
-            }, state.selectedEventCompetitors)
-
-          };
-        }
-        return state;
       }
       default:
         return state;

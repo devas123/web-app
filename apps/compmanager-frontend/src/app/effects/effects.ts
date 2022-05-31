@@ -75,7 +75,6 @@ export class Effects {
       eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
       eventManagerActions.ADD_CATEGORY_COMMAND,
       eventManagerActions.DELETE_CATEGORY_COMMAND,
-      eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
       allActions.PUBLISH_COMPETITION_COMMAND,
@@ -88,6 +87,7 @@ export class Effects {
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND,
       CommandType.REMOVE_COMPETITOR_COMMAND,
+      CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND,
       CommandType.DELETE_COMPETITION_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),
     mergeMap((action: CommonAction) => {
@@ -213,11 +213,11 @@ export class Effects {
     switchMap((action: CommonAction) => {
       return this.infoService.getCompetitor(action.competitionId, action.payload).pipe(catchError(error => observableOf(error)));
     }),
-    map((payload: any) => {
+    map((payload: Competitor) => {
       if (payload && payload.email) {
-        return eventManagerFighterLoaded((payload || {}) as Competitor);
+        return eventManagerFighterLoaded(payload);
       } else {
-        return errorEvent(payload);
+        return errorEvent(payload as any);
       }
     })));
 

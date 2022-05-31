@@ -6,6 +6,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {
   CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
+  cometitionListLoaded,
   EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_CONNECT_SOCKET,
   EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
@@ -18,14 +19,13 @@ import {
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
-  EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDefaultRestrictionsLoaded,
-  eventManagerDisconnectSocket, eventManagerPreviewCategoriesGenerated,
+  eventManagerDisconnectSocket,
+  eventManagerPreviewCategoriesGenerated,
   FIGHTS_EDITOR_APPLY_CHANGE,
   GENERATE_CATEGORIES_COMMAND,
-  cometitionListLoaded,
   GENERATE_PREVIEW_CATEGORIES_COMMAND,
   UPDATE_STAGE_STATUS_COMMAND
 } from './event-manager-actions';
@@ -36,11 +36,8 @@ import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {
-  CompetitionProperties,
-  GenerateCategoriesFromRestrictionsPayload,
-  ManagedCompetition
-} from "@frontend-nx/protobuf";
+import {CommandType, GenerateCategoriesFromRestrictionsPayload, ManagedCompetition} from "@frontend-nx/protobuf";
+import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
 
 @Injectable()
 export class EventManagerEffects {
@@ -51,10 +48,16 @@ export class EventManagerEffects {
       FIGHTS_EDITOR_APPLY_CHANGE,
       EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+      CommandType.UPDATE_COMPETITOR_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
-    mergeMap((command: any) => this.infoService.sendCommandSync(command).pipe(
-      mergeMap(from)
-    )),
+    mergeMap((action: any) => {
+      const command = InfoService.createCommandWithPayload(action);
+      return this.infoService.sendCommandSync(command).pipe(
+        tap(executeSuccessCallbacks(action)),
+        mergeMap((actions) => from(actions)),
+        catchError(executeErrorCallbacks(action))
+      )
+    }),
     catchError(error => {
       console.error(error);
       return of(errorEvent(JSON.stringify(error)));
@@ -118,7 +121,6 @@ export class EventManagerEffects {
       EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-      EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
       GENERATE_CATEGORIES_COMMAND,
       EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
     mergeMap((action: CommonAction) => {

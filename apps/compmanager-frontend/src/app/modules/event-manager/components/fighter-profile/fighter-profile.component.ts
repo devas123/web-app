@@ -4,21 +4,29 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import {SuiMultiSelect} from "@frontend-nx/ng2-semantic-ui";
-import {Academy, CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {LookupFn, SuiMultiSelect} from "@frontend-nx/ng2-semantic-ui";
+import {
+  Academy,
+  CategoryDescriptor,
+  Competitor,
+  CompetitorRegistrationStatus,
+  FullAcademyInfo
+} from "@frontend-nx/protobuf";
+import {map} from "rxjs/operators";
+import {InfoService} from "../../../../service/info.service";
 
 @Component({
   selector: 'app-fighter-profile',
   templateUrl: './fighter-profile.component.html',
-  styleUrls: ['./fighter-profile.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FighterProfileComponent implements  OnChanges {
+export class FighterProfileComponent implements OnChanges, OnInit {
 
   @Output()
   categoryChanged = new EventEmitter<{ fighter: Competitor, newCategories: string[] }>();
@@ -31,18 +39,18 @@ export class FighterProfileComponent implements  OnChanges {
   @Input()
   categories: CategoryDescriptor[];
 
-  @Input()
-  academies: Academy[];
-
-  statuses = ['UNKNOWN', 'PAYMENT_PENDING', 'SUCCESS', 'SUCCESS_UNACCEPTED', 'SUCCESS_CONFIRMED', 'REFUSED'];
-
+  statuses = Object.values(CompetitorRegistrationStatus);
   form: FormGroup;
 
-  _type: string;
-
-  @Input()
-  set type(value: string) {
-    this._type = value;
+  academyFormatter = (option: FullAcademyInfo, _query?: string) => option?.name.trim();
+  academyLookup: LookupFn<FullAcademyInfo> = (query: string, _initial?: FullAcademyInfo) => {
+    if (_initial) {
+      return Promise.resolve(_initial)
+    } else {
+      return this.infoService.lookupAcademy(query).pipe(
+        map(res => res.academies)
+      ).toPromise()
+    }
   }
 
   /*
@@ -60,15 +68,12 @@ export class FighterProfileComponent implements  OnChanges {
   displayCategory = (category: string) => this.getCategoryName(category);
   formatter = (option: CategoryDescriptor, query?: string) => AddFighterComponent.displayCategory(option);
   optionsFilter = (options: CategoryDescriptor[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
-  academyFormatter = (option: Academy, query?: string) => option.name || option.id;
-  academyOptionsFilter = (options: Academy[], filter: string) => options.filter(ac => ac.name && ac.name.toLowerCase().includes(filter.toLowerCase()));
 
-  constructor(private fb: FormBuilder) {
-    this.createForm();
+  constructor(private fb: FormBuilder, private infoService: InfoService) {
   }
 
   get email() {
-    return this.form.get('email');
+    return this.form.get('email') as FormControl;
   }
 
   get userId() {
@@ -76,15 +81,15 @@ export class FighterProfileComponent implements  OnChanges {
   }
 
   get firstName() {
-    return this.form.get('firstName');
+    return this.form.get('firstName') as FormControl;
   }
 
   get lastName() {
-    return this.form.get('lastName');
+    return this.form.get('lastName') as FormControl;
   }
 
   get birthDate() {
-    return this.form.get('birthDate');
+    return this.form.get('birthDate') as FormControl;
   }
 
 
@@ -127,23 +132,26 @@ export class FighterProfileComponent implements  OnChanges {
     }
   }
 
-  setAcademy(academy: Academy) {
+  setAcademy(academy: FullAcademyInfo) {
     this.form.patchValue({
-      academy: academy.name
+      academy: <Academy>{
+        name: academy.name,
+        id: academy.id
+      }
     });
   }
 
   createForm() {
     this.form = this.fb.group({
-      email: ['', [Validators.required]],
-      userId: ['', [Validators.required]],
-      firstName: ['', [Validators.required]],
-      lastName: [''],
-      birthDate: ['', [Validators.required]],
-      academy: ['', [Validators.required]],
-      category: ['', [Validators.required]],
-      registrationStatus: ['', [Validators.required]],
-      promo: ['', [Validators.required]]
+      email: [this.fighter?.email, [Validators.required]],
+      userId: [this.fighter?.userId],
+      firstName: [this.fighter?.firstName, [Validators.required]],
+      lastName: [this.fighter?.lastName, [Validators.required]],
+      birthDate: [this.fighter?.birthDate, [Validators.required]],
+      academy: [this.fighter?.academy, [Validators.required]],
+      category: [this.fighter?.categories, [Validators.required]],
+      registrationStatus: [this.fighter?.registrationStatus, [Validators.required]],
+      promo: [this.fighter?.promo]
     });
   }
 
@@ -162,18 +170,22 @@ export class FighterProfileComponent implements  OnChanges {
     this.competitorChanged.next({fighter});
   }
 
+  ngOnInit() {
+    this.createForm();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.fighter) {
+    if (this.form) {
       this.form.patchValue({
-        email: this.fighter.email,
-        userId: this.fighter.userId,
-        firstName: this.fighter.firstName,
-        lastName: this.fighter.lastName,
-        birthDate: this.fighter.birthDate,
-        academy: this.fighter.academy,
-        category: '',
-        registrationStatus: this.fighter.registrationStatus,
-        promo: this.fighter.promo,
+        email: this.fighter?.email,
+        userId: this.fighter?.userId,
+        firstName: this.fighter?.firstName,
+        lastName: this.fighter?.lastName,
+        birthDate: this.fighter?.birthDate,
+        academy: this.fighter?.academy,
+        category: this.fighter?.categories,
+        registrationStatus: this.fighter?.registrationStatus,
+        promo: this.fighter?.promo,
       });
     }
   }

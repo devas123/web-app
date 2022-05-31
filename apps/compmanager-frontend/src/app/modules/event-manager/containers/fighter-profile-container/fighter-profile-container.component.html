@@ -1,4 +1,4 @@
-<app-fighter-profile [type]="'event'" [fighter]="eventFighter$ | async"
+<app-fighter-profile [fighter]="eventFighter$ | async"
                      (categoryChanged)="sendChangeCategoryCommand($event)"
                      (competitorChanged)="sendChangeCompetitorCommand($event)"
                      [categories]="categories$ | async"></app-fighter-profile>

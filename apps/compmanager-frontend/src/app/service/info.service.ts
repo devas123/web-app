@@ -33,7 +33,8 @@ import {
   GenerateCategoriesFromRestrictionsPayload,
   GenerateCategoriesFromRestrictionsResponse,
   GenerateSchedulePayload,
-  GetAcademiesResponse, GetAcademyResponse,
+  GetAcademiesResponse,
+  GetAcademyResponse,
   GetCompetitorsResponse,
   ManagedCompetition,
   MatFightsQueryResult,
@@ -41,7 +42,8 @@ import {
   MessageInfo,
   PageInfo,
   QueryServiceResponse,
-  RegistrationInfo, RemoveAcademyPayload,
+  RegistrationInfo,
+  RemoveAcademyPayload,
   RemoveCompetitorPayload,
   Schedule,
   SetFightResultPayload,
@@ -57,7 +59,6 @@ import {
   EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
-  EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND,
   GENERATE_CATEGORIES_COMMAND
 } from "../modules/event-manager/redux/event-manager-actions";
 import {
@@ -411,10 +412,10 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case     EVENT_MANAGER_UPDATE_COMPETITOR_COMMAND:
+      case     CommandType.UPDATE_COMPETITOR_COMMAND:
         cmd.type = CommandType.UPDATE_COMPETITOR_COMMAND;
         messageInfo.updateCompetitorPayload = <UpdateCompetitorPayload>{
-          ...action.payload
+          competitor: action.payload.competitor
         }
         break;
       case     GENERATE_CATEGORIES_COMMAND:
@@ -468,7 +469,7 @@ export class InfoService {
           competitorId: action.payload.competitorId
         }
         break;
-      case   eventManagerActions.EVENT_MANAGER_CHANGE_COMPETITOR_CATEGORY_COMMAND:
+      case   CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND:
         cmd.type = CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND
         messageInfo.changeCompetitorCategoryPayload = <ChangeCompetitorCategoryPayload>{
           ...action.payload

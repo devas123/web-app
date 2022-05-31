@@ -13,21 +13,21 @@ import {FormControl} from "@angular/forms";
   selector: 'compmanager-frontend-editable-field',
   template: `
     <!--input  hidden field-->
-    <div class="input-content" *ngIf="_displayInput">
+    <div class="input-content" *ngIf="_editMode">
       <ng-content select="[edit-section]">
       </ng-content>
       <div class="right floated content ">
         <i (click)="fireContentChanged()" class="check link green icon"></i>
-        <i (click)="_displayInput = false" class="times link green icon"></i>
+        <i (click)="_editMode = false" class="times link green icon"></i>
       </div>
     </div>
     <!---------->
 
     <!--visible content-->
-    <div class="row-content" *ngIf="!_displayInput">
+    <div class="row-content" *ngIf="!_editMode">
       <ng-content select="[display-section]"></ng-content>
       <div class="right floated content">
-        <i #showInputButton class="edit link teal tiny  icon" (click)="_displayInput = true"></i>
+        <i #showInputButton class="edit link teal tiny  icon" (click)="fireEditModeEntered()"></i>
       </div>
     </div>
     <!---------->
@@ -44,17 +44,25 @@ export class EditableFieldComponent {
   @Input()
   value: any
 
-  _displayInput: boolean = false;
+  _editMode: boolean = false;
 
   @Output()
   contentChanged = new EventEmitter<any>();
+
+  @Output()
+  editModeEntered = new EventEmitter<any>();
 
   constructor(private renderer: Renderer2) {
   }
 
   fireContentChanged() {
     this.contentChanged.next();
-    this._displayInput = false;
+    this._editMode = false;
+  }
+
+  fireEditModeEntered() {
+    this.editModeEntered.next();
+    this._editMode = true;
   }
 
   @HostListener('mouseenter')
