@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {ItemInputDirective} from './directives/item-input.directive';
 import {WordbreakPipe} from '../pipes/wordbreak.pipe';
 import {TruncatePipe} from '../pipes/truncate.pipe';
 import {GetNamePipe} from '../pipes/get-name.pipe';
@@ -93,7 +92,6 @@ const importsExports = [
   ButtonComponent,
   DateFieldComponent,
   DateRangeComponent,
-  ItemInputDirective,
   EditableFieldComponent,
   LeftFloatedTextInputComponent,
   LeftFloatedValueDisplayComponent,

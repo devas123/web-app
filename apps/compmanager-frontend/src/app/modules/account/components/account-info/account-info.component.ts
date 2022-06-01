@@ -1,34 +1,85 @@
-
-import {filter} from 'rxjs/operators';
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
-import {select, Store} from '@ngrx/store';
-import {AppState, selectAccountState} from '../../../../reducers/global-reducers';
-import {Account} from '../../model/Account';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-account-info',
-  templateUrl: './account-info.component.html',
-  styleUrls: ['./account-info.component.css']
+  templateUrl: './account-info.component.html'
 })
-export class AccountInfoComponent implements OnInit {
+export class AccountInfoComponent implements OnChanges, OnInit {
+
+  defaultAvatarSrc = 'assets/images/empty.png';
+
+  @Input()
+  public accountState: AccountState;
 
 
-  avatarSrc = 'assets/images/empty.png';
-  public user: Account;
+  form: FormGroup
 
-  constructor(public sanitizer: DomSanitizer, private store: Store<AppState>) {
+  constructor(public sanitizer: DomSanitizer, private fb: FormBuilder) {
 
+  }
+
+  get userId() {
+    return this.form.get('userId') as FormControl
+  }
+
+  get email() {
+    return this.form.get('email') as FormControl
+  }
+
+  get firstName() {
+    return this.form.get('firstName') as FormControl
+  }
+
+  get lastName() {
+    return this.form.get('lastName') as FormControl
+  }
+
+  get password() {
+    return this.form.get('password') as FormControl
+  }
+
+  get avatar() {
+    return this.form.get('avatar') as FormControl
   }
 
   ngOnInit() {
-    this.store.pipe(select(selectAccountState), filter((data: AccountState) => data.user != null)).subscribe((data: AccountState) => {
-      this.avatarSrc = data.user.avatar || this.avatarSrc;
-      this.user = data.user;
-    });
+    this.createFormGroup(this.accountState);
   }
 
+  private createFormGroup(accountState: AccountState) {
+    this.form = this.fb.group({
+      userId: [accountState?.user?.userId, [Validators.required]],
+      email: [accountState?.user?.email, [Validators.required]],
+      firstName: [accountState?.user?.firstName, [Validators.required]],
+      lastName: [accountState?.user?.lastName, [Validators.required]],
+      password: [accountState?.user?.password, [Validators.required]],
+      avatar: [accountState?.user?.avatar, []],
+    })
+  }
 
-  openModal() {}
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.firstChange && changes.accountState) {
+      this.createFormGroup(changes.accountState.currentValue);
+    } else if (this.accountState && this.form) {
+      this.form.patchValue(
+        {
+          userId: this.accountState?.user?.userId,
+          email: this.accountState?.user?.email,
+          firstName: this.accountState?.user?.firstName,
+          lastName: this.accountState?.user?.lastName,
+          password: this.accountState?.user?.password,
+          avatar: this.accountState?.user?.avatar,
+        }
+      );
+    }
+  }
+
+  submitForm() {}
+
+
+  openModal() {
+  }
 }

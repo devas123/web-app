@@ -55,7 +55,6 @@ import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
 import {
   EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
-  EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
   EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
   EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
@@ -391,7 +390,7 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND:
+      case CommandType.CREATE_FAKE_COMPETITORS_COMMAND:
         cmd.type = CommandType.CREATE_FAKE_COMPETITORS_COMMAND;
         messageInfo.createFakeCompetitorsPayload = <CreateFakeCompetitorsPayload>{
           ...action.payload
@@ -481,10 +480,10 @@ export class InfoService {
       case   eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND:
         cmd.type = CommandType.DROP_ALL_BRACKETS_COMMAND
         break;
-      case   allActions.PUBLISH_COMPETITION_COMMAND:
+      case   CommandType.PUBLISH_COMPETITION_COMMAND:
         cmd.type = CommandType.PUBLISH_COMPETITION_COMMAND
         break;
-      case   allActions.UNPUBLISH_COMPETITION_COMMAND:
+      case   CommandType.UNPUBLISH_COMPETITION_COMMAND:
         cmd.type = CommandType.UNPUBLISH_COMPETITION_COMMAND
         break;
       case CommandType.ADD_ACADEMY_COMMAND:

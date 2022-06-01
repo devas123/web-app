@@ -9,7 +9,7 @@ import {createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 import {
   CategoryDescriptor,
-  CategoryRestriction,
+  CategoryRestriction, CategoryState,
   CommandType,
   CompetitionProperties,
   Competitor,
@@ -45,7 +45,6 @@ export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
 export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
-export const EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND = 'CREATE_FAKE_COMPETITORS_COMMAND';
 export const EVENT_MANAGER_GENERATE_BRACKETS_COMMAND = 'GENERATE_BRACKETS_COMMAND';
 export const EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND = 'GENERATE_SCHEDULE_COMMAND';
 export const EVENT_MANAGER_DROP_SCHEDULE_COMMAND = 'DROP_SCHEDULE_COMMAND';
@@ -195,7 +194,7 @@ export const cometitionListLoaded = (competitionProperties: ManagedCompetition[]
   payload: competitionProperties
 });
 
-export const eventManagerCategoriesLoaded = (competitionId: string, categories: any[]) => ({
+export const eventManagerCategoriesLoaded = (competitionId: string, categories: CategoryState[]) => ({
   type: EVENT_MANAGER_CATEGORIES_LOADED,
   payload: categories,
   competitionId
@@ -253,12 +252,12 @@ export const eventManagerDefaultRestrictionsLoaded = (competitionId, restriction
   payload: restrictions
 });
 
-export const updateCompetitionProperties = createAction(CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND, props<{competitionId: string, competitionProperties: CompetitionProperties}>());
+export const updateCompetitionProperties = createAction(CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND, props<{ competitionId: string, competitionProperties: CompetitionProperties }>());
 
 export const addCompetitor = createAction(CommandType.ADD_COMPETITOR_COMMAND, props<{ competitionId: string, competitor: Competitor, successCallback: SuccessCallback, errorCallback: ErrorCallback }>())
 
 export const eventManagerCreateFakeCompetitorsCommand = (competitionId: string, categoryId: string, numberOfCompetitors: number, numberOfAcademies: number) => ({
-  type: EVENT_MANAGER_CREATE_FAKE_COMPETITORS_COMMAND,
+  type: CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
   competitionId,
   categoryId,
   payload: {

@@ -1,4 +1,4 @@
-<div class="ui container" *ngIf="user">
+<div class="ui container" *ngIf="accountState?.user">
 
   <p></p>
 
@@ -76,164 +76,42 @@
           <h3 class="ui left floated header"><i class="user teal icon"></i>User details </h3>
           <div class="ui clearing divider"></div>
           <div class="ui middle aligned large selection animated divided list ">
-            <div class="item" itemInput>
-
-              <!--input  hidden field-->
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <div class="description">First name:<span>&nbsp;&nbsp;</span></div>
-                    <input type="text" [(ngModel)]="user.firstName">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <!---------->
-
-              <!--visible content-->
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">First name</div>
-                  <div class="header">{{user.firstName}}</div>
-                </div>
-                <div class="right floated content">
-                  <i class="edit link teal tiny  icon  show-input-btn"></i>
-                </div>
-              </div>
-              <!---------->
-            </div>
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <div class="description">Middle name <span>&nbsp;&nbsp;</span> </div>
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Middle name</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Last name</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Birthdate</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Email</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Password</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="item" itemInput>
-              <div class="input-content">
-                <div class="left floated content  ">
-                  <div class="ui transparent inverted right floated input">
-                    <input type="text">
-                  </div>
-                </div>
-                <div class="right floated content ">
-                  <i class="check link green icon hide-input-btn "></i>
-                </div>
-              </div>
-              <div class="row-content">
-                <div class="left floated content ">
-                  <div class="description">Gender</div>
-                  <div class="header">Christian</div>
-                </div>
-                <div class="right floated content ">
-                  <i class="edit link teal tiny  icon show-input-btn"></i>
-                </div>
-              </div>
-            </div>
-
-
+            <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+              <compmanager-frontend-left-floated-text-input
+                edit-section
+                [control]="firstName"
+                [name]="'First Name'"
+              ></compmanager-frontend-left-floated-text-input>
+              <compmanager-frontend-left-floated-display
+                display-section
+                [value]="accountState?.user?.firstName"
+                [name]="'First Name'"
+              ></compmanager-frontend-left-floated-display>
+            </compmanager-frontend-editable-field>
+            <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+              <compmanager-frontend-left-floated-text-input
+                edit-section
+                [control]="lastName"
+                [name]="'Last Name'"
+              ></compmanager-frontend-left-floated-text-input>
+              <compmanager-frontend-left-floated-display
+                display-section
+                [value]="accountState?.user?.lastName"
+                [name]="'Last Name'"
+              ></compmanager-frontend-left-floated-display>
+            </compmanager-frontend-editable-field>
+            <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
+              <compmanager-frontend-left-floated-text-input
+                edit-section
+                [control]="password"
+                [name]="'Password'"
+              ></compmanager-frontend-left-floated-text-input>
+              <compmanager-frontend-left-floated-display
+                display-section
+                [value]="accountState?.user?.password"
+                [name]="'Password'"
+              ></compmanager-frontend-left-floated-display>
+            </compmanager-frontend-editable-field>
           </div>
         </div>
         <div class="ui bottom attached basic teal  button">

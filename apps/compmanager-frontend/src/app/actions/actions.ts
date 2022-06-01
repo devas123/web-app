@@ -5,9 +5,6 @@ import {SuccessCallback} from "../reducers/global-reducers";
 // Commands
 export const LOAD_COMPETITIONS_LIST = 'LOAD_COMPETITIONS_LIST';
 export const START_COMPETITION_COMMAND = 'START_COMPETITION_COMMAND';
-export const PUBLISH_COMPETITION_COMMAND = 'PUBLISH_COMPETITION_COMMAND';
-export const UNPUBLISH_COMPETITION_COMMAND = 'UNPUBLISH_COMPETITION_COMMAND';
-export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 
 
 // Events
@@ -23,11 +20,11 @@ export const competitionsLoaded = (payload: ManagedCompetition[]) => ({type: COM
 export const registrationInfoLoaded = (payload: RegistrationInfo) => ({type: REGISTRATION_INFO_LOADED, payload});
 export const loadCompetitionsList = {type: LOAD_COMPETITIONS_LIST};
 export const publishCompetition = (competitionId: string) => ({
-  type: PUBLISH_COMPETITION_COMMAND,
+  type: CommandType.PUBLISH_COMPETITION_COMMAND,
   competitionId: competitionId
 });
 export const unpublishCompetition = (competitionId: string) => ({
-  type: UNPUBLISH_COMPETITION_COMMAND,
+  type: CommandType.UNPUBLISH_COMPETITION_COMMAND,
   competitionId: competitionId
 });
 export const deleteCompetition = createAction(CommandType.DELETE_COMPETITION_COMMAND, props<{ competitionId: string }>());

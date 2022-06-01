@@ -95,7 +95,6 @@ export class EventPropertiesEditorComponent implements OnChanges, OnInit {
 
   updateForm() {
     if (this.properties && this.form) {
-      console.log("Updating form ", this.properties, this.form)
       this.form.patchValue({
         competitionId: this.properties.id,
         competitionName: this.properties.competitionName,

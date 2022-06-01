@@ -35,6 +35,7 @@ import {
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Dictionary} from '@ngrx/entity';
 import {
+  CategoryState,
   CommandType,
   Competitor,
   FightDescription,
@@ -76,9 +77,7 @@ export class Effects {
       eventManagerActions.ADD_CATEGORY_COMMAND,
       eventManagerActions.DELETE_CATEGORY_COMMAND,
       eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND,
-      eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND,
-      allActions.PUBLISH_COMPETITION_COMMAND,
-      allActions.UNPUBLISH_COMPETITION_COMMAND),
+      eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND),
     mergeMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommand(cmd, action.competitionId)
@@ -87,6 +86,8 @@ export class Effects {
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND,
       CommandType.REMOVE_COMPETITOR_COMMAND,
+      CommandType.PUBLISH_COMPETITION_COMMAND,
+      CommandType.UNPUBLISH_COMPETITION_COMMAND,
       CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND,
       CommandType.DELETE_COMPETITION_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),
@@ -117,7 +118,7 @@ export class Effects {
     ofType(LOAD_CATEGORIES_COMMAND),
     switchMap((action: CommonAction) => {
       return this.infoService.getCategories(action.payload).pipe(map(payload => {
-        const categories = (payload || []) as any[];
+        const categories = (payload || []) as CategoryState[];
         return eventManagerCategoriesLoaded(action.payload, categories);
       }), catchError(error => observableOf(errorEvent(error))));
     })));

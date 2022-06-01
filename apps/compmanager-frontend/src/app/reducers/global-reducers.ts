@@ -41,7 +41,6 @@ import {
   EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_CATEGORY_UNSELECTED,
-  EVENT_MANAGER_COMPETITOR_ADDED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -72,7 +71,6 @@ import {
   COMPETITION_UNPUBLISHED,
   REGISTRATION_INFO_LOADED
 } from '../actions/actions';
-import * as competitorsActions from '../modules/competition/redux/actions/competitors';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {
   DASHBOARD_FIGHT_LOADED,
@@ -87,7 +85,7 @@ import {
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid} from "../modules/account/utils";
 import {
-  CategoryDescriptor,
+  CategoryDescriptor, CategoryState,
   CompetitionProperties,
   Competitor,
   Event,
@@ -306,18 +304,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
-      case competitorsActions.COMPETITOR_ADDED: {
-        const event = action as Event;
-        const {competitor} = event.messageInfo.competitorAddedPayload;
-        if (state.competitionProperties && (state.competitionProperties.id === event.messageInfo.competitionId)) {
-          return {
-            ...state,
-            selectedEventCompetitors: competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
-          };
-        } else {
-          return state;
-        }
-      }
       case EventType.COMPETITOR_UPDATED: {
         const event = action as Event;
         const {competitor} = event.messageInfo.competitorUpdatedPayload;
@@ -504,7 +490,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
 
       case EVENT_MANAGER_CATEGORIES_LOADED: {
         const competitionId = action.competitionId;
-        const categoriesRaw = action.payload as any[];
+        const categoriesRaw = action.payload as CategoryState[];
         if (competitionId && categoriesRaw && competitionId === state.competitionProperties.id) {
           const categories = categoriesRaw.map(rwc => ({
             id: rwc.id,
@@ -620,21 +606,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
-      case EVENT_MANAGER_COMPETITOR_ADDED: {
+      case EventType.COMPETITOR_ADDED: {
         const event = action as Event;
         let newEventCompetitors = state.selectedEventCompetitors;
         if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
           const competitor = event.messageInfo.competitorAddedPayload.competitor;
-          newEventCompetitors = competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors);
+          state.selectedEventCompetitors = competitorEntityAdapter.upsertOne(competitor, state.selectedEventCompetitors);
+          state.selectedEventCompetitors.total = state.selectedEventCompetitors.total + 1;
         }
-        newEventCompetitors = {
-          ...newEventCompetitors,
-          total: newEventCompetitors.total + 1
-        };
-        return {
-          ...state,
-          selectedEventCompetitors: newEventCompetitors
-        };
+        break;
       }
       case EventType.COMPETITOR_CATEGORY_CHANGED: {
         const event = action as Event;
@@ -645,7 +625,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             categories: payload.newCategories
           }
         }
-        competitorEntityAdapter.updateOne(updates, state.selectedEventCompetitors);
+        state.selectedEventCompetitors = competitorEntityAdapter.updateOne(updates, state.selectedEventCompetitors);
         break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {

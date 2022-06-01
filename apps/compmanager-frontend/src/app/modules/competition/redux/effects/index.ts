@@ -9,19 +9,6 @@ import * as fightsActions from '../actions/fights';
 @Injectable()
 export class CompetitorsEffects {
   @Effect()
-  addCompetitor$ = this.actions$.pipe(
-    ofType(competitorsActions.ADD_COMPETITOR),
-    switchMap((action: any) => {
-      const competitor = action.payload;
-      return this.registrationService
-        .registerCompetitor(competitor, action.competitionId)
-        .pipe(
-          map(() => ({type: competitorsActions.COMPETITOR_ADDED, payload: competitor, competitionId: action.competitionId})),
-          catchError(error => of(competitorsActions.competitorsError(error, action.competitionId)))
-        );
-    }));
-
-  @Effect()
   removeCompetitor$ = this.actions$.pipe(
     ofType(competitorsActions.REMOVE_COMPETITOR),
     switchMap((action: any) => {
