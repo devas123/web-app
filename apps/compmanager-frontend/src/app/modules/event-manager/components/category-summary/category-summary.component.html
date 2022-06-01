@@ -4,10 +4,9 @@
       <div class="content">
         <div class="center aligned header">
           <div class="ui statistic">
-            <!--<div class="value">
-              TODO
+            <div class="value">
               {{category?.numberOfCompetitors || 0}}
-            </div>-->
+            </div>
             <div class="label">
               Competitors
             </div>
@@ -20,20 +19,19 @@
       <div class="content">
         <div class="center aligned header">
           <div class="ui statistic">
-            // TODO
-            <!--<ng-container *ngIf="category?.fightsNumber > 0">
+            <ng-container *ngIf="category?.fightsNumber > 0">
               <div class="value">
                 {{category?.fightsNumber || 0}}
               </div>
               <div class="label">
                 Fights
               </div>
-            </ng-container>-->
-            <!--<ng-container *ngIf="!category?.fightsNumber || category?.fightsNumber <= 0">
+            </ng-container>
+            <ng-container *ngIf="!category?.fightsNumber || category?.fightsNumber <= 0">
               <div class="text value">
                 Brackets not generated
               </div>
-            </ng-container>-->
+            </ng-container>
           </div>
         </div>
       </div>

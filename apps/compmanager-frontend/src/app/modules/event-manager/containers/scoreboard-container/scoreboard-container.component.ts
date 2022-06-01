@@ -12,9 +12,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {
-  HeaderDescription
-} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {
@@ -29,12 +27,12 @@ import {
   eventManagerGetSelectedEventCompetitors
 } from '../../redux/event-manager-reducers';
 import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
-import {CategoryDescriptor, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
 
 @Component({
   templateUrl: './scoreboard-container.component.html',
@@ -49,7 +47,7 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
   selectedPeriodId$: Observable<String>;
   selectedFight$: Observable<FightDescription>;
   selectedFightFightResultOptions$: Observable<FightResultOption[]>;
-  fightCategory$: Observable<CategoryDescriptor>;
+  fightCategory$: Observable<CategoryState>;
   urlProvidedFightId$: Observable<string>;
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, public info: CommonBracketsInfoContainer, menuService: MenuService) {

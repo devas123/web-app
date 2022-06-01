@@ -5,17 +5,17 @@ import {select, Store} from '@ngrx/store';
 
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
-    eventManagerGetSelectedEventCategories,
-    eventManagerGetSelectedEventCompetitors,
-    eventManagerGetSelectedEventCompetitorsPageNumber,
-    eventManagerGetSelectedEventCompetitorsPageSize,
-    eventManagerGetSelectedEventCompetitorsTotal,
-    eventManagerGetSelectedEventName,
-    eventManagerGetSelectedEventSelectedCategory
+  eventManagerGetSelectedEventCategories,
+  eventManagerGetSelectedEventCompetitors,
+  eventManagerGetSelectedEventCompetitorsPageNumber,
+  eventManagerGetSelectedEventCompetitorsPageSize,
+  eventManagerGetSelectedEventCompetitorsTotal,
+  eventManagerGetSelectedEventName,
+  eventManagerGetSelectedEventSelectedCategory
 } from '../../../event-manager/redux/event-manager-reducers';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerCompetitionFightersPageChanged} from '../../../event-manager/redux/event-manager-actions';
-import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
     selector: 'app-fighters-display-container',
@@ -29,8 +29,8 @@ export class FightersDisplayContainerComponent  {
     totalCompetitors$: Observable<number>;
     pageSize$: Observable<number>;
     pageNumber$: Observable<number>;
-    categories$: Observable<CategoryDescriptor[]>;
-    category$: Observable<CategoryDescriptor>;
+    categories$: Observable<CategoryState[]>;
+    category$: Observable<CategoryState>;
     @ViewChild('categorySelect', {static: true})
     categorySelect: TemplateRef<any>;
     subs = new Subscription();

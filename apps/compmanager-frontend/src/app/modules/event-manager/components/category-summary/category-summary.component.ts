@@ -10,13 +10,10 @@ import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
 export class CategorySummaryComponent  {
 
   @Input()
-  categoryState: CategoryState;
-
-  @Input()
   competitionId: string;
 
   @Input()
-  category: CategoryDescriptor;
+  category: CategoryState;
 
   @Input()
   categoryStartTime: Date;

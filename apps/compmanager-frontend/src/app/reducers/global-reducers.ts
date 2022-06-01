@@ -22,11 +22,13 @@ import {
   FightsCollection,
   fightsInitialState,
   HeaderDescription,
+  PreviewCategoriesCollection,
+  previewCategoriesEntityAdapter,
+  previewCategoriesInitialState,
   stagesEntityAdapter,
   stagesInitialState
 } from '../commons/model/competition.model';
 import {
-  CATEGORY_ADDED,
   CATEGORY_DELETED,
   CATEGORY_STATE_DELETED,
   COMPETITION_SELECTED,
@@ -85,7 +87,8 @@ import {
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid} from "../modules/account/utils";
 import {
-  CategoryDescriptor, CategoryState,
+  CategoryDescriptor,
+  CategoryState,
   CompetitionProperties,
   Competitor,
   Event,
@@ -141,7 +144,7 @@ export interface InternalScheduleState {
 
 export interface CompetitionState {
   selectedEventCategories: CategoriesCollection;
-  selectedEventPreviewCategories: CategoriesCollection;
+  selectedEventPreviewCategories: PreviewCategoriesCollection;
   selectedEventCompetitors: CompetitorsCollection;
   selectedEventMats: MatsCollection;
   selectedEventSchedule: InternalScheduleState;
@@ -181,7 +184,7 @@ export const scheduleInitialState: InternalScheduleState = {
 
 export const initialCompetitionState: CompetitionState = {
   selectedEventCategories: categoriesInitialState,
-  selectedEventPreviewCategories: categoriesInitialState,
+  selectedEventPreviewCategories: previewCategoriesInitialState,
   registrationInfo: <RegistrationInfo>{},
   selectedEventCompetitors: competitorsInitialState,
   selectedEventSchedule: scheduleInitialState,
@@ -492,30 +495,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const competitionId = action.competitionId;
         const categoriesRaw = action.payload as CategoryState[];
         if (competitionId && categoriesRaw && competitionId === state.competitionProperties.id) {
-          const categories = categoriesRaw.map(rwc => ({
-            id: rwc.id,
-            ...rwc.category,
-            fightsNumber: rwc.fightsNumber,
-            numberOfCompetitors: rwc.numberOfCompetitors
-          } as CategoryDescriptor));
-          return {
-            ...state,
-            selectedEventCategories: categoryEntityAdapter.upsertMany(categories, state.selectedEventCategories)
-          };
+          state.selectedEventCategories = categoryEntityAdapter.upsertMany(categoriesRaw, state.selectedEventCategories);
         }
-        return state;
+        break
       }
 
       case EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED: {
-        const competitionId = action.competitionId;
         const categories = (action.categories || []) as CategoryDescriptor[];
-        if (competitionId === state.competitionProperties.id) {
-          return {
-            ...state,
-            selectedEventPreviewCategories: categoryEntityAdapter.setAll(categories, state.selectedEventPreviewCategories)
-          };
-        }
-        return state;
+        state.selectedEventPreviewCategories = previewCategoriesEntityAdapter.setAll(categories, state.selectedEventPreviewCategories);
+        break;
       }
       case EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED: {
         return {
@@ -611,6 +599,17 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         let newEventCompetitors = state.selectedEventCompetitors;
         if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
           const competitor = event.messageInfo.competitorAddedPayload.competitor;
+          const existingCategories = state.selectedEventCategories.entities;
+          const categoryUpdates = competitor.categories.filter(id => existingCategories.hasOwnProperty(id)).map(id =>
+            (<Update<CategoryState>>{
+              id,
+              changes: {
+                ...existingCategories[id],
+                numberOfCompetitors: existingCategories[id].numberOfCompetitors + 1
+              }
+            })
+          );
+          state.selectedEventCategories = categoryEntityAdapter.updateMany(categoryUpdates, state.selectedEventCategories);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertOne(competitor, state.selectedEventCompetitors);
           state.selectedEventCompetitors.total = state.selectedEventCompetitors.total + 1;
         }
@@ -791,16 +790,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         state.selectedEventCompetitors = competitorEntityAdapter.addOne(competitor, state.selectedEventCompetitors)
         break;
       }
-      case CATEGORY_ADDED: {
-        const category = action.payload.categoryId as CategoryDescriptor;
-        if (action.competitionId === state.competitionProperties.id && category) {
-          return {
-            ...state,
-            selectedEventCategories: categoryEntityAdapter.addOne(category, state.selectedEventCategories)
-          };
-        }
-        return state;
-      }
       case PERIOD_SELECTED: {
         state.selectedEventSchedule.periods.selectedPeriodId = action.payload;
         break;
@@ -880,7 +869,6 @@ export const getSelectedEventSelectedPeriod = createSelector(getSelectedEventSel
 export const eventManagerGetHeaderDescription = createSelector(state => state, (state: AppState) => state.header);
 
 export const eventsListState = createSelector(state => state, (state: AppState) => state.events);
-const selectCategoriesEntities = createSelector(getSelectedEventState, state => state && state.selectedEventCategories);
 export const selectAccountState = createSelector(state => state, (state: AppState) => (state && state.accountState) || initialAccountState);
 export const selectUser = createSelector(selectAccountState, state => state && state.user);
 export const selectUserId = createSelector(selectUser, state => state && state.userId);
@@ -890,8 +878,3 @@ export const {
 } = competitionPropertiesEntitiesAdapter.getSelectors(eventsListState);
 
 export const selectAllCompetitions = getAllCompetitions;
-
-export const {
-  // select the array of users
-  selectAll: getSelectedCompetitionCategories
-} = categoryEntityAdapter.getSelectors(selectCategoriesEntities);

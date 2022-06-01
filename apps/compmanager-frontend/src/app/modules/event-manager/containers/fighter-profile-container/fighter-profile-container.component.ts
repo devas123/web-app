@@ -26,7 +26,7 @@ import {
   ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighter-profile-container',
@@ -35,8 +35,8 @@ import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
 export class FighterProfileContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   eventFighter$: Observable<Competitor>;
-  category$: Observable<CategoryDescriptor>;
-  categories$: Observable<CategoryDescriptor[]>;
+  category$: Observable<CategoryState>;
+  categories$: Observable<CategoryState[]>;
   private subs = new Subscription();
 
   constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {

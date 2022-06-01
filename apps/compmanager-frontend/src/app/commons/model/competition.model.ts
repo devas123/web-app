@@ -54,13 +54,14 @@ export const displayCategory = (cat: CategoryDescriptor, maxLength: number = -1)
 
 const hasAny = (str: string, searchStr) => str && str.startsWith(searchStr);
 
-export const categoryFilter = value => cat => {
+export const categoryFilter = value => (cat: CategoryState) => {
   return !value || value.length <= 0 || (cat.id
-    && cat.restrictions && cat.restrictions.map(r => hasAny(r.name, value) || hasAny(r.alias, value) ||
+    && cat.category?.restrictions && cat.category?.restrictions.map(r => hasAny(r.name, value) || hasAny(r.alias, value) ||
       hasAny(r.value, value) || hasAny(r.minValue, value) || hasAny(r.maxValue, value)));
 };
 
-export const categoriesComparer = (a: CategoryDescriptor, b: CategoryDescriptor) => displayCategory(a).localeCompare(displayCategory(b));
+export const categoriesComparer = (a: CategoryState, b: CategoryState) => displayCategory(a.category).localeCompare(displayCategory(b.category));
+export const previewCategoriesComparer = (a: CategoryDescriptor, b: CategoryDescriptor) => displayCategory(a).localeCompare(displayCategory(b));
 
 export interface CompetitorGroupChange {
   competitorId: string;
@@ -95,11 +96,15 @@ export interface AdjacencyList<Type> {
   vertices: AdjacencyListEntry<Type>[];
 }
 
-export interface CategoriesCollection extends EntityState<CategoryDescriptor> {
+export interface CategoriesCollection extends EntityState<CategoryState> {
   selectedCategoryId: string | null;
   selectedCategoryState: CategoryState;
   selectedCategoryStages: CategoryBracketsStageCollection;
   categoryStateLoading: boolean;
+}
+
+export interface PreviewCategoriesCollection extends EntityState<CategoryDescriptor> {
+  selectedCategoryId: string | null;
 }
 
 export interface GroupDescriptor {
@@ -175,9 +180,14 @@ export const stagesEntityAdapter: EntityAdapter<StageDescriptor> = createEntityA
 });
 
 
-export const categoryEntityAdapter: EntityAdapter<CategoryDescriptor> = createEntityAdapter<CategoryDescriptor>({
-  selectId: (category: CategoryDescriptor) => category.id,
+export const categoryEntityAdapter: EntityAdapter<CategoryState> = createEntityAdapter<CategoryState>({
+  selectId: (category: CategoryState) => category.id,
   sortComparer: categoriesComparer
+});
+
+export const previewCategoriesEntityAdapter: EntityAdapter<CategoryDescriptor> = createEntityAdapter<CategoryDescriptor>({
+  selectId: (category: CategoryDescriptor) => category.id,
+  sortComparer: previewCategoriesComparer
 });
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
@@ -210,4 +220,8 @@ export const categoriesInitialState: CategoriesCollection = categoryEntityAdapte
   selectedCategoryState: null,
   selectedCategoryStages: stagesInitialState,
   categoryStateLoading: false
+});
+
+export const previewCategoriesInitialState: PreviewCategoriesCollection = previewCategoriesEntityAdapter.getInitialState({
+  selectedCategoryId: null,
 });

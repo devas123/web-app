@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {AppState, getSelectedEventProperties} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventCategories} from '../../../event-manager/redux/event-manager-reducers';
-import {CategoryDescriptor, CompetitionProperties} from "@frontend-nx/protobuf";
+import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-info-container',
@@ -14,7 +14,7 @@ export class CategoryInfoContainerComponent  {
 
   properties$: Observable<CompetitionProperties>;
 
-  categories$: Observable<CategoryDescriptor[]>;
+  categories$: Observable<CategoryState[]>;
 
   constructor(private store: Store<AppState>) {
     this.properties$ = store.pipe(select(getSelectedEventProperties));

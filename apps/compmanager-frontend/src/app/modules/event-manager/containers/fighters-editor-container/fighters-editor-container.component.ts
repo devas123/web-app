@@ -24,7 +24,7 @@ import {
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
-import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighters-container',
@@ -38,8 +38,8 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
   totalCompetitors$: Observable<number>;
   pageSize$: Observable<number>;
   pageNumber$: Observable<number>;
-  categories$: Observable<CategoryDescriptor[]>;
-  category$: Observable<CategoryDescriptor>;
+  categories$: Observable<CategoryState[]>;
+  category$: Observable<CategoryState>;
   @ViewChild('categorySelect', {static: true})
   categorySelect: TemplateRef<any>;
   subs = new Subscription();

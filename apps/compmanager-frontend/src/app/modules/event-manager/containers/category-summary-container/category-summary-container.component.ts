@@ -3,24 +3,25 @@ import {displayCategory, HeaderDescription} from '../../../../commons/model/comp
 import {Observable} from 'rxjs';
 import {
   eventManagerGetSelectedEventSelectedCategory,
-  eventManagerGetSelectedEventSelectedCategoryStartTime,
-  getSelectedEventSelectedCategoryState
+  eventManagerGetSelectedEventSelectedCategoryStartTime
 } from '../../redux/event-manager-reducers';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
-import {ComponentCommonMetadataProvider, CompetitionManagerModuleRouterEntryComponent} from '../../../../commons/directives/common-classes';
+import {
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
+} from '../../../../commons/directives/common-classes';
 import {filter, map, take} from 'rxjs/operators';
 import {MenuService} from '../../../../components/main-menu/menu.service';
-import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
+import {CategoryState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-category-summary-container',
   template: `
       <app-category-summary
               [category]="category$ | async"
-              [categoryState]="categoryState$ | async"
               [categoryStartTime]="categoryStartTime$ | async"
               [competitionId]="competitionId$ | async"
               (categoryBracketsSelected)="navigateToCategoryBrackets($event)"
@@ -30,9 +31,7 @@ import {CategoryDescriptor, CategoryState} from "@frontend-nx/protobuf";
 })
 export class CategorySummaryContainerComponent extends CompetitionManagerModuleRouterEntryComponent  {
 
-  categoryState$: Observable<CategoryState>;
-
-  category$: Observable<CategoryDescriptor>;
+  category$: Observable<CategoryState>;
   competitionId$: Observable<string>;
 
   categoryStartTime$: Observable<Date>;
@@ -47,12 +46,11 @@ export class CategorySummaryContainerComponent extends CompetitionManagerModuleR
       ],
       header: store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat), take(1), map(cat => <HeaderDescription>{
         header: 'Category',
-        subheader: displayCategory(cat)
+        subheader: displayCategory(cat?.category)
       }))
     }, menuService);
     this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory), filter(cat => !!cat));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
-    this.categoryState$ = store.pipe(select(getSelectedEventSelectedCategoryState));
     this.categoryStartTime$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStartTime));
   }
 

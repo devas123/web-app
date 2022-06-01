@@ -38,11 +38,9 @@ import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@fronten
     </ng-template>
     <app-category-editor [categories]="categories$ | async"
                          [searchString]="searchString$ | async"
-                         [defaultCategories]="[]"
                          [competition]="competition$ | async"
                          (categoryEditorClicked)="navigateToCategoryEditor($event)"
                          (createCustomCategoryClicked)="addCategory()"
-                         (addDefaultCategories)="sendAddDefaultCategoriesCommand($event)"
                          (deleteCategoryEvent)="doDeleteCategory($event)"
                          (generateRandomFightersEvent)="generateRandomFighters($event)"
                          (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>`

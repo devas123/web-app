@@ -10,17 +10,18 @@ import {
   eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
 import {
-  eventManagerAddRegistrationPeriod,
   eventManagerAddRegistrationGroup,
+  eventManagerAddRegistrationPeriod,
   eventManagerDeleteRegistrationGroup,
   eventManagerDeleteRegistrationPeriod,
-  eventManagerUpdateRegistrationInfo, eventManagerLoadRegistrationInfo
+  eventManagerLoadRegistrationInfo,
+  eventManagerUpdateRegistrationInfo
 } from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {
@@ -35,7 +36,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
-import {CategoryDescriptor, RegistrationInfo} from "@frontend-nx/protobuf";
+import {CategoryState, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -50,7 +51,7 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
   selectedRegistrationGroupId$: Observable<string | boolean>;
   hasRegistrationGroupSelected$: Observable<boolean>;
   columsNumber$: Observable<number>;
-  categories$: Observable<CategoryDescriptor[]>;
+  categories$: Observable<CategoryState[]>;
 
   constructor(store: Store<AppState>, private route: ActivatedRoute, private router: Router,
               private modalService: SuiModalService, private observer: BreakpointObserver, menuService: MenuService) {

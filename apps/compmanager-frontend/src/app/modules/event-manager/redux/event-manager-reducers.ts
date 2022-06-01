@@ -31,6 +31,8 @@ import {
   fightEntityAdapter,
   fightsInitialState,
   initialCategoryConstructorState,
+  previewCategoriesEntityAdapter,
+  previewCategoriesInitialState,
   RegistrationPeriodCollection,
   stagesEntityAdapter
 } from '../../../commons/model/competition.model';
@@ -183,7 +185,7 @@ export const getSelectedEventCategoriesCollection = createSelector(getSelectedEv
   return (state && state.selectedEventCategories) || categoriesInitialState;
 });
 export const getSelectedEventPreviewCategoriesCollection = createSelector(getSelectedEventState, state => {
-  return (state && state.selectedEventPreviewCategories) || categoriesInitialState;
+  return (state && state.selectedEventPreviewCategories) || previewCategoriesInitialState;
 });
 export const getSelectedEventSelectedCategoryState = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryState);
 export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryId);
@@ -219,11 +221,10 @@ export const {
 } = categoryEntityAdapter.getSelectors(getSelectedEventCategoriesCollection);
 export const {
   selectAll: eventManagerGetSelectedEventAllPreviewCategories
-} = categoryEntityAdapter.getSelectors(getSelectedEventPreviewCategoriesCollection);
+} = previewCategoriesEntityAdapter.getSelectors(getSelectedEventPreviewCategoriesCollection);
 
 export const {
   selectAll: eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights,
-  selectEntities: eventManagerGetSelectedEventSelectedCategorySelectedStageFightsEntities
 } = fightEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection);
 
 export const eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors = createSelector(getSelectedEventSelectedCategoryState, state => state && state.numberOfCompetitors);
@@ -248,11 +249,9 @@ export const eventManagerGetSelectedEventAvailableRegistrationGroups = createSel
 
 const {
   selectAll: selectAllPeriods,
-  selectEntities: selectPeriodsDictionary
 } = periodEntityAdapter.getSelectors(eventManagerGetSelectedEventSchedulePeriodsCollection);
 
 export const getSelectedEventPeriods = selectAllPeriods;
-export const getSelectedEventPeriodsDictionary = selectPeriodsDictionary;
 export const getSelectedEventUndispatchedRequirements = createSelector(eventManagerGetSelectedEventSchedule, schedule => (schedule && schedule.undispatchedRequirements) || []);
 export const eventManagerGetSelectedEventScheduleEmpty = createSelector(selectAllPeriods, (periods) => {
   return !(!!periods && periods.length > 0 && periods.find(p => p.scheduleEntries && p.scheduleEntries.length > 0));

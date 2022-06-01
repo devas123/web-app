@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AppState, getSelectedEventProperties,} from '../../../../reducers/global-reducers';
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
@@ -9,7 +9,7 @@ import {
 } from '../../../event-manager/redux/event-manager-reducers';
 import {ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
-import {CategoryDescriptor, CompetitionProperties} from "@frontend-nx/protobuf";
+import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 import {MenuItem, RegistrationPeriodCollection} from "../../../../commons/model/competition.model";
 
 @Component({
@@ -24,7 +24,7 @@ export class CompetitionMainInfoComponent  {
   properties$: Observable<CompetitionProperties>;
   registrationPeriod$: Observable<RegistrationPeriodCollection>;
   timezone$: Observable<string>;
-  categories$: Observable<CategoryDescriptor[]>;
+  categories$: Observable<CategoryState[]>;
   url$: Observable<string>;
   trackByMenu = (index: number, menuItem: MenuItem) => menuItem.name;
 

@@ -43,7 +43,7 @@ import {
 import {generateUuid, uniqueFilter} from '../../../account/utils';
 import {Observable} from 'rxjs';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
-import {CategoryDescriptor, CategoryRestriction} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryRestriction, CategoryState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-create-category',
@@ -70,8 +70,7 @@ import {CategoryDescriptor, CategoryRestriction} from "@frontend-nx/protobuf";
       </section>
       <section class="ui segment">
         <h4>Categories preview</h4>
-        <app-category-editor [categories]="previewCategories$ | async"
-                             [defaultCategories]="[]"
+        <app-category-editor [categories]="previewCategoriesStates$ | async"
                              [detailedView]="false"
                              [competition]="infoProvicer.competition$ | async"></app-category-editor>
       </section>
@@ -85,7 +84,7 @@ export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntry
   defaultRestrictionsNames$: Observable<string[]>;
 
   restrictions$: Observable<CategoryRestriction[]>;
-  previewCategories$: Observable<CategoryDescriptor[]>;
+  previewCategoriesStates$: Observable<CategoryState[]>;
 
   adjacencyLists$: Observable<AdjacencyList<string>[]>;
   restrictionNames$: Observable<string[]>;
@@ -113,7 +112,13 @@ export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntry
       tap(console.log)
     );
     this.restrictions$ = this.store.pipe(select(eventManagerCategoryRestrictions));
-    this.previewCategories$ = this.store.pipe(select(eventManagerGetSelectedEventPreviewCategories));
+    this.previewCategoriesStates$ = this.store.pipe(
+      select(eventManagerGetSelectedEventPreviewCategories),
+      map((descriptors: CategoryDescriptor[]) => descriptors.map(d => (<CategoryState>{
+        id: d.id,
+        category: d,
+      })))
+    );
   }
 
   openAddRestrictionModal(event: { name: string, existing: string[] }) {

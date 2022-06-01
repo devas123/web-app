@@ -11,7 +11,7 @@ import {eventManagerHeaderClear, eventManagerHeaderSet} from '../../modules/even
 import {filter, take} from 'rxjs/operators';
 import {HeaderDescription, MenuItem} from '../model/competition.model';
 import {MenuService} from '../../components/main-menu/menu.service';
-import {CategoryDescriptor} from "@frontend-nx/protobuf";
+import {CategoryState} from "@frontend-nx/protobuf";
 
 @Directive({})
 export abstract class CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
@@ -56,7 +56,7 @@ export interface ComponentCommonMetadataProvider {
 export abstract class BasicCompetitionInfoContainer extends CompetitionManagerModuleRouterEntryComponent {
   competitionName$: Observable<string>;
   competitionId$: Observable<string>;
-  categories$: Observable<CategoryDescriptor[]>;
+  categories$: Observable<CategoryState[]>;
   timeZone$: Observable<string>;
 
   protected constructor(store: Store<AppState>, metadataProvider: ComponentCommonMetadataProvider, menuService: MenuService) {

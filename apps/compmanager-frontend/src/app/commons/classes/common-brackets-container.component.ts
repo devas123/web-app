@@ -1,9 +1,5 @@
 import {Observable} from 'rxjs';
-import {
-  AppState,
-  getSelectedEventId,
-  getSelectedEventProperties
-} from '../../reducers/global-reducers';
+import {AppState, getSelectedEventId, getSelectedEventProperties} from '../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
@@ -27,8 +23,9 @@ import {
 } from '../../modules/event-manager/redux/event-manager-actions';
 import {
   BracketType,
-  CategoryDescriptor,
-  CompetitionProperties, Competitor,
+  CategoryState,
+  CompetitionProperties,
+  Competitor,
   FightDescription,
   StageDescriptor
 } from "@frontend-nx/protobuf";
@@ -44,8 +41,8 @@ export class CommonBracketsInfoContainer {
   stage$: Observable<StageDescriptor>;
   bracketsType$: Observable<'' | BracketType>;
   fightsAreLoading$: Observable<boolean>;
-  category$: Observable<CategoryDescriptor>;
-  categories$: Observable<CategoryDescriptor[]>;
+  category$: Observable<CategoryState>;
+  categories$: Observable<CategoryState[]>;
   numberOfCompetitor$: Observable<number>;
   bucketsize$: Observable<boolean>;
   competitors$: Observable<Competitor[]>;

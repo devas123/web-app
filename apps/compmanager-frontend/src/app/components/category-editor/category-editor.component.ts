@@ -1,11 +1,8 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {
-  categoryFilter,
-  defaultRestrictionFormatter
-} from '../../commons/model/competition.model';
+import {categoryFilter, defaultRestrictionFormatter} from '../../commons/model/competition.model';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
-import {CategoryDescriptor, CompetitionProperties} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -37,45 +34,14 @@ export class CategoryEditorComponent  {
   constructor() {
   }
 
-
-  get defaultCategories() {
-    if (!this._defaultCategories) {
-      this._defaultCategories = [];
-    }
-    return this._defaultCategories;
-  }
-
-  @Input()
-  set defaultCategories(value: CategoryDescriptor[]) {
-    if (value && value.length > 0) {
-      if (this._categories && this._categories.length > 0) {
-        const ids = this._categories.map(c => c.id);
-        this._allDefaultCategories = value.filter(cat => {
-          return ids.indexOf(cat.id) < 0;
-        });
-      } else {
-        this._allDefaultCategories = value;
-      }
-    } else {
-      this._allDefaultCategories = [];
-    }
-    this._defaultCategories = this._allDefaultCategories.slice(0, 50);
-  }
-
   get categories() {
     return this._categories;
   }
 
   @Input()
-  set categories(value: CategoryDescriptor[]) {
+  set categories(value: CategoryState[]) {
     if (value && value.length > 0) {
       this._categories = value;
-      if (this._defaultCategories && this._defaultCategories.length > 0) {
-        const ids = this._categories.map(c => c.id);
-        this._defaultCategories = this._defaultCategories.filter(cat => {
-          return ids.indexOf(cat.id) < 0;
-        });
-      }
     } else {
       this._categories = [];
     }
@@ -86,24 +52,20 @@ export class CategoryEditorComponent  {
     }
   }
 
-  _allDefaultCategories: CategoryDescriptor[];
-  filteredCategories: CategoryDescriptor[];
+  filteredCategories: CategoryState[];
 
   searchStr: string;
 
   @Output()
   createCustomCategoryClicked = new EventEmitter<string>();
   @Output()
-  addDefaultCategories = new EventEmitter<{ competitionId: string, category: CategoryDescriptor }[]>();
-  @Output()
   generateRandomFightersEvent: EventEmitter<any> = new EventEmitter<any>();
 
   @Input()
   competition: CompetitionProperties;
 
-  _defaultCategories: CategoryDescriptor[];
 
-  _categories: CategoryDescriptor[];
+  _categories: CategoryState[];
 
   @Output()
   deleteCategoryEvent: EventEmitter<{ competitionId: string, category: CategoryDescriptor }> = new EventEmitter<{ competitionId: string, category: CategoryDescriptor }>();
@@ -118,7 +80,7 @@ export class CategoryEditorComponent  {
   displayCategory = AddFighterComponent.displayCategory;
   displayRestriction = defaultRestrictionFormatter(true);
 
-  searchFilter = (options: CategoryDescriptor[], filter: string) => {
+  searchFilter = (options: CategoryState[], filter: string) => {
     let filteredOptions = [...options];
     const filterParts = filter.split(/\W/);
 
