@@ -30,7 +30,7 @@ import {
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {
-  CategoryDescriptor,
+  CategoryDescriptor, CategoryState,
   FightDescription,
   FightResultOption,
   StageDescriptor,
@@ -45,7 +45,7 @@ import {
 export class BracketsEditorContainerComponent extends BasicCompetitionInfoContainer implements OnInit, OnDestroy {
 
   public competitionId: string;
-  private categoryId: string;
+  categoryId: string;
   private subs = new Subscription();
   defaultFightResultOptions$: Observable<FightResultOption[]>;
   editMode = false;
@@ -124,8 +124,8 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.router.navigate(['..'], {relativeTo: this.route}).catch(console.log);
   }
 
-  optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-  formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryState[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat.category).toLowerCase().includes(filterword.toLowerCase()));
+  formatter = (option: CategoryState) => AddFighterComponent.displayCategory(option.category);
 
   setCategoryId(category: CategoryDescriptor) {
     this.editMode = false;
@@ -174,7 +174,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   generateBrackets(stages: StageDescriptor[]) {
-    this.sendCommandFromCategoryId(categoryId => eventManagerGenerateBrackets(this.competitionId, categoryId, stages));
+    this.sendCommandFromCategoryId(categoryId => eventManagerGenerateBrackets({competitionId: this.competitionId, categoryId, stageDescriptors: stages}));
   }
 
   private sendCommandFromCategoryId(actionBuilder: (categoryId) => any) {

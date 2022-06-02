@@ -56,8 +56,6 @@ import * as eventManagerActions from "../modules/event-manager/redux/event-manag
 import {
   EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-  EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-  EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   GENERATE_CATEGORIES_COMMAND
 } from "../modules/event-manager/redux/event-manager-actions";
 import {
@@ -396,7 +394,7 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case   EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND:
+      case   CommandType.DROP_CATEGORY_BRACKETS_COMMAND:
         cmd.type = CommandType.DROP_CATEGORY_BRACKETS_COMMAND;
         break;
       case     EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND:
@@ -423,10 +421,10 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case     EVENT_MANAGER_GENERATE_BRACKETS_COMMAND:
+      case     CommandType.GENERATE_BRACKETS_COMMAND:
         cmd.type = CommandType.GENERATE_BRACKETS_COMMAND;
         messageInfo.generateBracketsPayload = <GenerateBracketsPayload>{
-          ...action.payload
+          stageDescriptors: action.payload.stageDescriptors
         }
         break;
       case allActions.START_COMPETITION_COMMAND:
@@ -477,7 +475,7 @@ export class InfoService {
       case   eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND:
         cmd.type = CommandType.DROP_SCHEDULE_COMMAND
         break;
-      case   eventManagerActions.EVENT_MANAGER_DROP_ALL_BRACKETS_COMMAND:
+      case   CommandType.DROP_ALL_BRACKETS_COMMAND:
         cmd.type = CommandType.DROP_ALL_BRACKETS_COMMAND
         break;
       case   CommandType.PUBLISH_COMPETITION_COMMAND:

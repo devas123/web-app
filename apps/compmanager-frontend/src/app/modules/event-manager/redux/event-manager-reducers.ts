@@ -187,8 +187,13 @@ export const getSelectedEventCategoriesCollection = createSelector(getSelectedEv
 export const getSelectedEventPreviewCategoriesCollection = createSelector(getSelectedEventState, state => {
   return (state && state.selectedEventPreviewCategories) || previewCategoriesInitialState;
 });
-export const getSelectedEventSelectedCategoryState = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryState);
+
+const {
+  selectEntities: getSelectedEventCategoryEntities
+} = categoryEntityAdapter.getSelectors(getSelectedEventCategoriesCollection)
+
 export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryId);
+export const getSelectedEventSelectedCategoryState = createSelector(eventManagerGetSelectedEventSelectedCategoryId, getSelectedEventCategoryEntities, (id , entities) => id && entities[id]);
 export const eventManagerGetSelectedEventSelectedCategoryStagesCollection = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryStages);
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageId = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stages => stages.selectedStageId);
 

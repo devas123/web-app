@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
 import * as _ from 'lodash';
-import {CategoryDescriptor, Competitor, FightDescription, StageDescriptor} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, Competitor, FightDescription, StageDescriptor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-stage-display',
@@ -11,7 +11,7 @@ import {CategoryDescriptor, Competitor, FightDescription, StageDescriptor} from 
 })
 export class StageDisplayComponent  {
   @Input()
-  category: CategoryDescriptor;
+  category: CategoryState;
 
   @Input()
   set stages(stages: StageDescriptor[]) {

@@ -33,9 +33,7 @@ import {
   CATEGORY_STATE_DELETED,
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
-  EVENT_MANAGER_ALL_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORIES_LOADED,
-  EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
@@ -297,6 +295,26 @@ export function headerReducer(state: HeaderDescription = null, action: CommonAct
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce(st, state => {
     switch (action.type) {
+      case EventType.BRACKETS_GENERATED: {
+        const event = action as Event;
+        if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId) {
+          const stages = event.messageInfo.bracketsGeneratedPayload.stages;
+          const firstStage = stages.sort((a, b) => a.stageOrder - b.stageOrder)[0];
+          state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(stages, state.selectedEventCategories.selectedCategoryStages);
+          state.selectedEventCategories.selectedCategoryStages.selectedStageId = firstStage.id;
+          state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
+        }
+        break;
+      }
+      case EventType.FIGHTS_ADDED_TO_STAGE: {
+        const event = action as Event;
+        if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId) {
+          const payload = event.messageInfo.fightsAddedToStagePayload;
+          state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(payload.fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
+        }
+        break;
+      }
       case COMPETITION_UNSELECTED: {
         return initialCompetitionState;
       }
@@ -472,7 +490,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_STATE_LOADED: {
         const {competitionId, categoryId, payload} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
-          state.selectedEventCategories.selectedCategoryState = payload;
+          state.selectedEventCategories = categoryEntityAdapter.addOne(payload, state.selectedEventCategories);
           state.selectedEventCategories.categoryStateLoading = false;
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         }
@@ -660,8 +678,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             newState = {
               ...newState,
               selectedEventCategories: {
-                ...newState.selectedEventCategories,
-                selectedCategoryState: null
+                ...newState.selectedEventCategories
               }
             };
           }
@@ -803,17 +820,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-      case EVENT_MANAGER_ALL_BRACKETS_DROPPED:
-      case EVENT_MANAGER_CATEGORY_BRACKETS_DROPPED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          if (action.id === state.selectedEventCategories.selectedCategoryId) {
-            return state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
-          }
+      case EventType.CATEGORY_BRACKETS_DROPPED: {
+        const event = action as Event;
+        if (event.messageInfo.categoryId === state.selectedEventCategories.selectedCategoryId) {
+          state.selectedEventCategories.selectedCategoryStages = stagesInitialState;
         }
         break;
       }
       default:
-        return state;
+        break;
     }
   });
 }

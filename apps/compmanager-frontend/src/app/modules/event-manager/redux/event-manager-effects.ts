@@ -13,8 +13,6 @@ import {
   EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
   EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DISCONNECT_SOCKET,
-  EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
-  EVENT_MANAGER_GENERATE_BRACKETS_COMMAND,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
@@ -35,7 +33,7 @@ import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {CommandType, GenerateCategoriesFromRestrictionsPayload, ManagedCompetition} from "@frontend-nx/protobuf";
+import {CommandType, Event, GenerateCategoriesFromRestrictionsPayload, ManagedCompetition} from "@frontend-nx/protobuf";
 import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
 
 @Injectable()
@@ -43,6 +41,7 @@ export class EventManagerEffects {
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
+      CommandType.DROP_CATEGORY_BRACKETS_COMMAND,
       CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
       UPDATE_STAGE_STATUS_COMMAND,
       FIGHTS_EDITOR_APPLY_CHANGE,
@@ -63,6 +62,25 @@ export class EventManagerEffects {
       return of(errorEvent(JSON.stringify(error)));
     })
   ));
+
+  generateBrackets$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    ofType(CommandType.GENERATE_BRACKETS_COMMAND),
+    mergeMap((action: any) => {
+      const command = InfoService.createCommandWithPayload(action);
+      return this.infoService.sendCommandSync(command).pipe(
+        tap(executeSuccessCallbacks(action)),
+        mergeMap((actions: Event[]) => {
+          return from(actions.sort((a,b) => b.localEventNumber - a.localEventNumber));
+        }),
+        catchError(executeErrorCallbacks(action))
+      )
+    }),
+    catchError(error => {
+      console.error(error);
+      return of(errorEvent(JSON.stringify(error)));
+    })
+  ));
+
 
   loadMyCompetitions$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND),
@@ -117,11 +135,9 @@ export class EventManagerEffects {
 
   eventManagerForwardCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(
-      EVENT_MANAGER_DROP_CATEGORY_BRACKETS_COMMAND,
       EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
       EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-      GENERATE_CATEGORIES_COMMAND,
-      EVENT_MANAGER_GENERATE_BRACKETS_COMMAND),
+      GENERATE_CATEGORIES_COMMAND),
     mergeMap((action: CommonAction) => {
       const command = InfoService.createCommandWithPayload(action);
       return this.infoService.sendCommand(command, action.competitionId).pipe(catchError(error => observableOf(errorEvent(error))))

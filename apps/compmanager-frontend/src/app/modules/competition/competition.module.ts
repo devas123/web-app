@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {EffectsModule} from '@ngrx/effects';
 import {RegistrationService} from './service/registration.service';
-import {CompetitorsEffects, FightsEffects} from './redux/effects';
+import {CompetitorsEffects} from './redux/effects';
 import {RouterModule} from '@angular/router';
 import {compRoutes} from './competition.routes';
 import {SuiDimmerModule, SuiSelectModule, SuiSidebarModule, SuiTransitionModule} from '@frontend-nx/ng2-semantic-ui';
@@ -32,7 +32,7 @@ import {
   imports: [
     CompetitionManagerCommonsModule,
     CommonModule,
-    EffectsModule.forFeature([CompetitorsEffects, FightsEffects]),
+    EffectsModule.forFeature([CompetitorsEffects]),
     RouterModule.forChild(compRoutes),
     SuiSidebarModule,
     ReactiveFormsModule,

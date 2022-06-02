@@ -98,7 +98,6 @@ export interface AdjacencyList<Type> {
 
 export interface CategoriesCollection extends EntityState<CategoryState> {
   selectedCategoryId: string | null;
-  selectedCategoryState: CategoryState;
   selectedCategoryStages: CategoryBracketsStageCollection;
   categoryStateLoading: boolean;
 }

@@ -8,11 +8,11 @@ import {collectingReducer, generateUuid} from '../../../account/utils';
 import {debounceTime, throttle} from 'rxjs/operators';
 import {
   AdditionalGroupSortingDescriptor,
-  BracketType, CompetitorSelector,
+  BracketType, CompetitorSelector, CompetitorStageResult,
   FightResultOption,
   GroupSortDirection,
   GroupSortSpecifier, OperatorType, SelectorClassifier,
-  StageDescriptor, StageType
+  StageDescriptor, StageStatus, StageType
 } from "@frontend-nx/protobuf";
 
 @Component({
@@ -22,6 +22,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenerateBracketsFormComponent implements OnInit {
+
+  @Input()
+  categoryId: string
 
   @Input()
   set smallScreen(value: boolean) {
@@ -61,19 +64,19 @@ export class GenerateBracketsFormComponent implements OnInit {
   defaultFightResultOptions: FightResultOption[];
 
 
-  possibleGroupSortSpecifiers = Object.keys(GroupSortSpecifier);
-  possibleGroupSortDirections = Object.keys(GroupSortDirection);
+  possibleGroupSortSpecifiers = Object.values(GroupSortSpecifier);
+  possibleGroupSortDirections = Object.values(GroupSortDirection);
 
   @Input()
   competitionId: string;
 
   _competitorsSize = 0;
-  bracketTypes: BracketType[] = ['BRACKET_TYPE_SINGLE_ELIMINATION','BRACKET_TYPE_DOUBLE_ELIMINATION', 'BRACKET_TYPE_GROUP'];
-  stageTypes: StageType[] = ['STAGE_TYPE_PRELIMINARY', 'STAGE_TYPE_FINAL'];
+  bracketTypes: BracketType[] = Object.values(BracketType).filter(b => !b.endsWith('UNKNOWN'));
+  stageTypes: StageType[] = Object.values(StageType).filter(b => !b.endsWith('UNKNOWN'));
   form: FormGroup;
   private typeValidator = (control: FormGroup) => {
     const stageType = this.getStageType(control);
-    if (stageType === 'STAGE_TYPE_PRELIMINARY' && control.get('bracketType').value === 'BRACKET_TYPE_DOUBLE_ELIMINATION') {
+    if (stageType === "STAGE_TYPE_PRELIMINARY" && control.get('bracketType').value === 'BRACKET_TYPE_DOUBLE_ELIMINATION') {
       return {'typeValidator': true};
     }
     return null;
@@ -349,6 +352,10 @@ export class GenerateBracketsFormComponent implements OnInit {
       draft.stageResultDescriptor.fightResultOptions = draft.stageResultDescriptor.fightResultOptions.filter(o => !!o);
       draft.inputDescriptor.selectors = draft.inputDescriptor.selectors.filter(o => !!o);
       draft.stageResultDescriptor.additionalGroupSortingDescriptors = draft.stageResultDescriptor.additionalGroupSortingDescriptors.filter(o => !!o);
+      draft.stageResultDescriptor.competitorResults = <CompetitorStageResult[]>[];
+      draft.categoryId = this.categoryId;
+      draft.competitionId = this.competitionId;
+      draft.stageStatus = StageStatus.STAGE_STATUS_WAITING_FOR_APPROVAL;
     }));
     this.generateStages.next(stages);
   }
