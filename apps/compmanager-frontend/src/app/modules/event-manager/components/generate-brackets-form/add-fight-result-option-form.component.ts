@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {BracketType, FightResultOption} from "@frontend-nx/protobuf";
+import {generateUuid} from "../../../account/utils";
 
 export class AddFightResultOptionModal extends ComponentModalConfig<IAddFightResultOptionContext, FightResultOption, void> {
   constructor(bracketsType: BracketType, stageNumber: number, size = ModalSize.Small) {
@@ -158,6 +159,7 @@ export class AddFightResultOptionFormComponent implements OnInit {
 
   private fightResultOptionConfig() {
     return this.fb.group({
+      id: [generateUuid(), [Validators.required]],
       description: [''],
       shortName: ['', [Validators.required, Validators.maxLength(10)]],
       draw: [false],

@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
-import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'compmanager-frontend-button',
@@ -8,7 +7,7 @@ import {FormControl} from "@angular/forms";
       {{name}}
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
   @Input()

@@ -130,6 +130,7 @@ import {
   AddCompetitorContainerComponent
 } from "./containers/add-competitor-container/add-competitor-container.component";
 import {CreateEventContainerComponent} from "./containers/create-event-container/create-event-container.component";
+import {GroupDescriptorFormComponent} from "./components/generate-brackets-form/group-descriptor-form.component";
 
 @NgModule({
   imports: [
@@ -180,6 +181,7 @@ import {CreateEventContainerComponent} from "./containers/create-event-container
     RegistrationInfoEditorComponent,
     MatDisplayComponent,
     FightDisplayComponent,
+    GroupDescriptorFormComponent,
     PeriodManagementContainerComponent,
     PeriodsManagementContainerComponent,
     PeriodsManagementComponent,

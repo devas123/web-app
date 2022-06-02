@@ -14,6 +14,11 @@ import {
   GroupSortSpecifier, OperatorType, SelectorClassifier,
   StageDescriptor, StageStatus, StageType
 } from "@frontend-nx/protobuf";
+import {
+  defaultAdditionalGroupSortingFormatter, defaultBracketTypesFormatter,
+  defaultClassifierFormatter, defaultGroupSortDirectionsFormatter,
+  defaultGroupSortSpercifierFormatter, defaultStageTypesFormatter,
+} from "../../../../reducers/compmanager-utils";
 
 @Component({
   selector: 'app-generate-brackets-form',
@@ -67,11 +72,16 @@ export class GenerateBracketsFormComponent implements OnInit {
   possibleGroupSortSpecifiers = Object.values(GroupSortSpecifier);
   possibleGroupSortDirections = Object.values(GroupSortDirection);
 
+  groupSortSpercifierFormatter = defaultGroupSortSpercifierFormatter
+  groupSortDirectionsFormatter = defaultGroupSortDirectionsFormatter
+
   @Input()
   competitionId: string;
 
   _competitorsSize = 0;
   bracketTypes: BracketType[] = Object.values(BracketType).filter(b => !b.endsWith('UNKNOWN'));
+  bracketTypesFormatter = defaultBracketTypesFormatter
+  stageTypesFormatter = defaultStageTypesFormatter
   stageTypes: StageType[] = Object.values(StageType).filter(b => !b.endsWith('UNKNOWN'));
   form: FormGroup;
   private typeValidator = (control: FormGroup) => {
@@ -371,14 +381,15 @@ export class GenerateBracketsFormComponent implements OnInit {
 
   compSelectorFormatter = (opt: CompetitorSelector) => {
     const targetStage = this.stageDescriptions.controls.find(st => st.get('id').value === opt.applyToStageId);
-    const name = (targetStage && (targetStage.value.name || `Stage ${this.stageDescriptions.controls.indexOf(targetStage) + 1}`)) || opt.applyToStageId.substring(0, 7);
-    return `From ${name}: ${opt.classifier} ${opt.selectorValue.join()}`;
+    const name = (targetStage && (targetStage?.value?.name || `Stage ${this.stageDescriptions.controls.indexOf(targetStage) + 1}`)) || opt.applyToStageId.substring(0, 7);
+    return `From ${name}: ${this.classifierFormatter(opt.classifier)} ${opt.selectorValue.join()}`;
   };
+  classifierFormatter = defaultClassifierFormatter
 
   // eslint-disable-next-line eqeqeq
   // @ts-ignore
   // eslint-disable-next-line eqeqeq
-  additionalGroupSortingFormatter = (opt: AdditionalGroupSortingDescriptor) => opt.groupSortSpecifier + (opt.groupSortSpecifier == 'GROUP_SORT_SPECIFIER_MANUAL' ? '' : (':' + opt.groupSortDirection));
+  additionalGroupSortingFormatter = defaultAdditionalGroupSortingFormatter
 
   addAllFightOptions(i: number) {
     const bracketsType = this.getBracketsType(this.stageDescriptions.at(i));

@@ -54,6 +54,8 @@ import {LeftFloatedContainerComponent} from "./components/editable-field/left-fl
 import {
   TransparentRightFloatedContainerComponent
 } from "./components/editable-field/transparent-right-floated-container.component";
+import {LinkIconComponent} from "./components/link-icon-component";
+import {SimpleButtonDirective} from "./directives/simple.button.directive";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -97,6 +99,8 @@ const importsExports = [
   LeftFloatedValueDisplayComponent,
   LeftFloatedContainerComponent,
   TransparentRightFloatedContainerComponent,
+  LinkIconComponent,
+  SimpleButtonDirective,
   MultipleGroupsDisplayComponent];
 
 @NgModule({

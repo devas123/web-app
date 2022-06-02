@@ -2,7 +2,13 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import produce from 'immer';
-import {BracketType, CompetitorSelector, OperatorType, SelectorClassifier} from "@frontend-nx/protobuf";
+import {
+  BracketType,
+  CompetitorSelector,
+  LogicalOperator,
+  OperatorType,
+  SelectorClassifier
+} from "@frontend-nx/protobuf";
 
 export class AddInputSelectorFormModal extends ComponentModalConfig<IAddInputSelectorFormContext, CompetitorSelector[], void> {
   constructor(bracketsType: BracketType, stageNumber: number, precedingStages: string[], size = ModalSize.Small) {
@@ -76,9 +82,9 @@ export interface IAddInputSelectorFormContext {
 export class AddInputSelectorFormComponent implements OnInit {
 
   f: FormGroup;
-  selectorClassifiers = Object.keys(SelectorClassifier).filter(key => !isNaN(Number(SelectorClassifier[key])));
+  selectorClassifiers = Object.values(SelectorClassifier);
   stageNumbersFormatter = (opt: string) => `${this.modal.context.precedingStages.indexOf(opt) + 1}`;
-  selectorClassifiersFormatter = (opt: string) => opt === 'LAST_N_PLACES' ? 'Take last' : 'Take first';
+  selectorClassifiersFormatter = (opt: string) => opt === SelectorClassifier.SELECTOR_CLASSIFIER_LAST_N_PLACES ? 'Take last' : 'Take first';
   addOptions() {
     const groups = this.form.value as CompetitorSelector[];
     if (groups) {
@@ -113,7 +119,7 @@ export class AddInputSelectorFormComponent implements OnInit {
   private competitorSelectorConfig() {
     return this.fb.group({
       applyToStageId: ['', [Validators.required]],
-      logicalOperator: ['AND'],
+      logicalOperator: [LogicalOperator.LOGICAL_OPERATOR_AND],
       classifier: ['', [Validators.required]],
       selectorValue: this.fb.array([this.fb.control(0, [Validators.required, Validators.min(1)])], [Validators.required])
     });

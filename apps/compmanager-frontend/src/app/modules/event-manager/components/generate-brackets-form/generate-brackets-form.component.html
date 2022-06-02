@@ -1,10 +1,10 @@
 <div class="ui basic segment bottom_margin" [formGroup]="form" [ngClass]="{error: form.invalid}">
   <div class="ui buttons">
-    <button class="ui button" (click)="doGenerateStages()" [disabled]="form.invalid">Generate</button>
-    <button class="ui button" (click)="addStageDescription()">Add stage</button>
-    <button class="ui button" (click)="removeAllStages()">Clear</button>
+    <button compmanagerFrontendSimpleButton (click)="doGenerateStages()" [disabled]="form.invalid">Generate</button>
+    <button compmanagerFrontendSimpleButton (click)="addStageDescription()">Add stage</button>
+    <button compmanagerFrontendSimpleButton (click)="removeAllStages()">Clear</button>
   </div>
-  <div *ngIf="form.touched && form?.errors?.finalStageExistsValidator">
+  <div class="ui messages" *ngIf="form.touched && form?.errors?.finalStageExistsValidator">
     <div class="ui compact error message">There should be exactly one final stage for category.</div>
   </div>
   <div class="stage_descriptions_grid" formArrayName="stageDescriptions" [ngStyle]="ngStyle">
@@ -12,25 +12,25 @@
          *ngFor="let stage of stageDescriptions.controls; index as i; last as isLast">
       <div class="content">
         <div class="right floated">
-          <a>
-            <i class="close icon" (click)="removeStageDescription(i)"></i>
-          </a>
+          <compmanager-frontend-link-icon (click)="removeStageDescription(i)"
+                                          [iconClass]="'close'"></compmanager-frontend-link-icon>
         </div>
         <div class="header">
           Stage #{{i + 1}} {{getName(stage) ? '(' + getName(stage) + ')' : ''}}
         </div>
         <div class="ui basic divider"></div>
-        <div class="ui form" [ngClass]="{error: stage.invalid}" [formGroupName]="i" novalidate>
+        <div class="ui form" [ngClass]="{error: stage.invalid}" [formGroupName]="i">
           <div class="ui label transparent_label">Brackets type.</div>
-          <div class="ui compact error message" *ngIf="stage.errors?.typeValidator">Double elimination is only allowed
-            for the final stage.
+          <div class="ui compact error message" *ngIf="stage.errors?.typeValidator">Double elimination can only be used
+            as a final stage.
           </div>
           <div class="ui field">
             <sui-select class="selection"
                         (selectedOptionChange)="setBracketsType(i, $event)"
                         [placeholder]="'Select brackets type'"
                         [options]="bracketTypes"
-                        [isSearchable]="true"
+                        [optionFormatter]="bracketTypesFormatter"
+                        [isSearchable]="false"
                         [isDisabled]="false"
                         #bracketType>
               <sui-select-option *ngFor="let option of bracketType.filteredOptions"
@@ -44,7 +44,8 @@
                         (selectedOptionChange)="setStageType(i, $event)"
                         [placeholder]="'Select stage type'"
                         [options]="stageTypes"
-                        [isSearchable]="true"
+                        [optionFormatter]="stageTypesFormatter"
+                        [isSearchable]="false"
                         [isDisabled]="false"
                         #stageType>
               <sui-select-option *ngFor="let option of stageType.filteredOptions"
@@ -93,24 +94,15 @@
                 </div>
                 <ng-container *ngIf="getBracketsType(stage) === 'BRACKET_TYPE_GROUP'">
                   <div formArrayName="groupDescriptors">
-                    <button class="ui button" (click)="addGroupDescriptor(i)">Add group descriptor</button>
+                    <button compmanagerFrontendSimpleButton (click)="addGroupDescriptor(i)">Add group descriptor
+                    </button>
                     <p></p>
-                    <div class="ui fields" *ngFor="let group of groupDescriptors(i).controls; index as k"
-                         [formGroupName]="k">
-                      <div class="ui field">
-                        <input class="ui input" type="text" [placeholder]="1 + k + ' name (optional)'"
-                               formControlName="name"/>
-                      </div>
-                      <div class="ui field">
-                        <input class="ui input" type="number"
-                               [placeholder]="1 + k + ' size'"
-                               formControlName="size"/>
-                      </div>
-                      <div class="ui field">
-                        <button class="ui icon button" (click)="removeGroupDescriptor(i, k)"><i class="trash icon"></i>
-                        </button>
-                      </div>
-                    </div>
+                    <compmanager-frontend-group-descriptor-form
+                      *ngFor="let group of groupDescriptors(i).controls; index as k"
+                      [group]="group"
+                      [groupNumber]="k"
+                      (groupDescriptorRemoved)="removeGroupDescriptor(i, k)"
+                    ></compmanager-frontend-group-descriptor-form>
                   </div>
                 </ng-container>
                 <ng-container *ngIf="i > 0">
@@ -145,11 +137,12 @@
           <div class="results_section" [ngStyle]="ngStyle">
             <div class="ui card">
               <div class="content">
-                <div class="header">Possible results</div>
+                <div class="header">Possible fight results</div>
                 <div class="fight_options_select">
-                  <a
-                    (click)="mergeSelectedFightResultOptions(i, select.selectedOptions); select.selectedOptions = []"><i
-                    class="ui check icon"></i></a>
+                  <compmanager-frontend-link-icon
+                    (click)="mergeSelectedFightResultOptions(i, select.selectedOptions); select.selectedOptions = []"
+                    [iconClass]="'check'"
+                  ></compmanager-frontend-link-icon>
                   <sui-multi-select
                     [isSearchable]="true"
                     [isDisabled]="false"
@@ -184,10 +177,10 @@
                   </ng-template>
                 </app-tag-list>
                 <div class="ui buttons">
-                  <button class="ui button"
+                  <button compmanagerFrontendSimpleButton
                           (click)="addAllFightOptions(i)">Add all
                   </button>
-                  <button class="ui button"
+                  <button compmanagerFrontendSimpleButton
                           (click)="openAddFightOptionsModal(i)">Create custom
                   </button>
                 </div>
@@ -207,6 +200,7 @@
                     <sui-select
                       [isDisabled]="false"
                       [options]="possibleGroupSortSpecifiers"
+                      [optionFormatter]="groupSortSpercifierFormatter"
                       placeholder="Specifier"
                       #specifierSelect>
                       <sui-select-option *ngFor="let o of specifierSelect.filteredOptions"
@@ -217,15 +211,17 @@
                     <sui-select
                       [isDisabled]="specifierSelect.selectedOption === 'GROUP_SORT_SPECIFIER_MANUAL'"
                       [options]="possibleGroupSortDirections"
+                      [optionFormatter]="groupSortDirectionsFormatter"
                       placeholder="Direction"
                       #directionSelect>
                       <sui-select-option *ngFor="let o of directionSelect.filteredOptions"
                                          [value]="o"></sui-select-option>
                     </sui-select>
                   </div>
-                  <a
-                    (click)="addAdditionalSortingOption(i, specifierSelect.selectedOption, directionSelect.selectedOption)"><i
-                    class="check icon"></i></a>
+                  <compmanager-frontend-link-icon
+                    (click)="addAdditionalSortingOption(i, specifierSelect.selectedOption, directionSelect.selectedOption)"
+                    [iconClass]="'check'"
+                  ></compmanager-frontend-link-icon>
                 </div>
                 <app-tag-list *ngIf="!forceManual.isChecked" [values]="getAdditionalGroupSortingDescriptorsValue(i)"
                               (itemRemoved)="removeAdditionalSortingOption(i, $event.index)"
