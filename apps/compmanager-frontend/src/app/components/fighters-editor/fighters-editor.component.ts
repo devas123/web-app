@@ -38,13 +38,8 @@ export class FightersEditorComponent {
   set pageNumber(value: number) {
     if (value && value > 0) {
       this._pageNumber = value;
-      if (this._pagination) {
-        this._pagination.setPage(value);
-      }
     }
   }
-
-  _pagination: SuiPagination;
 
   @Input()
   pageSize: number;
@@ -63,15 +58,6 @@ export class FightersEditorComponent {
 
   @Input()
   showRegistrationStatus = true;
-
-
-  @ViewChild('pagination')
-  set pagination(value: SuiPagination) {
-    if (value) {
-      this._pagination = value;
-      this._pagination.setPage(this.pageNumber);
-    }
-  }
 
   constructor() {
   }

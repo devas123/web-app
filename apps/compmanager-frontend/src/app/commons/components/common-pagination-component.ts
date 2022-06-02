@@ -1,11 +1,12 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from "@angular/core";
+import {SuiPagination} from "@frontend-nx/ng2-semantic-ui";
 
 @Component({
   selector: 'compmanager-frontend-common-pagination',
   template: `
     <sui-pagination [collectionSize]="collectionSize"
                     [pageSize]="pageSize"
-                    [maxSize]="5"
+                    [maxSize]="4"
                     [page]="pageNumber"
                     [hasEllipses]="true"
                     (pageChange)="selectPage($event)" #pagination>
@@ -26,5 +27,14 @@ export class CommonPaginationComponent {
 
   selectPage(page: number) {
     this.pageChanged.next(page);
+  }
+
+  _pagination: SuiPagination;
+  @ViewChild('pagination')
+  set pagination(value: SuiPagination) {
+    if (value) {
+      this._pagination = value;
+      this._pagination.setPage(this.pageNumber);
+    }
   }
 }

@@ -153,8 +153,7 @@ export class SuiPagination implements OnChanges {
         this.pageCount = Math.max(1, Math.ceil(this._collectionSize / this.pageSize));
 
         const [start, end] = this.applyPagination();
-
-        if (start && isNumeric(start) && end && isNumeric(end) && end >= start) {
+        if (isNumeric(start) && isNumeric(end) && end >= start) {
           this._pages = Array<number>(end - start)
             .fill(start + 1)
             .map((s, i) => s + i);
