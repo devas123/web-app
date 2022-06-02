@@ -2851,7 +2851,6 @@ proto.compservice.model.protobuf.CompetitorSelector.prototype.toObject = functio
  */
 proto.compservice.model.protobuf.CompetitorSelector.toObject = function(includeInstance, msg) {
   var f, obj = {
-    id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     applytostageid: jspb.Message.getFieldWithDefault(msg, 2, ""),
     logicaloperator: jspb.Message.getFieldWithDefault(msg, 4, 0),
     classifier: jspb.Message.getFieldWithDefault(msg, 5, 0),
@@ -2893,10 +2892,6 @@ proto.compservice.model.protobuf.CompetitorSelector.deserializeBinaryFromReader 
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setId(value);
-      break;
     case 2:
       var value = /** @type {string} */ (reader.readString());
       msg.setApplytostageid(value);
@@ -2946,13 +2941,6 @@ proto.compservice.model.protobuf.CompetitorSelector.prototype.serializeBinary = 
  */
 proto.compservice.model.protobuf.CompetitorSelector.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getId();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getApplytostageid();
   if (f.length > 0) {
     writer.writeString(
@@ -2988,24 +2976,6 @@ proto.compservice.model.protobuf.CompetitorSelector.serializeBinaryToWriter = fu
       f
     );
   }
-};
-
-
-/**
- * optional string id = 1;
- * @return {string}
- */
-proto.compservice.model.protobuf.CompetitorSelector.prototype.getId = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.compservice.model.protobuf.CompetitorSelector} returns this
- */
-proto.compservice.model.protobuf.CompetitorSelector.prototype.setId = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

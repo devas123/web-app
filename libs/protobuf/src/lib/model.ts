@@ -1247,7 +1247,6 @@ export interface StageInputDescriptor {
 }
 
 export interface CompetitorSelector {
-  id: string;
   applyToStageId: string;
   logicalOperator: LogicalOperator;
   classifier: SelectorClassifier;
@@ -2333,7 +2332,6 @@ export const StageInputDescriptor = {
 
 function createBaseCompetitorSelector(): CompetitorSelector {
   return {
-    id: '',
     applyToStageId: '',
     logicalOperator: LogicalOperator.LOGICAL_OPERATOR_AND,
     classifier: SelectorClassifier.SELECTOR_CLASSIFIER_FIRST_N_PLACES,
@@ -2347,9 +2345,6 @@ export const CompetitorSelector = {
     message: CompetitorSelector,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.id !== '') {
-      writer.uint32(10).string(message.id);
-    }
     if (message.applyToStageId !== '') {
       writer.uint32(18).string(message.applyToStageId);
     }
@@ -2378,9 +2373,6 @@ export const CompetitorSelector = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.id = reader.string();
-          break;
         case 2:
           message.applyToStageId = reader.string();
           break;
@@ -2406,7 +2398,6 @@ export const CompetitorSelector = {
 
   fromJSON(object: any): CompetitorSelector {
     return {
-      id: isSet(object.id) ? String(object.id) : '',
       applyToStageId: isSet(object.applyToStageId)
         ? String(object.applyToStageId)
         : '',
@@ -2427,7 +2418,6 @@ export const CompetitorSelector = {
 
   toJSON(message: CompetitorSelector): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
     message.applyToStageId !== undefined &&
       (obj.applyToStageId = message.applyToStageId);
     message.logicalOperator !== undefined &&
@@ -2448,7 +2438,6 @@ export const CompetitorSelector = {
     object: I
   ): CompetitorSelector {
     const message = createBaseCompetitorSelector();
-    message.id = object.id ?? '';
     message.applyToStageId = object.applyToStageId ?? '';
     message.logicalOperator =
       object.logicalOperator ?? LogicalOperator.LOGICAL_OPERATOR_AND;

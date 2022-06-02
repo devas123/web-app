@@ -205,7 +205,8 @@ export class GenerateBracketsFormComponent implements OnInit {
   groupDescriptorConfig = () => this.fb.group({
     size: [0, [Validators.required, Validators.min(0),
       Validators.max(this._competitorsSize)]],
-    name: ['']
+    name: [''],
+    id: [generateUuid(), [Validators.required]]
   });
   formatter = (option: FightResultOption) => (option && option.shortName) || 'Unnamed';
   filterFightResults = (options: FightResultOption[], query?: string) => (query && options.filter(fr => new RegExp(`.*${query.toLowerCase()}.*`).test(fr.shortName.toLowerCase()))) || options;

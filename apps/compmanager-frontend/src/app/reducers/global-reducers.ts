@@ -86,7 +86,7 @@ import {
 import {generateUuid} from "../modules/account/utils";
 import {
   CategoryDescriptor,
-  CategoryState,
+  CategoryState, CommandType,
   CompetitionProperties,
   Competitor,
   Event,
@@ -295,11 +295,16 @@ export function headerReducer(state: HeaderDescription = null, action: CommonAct
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce(st, state => {
     switch (action.type) {
+      case CommandType.GENERATE_BRACKETS_COMMAND: {
+        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
+        break;
+      }
       case EventType.BRACKETS_GENERATED: {
         const event = action as Event;
-        if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId) {
-          const stages = event.messageInfo.bracketsGeneratedPayload.stages;
-          const firstStage = stages.sort((a, b) => a.stageOrder - b.stageOrder)[0];
+        const stages = event.messageInfo.bracketsGeneratedPayload?.stages || [];
+        if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId && stages.length > 0) {
+          const minStage = stages.map(s => s.stageOrder).sort((a, b) => a - b)[0];
+          const firstStage = stages.find(s => s.stageOrder === minStage);
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(stages, state.selectedEventCategories.selectedCategoryStages);
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = firstStage.id;
           state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightsInitialState;
@@ -310,8 +315,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const event = action as Event;
         if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId) {
           const payload = event.messageInfo.fightsAddedToStagePayload;
-          state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(payload.fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
-          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
+          if (payload.stageId === state.selectedEventCategories.selectedCategoryStages.selectedStageId) {
+            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(payload.fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+            state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
+          }
         }
         break;
       }
