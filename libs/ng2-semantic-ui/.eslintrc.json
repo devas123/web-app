@@ -20,7 +20,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "frontend-nx",
+            "prefix": "sui",
             "style": "camelCase"
           }
         ],
@@ -28,9 +28,15 @@
           "error",
           {
             "type": "element",
-            "prefix": "frontend-nx",
+            "prefix": "sui",
             "style": "kebab-case"
           }
+        ],
+        "@angular-eslint/component-class-suffix": [
+          "warn"
+        ],
+        "@angular-eslint/directive-class-suffix": [
+          "warn"
         ]
       }
     },

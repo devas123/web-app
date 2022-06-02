@@ -20,7 +20,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "compmanager-frontend",
+            "prefix": "cf",
             "style": "camelCase"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "compmanager-frontend",
+            "prefix": "cf",
             "style": "kebab-case"
           }
         ]

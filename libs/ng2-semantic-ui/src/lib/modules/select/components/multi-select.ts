@@ -45,7 +45,7 @@ import { SuiSelectOption } from "./select-option";
      [menuAutoSelectFirst]="true">
 
     <ng-content></ng-content>
-    <ng-container *ngIf="availableOptions.length == 0 ">
+    <ng-container *ngIf="availableOptions.length === 0 ">
         <div *ngIf="!maxSelectedReached" class="message">{{ localeValues.noResultsMessage }}</div>
         <div *ngIf="maxSelectedReached" class="message">{{ maxSelectedMessage }}</div>
     </ng-container>
@@ -239,7 +239,9 @@ export class SuiMultiSelect<T, U> extends SuiSelectBase<T, U> implements ICustom
 
 // Value accessor directive for the select to support ngModel.
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
     selector: "sui-multi-select",
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
     host: {
         "(selectedOptionsChange)": "onChange($event)",
         "(touched)": "onTouched()"
