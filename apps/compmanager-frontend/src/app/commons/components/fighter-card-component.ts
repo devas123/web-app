@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
-import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor} from "@frontend-nx/protobuf";
 import {AddFighterComponent} from "../../modules/event-manager/components/add-fighter/add-fighter.component";
 
 @Component({
@@ -40,7 +40,7 @@ export class FighterCardComponent {
   fighter: Competitor
 
   @Input()
-  categories: CategoryDescriptor[]
+  categories: CategoryState[]
 
   @Input()
   showPersonalData: boolean
@@ -63,9 +63,11 @@ export class FighterCardComponent {
   sendHeaderClicked() {
     this.headerClicked.next(this.fighter);
   }
+
   sendDeleteClicked() {
     this.deleteClicked.next(this.fighter);
   }
+
   sendEditClicked() {
     this.editClicked.next(this.fighter);
   }
@@ -73,7 +75,7 @@ export class FighterCardComponent {
   getCategoryName(categoryId: string): string {
     const cat = this.categories?.find(c => c.id === categoryId);
     if (cat) {
-      return AddFighterComponent.displayCategory(cat);
+      return AddFighterComponent.displayCategory(cat.category);
     }
     return categoryId;
   }

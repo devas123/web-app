@@ -53,8 +53,8 @@ export class FightersDisplayContainerComponent  {
         this.subs.add(this.searchString$.subscribe(str => this.setSearchString(str)));
     }
 
-    optionsFilter = (options: CategoryDescriptor[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filterword.toLowerCase()));
-    formatter = (option: CategoryDescriptor) => AddFighterComponent.displayCategory(option);
+    optionsFilter = (options: CategoryState[], filterword: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat?.category).toLowerCase().includes(filterword.toLowerCase()));
+    formatter = (option: CategoryState) => AddFighterComponent.displayCategory(option?.category);
 
 
     changePage(info: any) {

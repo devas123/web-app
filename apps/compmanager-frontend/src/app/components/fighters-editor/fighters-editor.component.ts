@@ -1,7 +1,5 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
-import {SuiPagination} from '@frontend-nx/ng2-semantic-ui';
-import {CategoryDescriptor, Competitor} from "@frontend-nx/protobuf";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {CategoryState, Competitor} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fighters-editor',
@@ -20,13 +18,13 @@ export class FightersEditorComponent {
   }
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
   competitionId: string;
 
   @Input()
-  category: CategoryDescriptor;
+  category: CategoryState;
 
   @Input()
   fighters: Competitor[];
