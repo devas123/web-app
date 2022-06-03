@@ -1,8 +1,8 @@
 <div class="ui segments" id="schedule_page" (app-drag-start)="startDrag()" (app-drag-end)="finishDrag()">
   <div [suiCollapse]="!showEditor">
     <div class="ui basic segment" cdkDropListGroup>
-      <button class="ui tiny button" (click)="openAddSchedulePeriodModal()">Add period</button>
-      <button class="ui tiny button" (click)="sendDropSchedule()">Drop schedule</button>
+      <button class="ui tiny button" *ngIf="scheduleEmpty" (click)="openAddSchedulePeriodModal()">Add period</button>
+      <button class="ui tiny button" *ngIf="!scheduleEmpty" (click)="sendDropSchedule()">Drop schedule</button>
       <button class="ui tiny button" *ngIf="_selectedReqs && _selectedReqs.size > 1"
               (click)="mergeSelectedReqs()">Merge selected
       </button>
@@ -33,7 +33,9 @@
                 [date]="period?.startTime"
                 [text]="'Begins '"
               ></compmanager-frontend-date-field>
-              <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">Add Pause</button>
+              <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">
+                Add Pause
+              </button>
               <app-requirements-display
                 *ngIf="getPeriodMats(period?.id)?.length > 1 || getPeriodMats(period?.id)?.length === 0"
                 class="padded-top"

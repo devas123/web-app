@@ -23,7 +23,7 @@ import {InternalScheduleState} from "../../reducers/global-reducers";
             ></compmanager-frontend-date-field>
             <div class="ui toggle checkbox margin-vertical">
               <input type="checkbox" name="public" [value]="matsView[period?.id]" (click)="toggleMatsView(period.id)">
-              <label>{{matsView[period?.id] ? 'Hide mats' : 'Show mats' }}</label>
+              <label>{{matsView[period?.id] ? 'Hide areas' : 'Show areas' }}</label>
             </div>
             <app-schedule-entry-display
               [timeZone]="timeZone"

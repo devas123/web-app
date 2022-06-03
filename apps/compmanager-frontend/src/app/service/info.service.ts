@@ -439,7 +439,7 @@ export class InfoService {
           competitionProperties: action.payload.competitionProperties
         }
         break;
-      case   eventManagerActions.EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND:
+      case   CommandType.GENERATE_SCHEDULE_COMMAND:
         cmd.type = CommandType.GENERATE_SCHEDULE_COMMAND
         messageInfo.generateSchedulePayload = <GenerateSchedulePayload>{
           ...action.payload
@@ -472,7 +472,7 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case   eventManagerActions.EVENT_MANAGER_DROP_SCHEDULE_COMMAND:
+      case   CommandType.DROP_SCHEDULE_COMMAND:
         cmd.type = CommandType.DROP_SCHEDULE_COMMAND
         break;
       case   CommandType.DROP_ALL_BRACKETS_COMMAND:

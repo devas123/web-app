@@ -47,7 +47,6 @@ import {
   EVENT_MANAGER_FIGHTER_UNSELECTED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
-  EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND,
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
@@ -56,13 +55,10 @@ import {
   EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED,
   EVENT_MANAGER_REGISTRATION_GROUP_CREATED,
   EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
-  EVENT_MANAGER_SCHEDULE_DROPPED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED,
   FIGHT_IDS_BY_CATEGORY_ID_LOADED,
-  FIGHTS_START_TIME_UPDATED,
-  REGISTRATION_INFO_UPDATED,
-  SCHEDULE_GENERATED
+  REGISTRATION_INFO_UPDATED
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce from 'immer';
 import {
@@ -86,7 +82,8 @@ import {
 import {generateUuid} from "../modules/account/utils";
 import {
   CategoryDescriptor,
-  CategoryState, CommandType,
+  CategoryState,
+  CommandType,
   CompetitionProperties,
   Competitor,
   Event,
@@ -394,20 +391,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
 
-      case EVENT_MANAGER_GENERATE_SCHEDULE_COMMAND: {
-        const {payload, competitionId} = action;
-        if (state.competitionProperties.id === competitionId && payload) {
-          return {
-            ...state,
-            selectedEventSchedule: {
-              ...state.selectedEventSchedule,
-              scheduleProperties: payload
-            }
-          };
-        }
-        return state;
-      }
-
       case EVENT_MANAGER_CATEGORY_MOVED: {
         const {competitionId, payload} = action;
 
@@ -701,24 +684,39 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
-      case SCHEDULE_GENERATED: {
-        const {competitionId, payload} = action;
-        if (state.competitionProperties.id === competitionId && payload) {
-          const {schedule} = payload;
-          if (schedule) {
-            state.selectedEventSchedule.periods = periodEntityAdapter.setAll(schedule.periods, periodEntityInitialState);
-            state.selectedEventSchedule.competitionId = competitionId;
-          }
+      case EventType.SCHEDULE_GENERATED: {
+        const event = action as Event;
+        const competitionId = event.messageInfo.competitionId;
+        const payload = event.messageInfo.scheduleGeneratedPayload;
+        if (payload?.schedule) {
+          state.selectedEventSchedule.periods = periodEntityAdapter.setAll(payload?.schedule.periods, periodEntityInitialState);
+          state.selectedEventSchedule.competitionId = competitionId;
+          state.selectedEventMats = matEntityAdapter.setAll(payload?.schedule?.mats, matsInitialState);
         }
         break;
       }
-      case FIGHTS_START_TIME_UPDATED: {
-        const {competitionId, payload, categoryId} = action;
-        if (state.selectedEventCategories.selectedCategoryId === categoryId && state.competitionProperties.id === competitionId && payload) {
+      case EventType.FIGHTS_START_TIME_UPDATED: {
+        const event = action as Event;
+        const payload = event.messageInfo.fightStartTimeUpdatedPayload;
+        if (payload) {
           const {newFights} = payload;
+          const mats = state.selectedEventMats.entities
           if (newFights) {
+            const updates = newFights.map(f => {
+              return <Update<FightDescription>>{
+                id: f.fightId,
+                changes: {
+                  period: f.periodId,
+                  mat: mats[f.matId],
+                  numberOnMat: f.numberOnMat,
+                  startTime: f.startTime,
+                  scheduleEntryId: f.scheduleEntryId,
+                  invalid: f.invalid
+                }
+              }
+            })
             state.selectedEventCategories.selectedCategoryStages.selectedStageFights
-              = fightEntityAdapter.setAll(newFights, fightsInitialState);
+              = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
           }
         }
         break;
@@ -818,14 +816,14 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         state.selectedEventSchedule.periods.selectedPeriodId = action.payload;
         break;
       }
-      case EVENT_MANAGER_SCHEDULE_DROPPED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          return {
-            ...state,
-            selectedEventSchedule: scheduleInitialState
-          };
-        }
-        return state;
+      case EventType.SCHEDULE_DROPPED: {
+        const updates = Object.values(state.selectedEventSchedule.periods.entities).map(per => (<Update<Period>>{
+          id: per.id, changes: {
+            scheduleEntries: []
+          }
+        }))
+        state.selectedEventSchedule.periods = periodEntityAdapter.updateMany(updates, state.selectedEventSchedule.periods);
+        break;
       }
       case EventType.CATEGORY_BRACKETS_DROPPED: {
         const event = action as Event;
