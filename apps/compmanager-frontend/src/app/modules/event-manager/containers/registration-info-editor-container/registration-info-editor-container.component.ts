@@ -10,7 +10,7 @@ import {
   eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
 import {
-  eventManagerAddRegistrationGroup,
+  eventManagerAddRegistrationGroup, eventManagerAddRegistrationGroupToRegistrationPeriod,
   eventManagerAddRegistrationPeriod,
   eventManagerDeleteRegistrationGroup,
   eventManagerDeleteRegistrationPeriod,
@@ -127,24 +127,36 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
 
   addRegistrationInfoGroups(data: IAddRegistrationGroupResult) {
     if (data && data.groups && data.registrationInfoId) {
-      this.store.dispatch(eventManagerAddRegistrationGroup(data.competitionId, data.periodId, data.groups.map(gr => ({
-        ...gr,
-        registrationInfoId: data.registrationInfoId
-      }))));
+      if (data.createNew) {
+        this.store.dispatch(eventManagerAddRegistrationGroup({
+          competitionId: data.competitionId, periodId: data.periodId,
+          groups: data.groups.map(gr => ({
+            ...gr,
+            registrationInfoId: data.registrationInfoId,
+            categories: []
+          }))
+        }));
+      } else {
+        data.groups.map(gr => eventManagerAddRegistrationGroupToRegistrationPeriod({
+          competitionId: data.competitionId,
+          periodId: data.periodId,
+          groupId: gr.id
+        }))
+          .forEach(e => this.store.dispatch(e));
+      }
     }
   }
 
   addRegistrationInfoPeriod(data: IAddRegistrationPeriodResult) {
-    this.store.dispatch(eventManagerAddRegistrationPeriod(data.competitionId, data.period));
+    this.store.dispatch(eventManagerAddRegistrationPeriod({...data}));
   }
 
   deleteRegistrationInfoGroup(data: { competitionId: string, periodId: string, groupId: string }) {
-    this.store.dispatch(eventManagerDeleteRegistrationGroup(data.competitionId, data.periodId, data.groupId));
+    this.store.dispatch(eventManagerDeleteRegistrationGroup({...data}));
   }
 
   deleteRegistrationInfoPeriod(data: { competitionId: string, periodId: string }) {
-    const {competitionId, periodId} = data;
-    this.store.dispatch(eventManagerDeleteRegistrationPeriod(competitionId, periodId));
+    this.store.dispatch(eventManagerDeleteRegistrationPeriod({...data}));
   }
 
   selectRegistrationGroup(groupId: string) {

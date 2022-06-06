@@ -4,16 +4,24 @@
   </div>
   <div class="category_list_container">
     <h4>Categories of the group</h4>
-    <div class="categories_list" [ngClass]="{empty: !groupCategories || groupCategories.length === 0}" (cdkDropListDropped)="moveCategoryToGroup($event)" cdkDropList>
-      <div class="category_card placeholder" *ngIf="!groupCategories || groupCategories.length === 0">Drag here to assign category</div>
-      <div class="category_card" *ngFor="let c of groupCategories" cdkDrag [cdkDragData]="c.id">{{c | displayCategory}}</div>
+    <div class="categories_list" [ngClass]="{empty: !groupCategories || groupCategories.length === 0}"
+         (cdkDropListDropped)="moveCategoryToGroup($event)" cdkDropList>
+      <div class="category_card placeholder" *ngIf="!groupCategories || groupCategories.length === 0">Drag here to
+        assign category
+      </div>
+      <div class="category_card" *ngFor="let c of groupCategories" cdkDrag
+           [cdkDragData]="c.id">{{c | displayCategory}}</div>
     </div>
   </div>
   <div class="category_list_container">
     <h4>Unassigned categories</h4>
-    <div class="categories_list" [ngClass]="{empty: !unassignedCategoies || unassignedCategoies.length === 0}" cdkDropList (cdkDropListDropped)="moveCategoryOutOfGroup($event)">
-      <div class="category_card placeholder" *ngIf="!unassignedCategoies || unassignedCategoies.length === 0">No unassigned categories. Drop here to unassign</div>
-      <div class="category_card" *ngFor="let c of unassignedCategoies" cdkDrag [cdkDragData]="c">{{c | displayCategory}}</div>
+    <div class="categories_list" [ngClass]="{empty: !unassignedCategoies || unassignedCategoies.length === 0}"
+         cdkDropList (cdkDropListDropped)="moveCategoryOutOfGroup($event)">
+      <div class="category_card placeholder" *ngIf="!unassignedCategoies || unassignedCategoies.length === 0">No
+        unassigned categories. Drop here to unassign
+      </div>
+      <div class="category_card" *ngFor="let c of unassignedCategoies" cdkDrag
+           [cdkDragData]="c">{{c | displayCategory}}</div>
     </div>
   </div>
 </div>

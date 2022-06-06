@@ -21,7 +21,7 @@ import {
   Period,
   RegistrationGroup,
   RegistrationInfo,
-  RegistrationPeriod,
+  RegistrationPeriod, RegistrationPeriodAddRegistrationGroupPayload,
   Schedule,
   ScheduleRequirement,
   StageDescriptor,
@@ -35,14 +35,8 @@ export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPE
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
-export const GENERATE_CATEGORIES_COMMAND = 'GENERATE_CATEGORIES_COMMAND';
 export const GENERATE_PREVIEW_CATEGORIES_COMMAND = 'GENERATE_PREVIEW_CATEGORIES_COMMAND';
 export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND';
-export const EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND = 'ADD_REGISTRATION_PERIOD_COMMAND';
-export const EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND = 'DELETE_REGISTRATION_PERIOD_COMMAND';
-export const EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND = 'DELETE_REGISTRATION_GROUP_COMMAND';
-export const EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND = 'ADD_REGISTRATION_GROUP_COMMAND';
-export const DELETE_CATEGORY_COMMAND = 'DELETE_CATEGORY_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
 export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
@@ -57,9 +51,6 @@ export const EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS = 'EVENT_MANAGER_L
 // events
 export const EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED = 'EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED';
 export const EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED = 'EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED';
-export const EVENT_MANAGER_REGISTRATION_GROUP_CREATED = 'REGISTRATION_GROUP_ADDED';
-export const EVENT_MANAGER_REGISTRATION_GROUP_DELETED = 'REGISTRATION_GROUP_DELETED';
-export const REGISTRATION_INFO_UPDATED = 'REGISTRATION_INFO_UPDATED';
 export const EVENT_MANAGER_FIGHTER_LOADED = 'EVENT_MANAGER_FIGHTER_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED';
@@ -106,8 +97,8 @@ export const eventManagerHeaderClear = {
 
 export const eventManagerCategoriesCleared = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED);
 export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: CategoryDescriptor[] }>());
-export const generateCategoriesCommand = createAction(GENERATE_CATEGORIES_COMMAND, props<{
-  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[]
+export const generateCategoriesCommand = createAction(CommandType.GENERATE_CATEGORIES_COMMAND, props<{
+  competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[], successCallback: SuccessCallback
 }>());
 export const generatePreviewCategoriesCommand = createAction(GENERATE_PREVIEW_CATEGORIES_COMMAND, props<{
   competitionId: string, restrictions: CategoryRestriction[], idTrees: AdjacencyList<number>[], restrictionNames: string[]
@@ -146,36 +137,15 @@ export const loadMyCompetitions = (creatorId: any, status?: string) => ({
     status
   }
 });
+export const eventManagerAddRegistrationPeriod = createAction(CommandType.ADD_REGISTRATION_PERIOD_COMMAND, props<{ competitionId: string, period: RegistrationPeriod }>())
 
-export const eventManagerAddRegistrationPeriod = (competitionId: string, period: RegistrationPeriod) => ({
-  type: EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
-  competitionId,
-  payload: {period}
-});
+export const eventManagerAddRegistrationGroup = createAction(CommandType.ADD_REGISTRATION_GROUP_COMMAND, props<{competitionId: string, periodId, groups: RegistrationGroup[]}>());
 
-export const eventManagerAddRegistrationGroup = (competitionId: string, periodId, groups: RegistrationGroup[]) => ({
-  type: EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
-  competitionId,
-  payload: {
-    periodId,
-    groups
-  }
-});
+export const eventManagerAddRegistrationGroupToRegistrationPeriod = createAction(CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND, props<{competitionId: string, groupId: string, periodId: string}>());
 
-export const eventManagerDeleteRegistrationPeriod = (competitionId: string, periodId: string) => ({
-  type: EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-  competitionId,
-  payload: {periodId}
-});
+export const eventManagerDeleteRegistrationPeriod = createAction(CommandType.DELETE_REGISTRATION_PERIOD_COMMAND, props<{ competitionId: string, periodId: string }>())
 
-export const eventManagerDeleteRegistrationGroup = (competitionId: string, periodId: string, groupId: string) => ({
-  type: EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
-  competitionId,
-  payload: {
-    periodId,
-    groupId
-  }
-});
+export const eventManagerDeleteRegistrationGroup = createAction(CommandType.DELETE_REGISTRATION_GROUP_COMMAND, props<{competitionId: string, periodId: string, groupId: string}>())
 
 
 export const cometitionListLoaded = (competitionProperties: ManagedCompetition[]) => ({
@@ -227,13 +197,7 @@ export const eventManagerPeriodRemoved = (competitionId, periodId: string) => ({
   competitionId,
   payload: periodId
 });
-
-export const deleteCategory = (competitionId, categoryId: string) => ({
-  type: DELETE_CATEGORY_COMMAND,
-  competitionId,
-  categoryId,
-  payload: {categoryId}
-});
+export const deleteCategory = createAction(CommandType.DELETE_CATEGORY_COMMAND, props<{ competitionId: string, categoryId: string }>())
 
 export const eventManagerDefaultRestrictionsLoaded = (competitionId, restrictions: CategoryRestriction[]) => ({
   type: EVENT_MANAGER_DEFAULT_RESTRICTIONS_LOADED,

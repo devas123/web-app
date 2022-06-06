@@ -28,33 +28,33 @@ export class AddPeriodModal extends ComponentModalConfig<IAddRegistrationPeriodC
   selector: 'app-add-registration-period-form',
   template: `
 
-      <div class="header">Add registration period</div>
-      <div class="content">
-          <form class="ui form" [formGroup]="periodForm">
-              <label>
-                  Period name:
-                  <input class="ui input" type="text" formControlName="name">
-              </label>
-              <label>
-                  Period start:
-                  <input class="ui input" suiDatepicker
-                         name="start"
-                         (pickerSelectedDateChange)="periodStart = $event"
-                         [pickerFirstDayOfWeek]="1">
-              </label>
-              <label>
-                  Period end:
-                  <input class="ui input" suiDatepicker
-                         name="end"
-                         (pickerSelectedDateChange)="periodEnd = $event"
-                         [pickerFirstDayOfWeek]="1">
-              </label>
-          </form>
-      </div>
-      <div class="actions">
-          <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-          <button class="ui green button" (click)="triggerAddPeriod()" autofocus>OK</button>
-      </div>
+    <div class="header">Add registration period</div>
+    <div class="content">
+      <form class="ui form" [formGroup]="periodForm">
+        <label>
+          Period name:
+          <input class="ui input" type="text" formControlName="name">
+        </label>
+        <label>
+          Period start:
+          <input class="ui input" suiDatepicker
+                 name="start"
+                 (pickerSelectedDateChange)="periodStart = $event"
+                 [pickerFirstDayOfWeek]="1">
+        </label>
+        <label>
+          Period end:
+          <input class="ui input" suiDatepicker
+                 name="end"
+                 (pickerSelectedDateChange)="periodEnd = $event"
+                 [pickerFirstDayOfWeek]="1">
+        </label>
+      </form>
+    </div>
+    <div class="actions">
+      <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
+      <button class="ui green button" (click)="triggerAddPeriod()" autofocus>OK</button>
+    </div>
   `,
   styleUrls: ['./registration-info-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -64,12 +64,14 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
   periodForm: FormGroup;
 
   triggerAddPeriod() {
-    const period = {} as RegistrationPeriod;
-    period.end = this.periodStart;
-    period.start = this.periodEnd;
-    period.name = this.periodName.value;
-    period.competitionId = this.modal.context.competitionId;
-    period.id = '';
+    const period = <RegistrationPeriod>{
+      end: this.periodStart,
+      start: this.periodEnd,
+      name: this.periodName.value,
+      competitionId: this.modal.context.competitionId,
+      id: '',
+      registrationGroupIds: [],
+    };
     this.periodForm.reset();
     this.modal.approve({competitionId: this.modal.context.competitionId, period});
   }
@@ -93,12 +95,12 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
   get periodStart() {
     return this.periodForm.get('start').value;
   }
+
   set periodStart(value: Date) {
     this.periodForm.patchValue({
       'start': value
     });
   }
-
 
 
   get periodEnd() {

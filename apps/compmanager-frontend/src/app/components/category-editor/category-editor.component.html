@@ -1,6 +1,6 @@
 <div class="customcontainer">
   <sui-accordion [closeOthers]="false">
-    <sui-accordion-panel *ngFor="let category of filteredCategories">
+    <sui-accordion-panel *ngFor="let category of filteredCategories;trackBy: trackByCategoryId">
       <div title>
         <a class="ui small header link"
            (click)="handleCategoryHeaderClicked(getCategoryId(category?.category))">{{displayCategory(category?.category)}}</a>

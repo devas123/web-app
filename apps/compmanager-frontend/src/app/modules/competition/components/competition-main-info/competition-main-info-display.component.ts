@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {CategoryDescriptor, CompetitionProperties, RegistrationPeriod} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, CompetitionProperties, RegistrationPeriod} from "@frontend-nx/protobuf";
 import {MenuItem, RegistrationPeriodCollection} from "../../../../commons/model/competition.model";
 
 @Component({
@@ -71,7 +71,7 @@ export class CompetitionMainInfoDisplayComponent {
   @Input()
   timezone: string;
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
   @Input()
   url: string;
   trackByMenu = (index: number, menuItem: MenuItem) => menuItem.name;

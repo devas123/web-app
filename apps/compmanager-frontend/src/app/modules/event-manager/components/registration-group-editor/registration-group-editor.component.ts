@@ -1,11 +1,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {
-  displayCategory as dc,
-} from '../../../../commons/model/competition.model';
+import {displayCategory as dc,} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import produce from 'immer';
 import {objectValues} from "../../../account/utils";
-import {CategoryDescriptor, RegistrationGroup, RegistrationInfo} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, RegistrationGroup, RegistrationInfo} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-registration-group-editor',
@@ -13,7 +11,7 @@ import {CategoryDescriptor, RegistrationGroup, RegistrationInfo} from "@frontend
   styleUrls: ['./registration-group-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegistrationGroupEditorComponent  {
+export class RegistrationGroupEditorComponent {
 
   get group(): RegistrationGroup {
     if (this.groupId !== false && this.registrationInfo) {
@@ -21,7 +19,7 @@ export class RegistrationGroupEditorComponent  {
     }
   }
 
-  get groupCategories(): CategoryDescriptor[] {
+  get groupCategories(): CategoryState[] {
     if (this.group && this.categories) {
       const groupCatIds = this.group.categories || [];
       return this.categories.filter(cat => groupCatIds.indexOf(cat.id) >= 0);
@@ -34,7 +32,7 @@ export class RegistrationGroupEditorComponent  {
       && objectValues(this.registrationInfo.registrationGroups).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
-  get unassignedCategoies(): CategoryDescriptor[] {
+  get unassignedCategoies(): CategoryState[] {
     return this.categories && this.categories.filter(cat => !this.assignedCategoryIds || this.assignedCategoryIds.indexOf(cat.id) < 0);
   }
 
@@ -50,13 +48,13 @@ export class RegistrationGroupEditorComponent  {
   registrationInfo: RegistrationInfo;
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Output()
   registrationInfoUpdated = new EventEmitter<RegistrationInfo>();
   changed = false;
 
-  moveCategoryToGroup(cdkDragDrop: CdkDragDrop<CategoryDescriptor[]>) {
+  moveCategoryToGroup(cdkDragDrop: CdkDragDrop<CategoryState[]>) {
     if (cdkDragDrop.previousContainer !== cdkDragDrop.container) {
       this.registrationInfo = produce(this.registrationInfo, draft => {
         const currentGroup = draft.registrationGroups[this.groupId as string];

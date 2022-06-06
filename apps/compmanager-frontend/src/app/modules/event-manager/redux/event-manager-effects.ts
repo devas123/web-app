@@ -7,11 +7,7 @@ import {Action} from '@ngrx/store';
 import {
   CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
   cometitionListLoaded,
-  EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_CONNECT_SOCKET,
-  EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
-  EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
-  EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
   EVENT_MANAGER_DISCONNECT_SOCKET,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
@@ -22,7 +18,6 @@ import {
   eventManagerDisconnectSocket,
   eventManagerPreviewCategoriesGenerated,
   FIGHTS_EDITOR_APPLY_CHANGE,
-  GENERATE_CATEGORIES_COMMAND,
   GENERATE_PREVIEW_CATEGORIES_COMMAND,
   UPDATE_STAGE_STATUS_COMMAND
 } from './event-manager-actions';
@@ -41,12 +36,16 @@ export class EventManagerEffects {
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
+      CommandType.ADD_REGISTRATION_PERIOD_COMMAND,
+      CommandType.DELETE_REGISTRATION_PERIOD_COMMAND,
       CommandType.DROP_CATEGORY_BRACKETS_COMMAND,
       CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
       UPDATE_STAGE_STATUS_COMMAND,
       FIGHTS_EDITOR_APPLY_CHANGE,
-      EVENT_MANAGER_CREATE_REGISTRATION_GROUP_COMMAND,
-      EVENT_MANAGER_DELETE_REGISTRATION_GROUP_COMMAND,
+      CommandType.ADD_REGISTRATION_GROUP_COMMAND,
+      CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND,
+      CommandType.DELETE_REGISTRATION_GROUP_COMMAND,
+      CommandType.GENERATE_CATEGORIES_COMMAND,
       CommandType.UPDATE_COMPETITOR_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
     mergeMap((action: any) => {
@@ -132,17 +131,6 @@ export class EventManagerEffects {
   disconnectEventManagerSocket$ = createEffect(() => this.actions$.pipe(
     ofType(LOGOUT),
     map(() => eventManagerDisconnectSocket)));
-
-  eventManagerForwardCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(
-      EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
-      EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-      GENERATE_CATEGORIES_COMMAND),
-    mergeMap((action: CommonAction) => {
-      const command = InfoService.createCommandWithPayload(action);
-      return this.infoService.sendCommand(command, action.competitionId).pipe(catchError(error => observableOf(errorEvent(error))))
-    })),
-    {dispatch: false});
 
   loadGeneratedCategories$ = createEffect(() => this.actions$.pipe(
     ofType(GENERATE_PREVIEW_CATEGORIES_COMMAND),

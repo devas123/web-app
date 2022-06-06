@@ -11,7 +11,6 @@ import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
   styleUrls: ['./category-info-container.component.scss']
 })
 export class CategoryInfoContainerComponent  {
-
   properties$: Observable<CompetitionProperties>;
 
   categories$: Observable<CategoryState[]>;

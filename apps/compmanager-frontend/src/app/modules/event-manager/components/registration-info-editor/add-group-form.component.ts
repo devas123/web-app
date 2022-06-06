@@ -63,12 +63,12 @@ export interface IAddRegistrationGroupResult {
         </label>
         <div formGroupName="registrationFee">
           <label>
-            Registration Fee Currency:
-            <input class="ui input" type="text" formControlName="currency">
-          </label>
-          <label>
             Registration Fee Amount:
             <input class="ui input" type="number" formControlName="amount">
+          </label>
+          <label>
+            Registration Fee Currency:
+            <input class="ui input" type="text" formControlName="currency">
           </label>
         </div>
         <ng-container *ngIf="!modal.context?.haveDefaultGroup">

@@ -1,5 +1,5 @@
-import {Observable, of, throwError, timer} from 'rxjs';
-import {catchError, filter, finalize, map, mergeMap, retryWhen, tap, timeout} from 'rxjs/operators';
+import {Observable, of, throwError} from 'rxjs';
+import {catchError, filter, map, mergeMap, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -14,7 +14,7 @@ import {generateUuid} from "../modules/account/utils";
 import {
   AddAcademyPayload,
   AddCategoryPayload,
-  AddCompetitorPayload,
+  AddCompetitorPayload, AddRegistrationGroupPayload,
   AddRegistrationPeriodPayload,
   CategoryRestriction,
   CategoryState,
@@ -25,7 +25,7 @@ import {
   CompetitionProperties,
   Competitor,
   CreateCompetitionPayload,
-  CreateFakeCompetitorsPayload,
+  CreateFakeCompetitorsPayload, DeleteRegistrationGroupPayload,
   DeleteRegistrationPeriodPayload,
   FightDescription,
   FightResultOption,
@@ -42,7 +42,7 @@ import {
   MessageInfo,
   PageInfo,
   QueryServiceResponse,
-  RegistrationInfo,
+  RegistrationInfo, RegistrationPeriodAddRegistrationGroupPayload,
   RemoveAcademyPayload,
   RemoveCompetitorPayload,
   Schedule,
@@ -53,11 +53,6 @@ import {
 } from "@frontend-nx/protobuf";
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
-import {
-  EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND,
-  EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND,
-  GENERATE_CATEGORIES_COMMAND
-} from "../modules/event-manager/redux/event-manager-actions";
 import {
   DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND,
   DASHBOARD_SET_FIGHT_RESULT_COMMAND
@@ -88,37 +83,6 @@ const normalizeCommand = (command: any) => {
       }
     });
   }) as any;
-};
-
-
-export const genericRetryStrategy = ({
-                                       maxRetryAttempts = 3,
-                                       scalingDuration = 500,
-                                       excludedStatusCodes = []
-                                     }: {
-  maxRetryAttempts?: number,
-  scalingDuration?: number,
-  excludedStatusCodes?: number[]
-} = {}) => (attempts: Observable<any>) => {
-  return attempts.pipe(
-    mergeMap((error, i) => {
-      const retryAttempt = i + 1;
-      // if maximum number of retries have been met
-      // or response is a status code we don't wish to retry, throw error
-      if (
-        retryAttempt > maxRetryAttempts ||
-        excludedStatusCodes.find(e => e === error.status)
-      ) {
-        return throwError(error);
-      }
-      console.log(
-        `Attempt ${retryAttempt}: retrying in ${retryAttempt * scalingDuration}ms`
-      );
-      // retry after 1s, 2s, etc...
-      return timer(retryAttempt * scalingDuration);
-    }),
-    finalize(() => console.log('We are done!'))
-  );
 };
 
 const competitionIdPrefix = (competitionId: string) => (arg: string) => `${competitionQueryEndpoint}/${competitionId}/${arg}`
@@ -167,7 +131,6 @@ export class InfoService {
       }
     }).pipe(
       timeout(tmt),
-      retryWhen(genericRetryStrategy()),
       map(buff => QueryServiceResponse.decode(new Uint8Array(buff as any))),
       tap(r => console.log("Info service received a response: \n ", QueryServiceResponse.toJSON(r))),
       catchError(error => {
@@ -351,7 +314,6 @@ export class InfoService {
       })
     }).pipe(
       timeout(tmt),
-      retryWhen(genericRetryStrategy()),
       catchError(error => {
         console.log(error);
         return throwError(error);
@@ -397,13 +359,31 @@ export class InfoService {
       case   CommandType.DROP_CATEGORY_BRACKETS_COMMAND:
         cmd.type = CommandType.DROP_CATEGORY_BRACKETS_COMMAND;
         break;
-      case     EVENT_MANAGER_ADD_REGISTRATION_PERIOD_COMMAND:
+      case     CommandType.ADD_REGISTRATION_PERIOD_COMMAND:
         cmd.type = CommandType.ADD_REGISTRATION_PERIOD_COMMAND;
         messageInfo.addRegistrationPeriodPayload = <AddRegistrationPeriodPayload>{
           ...action.payload
         }
         break;
-      case     EVENT_MANAGER_DELETE_REGISTRATION_PERIOD_COMMAND:
+      case     CommandType.ADD_REGISTRATION_GROUP_COMMAND:
+        cmd.type = CommandType.ADD_REGISTRATION_GROUP_COMMAND;
+        messageInfo.addRegistrationGroupPayload = <AddRegistrationGroupPayload>{
+          ...action.payload
+        }
+        break;
+      case     CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND:
+        cmd.type = CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND;
+        messageInfo.registrationPeriodAddRegistrationGroupPayload = <RegistrationPeriodAddRegistrationGroupPayload>{
+          ...action.payload
+        }
+        break;
+      case     CommandType.DELETE_REGISTRATION_GROUP_COMMAND:
+        cmd.type = CommandType.DELETE_REGISTRATION_GROUP_COMMAND;
+        messageInfo.deleteRegistrationGroupPayload = <DeleteRegistrationGroupPayload>{
+          ...action.payload
+        }
+        break;
+      case     CommandType.DELETE_REGISTRATION_PERIOD_COMMAND:
         cmd.type = CommandType.DELETE_REGISTRATION_PERIOD_COMMAND;
         messageInfo.deleteRegistrationPeriodPayload = <DeleteRegistrationPeriodPayload>{
           ...action.payload
@@ -415,7 +395,7 @@ export class InfoService {
           competitor: action.payload.competitor
         }
         break;
-      case     GENERATE_CATEGORIES_COMMAND:
+      case     CommandType.GENERATE_CATEGORIES_COMMAND:
         cmd.type = CommandType.GENERATE_CATEGORIES_COMMAND;
         messageInfo.generateCategoriesFromRestrictionsPayload = <GenerateCategoriesFromRestrictionsPayload>{
           ...action.payload
@@ -451,7 +431,7 @@ export class InfoService {
           ...action.payload
         }
         break;
-      case   eventManagerActions.DELETE_CATEGORY_COMMAND:
+      case   CommandType.DELETE_CATEGORY_COMMAND:
         cmd.type = CommandType.DELETE_CATEGORY_COMMAND
         break;
       case   CommandType.ADD_COMPETITOR_COMMAND:

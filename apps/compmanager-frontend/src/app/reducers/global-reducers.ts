@@ -29,8 +29,6 @@ import {
   stagesInitialState
 } from '../commons/model/competition.model';
 import {
-  CATEGORY_DELETED,
-  CATEGORY_STATE_DELETED,
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
@@ -53,12 +51,9 @@ import {
   EVENT_MANAGER_PERIOD_REMOVED,
   EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED,
   EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED,
-  EVENT_MANAGER_REGISTRATION_GROUP_CREATED,
-  EVENT_MANAGER_REGISTRATION_GROUP_DELETED,
   EVENT_MANAGER_SCHEDULE_LOADED,
   EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED,
   FIGHT_IDS_BY_CATEGORY_ID_LOADED,
-  REGISTRATION_INFO_UPDATED
 } from '../modules/event-manager/redux/event-manager-actions';
 import produce from 'immer';
 import {
@@ -341,42 +336,32 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-      case EVENT_MANAGER_REGISTRATION_GROUP_DELETED: {
-        if (state.competitionProperties.id === action.competitionId
-          && state.registrationInfo
-          && action.payload.periodId && action.payload.groupId) {
-          const {periodId, groupId} = action.payload;
-          if (!state.registrationInfo.registrationGroups) {
-            state.registrationInfo.registrationGroups = {};
+      case EventType.REGISTRATION_GROUP_DELETED: {
+        const event = action as Event;
+        const {periodId, groupId} = event.messageInfo.registrationGroupDeletedPayload;
+        const per = state.registrationInfo.registrationPeriods[periodId]
+        per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+        let shouldDeleteGroup = Object.values(state.registrationInfo.registrationPeriods).filter(p => p.id != periodId)
+          .every(p => !p.registrationGroupIds.includes(groupId));
+        if (shouldDeleteGroup) {
+          delete state.registrationInfo.registrationGroups[groupId];
+        }
+        break;
+      }
+      case EventType.REGISTRATION_GROUP_ADDED: {
+        const event = action as Event;
+        const {groups, periodId} = event.messageInfo.registrationGroupAddedPayload;
+        groups.forEach(group => {
+          state.registrationInfo.registrationGroups[group.id] = group;
+          if (state.registrationInfo.registrationPeriods) {
+            state.registrationInfo.registrationPeriods[periodId]?.registrationGroupIds?.push(group.id);
           }
-          const per = state.registrationInfo.registrationPeriods[periodId]
-          per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
-          const newGroups = {...state.registrationInfo.registrationGroups}
-          delete newGroups[groupId];
-          state.registrationInfo.registrationGroups = newGroups
-
-        }
+        });
         break;
       }
-      case EVENT_MANAGER_REGISTRATION_GROUP_CREATED: {
-        if (state.competitionProperties.id === action.competitionId
-          && state && state.registrationInfo
-          && action.payload.periodId && action.payload.groups) {
-          const registrationGroups = state.registrationInfo.registrationGroups || {};
-          action.payload.groups.forEach(group => {
-            registrationGroups[group.id] = group;
-            if (state.registrationInfo.registrationPeriods) {
-              state.registrationInfo.registrationPeriods[action.payload.periodId]?.registrationGroupIds?.push(group.id);
-            }
-          });
-          state.registrationInfo.registrationGroups = registrationGroups;
-        }
-        break;
-      }
-      case REGISTRATION_INFO_UPDATED: {
-        if (state === action.competitionId && state && action.payload.registrationInfo) {
-          state.registrationInfo = action.payload.registrationInfo;
-        }
+      case EventType.REGISTRATION_INFO_UPDATED: {
+        const event = action as Event;
+        state.registrationInfo = event.messageInfo.registrationInfoUpdatedPayload.registrationInfo;
         break;
       }
       case EventType.COMPETITION_PROPERTIES_UPDATED: {
@@ -657,24 +642,48 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-      case CATEGORY_STATE_DELETED:
-      case CATEGORY_DELETED:
-        if (action.competitionId === state.competitionProperties.id && action.id) {
-          let newState = {
-            ...state,
-            selectedEventCategories: categoryEntityAdapter.removeOne(action.id, state.selectedEventCategories)
-          };
-          if (action.id === newState.selectedEventCategories.selectedCategoryId) {
-            newState = {
-              ...newState,
-              selectedEventCategories: {
-                ...newState.selectedEventCategories
-              }
-            };
-          }
-          return newState;
+      case EventType.REGISTRATION_PERIOD_DELETED: {
+        const event = action as Event;
+        const {periodId} = event.messageInfo.registrationPeriodDeletedPayload;
+        const period = state.registrationInfo.registrationPeriods[periodId];
+        delete state.registrationInfo.registrationPeriods[periodId];
+        const registrationGroupsOfRemovedPeriod = period.registrationGroupIds;
+        const usedGroups = new Set<string>();
+        for (let p of Object.values(state.registrationInfo.registrationPeriods)) {
+          p.registrationGroupIds.forEach(usedGroups.add);
         }
-        return state;
+        registrationGroupsOfRemovedPeriod.filter(g => !usedGroups.has(g))
+          .forEach(g => {
+            delete state.registrationInfo.registrationGroups[g];
+          });
+        break;
+      }
+      case EventType.REGISTRATION_PERIOD_ADDED: {
+        const event = action as Event;
+        const {period} = event.messageInfo.registrationPeriodAddedPayload;
+        state.registrationInfo.registrationPeriods[period.id] = period;
+        break;
+      }
+      case EventType.CATEGORY_ADDED: {
+        const event = action as Event;
+        const cat = <CategoryState>{
+          category: event.messageInfo.categoryAddedPayload.categoryState,
+          id: event.messageInfo.categoryAddedPayload.categoryState.id,
+          competitionId: event.messageInfo.competitionId,
+          numberOfCompetitors: 0,
+          fightsNumber: 0
+        }
+        state.selectedEventCategories = categoryEntityAdapter.addOne(cat, state.selectedEventCategories)
+        break;
+      }
+      case EventType.CATEGORY_DELETED: {
+        const event = action as Event
+        state.selectedEventCategories = categoryEntityAdapter.removeOne(event.messageInfo.categoryId, state.selectedEventCategories)
+        if (event.messageInfo.categoryId === state.selectedEventCategories.selectedCategoryId) {
+          state.selectedEventCategories.selectedCategoryId = null;
+        }
+        break;
+      }
       case EVENT_MANAGER_PERIOD_REMOVED: {
         if (action.competitionId === state.competitionProperties.id) {
           const periodId = action.payload;

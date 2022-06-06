@@ -12,14 +12,10 @@ import {
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventPreviewCategories
 } from '../../redux/event-manager-reducers';
+import {AdjacencyList, AdjacencyListEntry, HeaderDescription} from '../../../../commons/model/competition.model';
 import {
-  AdjacencyList,
-  AdjacencyListEntry,
-  HeaderDescription
-} from '../../../../commons/model/competition.model';
-import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {
@@ -100,7 +96,7 @@ export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntry
       menu: [
         {
           name: 'Return',
-          action: () => this.router.navigate(['..'], {relativeTo: this.route})
+          action: () => this.navigateBack()
         }
       ]
     }, menuService);
@@ -119,6 +115,10 @@ export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntry
         category: d,
       })))
     );
+  }
+
+  private navigateBack() {
+    return this.router.navigate(['..'], {relativeTo: this.route}).catch(console.error);
   }
 
   openAddRestrictionModal(event: { name: string, existing: string[] }) {
@@ -175,7 +175,8 @@ export class CreateCategoryComponent extends CompetitionManagerModuleRouterEntry
       idTrees: intAdjacencyLists,
       restrictions: event.restrictions,
       restrictionNames: event.restrictionNames,
-      competitionId
+      competitionId,
+      successCallback: _ => this.navigateBack()
     }));
   }
 

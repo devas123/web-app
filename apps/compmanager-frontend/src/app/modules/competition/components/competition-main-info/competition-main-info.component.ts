@@ -26,7 +26,6 @@ export class CompetitionMainInfoComponent  {
   timezone$: Observable<string>;
   categories$: Observable<CategoryState[]>;
   url$: Observable<string>;
-  trackByMenu = (index: number, menuItem: MenuItem) => menuItem.name;
 
   constructor(private store: Store<AppState>, private router: Router) {
     this.properties$ = store.pipe(select(getSelectedEventProperties));

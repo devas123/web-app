@@ -45,7 +45,7 @@ import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@fronten
                          (generateRandomFightersEvent)="generateRandomFighters($event)"
                          (registrationStatusToggled)="toggleRegistrationStatus($event)"></app-category-editor>`
 })
-export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer  {
+export class CategoryEditorContainerComponent extends BasicCompetitionInfoContainer {
 
   competition$: Observable<CompetitionProperties>;
 
@@ -93,11 +93,10 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   doDeleteCategory({category, competitionId}) {
-    this.store.dispatch(deleteCategory(competitionId, category.id));
+    this.store.dispatch(deleteCategory({competitionId, categoryId: category.id}));
   }
 
   sendAddDefaultCategoriesCommand(categories: { competitionId: string, category: CategoryDescriptor }[]) {
-    console.log(categories);
     if (categories && categories.length > 0) {
       categories.forEach(cate => this.store.dispatch(eventManagerAddCategory(cate.competitionId, cate.category)));
     }
@@ -108,7 +107,10 @@ export class CategoryEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   toggleRegistrationStatus(event: { categoryId: string; newStatus: boolean }) {
-    of(event).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({...e, competitionId})), take(1)).subscribe(this.store);
+    of(event).pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), map(([e, competitionId]) => eventManagerSetCategoryRegistrationStatus({
+      ...e,
+      competitionId
+    })), take(1)).subscribe(this.store);
   }
 
   navigateToCategoryEditor(categoryId: string) {

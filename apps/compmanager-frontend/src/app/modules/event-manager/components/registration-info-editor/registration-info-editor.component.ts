@@ -1,6 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {objectValues} from "../../../account/utils";
-import {CategoryDescriptor, RegistrationGroup, RegistrationInfo, RegistrationPeriod} from "@frontend-nx/protobuf";
+import {
+  CategoryDescriptor,
+  CategoryState,
+  RegistrationGroup,
+  RegistrationInfo,
+  RegistrationPeriod
+} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-registration-info-editor',
@@ -20,7 +26,7 @@ export class RegistrationInfoEditorComponent {
   }
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
   competitionId: string;
@@ -57,7 +63,7 @@ export class RegistrationInfoEditorComponent {
       && objectValues(this.registrationInfo.registrationGroups).reduce((previousValue: string[], currentValue: RegistrationGroup) => [...previousValue, ...(currentValue.categories || [])], [])) || [];
   }
 
-  get unassignedCategoies(): CategoryDescriptor[] {
+  get unassignedCategoies(): CategoryState[] {
     return this.categories && this.categories.filter(cat => !this.assignedCategoryIds || this.assignedCategoryIds.indexOf(cat.id) < 0);
   }
 

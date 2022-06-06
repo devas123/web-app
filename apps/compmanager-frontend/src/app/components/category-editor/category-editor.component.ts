@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {categoryFilter, defaultRestrictionFormatter} from '../../commons/model/competition.model';
+import {categoryFilter, defaultRestrictionFormatter, MenuItem} from '../../commons/model/competition.model';
 import {eventManagerCreateFakeCompetitorsCommand} from '../../modules/event-manager/redux/event-manager-actions';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
@@ -11,7 +11,7 @@ import {CategoryDescriptor, CategoryState, CompetitionProperties} from "@fronten
   styleUrls: ['./category-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryEditorComponent  {
+export class CategoryEditorComponent {
 
   @Input()
   editMode = true;
@@ -51,7 +51,7 @@ export class CategoryEditorComponent  {
       this.filteredCategories = this._categories;
     }
   }
-
+  trackByCategoryId = (_: number, category: CategoryState) => category.id;
   filteredCategories: CategoryState[];
 
   searchStr: string;
