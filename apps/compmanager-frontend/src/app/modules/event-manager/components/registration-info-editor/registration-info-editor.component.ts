@@ -41,16 +41,11 @@ export class RegistrationInfoEditorComponent {
   addPeriod = new EventEmitter<{ competitionId: string, period: RegistrationPeriod }>();
 
   @Output()
-  addGroupModal = new EventEmitter<{ competitionId: string, periodId: string, periodRegistrationGroups: string[] }>();
-
-  @Output()
-  deletePeriod = new EventEmitter<{ competitionId: string, periodId: string }>();
+  addGroupModal = new EventEmitter<{ competitionId: string, periodId: string, periodRegistrationGroups: string[], registrationInfo: RegistrationInfo }>();
 
   @Output()
   registrationInfoUpdated = new EventEmitter<RegistrationInfo>();
 
-  @Output()
-  deleteGroup = new EventEmitter<{ competitionId: string, periodId: string, groupId: string }>();
 
   @Output()
   selectGroup = new EventEmitter<string>();
@@ -81,11 +76,29 @@ export class RegistrationInfoEditorComponent {
   }
 
   deleteGroupEvent(groupId: string, periodId: string) {
-    this.deleteGroup.next({competitionId: this.competitionId, periodId, groupId});
+    const per = this.registrationInfo.registrationPeriods[periodId]
+    per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+    let shouldDeleteGroup = Object.values(this.registrationInfo.registrationPeriods).filter(p => p.id != periodId)
+      .every(p => !p.registrationGroupIds.includes(groupId));
+    if (shouldDeleteGroup) {
+      delete this.registrationInfo.registrationGroups[groupId];
+    }
+    this.registrationInfoUpdated.next(this.registrationInfo);
   }
 
   deletePeriodEvent(periodId: string) {
-    this.deletePeriod.next({competitionId: this.competitionId, periodId});
+    const period = this.registrationInfo.registrationPeriods[periodId];
+    delete this.registrationInfo.registrationPeriods[periodId];
+    const registrationGroupsOfRemovedPeriod = period.registrationGroupIds;
+    const usedGroups = new Set<string>();
+    for (let p of Object.values(this.registrationInfo.registrationPeriods)) {
+      p.registrationGroupIds.forEach(usedGroups.add);
+    }
+    registrationGroupsOfRemovedPeriod.filter(g => !usedGroups.has(g))
+      .forEach(g => {
+        delete this.registrationInfo.registrationGroups[g];
+      });
+    this.registrationInfoUpdated.next(this.registrationInfo);
   }
 
   openGroupModal(periodId: string, registrationGroupIds: string[]) {
@@ -93,7 +106,8 @@ export class RegistrationInfoEditorComponent {
       this.addGroupModal.next({
         competitionId: this.competitionId,
         periodId,
-        periodRegistrationGroups: (registrationGroupIds || [])
+        periodRegistrationGroups: (registrationGroupIds || []),
+        registrationInfo: this.registrationInfo
       });
     }
   }

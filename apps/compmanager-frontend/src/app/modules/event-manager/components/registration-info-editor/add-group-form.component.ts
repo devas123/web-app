@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {RegistrationGroup} from "@frontend-nx/protobuf";
+import {RegistrationGroup, RegistrationInfo} from "@frontend-nx/protobuf";
+import {generateUuid} from "../../../account/utils";
 
 export class AddGroupModal extends ComponentModalConfig<IAddRegistrationGroupContext, IAddRegistrationGroupResult, void> {
   constructor(context: IAddRegistrationGroupContext, size = ModalSize.Small) {
@@ -18,6 +19,7 @@ export interface IAddRegistrationGroupContext {
   periodId: string;
   existingGroups: RegistrationGroup[];
   haveDefaultGroup: boolean;
+  registrationInfo: RegistrationInfo;
 }
 
 export interface IAddRegistrationGroupResult {
@@ -26,6 +28,7 @@ export interface IAddRegistrationGroupResult {
   registrationInfoId: string;
   periodId: string;
   groups: RegistrationGroup[];
+  registrationInfo: RegistrationInfo;
 }
 
 @Component({
@@ -100,7 +103,7 @@ export class AddGroupFormComponent implements OnInit {
     if (this.groupsToAdd && this.groupsToAdd.length > 0) {
       groups = this.groupsToAdd;
     } else if (group.displayName && group.registrationFee) {
-      group.id = '';
+      group.id = generateUuid();
       groups = [group];
       createNew = true;
     }
@@ -110,7 +113,8 @@ export class AddGroupFormComponent implements OnInit {
         registrationInfoId: this.modal.context.competitionId,
         periodId: this.modal.context.periodId,
         groups,
-        createNew
+        createNew,
+        registrationInfo: this.modal.context.registrationInfo
       });
     } else {
       this.modal.deny(undefined);

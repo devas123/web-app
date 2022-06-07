@@ -336,29 +336,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-      case EventType.REGISTRATION_GROUP_DELETED: {
-        const event = action as Event;
-        const {periodId, groupId} = event.messageInfo.registrationGroupDeletedPayload;
-        const per = state.registrationInfo.registrationPeriods[periodId]
-        per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
-        let shouldDeleteGroup = Object.values(state.registrationInfo.registrationPeriods).filter(p => p.id != periodId)
-          .every(p => !p.registrationGroupIds.includes(groupId));
-        if (shouldDeleteGroup) {
-          delete state.registrationInfo.registrationGroups[groupId];
-        }
-        break;
-      }
-      case EventType.REGISTRATION_GROUP_ADDED: {
-        const event = action as Event;
-        const {groups, periodId} = event.messageInfo.registrationGroupAddedPayload;
-        groups.forEach(group => {
-          state.registrationInfo.registrationGroups[group.id] = group;
-          if (state.registrationInfo.registrationPeriods) {
-            state.registrationInfo.registrationPeriods[periodId]?.registrationGroupIds?.push(group.id);
-          }
-        });
-        break;
-      }
       case EventType.REGISTRATION_INFO_UPDATED: {
         const event = action as Event;
         state.registrationInfo = event.messageInfo.registrationInfoUpdatedPayload.registrationInfo;
@@ -641,28 +618,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           };
         }
         return state;
-      }
-      case EventType.REGISTRATION_PERIOD_DELETED: {
-        const event = action as Event;
-        const {periodId} = event.messageInfo.registrationPeriodDeletedPayload;
-        const period = state.registrationInfo.registrationPeriods[periodId];
-        delete state.registrationInfo.registrationPeriods[periodId];
-        const registrationGroupsOfRemovedPeriod = period.registrationGroupIds;
-        const usedGroups = new Set<string>();
-        for (let p of Object.values(state.registrationInfo.registrationPeriods)) {
-          p.registrationGroupIds.forEach(usedGroups.add);
-        }
-        registrationGroupsOfRemovedPeriod.filter(g => !usedGroups.has(g))
-          .forEach(g => {
-            delete state.registrationInfo.registrationGroups[g];
-          });
-        break;
-      }
-      case EventType.REGISTRATION_PERIOD_ADDED: {
-        const event = action as Event;
-        const {period} = event.messageInfo.registrationPeriodAddedPayload;
-        state.registrationInfo.registrationPeriods[period.id] = period;
-        break;
       }
       case EventType.CATEGORY_ADDED: {
         const event = action as Event;

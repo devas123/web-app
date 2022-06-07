@@ -5,24 +5,18 @@ import {
   AddAcademyPayload,
   AddCategoryPayload,
   AddCompetitorPayload,
-  AddRegistrationGroupPayload,
-  AddRegistrationPeriodPayload,
-  AssignRegistrationGroupCategoriesPayload,
   CategoryRegistrationStatusChangePayload,
   ChangeCompetitorCategoryPayload,
   ChangeFightOrderPayload,
   CompetitorCategoryAddedPayload,
   CreateCompetitionPayload,
   CreateFakeCompetitorsPayload,
-  DeleteRegistrationGroupPayload,
-  DeleteRegistrationPeriodPayload,
   FightEditorApplyChangesPayload,
   GenerateAbsoluteCategoryPayload,
   GenerateBracketsPayload,
   GenerateCategoriesFromRestrictionsPayload,
   GenerateSchedulePayload,
   PropagateCompetitorsPayload,
-  RegistrationPeriodAddRegistrationGroupPayload,
   RemoveAcademyPayload,
   RemoveCompetitorPayload,
   SetFightResultPayload,
@@ -48,12 +42,7 @@ import {
   FightsAddedToStagePayload,
   FightStartTimeUpdatedPayload,
   MatsUpdatedPayload,
-  RegistrationGroupAddedPayload,
-  RegistrationGroupCategoriesAssignedPayload,
-  RegistrationGroupDeletedPayload,
   RegistrationInfoUpdatedPayload,
-  RegistrationPeriodAddedPayload,
-  RegistrationPeriodDeletedPayload,
   ScheduleGeneratedPayload,
   StageResultSetPayload,
   StageStatusUpdatedPayload,
@@ -69,11 +58,6 @@ export interface MessageInfo {
   addAcademyPayload?: AddAcademyPayload | undefined;
   addCategoryPayload?: AddCategoryPayload | undefined;
   addCompetitorPayload?: AddCompetitorPayload | undefined;
-  addRegistrationGroupPayload?: AddRegistrationGroupPayload | undefined;
-  addRegistrationPeriodPayload?: AddRegistrationPeriodPayload | undefined;
-  assignRegistrationGroupCategoriesPayload?:
-    | AssignRegistrationGroupCategoriesPayload
-    | undefined;
   categoryRegistrationStatusChangePayload?:
     | CategoryRegistrationStatusChangePayload
     | undefined;
@@ -82,8 +66,6 @@ export interface MessageInfo {
   competitorCategoryAddedPayload?: CompetitorCategoryAddedPayload | undefined;
   createCompetitionPayload?: CreateCompetitionPayload | undefined;
   createFakeCompetitorsPayload?: CreateFakeCompetitorsPayload | undefined;
-  deleteRegistrationGroupPayload?: DeleteRegistrationGroupPayload | undefined;
-  deleteRegistrationPeriodPayload?: DeleteRegistrationPeriodPayload | undefined;
   fightEditorApplyChangesPayload?: FightEditorApplyChangesPayload | undefined;
   generateAbsoluteCategoryPayload?: GenerateAbsoluteCategoryPayload | undefined;
   generateBracketsPayload?: GenerateBracketsPayload | undefined;
@@ -92,9 +74,6 @@ export interface MessageInfo {
     | undefined;
   generateSchedulePayload?: GenerateSchedulePayload | undefined;
   propagateCompetitorsPayload?: PropagateCompetitorsPayload | undefined;
-  registrationPeriodAddRegistrationGroupPayload?:
-    | RegistrationPeriodAddRegistrationGroupPayload
-    | undefined;
   removeAcademyPayload?: RemoveAcademyPayload | undefined;
   removeCompetitorPayload?: RemoveCompetitorPayload | undefined;
   setFightResultPayload?: SetFightResultPayload | undefined;
@@ -126,16 +105,7 @@ export interface MessageInfo {
   fightsAddedToStagePayload?: FightsAddedToStagePayload | undefined;
   fightStartTimeUpdatedPayload?: FightStartTimeUpdatedPayload | undefined;
   matsUpdatedPayload?: MatsUpdatedPayload | undefined;
-  registrationGroupAddedPayload?: RegistrationGroupAddedPayload | undefined;
-  registrationGroupCategoriesAssignedPayload?:
-    | RegistrationGroupCategoriesAssignedPayload
-    | undefined;
-  registrationGroupDeletedPayload?: RegistrationGroupDeletedPayload | undefined;
   registrationInfoUpdatedPayload?: RegistrationInfoUpdatedPayload | undefined;
-  registrationPeriodAddedPayload?: RegistrationPeriodAddedPayload | undefined;
-  registrationPeriodDeletedPayload?:
-    | RegistrationPeriodDeletedPayload
-    | undefined;
   scheduleGeneratedPayload?: ScheduleGeneratedPayload | undefined;
   stageResultSetPayload?: StageResultSetPayload | undefined;
   stageStatusUpdatedPayload?: StageStatusUpdatedPayload | undefined;
@@ -152,24 +122,18 @@ function createBaseMessageInfo(): MessageInfo {
     addAcademyPayload: undefined,
     addCategoryPayload: undefined,
     addCompetitorPayload: undefined,
-    addRegistrationGroupPayload: undefined,
-    addRegistrationPeriodPayload: undefined,
-    assignRegistrationGroupCategoriesPayload: undefined,
     categoryRegistrationStatusChangePayload: undefined,
     changeCompetitorCategoryPayload: undefined,
     changeFightOrderPayload: undefined,
     competitorCategoryAddedPayload: undefined,
     createCompetitionPayload: undefined,
     createFakeCompetitorsPayload: undefined,
-    deleteRegistrationGroupPayload: undefined,
-    deleteRegistrationPeriodPayload: undefined,
     fightEditorApplyChangesPayload: undefined,
     generateAbsoluteCategoryPayload: undefined,
     generateBracketsPayload: undefined,
     generateCategoriesFromRestrictionsPayload: undefined,
     generateSchedulePayload: undefined,
     propagateCompetitorsPayload: undefined,
-    registrationPeriodAddRegistrationGroupPayload: undefined,
     removeAcademyPayload: undefined,
     removeCompetitorPayload: undefined,
     setFightResultPayload: undefined,
@@ -193,12 +157,7 @@ function createBaseMessageInfo(): MessageInfo {
     fightsAddedToStagePayload: undefined,
     fightStartTimeUpdatedPayload: undefined,
     matsUpdatedPayload: undefined,
-    registrationGroupAddedPayload: undefined,
-    registrationGroupCategoriesAssignedPayload: undefined,
-    registrationGroupDeletedPayload: undefined,
     registrationInfoUpdatedPayload: undefined,
-    registrationPeriodAddedPayload: undefined,
-    registrationPeriodDeletedPayload: undefined,
     scheduleGeneratedPayload: undefined,
     stageResultSetPayload: undefined,
     stageStatusUpdatedPayload: undefined,
@@ -246,24 +205,6 @@ export const MessageInfo = {
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.addRegistrationGroupPayload !== undefined) {
-      AddRegistrationGroupPayload.encode(
-        message.addRegistrationGroupPayload,
-        writer.uint32(114).fork()
-      ).ldelim();
-    }
-    if (message.addRegistrationPeriodPayload !== undefined) {
-      AddRegistrationPeriodPayload.encode(
-        message.addRegistrationPeriodPayload,
-        writer.uint32(122).fork()
-      ).ldelim();
-    }
-    if (message.assignRegistrationGroupCategoriesPayload !== undefined) {
-      AssignRegistrationGroupCategoriesPayload.encode(
-        message.assignRegistrationGroupCategoriesPayload,
-        writer.uint32(130).fork()
-      ).ldelim();
-    }
     if (message.categoryRegistrationStatusChangePayload !== undefined) {
       CategoryRegistrationStatusChangePayload.encode(
         message.categoryRegistrationStatusChangePayload,
@@ -300,18 +241,6 @@ export const MessageInfo = {
         writer.uint32(898).fork()
       ).ldelim();
     }
-    if (message.deleteRegistrationGroupPayload !== undefined) {
-      DeleteRegistrationGroupPayload.encode(
-        message.deleteRegistrationGroupPayload,
-        writer.uint32(906).fork()
-      ).ldelim();
-    }
-    if (message.deleteRegistrationPeriodPayload !== undefined) {
-      DeleteRegistrationPeriodPayload.encode(
-        message.deleteRegistrationPeriodPayload,
-        writer.uint32(914).fork()
-      ).ldelim();
-    }
     if (message.fightEditorApplyChangesPayload !== undefined) {
       FightEditorApplyChangesPayload.encode(
         message.fightEditorApplyChangesPayload,
@@ -346,12 +275,6 @@ export const MessageInfo = {
       PropagateCompetitorsPayload.encode(
         message.propagateCompetitorsPayload,
         writer.uint32(962).fork()
-      ).ldelim();
-    }
-    if (message.registrationPeriodAddRegistrationGroupPayload !== undefined) {
-      RegistrationPeriodAddRegistrationGroupPayload.encode(
-        message.registrationPeriodAddRegistrationGroupPayload,
-        writer.uint32(970).fork()
       ).ldelim();
     }
     if (message.removeAcademyPayload !== undefined) {
@@ -492,40 +415,10 @@ export const MessageInfo = {
         writer.uint32(1722).fork()
       ).ldelim();
     }
-    if (message.registrationGroupAddedPayload !== undefined) {
-      RegistrationGroupAddedPayload.encode(
-        message.registrationGroupAddedPayload,
-        writer.uint32(1730).fork()
-      ).ldelim();
-    }
-    if (message.registrationGroupCategoriesAssignedPayload !== undefined) {
-      RegistrationGroupCategoriesAssignedPayload.encode(
-        message.registrationGroupCategoriesAssignedPayload,
-        writer.uint32(1738).fork()
-      ).ldelim();
-    }
-    if (message.registrationGroupDeletedPayload !== undefined) {
-      RegistrationGroupDeletedPayload.encode(
-        message.registrationGroupDeletedPayload,
-        writer.uint32(1746).fork()
-      ).ldelim();
-    }
     if (message.registrationInfoUpdatedPayload !== undefined) {
       RegistrationInfoUpdatedPayload.encode(
         message.registrationInfoUpdatedPayload,
         writer.uint32(1754).fork()
-      ).ldelim();
-    }
-    if (message.registrationPeriodAddedPayload !== undefined) {
-      RegistrationPeriodAddedPayload.encode(
-        message.registrationPeriodAddedPayload,
-        writer.uint32(1762).fork()
-      ).ldelim();
-    }
-    if (message.registrationPeriodDeletedPayload !== undefined) {
-      RegistrationPeriodDeletedPayload.encode(
-        message.registrationPeriodDeletedPayload,
-        writer.uint32(1770).fork()
       ).ldelim();
     }
     if (message.scheduleGeneratedPayload !== undefined) {
@@ -592,21 +485,6 @@ export const MessageInfo = {
             reader.uint32()
           );
           break;
-        case 14:
-          message.addRegistrationGroupPayload =
-            AddRegistrationGroupPayload.decode(reader, reader.uint32());
-          break;
-        case 15:
-          message.addRegistrationPeriodPayload =
-            AddRegistrationPeriodPayload.decode(reader, reader.uint32());
-          break;
-        case 16:
-          message.assignRegistrationGroupCategoriesPayload =
-            AssignRegistrationGroupCategoriesPayload.decode(
-              reader,
-              reader.uint32()
-            );
-          break;
         case 17:
           message.categoryRegistrationStatusChangePayload =
             CategoryRegistrationStatusChangePayload.decode(
@@ -638,14 +516,6 @@ export const MessageInfo = {
           message.createFakeCompetitorsPayload =
             CreateFakeCompetitorsPayload.decode(reader, reader.uint32());
           break;
-        case 113:
-          message.deleteRegistrationGroupPayload =
-            DeleteRegistrationGroupPayload.decode(reader, reader.uint32());
-          break;
-        case 114:
-          message.deleteRegistrationPeriodPayload =
-            DeleteRegistrationPeriodPayload.decode(reader, reader.uint32());
-          break;
         case 115:
           message.fightEditorApplyChangesPayload =
             FightEditorApplyChangesPayload.decode(reader, reader.uint32());
@@ -676,13 +546,6 @@ export const MessageInfo = {
         case 120:
           message.propagateCompetitorsPayload =
             PropagateCompetitorsPayload.decode(reader, reader.uint32());
-          break;
-        case 121:
-          message.registrationPeriodAddRegistrationGroupPayload =
-            RegistrationPeriodAddRegistrationGroupPayload.decode(
-              reader,
-              reader.uint32()
-            );
           break;
         case 122:
           message.removeAcademyPayload = RemoveAcademyPayload.decode(
@@ -806,32 +669,9 @@ export const MessageInfo = {
             reader.uint32()
           );
           break;
-        case 216:
-          message.registrationGroupAddedPayload =
-            RegistrationGroupAddedPayload.decode(reader, reader.uint32());
-          break;
-        case 217:
-          message.registrationGroupCategoriesAssignedPayload =
-            RegistrationGroupCategoriesAssignedPayload.decode(
-              reader,
-              reader.uint32()
-            );
-          break;
-        case 218:
-          message.registrationGroupDeletedPayload =
-            RegistrationGroupDeletedPayload.decode(reader, reader.uint32());
-          break;
         case 219:
           message.registrationInfoUpdatedPayload =
             RegistrationInfoUpdatedPayload.decode(reader, reader.uint32());
-          break;
-        case 220:
-          message.registrationPeriodAddedPayload =
-            RegistrationPeriodAddedPayload.decode(reader, reader.uint32());
-          break;
-        case 221:
-          message.registrationPeriodDeletedPayload =
-            RegistrationPeriodDeletedPayload.decode(reader, reader.uint32());
           break;
         case 222:
           message.scheduleGeneratedPayload = ScheduleGeneratedPayload.decode(
@@ -884,23 +724,6 @@ export const MessageInfo = {
       addCompetitorPayload: isSet(object.addCompetitorPayload)
         ? AddCompetitorPayload.fromJSON(object.addCompetitorPayload)
         : undefined,
-      addRegistrationGroupPayload: isSet(object.addRegistrationGroupPayload)
-        ? AddRegistrationGroupPayload.fromJSON(
-            object.addRegistrationGroupPayload
-          )
-        : undefined,
-      addRegistrationPeriodPayload: isSet(object.addRegistrationPeriodPayload)
-        ? AddRegistrationPeriodPayload.fromJSON(
-            object.addRegistrationPeriodPayload
-          )
-        : undefined,
-      assignRegistrationGroupCategoriesPayload: isSet(
-        object.assignRegistrationGroupCategoriesPayload
-      )
-        ? AssignRegistrationGroupCategoriesPayload.fromJSON(
-            object.assignRegistrationGroupCategoriesPayload
-          )
-        : undefined,
       categoryRegistrationStatusChangePayload: isSet(
         object.categoryRegistrationStatusChangePayload
       )
@@ -933,20 +756,6 @@ export const MessageInfo = {
             object.createFakeCompetitorsPayload
           )
         : undefined,
-      deleteRegistrationGroupPayload: isSet(
-        object.deleteRegistrationGroupPayload
-      )
-        ? DeleteRegistrationGroupPayload.fromJSON(
-            object.deleteRegistrationGroupPayload
-          )
-        : undefined,
-      deleteRegistrationPeriodPayload: isSet(
-        object.deleteRegistrationPeriodPayload
-      )
-        ? DeleteRegistrationPeriodPayload.fromJSON(
-            object.deleteRegistrationPeriodPayload
-          )
-        : undefined,
       fightEditorApplyChangesPayload: isSet(
         object.fightEditorApplyChangesPayload
       )
@@ -977,13 +786,6 @@ export const MessageInfo = {
       propagateCompetitorsPayload: isSet(object.propagateCompetitorsPayload)
         ? PropagateCompetitorsPayload.fromJSON(
             object.propagateCompetitorsPayload
-          )
-        : undefined,
-      registrationPeriodAddRegistrationGroupPayload: isSet(
-        object.registrationPeriodAddRegistrationGroupPayload
-      )
-        ? RegistrationPeriodAddRegistrationGroupPayload.fromJSON(
-            object.registrationPeriodAddRegistrationGroupPayload
           )
         : undefined,
       removeAcademyPayload: isSet(object.removeAcademyPayload)
@@ -1083,44 +885,11 @@ export const MessageInfo = {
       matsUpdatedPayload: isSet(object.matsUpdatedPayload)
         ? MatsUpdatedPayload.fromJSON(object.matsUpdatedPayload)
         : undefined,
-      registrationGroupAddedPayload: isSet(object.registrationGroupAddedPayload)
-        ? RegistrationGroupAddedPayload.fromJSON(
-            object.registrationGroupAddedPayload
-          )
-        : undefined,
-      registrationGroupCategoriesAssignedPayload: isSet(
-        object.registrationGroupCategoriesAssignedPayload
-      )
-        ? RegistrationGroupCategoriesAssignedPayload.fromJSON(
-            object.registrationGroupCategoriesAssignedPayload
-          )
-        : undefined,
-      registrationGroupDeletedPayload: isSet(
-        object.registrationGroupDeletedPayload
-      )
-        ? RegistrationGroupDeletedPayload.fromJSON(
-            object.registrationGroupDeletedPayload
-          )
-        : undefined,
       registrationInfoUpdatedPayload: isSet(
         object.registrationInfoUpdatedPayload
       )
         ? RegistrationInfoUpdatedPayload.fromJSON(
             object.registrationInfoUpdatedPayload
-          )
-        : undefined,
-      registrationPeriodAddedPayload: isSet(
-        object.registrationPeriodAddedPayload
-      )
-        ? RegistrationPeriodAddedPayload.fromJSON(
-            object.registrationPeriodAddedPayload
-          )
-        : undefined,
-      registrationPeriodDeletedPayload: isSet(
-        object.registrationPeriodDeletedPayload
-      )
-        ? RegistrationPeriodDeletedPayload.fromJSON(
-            object.registrationPeriodDeletedPayload
           )
         : undefined,
       scheduleGeneratedPayload: isSet(object.scheduleGeneratedPayload)
@@ -1158,25 +927,6 @@ export const MessageInfo = {
       (obj.addCompetitorPayload = message.addCompetitorPayload
         ? AddCompetitorPayload.toJSON(message.addCompetitorPayload)
         : undefined);
-    message.addRegistrationGroupPayload !== undefined &&
-      (obj.addRegistrationGroupPayload = message.addRegistrationGroupPayload
-        ? AddRegistrationGroupPayload.toJSON(
-            message.addRegistrationGroupPayload
-          )
-        : undefined);
-    message.addRegistrationPeriodPayload !== undefined &&
-      (obj.addRegistrationPeriodPayload = message.addRegistrationPeriodPayload
-        ? AddRegistrationPeriodPayload.toJSON(
-            message.addRegistrationPeriodPayload
-          )
-        : undefined);
-    message.assignRegistrationGroupCategoriesPayload !== undefined &&
-      (obj.assignRegistrationGroupCategoriesPayload =
-        message.assignRegistrationGroupCategoriesPayload
-          ? AssignRegistrationGroupCategoriesPayload.toJSON(
-              message.assignRegistrationGroupCategoriesPayload
-            )
-          : undefined);
     message.categoryRegistrationStatusChangePayload !== undefined &&
       (obj.categoryRegistrationStatusChangePayload =
         message.categoryRegistrationStatusChangePayload
@@ -1212,20 +962,6 @@ export const MessageInfo = {
             message.createFakeCompetitorsPayload
           )
         : undefined);
-    message.deleteRegistrationGroupPayload !== undefined &&
-      (obj.deleteRegistrationGroupPayload =
-        message.deleteRegistrationGroupPayload
-          ? DeleteRegistrationGroupPayload.toJSON(
-              message.deleteRegistrationGroupPayload
-            )
-          : undefined);
-    message.deleteRegistrationPeriodPayload !== undefined &&
-      (obj.deleteRegistrationPeriodPayload =
-        message.deleteRegistrationPeriodPayload
-          ? DeleteRegistrationPeriodPayload.toJSON(
-              message.deleteRegistrationPeriodPayload
-            )
-          : undefined);
     message.fightEditorApplyChangesPayload !== undefined &&
       (obj.fightEditorApplyChangesPayload =
         message.fightEditorApplyChangesPayload
@@ -1261,13 +997,6 @@ export const MessageInfo = {
             message.propagateCompetitorsPayload
           )
         : undefined);
-    message.registrationPeriodAddRegistrationGroupPayload !== undefined &&
-      (obj.registrationPeriodAddRegistrationGroupPayload =
-        message.registrationPeriodAddRegistrationGroupPayload
-          ? RegistrationPeriodAddRegistrationGroupPayload.toJSON(
-              message.registrationPeriodAddRegistrationGroupPayload
-            )
-          : undefined);
     message.removeAcademyPayload !== undefined &&
       (obj.removeAcademyPayload = message.removeAcademyPayload
         ? RemoveAcademyPayload.toJSON(message.removeAcademyPayload)
@@ -1382,45 +1111,11 @@ export const MessageInfo = {
       (obj.matsUpdatedPayload = message.matsUpdatedPayload
         ? MatsUpdatedPayload.toJSON(message.matsUpdatedPayload)
         : undefined);
-    message.registrationGroupAddedPayload !== undefined &&
-      (obj.registrationGroupAddedPayload = message.registrationGroupAddedPayload
-        ? RegistrationGroupAddedPayload.toJSON(
-            message.registrationGroupAddedPayload
-          )
-        : undefined);
-    message.registrationGroupCategoriesAssignedPayload !== undefined &&
-      (obj.registrationGroupCategoriesAssignedPayload =
-        message.registrationGroupCategoriesAssignedPayload
-          ? RegistrationGroupCategoriesAssignedPayload.toJSON(
-              message.registrationGroupCategoriesAssignedPayload
-            )
-          : undefined);
-    message.registrationGroupDeletedPayload !== undefined &&
-      (obj.registrationGroupDeletedPayload =
-        message.registrationGroupDeletedPayload
-          ? RegistrationGroupDeletedPayload.toJSON(
-              message.registrationGroupDeletedPayload
-            )
-          : undefined);
     message.registrationInfoUpdatedPayload !== undefined &&
       (obj.registrationInfoUpdatedPayload =
         message.registrationInfoUpdatedPayload
           ? RegistrationInfoUpdatedPayload.toJSON(
               message.registrationInfoUpdatedPayload
-            )
-          : undefined);
-    message.registrationPeriodAddedPayload !== undefined &&
-      (obj.registrationPeriodAddedPayload =
-        message.registrationPeriodAddedPayload
-          ? RegistrationPeriodAddedPayload.toJSON(
-              message.registrationPeriodAddedPayload
-            )
-          : undefined);
-    message.registrationPeriodDeletedPayload !== undefined &&
-      (obj.registrationPeriodDeletedPayload =
-        message.registrationPeriodDeletedPayload
-          ? RegistrationPeriodDeletedPayload.toJSON(
-              message.registrationPeriodDeletedPayload
             )
           : undefined);
     message.scheduleGeneratedPayload !== undefined &&
@@ -1463,27 +1158,6 @@ export const MessageInfo = {
       object.addCompetitorPayload !== null
         ? AddCompetitorPayload.fromPartial(object.addCompetitorPayload)
         : undefined;
-    message.addRegistrationGroupPayload =
-      object.addRegistrationGroupPayload !== undefined &&
-      object.addRegistrationGroupPayload !== null
-        ? AddRegistrationGroupPayload.fromPartial(
-            object.addRegistrationGroupPayload
-          )
-        : undefined;
-    message.addRegistrationPeriodPayload =
-      object.addRegistrationPeriodPayload !== undefined &&
-      object.addRegistrationPeriodPayload !== null
-        ? AddRegistrationPeriodPayload.fromPartial(
-            object.addRegistrationPeriodPayload
-          )
-        : undefined;
-    message.assignRegistrationGroupCategoriesPayload =
-      object.assignRegistrationGroupCategoriesPayload !== undefined &&
-      object.assignRegistrationGroupCategoriesPayload !== null
-        ? AssignRegistrationGroupCategoriesPayload.fromPartial(
-            object.assignRegistrationGroupCategoriesPayload
-          )
-        : undefined;
     message.categoryRegistrationStatusChangePayload =
       object.categoryRegistrationStatusChangePayload !== undefined &&
       object.categoryRegistrationStatusChangePayload !== null
@@ -1522,20 +1196,6 @@ export const MessageInfo = {
             object.createFakeCompetitorsPayload
           )
         : undefined;
-    message.deleteRegistrationGroupPayload =
-      object.deleteRegistrationGroupPayload !== undefined &&
-      object.deleteRegistrationGroupPayload !== null
-        ? DeleteRegistrationGroupPayload.fromPartial(
-            object.deleteRegistrationGroupPayload
-          )
-        : undefined;
-    message.deleteRegistrationPeriodPayload =
-      object.deleteRegistrationPeriodPayload !== undefined &&
-      object.deleteRegistrationPeriodPayload !== null
-        ? DeleteRegistrationPeriodPayload.fromPartial(
-            object.deleteRegistrationPeriodPayload
-          )
-        : undefined;
     message.fightEditorApplyChangesPayload =
       object.fightEditorApplyChangesPayload !== undefined &&
       object.fightEditorApplyChangesPayload !== null
@@ -1572,13 +1232,6 @@ export const MessageInfo = {
       object.propagateCompetitorsPayload !== null
         ? PropagateCompetitorsPayload.fromPartial(
             object.propagateCompetitorsPayload
-          )
-        : undefined;
-    message.registrationPeriodAddRegistrationGroupPayload =
-      object.registrationPeriodAddRegistrationGroupPayload !== undefined &&
-      object.registrationPeriodAddRegistrationGroupPayload !== null
-        ? RegistrationPeriodAddRegistrationGroupPayload.fromPartial(
-            object.registrationPeriodAddRegistrationGroupPayload
           )
         : undefined;
     message.removeAcademyPayload =
@@ -1716,46 +1369,11 @@ export const MessageInfo = {
       object.matsUpdatedPayload !== null
         ? MatsUpdatedPayload.fromPartial(object.matsUpdatedPayload)
         : undefined;
-    message.registrationGroupAddedPayload =
-      object.registrationGroupAddedPayload !== undefined &&
-      object.registrationGroupAddedPayload !== null
-        ? RegistrationGroupAddedPayload.fromPartial(
-            object.registrationGroupAddedPayload
-          )
-        : undefined;
-    message.registrationGroupCategoriesAssignedPayload =
-      object.registrationGroupCategoriesAssignedPayload !== undefined &&
-      object.registrationGroupCategoriesAssignedPayload !== null
-        ? RegistrationGroupCategoriesAssignedPayload.fromPartial(
-            object.registrationGroupCategoriesAssignedPayload
-          )
-        : undefined;
-    message.registrationGroupDeletedPayload =
-      object.registrationGroupDeletedPayload !== undefined &&
-      object.registrationGroupDeletedPayload !== null
-        ? RegistrationGroupDeletedPayload.fromPartial(
-            object.registrationGroupDeletedPayload
-          )
-        : undefined;
     message.registrationInfoUpdatedPayload =
       object.registrationInfoUpdatedPayload !== undefined &&
       object.registrationInfoUpdatedPayload !== null
         ? RegistrationInfoUpdatedPayload.fromPartial(
             object.registrationInfoUpdatedPayload
-          )
-        : undefined;
-    message.registrationPeriodAddedPayload =
-      object.registrationPeriodAddedPayload !== undefined &&
-      object.registrationPeriodAddedPayload !== null
-        ? RegistrationPeriodAddedPayload.fromPartial(
-            object.registrationPeriodAddedPayload
-          )
-        : undefined;
-    message.registrationPeriodDeletedPayload =
-      object.registrationPeriodDeletedPayload !== undefined &&
-      object.registrationPeriodDeletedPayload !== null
-        ? RegistrationPeriodDeletedPayload.fromPartial(
-            object.registrationPeriodDeletedPayload
           )
         : undefined;
     message.scheduleGeneratedPayload =

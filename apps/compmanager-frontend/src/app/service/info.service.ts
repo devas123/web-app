@@ -14,8 +14,7 @@ import {generateUuid} from "../modules/account/utils";
 import {
   AddAcademyPayload,
   AddCategoryPayload,
-  AddCompetitorPayload, AddRegistrationGroupPayload,
-  AddRegistrationPeriodPayload,
+  AddCompetitorPayload,
   CategoryRestriction,
   CategoryState,
   ChangeCompetitorCategoryPayload,
@@ -25,8 +24,7 @@ import {
   CompetitionProperties,
   Competitor,
   CreateCompetitionPayload,
-  CreateFakeCompetitorsPayload, DeleteRegistrationGroupPayload,
-  DeleteRegistrationPeriodPayload,
+  CreateFakeCompetitorsPayload,
   FightDescription,
   FightResultOption,
   GenerateBracketsPayload,
@@ -42,7 +40,7 @@ import {
   MessageInfo,
   PageInfo,
   QueryServiceResponse,
-  RegistrationInfo, RegistrationPeriodAddRegistrationGroupPayload,
+  RegistrationInfo,
   RemoveAcademyPayload,
   RemoveCompetitorPayload,
   Schedule,
@@ -358,36 +356,6 @@ export class InfoService {
         break;
       case   CommandType.DROP_CATEGORY_BRACKETS_COMMAND:
         cmd.type = CommandType.DROP_CATEGORY_BRACKETS_COMMAND;
-        break;
-      case     CommandType.ADD_REGISTRATION_PERIOD_COMMAND:
-        cmd.type = CommandType.ADD_REGISTRATION_PERIOD_COMMAND;
-        messageInfo.addRegistrationPeriodPayload = <AddRegistrationPeriodPayload>{
-          ...action.payload
-        }
-        break;
-      case     CommandType.ADD_REGISTRATION_GROUP_COMMAND:
-        cmd.type = CommandType.ADD_REGISTRATION_GROUP_COMMAND;
-        messageInfo.addRegistrationGroupPayload = <AddRegistrationGroupPayload>{
-          ...action.payload
-        }
-        break;
-      case     CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND:
-        cmd.type = CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND;
-        messageInfo.registrationPeriodAddRegistrationGroupPayload = <RegistrationPeriodAddRegistrationGroupPayload>{
-          ...action.payload
-        }
-        break;
-      case     CommandType.DELETE_REGISTRATION_GROUP_COMMAND:
-        cmd.type = CommandType.DELETE_REGISTRATION_GROUP_COMMAND;
-        messageInfo.deleteRegistrationGroupPayload = <DeleteRegistrationGroupPayload>{
-          ...action.payload
-        }
-        break;
-      case     CommandType.DELETE_REGISTRATION_PERIOD_COMMAND:
-        cmd.type = CommandType.DELETE_REGISTRATION_PERIOD_COMMAND;
-        messageInfo.deleteRegistrationPeriodPayload = <DeleteRegistrationPeriodPayload>{
-          ...action.payload
-        }
         break;
       case     CommandType.UPDATE_COMPETITOR_COMMAND:
         cmd.type = CommandType.UPDATE_COMPETITOR_COMMAND;

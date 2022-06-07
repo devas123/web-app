@@ -1,21 +1,24 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
-import {RegistrationPeriod} from "@frontend-nx/protobuf";
+import {RegistrationInfo, RegistrationPeriod} from "@frontend-nx/protobuf";
+import {generateUuid} from "../../../account/utils";
 
 export interface IAddRegistrationPeriodContext {
   competitionId: string;
   timeZone: string;
+  registrationInfo: RegistrationInfo;
 }
 
 export interface IAddRegistrationPeriodResult {
   competitionId: string;
   period: RegistrationPeriod;
+  registrationInfo: RegistrationInfo;
 }
 
 export class AddPeriodModal extends ComponentModalConfig<IAddRegistrationPeriodContext, IAddRegistrationPeriodResult, void> {
-  constructor(competitionId: string, timeZone: string, size = ModalSize.Small) {
-    super(AddRegistrationPeriodFormComponent, {timeZone, competitionId});
+  constructor(competitionId: string, timeZone: string, registrationInfo: RegistrationInfo, size = ModalSize.Small) {
+    super(AddRegistrationPeriodFormComponent, {timeZone, competitionId, registrationInfo});
 
     this.isClosable = true;
     this.transitionDuration = 200;
@@ -69,11 +72,15 @@ export class AddRegistrationPeriodFormComponent implements OnInit {
       start: this.periodEnd,
       name: this.periodName.value,
       competitionId: this.modal.context.competitionId,
-      id: '',
+      id: generateUuid(),
       registrationGroupIds: [],
     };
     this.periodForm.reset();
-    this.modal.approve({competitionId: this.modal.context.competitionId, period});
+    this.modal.approve({
+      competitionId: this.modal.context.competitionId,
+      period,
+      registrationInfo: this.modal.context.registrationInfo
+    });
   }
 
 

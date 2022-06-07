@@ -1479,6 +1479,38 @@ export interface CompetitionProcessingStopped {
   id: string;
 }
 
+export interface CommandProcessorCompetitionState {
+  id: string;
+  competitors: { [key: string]: Competitor };
+  competitionProperties?: CompetitionProperties;
+  stages: { [key: string]: StageDescriptor };
+  fights: { [key: string]: FightDescription };
+  categories: { [key: string]: CategoryDescriptor };
+  registrationInfo?: RegistrationInfo | undefined;
+  schedule?: Schedule | undefined;
+  revision: number;
+}
+
+export interface CommandProcessorCompetitionState_CompetitorsEntry {
+  key: string;
+  value?: Competitor;
+}
+
+export interface CommandProcessorCompetitionState_StagesEntry {
+  key: string;
+  value?: StageDescriptor;
+}
+
+export interface CommandProcessorCompetitionState_FightsEntry {
+  key: string;
+  value?: FightDescription;
+}
+
+export interface CommandProcessorCompetitionState_CategoriesEntry {
+  key: string;
+  value?: CategoryDescriptor;
+}
+
 export interface CompetitionState {
   id: string;
   categories: CategoryState[];
@@ -5621,6 +5653,612 @@ export const CompetitionProcessingStopped = {
   ): CompetitionProcessingStopped {
     const message = createBaseCompetitionProcessingStopped();
     message.id = object.id ?? '';
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState(): CommandProcessorCompetitionState {
+  return {
+    id: '',
+    competitors: {},
+    competitionProperties: undefined,
+    stages: {},
+    fights: {},
+    categories: {},
+    registrationInfo: undefined,
+    schedule: undefined,
+    revision: 0,
+  };
+}
+
+export const CommandProcessorCompetitionState = {
+  encode(
+    message: CommandProcessorCompetitionState,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.id !== '') {
+      writer.uint32(10).string(message.id);
+    }
+    Object.entries(message.competitors).forEach(([key, value]) => {
+      CommandProcessorCompetitionState_CompetitorsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(18).fork()
+      ).ldelim();
+    });
+    if (message.competitionProperties !== undefined) {
+      CompetitionProperties.encode(
+        message.competitionProperties,
+        writer.uint32(26).fork()
+      ).ldelim();
+    }
+    Object.entries(message.stages).forEach(([key, value]) => {
+      CommandProcessorCompetitionState_StagesEntry.encode(
+        { key: key as any, value },
+        writer.uint32(34).fork()
+      ).ldelim();
+    });
+    Object.entries(message.fights).forEach(([key, value]) => {
+      CommandProcessorCompetitionState_FightsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(42).fork()
+      ).ldelim();
+    });
+    Object.entries(message.categories).forEach(([key, value]) => {
+      CommandProcessorCompetitionState_CategoriesEntry.encode(
+        { key: key as any, value },
+        writer.uint32(50).fork()
+      ).ldelim();
+    });
+    if (message.registrationInfo !== undefined) {
+      RegistrationInfo.encode(
+        message.registrationInfo,
+        writer.uint32(802).fork()
+      ).ldelim();
+    }
+    if (message.schedule !== undefined) {
+      Schedule.encode(message.schedule, writer.uint32(1602).fork()).ldelim();
+    }
+    if (message.revision !== 0) {
+      writer.uint32(2400).int32(message.revision);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandProcessorCompetitionState();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          const entry2 =
+            CommandProcessorCompetitionState_CompetitorsEntry.decode(
+              reader,
+              reader.uint32()
+            );
+          if (entry2.value !== undefined) {
+            message.competitors[entry2.key] = entry2.value;
+          }
+          break;
+        case 3:
+          message.competitionProperties = CompetitionProperties.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        case 4:
+          const entry4 = CommandProcessorCompetitionState_StagesEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry4.value !== undefined) {
+            message.stages[entry4.key] = entry4.value;
+          }
+          break;
+        case 5:
+          const entry5 = CommandProcessorCompetitionState_FightsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry5.value !== undefined) {
+            message.fights[entry5.key] = entry5.value;
+          }
+          break;
+        case 6:
+          const entry6 =
+            CommandProcessorCompetitionState_CategoriesEntry.decode(
+              reader,
+              reader.uint32()
+            );
+          if (entry6.value !== undefined) {
+            message.categories[entry6.key] = entry6.value;
+          }
+          break;
+        case 100:
+          message.registrationInfo = RegistrationInfo.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        case 200:
+          message.schedule = Schedule.decode(reader, reader.uint32());
+          break;
+        case 300:
+          message.revision = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommandProcessorCompetitionState {
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+      competitors: isObject(object.competitors)
+        ? Object.entries(object.competitors).reduce<{
+            [key: string]: Competitor;
+          }>((acc, [key, value]) => {
+            acc[key] = Competitor.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      competitionProperties: isSet(object.competitionProperties)
+        ? CompetitionProperties.fromJSON(object.competitionProperties)
+        : undefined,
+      stages: isObject(object.stages)
+        ? Object.entries(object.stages).reduce<{
+            [key: string]: StageDescriptor;
+          }>((acc, [key, value]) => {
+            acc[key] = StageDescriptor.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      fights: isObject(object.fights)
+        ? Object.entries(object.fights).reduce<{
+            [key: string]: FightDescription;
+          }>((acc, [key, value]) => {
+            acc[key] = FightDescription.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      categories: isObject(object.categories)
+        ? Object.entries(object.categories).reduce<{
+            [key: string]: CategoryDescriptor;
+          }>((acc, [key, value]) => {
+            acc[key] = CategoryDescriptor.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      registrationInfo: isSet(object.registrationInfo)
+        ? RegistrationInfo.fromJSON(object.registrationInfo)
+        : undefined,
+      schedule: isSet(object.schedule)
+        ? Schedule.fromJSON(object.schedule)
+        : undefined,
+      revision: isSet(object.revision) ? Number(object.revision) : 0,
+    };
+  },
+
+  toJSON(message: CommandProcessorCompetitionState): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    obj.competitors = {};
+    if (message.competitors) {
+      Object.entries(message.competitors).forEach(([k, v]) => {
+        obj.competitors[k] = Competitor.toJSON(v);
+      });
+    }
+    message.competitionProperties !== undefined &&
+      (obj.competitionProperties = message.competitionProperties
+        ? CompetitionProperties.toJSON(message.competitionProperties)
+        : undefined);
+    obj.stages = {};
+    if (message.stages) {
+      Object.entries(message.stages).forEach(([k, v]) => {
+        obj.stages[k] = StageDescriptor.toJSON(v);
+      });
+    }
+    obj.fights = {};
+    if (message.fights) {
+      Object.entries(message.fights).forEach(([k, v]) => {
+        obj.fights[k] = FightDescription.toJSON(v);
+      });
+    }
+    obj.categories = {};
+    if (message.categories) {
+      Object.entries(message.categories).forEach(([k, v]) => {
+        obj.categories[k] = CategoryDescriptor.toJSON(v);
+      });
+    }
+    message.registrationInfo !== undefined &&
+      (obj.registrationInfo = message.registrationInfo
+        ? RegistrationInfo.toJSON(message.registrationInfo)
+        : undefined);
+    message.schedule !== undefined &&
+      (obj.schedule = message.schedule
+        ? Schedule.toJSON(message.schedule)
+        : undefined);
+    message.revision !== undefined &&
+      (obj.revision = Math.round(message.revision));
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<CommandProcessorCompetitionState>, I>
+  >(object: I): CommandProcessorCompetitionState {
+    const message = createBaseCommandProcessorCompetitionState();
+    message.id = object.id ?? '';
+    message.competitors = Object.entries(object.competitors ?? {}).reduce<{
+      [key: string]: Competitor;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = Competitor.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.competitionProperties =
+      object.competitionProperties !== undefined &&
+      object.competitionProperties !== null
+        ? CompetitionProperties.fromPartial(object.competitionProperties)
+        : undefined;
+    message.stages = Object.entries(object.stages ?? {}).reduce<{
+      [key: string]: StageDescriptor;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = StageDescriptor.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.fights = Object.entries(object.fights ?? {}).reduce<{
+      [key: string]: FightDescription;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = FightDescription.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.categories = Object.entries(object.categories ?? {}).reduce<{
+      [key: string]: CategoryDescriptor;
+    }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = CategoryDescriptor.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.registrationInfo =
+      object.registrationInfo !== undefined && object.registrationInfo !== null
+        ? RegistrationInfo.fromPartial(object.registrationInfo)
+        : undefined;
+    message.schedule =
+      object.schedule !== undefined && object.schedule !== null
+        ? Schedule.fromPartial(object.schedule)
+        : undefined;
+    message.revision = object.revision ?? 0;
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState_CompetitorsEntry(): CommandProcessorCompetitionState_CompetitorsEntry {
+  return { key: '', value: undefined };
+}
+
+export const CommandProcessorCompetitionState_CompetitorsEntry = {
+  encode(
+    message: CommandProcessorCompetitionState_CompetitorsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      Competitor.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState_CompetitorsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message =
+      createBaseCommandProcessorCompetitionState_CompetitorsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = Competitor.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommandProcessorCompetitionState_CompetitorsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? Competitor.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: CommandProcessorCompetitionState_CompetitorsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? Competitor.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CommandProcessorCompetitionState_CompetitorsEntry>,
+      I
+    >
+  >(object: I): CommandProcessorCompetitionState_CompetitorsEntry {
+    const message =
+      createBaseCommandProcessorCompetitionState_CompetitorsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? Competitor.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState_StagesEntry(): CommandProcessorCompetitionState_StagesEntry {
+  return { key: '', value: undefined };
+}
+
+export const CommandProcessorCompetitionState_StagesEntry = {
+  encode(
+    message: CommandProcessorCompetitionState_StagesEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      StageDescriptor.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState_StagesEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandProcessorCompetitionState_StagesEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = StageDescriptor.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommandProcessorCompetitionState_StagesEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? StageDescriptor.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: CommandProcessorCompetitionState_StagesEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? StageDescriptor.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CommandProcessorCompetitionState_StagesEntry>,
+      I
+    >
+  >(object: I): CommandProcessorCompetitionState_StagesEntry {
+    const message = createBaseCommandProcessorCompetitionState_StagesEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? StageDescriptor.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState_FightsEntry(): CommandProcessorCompetitionState_FightsEntry {
+  return { key: '', value: undefined };
+}
+
+export const CommandProcessorCompetitionState_FightsEntry = {
+  encode(
+    message: CommandProcessorCompetitionState_FightsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      FightDescription.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState_FightsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommandProcessorCompetitionState_FightsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = FightDescription.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommandProcessorCompetitionState_FightsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? FightDescription.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: CommandProcessorCompetitionState_FightsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? FightDescription.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CommandProcessorCompetitionState_FightsEntry>,
+      I
+    >
+  >(object: I): CommandProcessorCompetitionState_FightsEntry {
+    const message = createBaseCommandProcessorCompetitionState_FightsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? FightDescription.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState_CategoriesEntry(): CommandProcessorCompetitionState_CategoriesEntry {
+  return { key: '', value: undefined };
+}
+
+export const CommandProcessorCompetitionState_CategoriesEntry = {
+  encode(
+    message: CommandProcessorCompetitionState_CategoriesEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      CategoryDescriptor.encode(
+        message.value,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState_CategoriesEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message =
+      createBaseCommandProcessorCompetitionState_CategoriesEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = CategoryDescriptor.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommandProcessorCompetitionState_CategoriesEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? CategoryDescriptor.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: CommandProcessorCompetitionState_CategoriesEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? CategoryDescriptor.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CommandProcessorCompetitionState_CategoriesEntry>,
+      I
+    >
+  >(object: I): CommandProcessorCompetitionState_CategoriesEntry {
+    const message =
+      createBaseCommandProcessorCompetitionState_CategoriesEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? CategoryDescriptor.fromPartial(object.value)
+        : undefined;
     return message;
   },
 };

@@ -51,7 +51,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.compservice.model.protobuf.MessageInfo.oneofGroups_ = [[11,12,13,14,15,16,17,18,19,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,21,22,23,24,25,26,27,28,29,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224]];
+proto.compservice.model.protobuf.MessageInfo.oneofGroups_ = [[11,12,13,17,18,19,110,111,112,115,116,117,118,119,120,122,123,124,125,126,127,128,129,21,22,23,24,25,26,27,28,29,210,211,212,213,214,215,219,222,223,224]];
 
 /**
  * @enum {number}
@@ -61,24 +61,18 @@ proto.compservice.model.protobuf.MessageInfo.PayloadCase = {
   ADDACADEMYPAYLOAD: 11,
   ADDCATEGORYPAYLOAD: 12,
   ADDCOMPETITORPAYLOAD: 13,
-  ADDREGISTRATIONGROUPPAYLOAD: 14,
-  ADDREGISTRATIONPERIODPAYLOAD: 15,
-  ASSIGNREGISTRATIONGROUPCATEGORIESPAYLOAD: 16,
   CATEGORYREGISTRATIONSTATUSCHANGEPAYLOAD: 17,
   CHANGECOMPETITORCATEGORYPAYLOAD: 18,
   CHANGEFIGHTORDERPAYLOAD: 19,
   COMPETITORCATEGORYADDEDPAYLOAD: 110,
   CREATECOMPETITIONPAYLOAD: 111,
   CREATEFAKECOMPETITORSPAYLOAD: 112,
-  DELETEREGISTRATIONGROUPPAYLOAD: 113,
-  DELETEREGISTRATIONPERIODPAYLOAD: 114,
   FIGHTEDITORAPPLYCHANGESPAYLOAD: 115,
   GENERATEABSOLUTECATEGORYPAYLOAD: 116,
   GENERATEBRACKETSPAYLOAD: 117,
   GENERATECATEGORIESFROMRESTRICTIONSPAYLOAD: 118,
   GENERATESCHEDULEPAYLOAD: 119,
   PROPAGATECOMPETITORSPAYLOAD: 120,
-  REGISTRATIONPERIODADDREGISTRATIONGROUPPAYLOAD: 121,
   REMOVEACADEMYPAYLOAD: 122,
   REMOVECOMPETITORPAYLOAD: 123,
   SETFIGHTRESULTPAYLOAD: 124,
@@ -102,12 +96,7 @@ proto.compservice.model.protobuf.MessageInfo.PayloadCase = {
   FIGHTSADDEDTOSTAGEPAYLOAD: 213,
   FIGHTSTARTTIMEUPDATEDPAYLOAD: 214,
   MATSUPDATEDPAYLOAD: 215,
-  REGISTRATIONGROUPADDEDPAYLOAD: 216,
-  REGISTRATIONGROUPCATEGORIESASSIGNEDPAYLOAD: 217,
-  REGISTRATIONGROUPDELETEDPAYLOAD: 218,
   REGISTRATIONINFOUPDATEDPAYLOAD: 219,
-  REGISTRATIONPERIODADDEDPAYLOAD: 220,
-  REGISTRATIONPERIODDELETEDPAYLOAD: 221,
   SCHEDULEGENERATEDPAYLOAD: 222,
   STAGERESULTSETPAYLOAD: 223,
   STAGESTATUSUPDATEDPAYLOAD: 224
@@ -160,24 +149,18 @@ proto.compservice.model.protobuf.MessageInfo.toObject = function(includeInstance
     addacademypayload: (f = msg.getAddacademypayload()) && commandpayload_pb.AddAcademyPayload.toObject(includeInstance, f),
     addcategorypayload: (f = msg.getAddcategorypayload()) && commandpayload_pb.AddCategoryPayload.toObject(includeInstance, f),
     addcompetitorpayload: (f = msg.getAddcompetitorpayload()) && commandpayload_pb.AddCompetitorPayload.toObject(includeInstance, f),
-    addregistrationgrouppayload: (f = msg.getAddregistrationgrouppayload()) && commandpayload_pb.AddRegistrationGroupPayload.toObject(includeInstance, f),
-    addregistrationperiodpayload: (f = msg.getAddregistrationperiodpayload()) && commandpayload_pb.AddRegistrationPeriodPayload.toObject(includeInstance, f),
-    assignregistrationgroupcategoriespayload: (f = msg.getAssignregistrationgroupcategoriespayload()) && commandpayload_pb.AssignRegistrationGroupCategoriesPayload.toObject(includeInstance, f),
     categoryregistrationstatuschangepayload: (f = msg.getCategoryregistrationstatuschangepayload()) && commandpayload_pb.CategoryRegistrationStatusChangePayload.toObject(includeInstance, f),
     changecompetitorcategorypayload: (f = msg.getChangecompetitorcategorypayload()) && commandpayload_pb.ChangeCompetitorCategoryPayload.toObject(includeInstance, f),
     changefightorderpayload: (f = msg.getChangefightorderpayload()) && commandpayload_pb.ChangeFightOrderPayload.toObject(includeInstance, f),
     competitorcategoryaddedpayload: (f = msg.getCompetitorcategoryaddedpayload()) && commandpayload_pb.CompetitorCategoryAddedPayload.toObject(includeInstance, f),
     createcompetitionpayload: (f = msg.getCreatecompetitionpayload()) && commandpayload_pb.CreateCompetitionPayload.toObject(includeInstance, f),
     createfakecompetitorspayload: (f = msg.getCreatefakecompetitorspayload()) && commandpayload_pb.CreateFakeCompetitorsPayload.toObject(includeInstance, f),
-    deleteregistrationgrouppayload: (f = msg.getDeleteregistrationgrouppayload()) && commandpayload_pb.DeleteRegistrationGroupPayload.toObject(includeInstance, f),
-    deleteregistrationperiodpayload: (f = msg.getDeleteregistrationperiodpayload()) && commandpayload_pb.DeleteRegistrationPeriodPayload.toObject(includeInstance, f),
     fighteditorapplychangespayload: (f = msg.getFighteditorapplychangespayload()) && commandpayload_pb.FightEditorApplyChangesPayload.toObject(includeInstance, f),
     generateabsolutecategorypayload: (f = msg.getGenerateabsolutecategorypayload()) && commandpayload_pb.GenerateAbsoluteCategoryPayload.toObject(includeInstance, f),
     generatebracketspayload: (f = msg.getGeneratebracketspayload()) && commandpayload_pb.GenerateBracketsPayload.toObject(includeInstance, f),
     generatecategoriesfromrestrictionspayload: (f = msg.getGeneratecategoriesfromrestrictionspayload()) && commandpayload_pb.GenerateCategoriesFromRestrictionsPayload.toObject(includeInstance, f),
     generateschedulepayload: (f = msg.getGenerateschedulepayload()) && commandpayload_pb.GenerateSchedulePayload.toObject(includeInstance, f),
     propagatecompetitorspayload: (f = msg.getPropagatecompetitorspayload()) && commandpayload_pb.PropagateCompetitorsPayload.toObject(includeInstance, f),
-    registrationperiodaddregistrationgrouppayload: (f = msg.getRegistrationperiodaddregistrationgrouppayload()) && commandpayload_pb.RegistrationPeriodAddRegistrationGroupPayload.toObject(includeInstance, f),
     removeacademypayload: (f = msg.getRemoveacademypayload()) && commandpayload_pb.RemoveAcademyPayload.toObject(includeInstance, f),
     removecompetitorpayload: (f = msg.getRemovecompetitorpayload()) && commandpayload_pb.RemoveCompetitorPayload.toObject(includeInstance, f),
     setfightresultpayload: (f = msg.getSetfightresultpayload()) && commandpayload_pb.SetFightResultPayload.toObject(includeInstance, f),
@@ -201,12 +184,7 @@ proto.compservice.model.protobuf.MessageInfo.toObject = function(includeInstance
     fightsaddedtostagepayload: (f = msg.getFightsaddedtostagepayload()) && eventpayload_pb.FightsAddedToStagePayload.toObject(includeInstance, f),
     fightstarttimeupdatedpayload: (f = msg.getFightstarttimeupdatedpayload()) && eventpayload_pb.FightStartTimeUpdatedPayload.toObject(includeInstance, f),
     matsupdatedpayload: (f = msg.getMatsupdatedpayload()) && eventpayload_pb.MatsUpdatedPayload.toObject(includeInstance, f),
-    registrationgroupaddedpayload: (f = msg.getRegistrationgroupaddedpayload()) && eventpayload_pb.RegistrationGroupAddedPayload.toObject(includeInstance, f),
-    registrationgroupcategoriesassignedpayload: (f = msg.getRegistrationgroupcategoriesassignedpayload()) && eventpayload_pb.RegistrationGroupCategoriesAssignedPayload.toObject(includeInstance, f),
-    registrationgroupdeletedpayload: (f = msg.getRegistrationgroupdeletedpayload()) && eventpayload_pb.RegistrationGroupDeletedPayload.toObject(includeInstance, f),
     registrationinfoupdatedpayload: (f = msg.getRegistrationinfoupdatedpayload()) && eventpayload_pb.RegistrationInfoUpdatedPayload.toObject(includeInstance, f),
-    registrationperiodaddedpayload: (f = msg.getRegistrationperiodaddedpayload()) && eventpayload_pb.RegistrationPeriodAddedPayload.toObject(includeInstance, f),
-    registrationperioddeletedpayload: (f = msg.getRegistrationperioddeletedpayload()) && eventpayload_pb.RegistrationPeriodDeletedPayload.toObject(includeInstance, f),
     schedulegeneratedpayload: (f = msg.getSchedulegeneratedpayload()) && eventpayload_pb.ScheduleGeneratedPayload.toObject(includeInstance, f),
     stageresultsetpayload: (f = msg.getStageresultsetpayload()) && eventpayload_pb.StageResultSetPayload.toObject(includeInstance, f),
     stagestatusupdatedpayload: (f = msg.getStagestatusupdatedpayload()) && eventpayload_pb.StageStatusUpdatedPayload.toObject(includeInstance, f)
@@ -285,21 +263,6 @@ proto.compservice.model.protobuf.MessageInfo.deserializeBinaryFromReader = funct
       reader.readMessage(value,commandpayload_pb.AddCompetitorPayload.deserializeBinaryFromReader);
       msg.setAddcompetitorpayload(value);
       break;
-    case 14:
-      var value = new commandpayload_pb.AddRegistrationGroupPayload;
-      reader.readMessage(value,commandpayload_pb.AddRegistrationGroupPayload.deserializeBinaryFromReader);
-      msg.setAddregistrationgrouppayload(value);
-      break;
-    case 15:
-      var value = new commandpayload_pb.AddRegistrationPeriodPayload;
-      reader.readMessage(value,commandpayload_pb.AddRegistrationPeriodPayload.deserializeBinaryFromReader);
-      msg.setAddregistrationperiodpayload(value);
-      break;
-    case 16:
-      var value = new commandpayload_pb.AssignRegistrationGroupCategoriesPayload;
-      reader.readMessage(value,commandpayload_pb.AssignRegistrationGroupCategoriesPayload.deserializeBinaryFromReader);
-      msg.setAssignregistrationgroupcategoriespayload(value);
-      break;
     case 17:
       var value = new commandpayload_pb.CategoryRegistrationStatusChangePayload;
       reader.readMessage(value,commandpayload_pb.CategoryRegistrationStatusChangePayload.deserializeBinaryFromReader);
@@ -330,16 +293,6 @@ proto.compservice.model.protobuf.MessageInfo.deserializeBinaryFromReader = funct
       reader.readMessage(value,commandpayload_pb.CreateFakeCompetitorsPayload.deserializeBinaryFromReader);
       msg.setCreatefakecompetitorspayload(value);
       break;
-    case 113:
-      var value = new commandpayload_pb.DeleteRegistrationGroupPayload;
-      reader.readMessage(value,commandpayload_pb.DeleteRegistrationGroupPayload.deserializeBinaryFromReader);
-      msg.setDeleteregistrationgrouppayload(value);
-      break;
-    case 114:
-      var value = new commandpayload_pb.DeleteRegistrationPeriodPayload;
-      reader.readMessage(value,commandpayload_pb.DeleteRegistrationPeriodPayload.deserializeBinaryFromReader);
-      msg.setDeleteregistrationperiodpayload(value);
-      break;
     case 115:
       var value = new commandpayload_pb.FightEditorApplyChangesPayload;
       reader.readMessage(value,commandpayload_pb.FightEditorApplyChangesPayload.deserializeBinaryFromReader);
@@ -369,11 +322,6 @@ proto.compservice.model.protobuf.MessageInfo.deserializeBinaryFromReader = funct
       var value = new commandpayload_pb.PropagateCompetitorsPayload;
       reader.readMessage(value,commandpayload_pb.PropagateCompetitorsPayload.deserializeBinaryFromReader);
       msg.setPropagatecompetitorspayload(value);
-      break;
-    case 121:
-      var value = new commandpayload_pb.RegistrationPeriodAddRegistrationGroupPayload;
-      reader.readMessage(value,commandpayload_pb.RegistrationPeriodAddRegistrationGroupPayload.deserializeBinaryFromReader);
-      msg.setRegistrationperiodaddregistrationgrouppayload(value);
       break;
     case 122:
       var value = new commandpayload_pb.RemoveAcademyPayload;
@@ -490,35 +438,10 @@ proto.compservice.model.protobuf.MessageInfo.deserializeBinaryFromReader = funct
       reader.readMessage(value,eventpayload_pb.MatsUpdatedPayload.deserializeBinaryFromReader);
       msg.setMatsupdatedpayload(value);
       break;
-    case 216:
-      var value = new eventpayload_pb.RegistrationGroupAddedPayload;
-      reader.readMessage(value,eventpayload_pb.RegistrationGroupAddedPayload.deserializeBinaryFromReader);
-      msg.setRegistrationgroupaddedpayload(value);
-      break;
-    case 217:
-      var value = new eventpayload_pb.RegistrationGroupCategoriesAssignedPayload;
-      reader.readMessage(value,eventpayload_pb.RegistrationGroupCategoriesAssignedPayload.deserializeBinaryFromReader);
-      msg.setRegistrationgroupcategoriesassignedpayload(value);
-      break;
-    case 218:
-      var value = new eventpayload_pb.RegistrationGroupDeletedPayload;
-      reader.readMessage(value,eventpayload_pb.RegistrationGroupDeletedPayload.deserializeBinaryFromReader);
-      msg.setRegistrationgroupdeletedpayload(value);
-      break;
     case 219:
       var value = new eventpayload_pb.RegistrationInfoUpdatedPayload;
       reader.readMessage(value,eventpayload_pb.RegistrationInfoUpdatedPayload.deserializeBinaryFromReader);
       msg.setRegistrationinfoupdatedpayload(value);
-      break;
-    case 220:
-      var value = new eventpayload_pb.RegistrationPeriodAddedPayload;
-      reader.readMessage(value,eventpayload_pb.RegistrationPeriodAddedPayload.deserializeBinaryFromReader);
-      msg.setRegistrationperiodaddedpayload(value);
-      break;
-    case 221:
-      var value = new eventpayload_pb.RegistrationPeriodDeletedPayload;
-      reader.readMessage(value,eventpayload_pb.RegistrationPeriodDeletedPayload.deserializeBinaryFromReader);
-      msg.setRegistrationperioddeletedpayload(value);
       break;
     case 222:
       var value = new eventpayload_pb.ScheduleGeneratedPayload;
@@ -630,30 +553,6 @@ proto.compservice.model.protobuf.MessageInfo.serializeBinaryToWriter = function(
       commandpayload_pb.AddCompetitorPayload.serializeBinaryToWriter
     );
   }
-  f = message.getAddregistrationgrouppayload();
-  if (f != null) {
-    writer.writeMessage(
-      14,
-      f,
-      commandpayload_pb.AddRegistrationGroupPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getAddregistrationperiodpayload();
-  if (f != null) {
-    writer.writeMessage(
-      15,
-      f,
-      commandpayload_pb.AddRegistrationPeriodPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getAssignregistrationgroupcategoriespayload();
-  if (f != null) {
-    writer.writeMessage(
-      16,
-      f,
-      commandpayload_pb.AssignRegistrationGroupCategoriesPayload.serializeBinaryToWriter
-    );
-  }
   f = message.getCategoryregistrationstatuschangepayload();
   if (f != null) {
     writer.writeMessage(
@@ -702,22 +601,6 @@ proto.compservice.model.protobuf.MessageInfo.serializeBinaryToWriter = function(
       commandpayload_pb.CreateFakeCompetitorsPayload.serializeBinaryToWriter
     );
   }
-  f = message.getDeleteregistrationgrouppayload();
-  if (f != null) {
-    writer.writeMessage(
-      113,
-      f,
-      commandpayload_pb.DeleteRegistrationGroupPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getDeleteregistrationperiodpayload();
-  if (f != null) {
-    writer.writeMessage(
-      114,
-      f,
-      commandpayload_pb.DeleteRegistrationPeriodPayload.serializeBinaryToWriter
-    );
-  }
   f = message.getFighteditorapplychangespayload();
   if (f != null) {
     writer.writeMessage(
@@ -764,14 +647,6 @@ proto.compservice.model.protobuf.MessageInfo.serializeBinaryToWriter = function(
       120,
       f,
       commandpayload_pb.PropagateCompetitorsPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getRegistrationperiodaddregistrationgrouppayload();
-  if (f != null) {
-    writer.writeMessage(
-      121,
-      f,
-      commandpayload_pb.RegistrationPeriodAddRegistrationGroupPayload.serializeBinaryToWriter
     );
   }
   f = message.getRemoveacademypayload();
@@ -958,52 +833,12 @@ proto.compservice.model.protobuf.MessageInfo.serializeBinaryToWriter = function(
       eventpayload_pb.MatsUpdatedPayload.serializeBinaryToWriter
     );
   }
-  f = message.getRegistrationgroupaddedpayload();
-  if (f != null) {
-    writer.writeMessage(
-      216,
-      f,
-      eventpayload_pb.RegistrationGroupAddedPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getRegistrationgroupcategoriesassignedpayload();
-  if (f != null) {
-    writer.writeMessage(
-      217,
-      f,
-      eventpayload_pb.RegistrationGroupCategoriesAssignedPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getRegistrationgroupdeletedpayload();
-  if (f != null) {
-    writer.writeMessage(
-      218,
-      f,
-      eventpayload_pb.RegistrationGroupDeletedPayload.serializeBinaryToWriter
-    );
-  }
   f = message.getRegistrationinfoupdatedpayload();
   if (f != null) {
     writer.writeMessage(
       219,
       f,
       eventpayload_pb.RegistrationInfoUpdatedPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getRegistrationperiodaddedpayload();
-  if (f != null) {
-    writer.writeMessage(
-      220,
-      f,
-      eventpayload_pb.RegistrationPeriodAddedPayload.serializeBinaryToWriter
-    );
-  }
-  f = message.getRegistrationperioddeletedpayload();
-  if (f != null) {
-    writer.writeMessage(
-      221,
-      f,
-      eventpayload_pb.RegistrationPeriodDeletedPayload.serializeBinaryToWriter
     );
   }
   f = message.getSchedulegeneratedpayload();
@@ -1361,117 +1196,6 @@ proto.compservice.model.protobuf.MessageInfo.prototype.hasAddcompetitorpayload =
 
 
 /**
- * optional AddRegistrationGroupPayload addRegistrationGroupPayload = 14;
- * @return {?proto.compservice.model.protobuf.AddRegistrationGroupPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getAddregistrationgrouppayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.AddRegistrationGroupPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.AddRegistrationGroupPayload, 14));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.AddRegistrationGroupPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setAddregistrationgrouppayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 14, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearAddregistrationgrouppayload = function() {
-  return this.setAddregistrationgrouppayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasAddregistrationgrouppayload = function() {
-  return jspb.Message.getField(this, 14) != null;
-};
-
-
-/**
- * optional AddRegistrationPeriodPayload addRegistrationPeriodPayload = 15;
- * @return {?proto.compservice.model.protobuf.AddRegistrationPeriodPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getAddregistrationperiodpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.AddRegistrationPeriodPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.AddRegistrationPeriodPayload, 15));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.AddRegistrationPeriodPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setAddregistrationperiodpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 15, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearAddregistrationperiodpayload = function() {
-  return this.setAddregistrationperiodpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasAddregistrationperiodpayload = function() {
-  return jspb.Message.getField(this, 15) != null;
-};
-
-
-/**
- * optional AssignRegistrationGroupCategoriesPayload assignRegistrationGroupCategoriesPayload = 16;
- * @return {?proto.compservice.model.protobuf.AssignRegistrationGroupCategoriesPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getAssignregistrationgroupcategoriespayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.AssignRegistrationGroupCategoriesPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.AssignRegistrationGroupCategoriesPayload, 16));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.AssignRegistrationGroupCategoriesPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setAssignregistrationgroupcategoriespayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 16, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearAssignregistrationgroupcategoriespayload = function() {
-  return this.setAssignregistrationgroupcategoriespayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasAssignregistrationgroupcategoriespayload = function() {
-  return jspb.Message.getField(this, 16) != null;
-};
-
-
-/**
  * optional CategoryRegistrationStatusChangePayload categoryRegistrationStatusChangePayload = 17;
  * @return {?proto.compservice.model.protobuf.CategoryRegistrationStatusChangePayload}
  */
@@ -1694,80 +1418,6 @@ proto.compservice.model.protobuf.MessageInfo.prototype.hasCreatefakecompetitorsp
 
 
 /**
- * optional DeleteRegistrationGroupPayload deleteRegistrationGroupPayload = 113;
- * @return {?proto.compservice.model.protobuf.DeleteRegistrationGroupPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getDeleteregistrationgrouppayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.DeleteRegistrationGroupPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.DeleteRegistrationGroupPayload, 113));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.DeleteRegistrationGroupPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setDeleteregistrationgrouppayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 113, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearDeleteregistrationgrouppayload = function() {
-  return this.setDeleteregistrationgrouppayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasDeleteregistrationgrouppayload = function() {
-  return jspb.Message.getField(this, 113) != null;
-};
-
-
-/**
- * optional DeleteRegistrationPeriodPayload deleteRegistrationPeriodPayload = 114;
- * @return {?proto.compservice.model.protobuf.DeleteRegistrationPeriodPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getDeleteregistrationperiodpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.DeleteRegistrationPeriodPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.DeleteRegistrationPeriodPayload, 114));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.DeleteRegistrationPeriodPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setDeleteregistrationperiodpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 114, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearDeleteregistrationperiodpayload = function() {
-  return this.setDeleteregistrationperiodpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasDeleteregistrationperiodpayload = function() {
-  return jspb.Message.getField(this, 114) != null;
-};
-
-
-/**
  * optional FightEditorApplyChangesPayload fightEditorApplyChangesPayload = 115;
  * @return {?proto.compservice.model.protobuf.FightEditorApplyChangesPayload}
  */
@@ -1986,43 +1636,6 @@ proto.compservice.model.protobuf.MessageInfo.prototype.clearPropagatecompetitors
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.hasPropagatecompetitorspayload = function() {
   return jspb.Message.getField(this, 120) != null;
-};
-
-
-/**
- * optional RegistrationPeriodAddRegistrationGroupPayload registrationPeriodAddRegistrationGroupPayload = 121;
- * @return {?proto.compservice.model.protobuf.RegistrationPeriodAddRegistrationGroupPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationperiodaddregistrationgrouppayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationPeriodAddRegistrationGroupPayload} */ (
-    jspb.Message.getWrapperField(this, commandpayload_pb.RegistrationPeriodAddRegistrationGroupPayload, 121));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationPeriodAddRegistrationGroupPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationperiodaddregistrationgrouppayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 121, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationperiodaddregistrationgrouppayload = function() {
-  return this.setRegistrationperiodaddregistrationgrouppayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationperiodaddregistrationgrouppayload = function() {
-  return jspb.Message.getField(this, 121) != null;
 };
 
 
@@ -2878,117 +2491,6 @@ proto.compservice.model.protobuf.MessageInfo.prototype.hasMatsupdatedpayload = f
 
 
 /**
- * optional RegistrationGroupAddedPayload registrationGroupAddedPayload = 216;
- * @return {?proto.compservice.model.protobuf.RegistrationGroupAddedPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationgroupaddedpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationGroupAddedPayload} */ (
-    jspb.Message.getWrapperField(this, eventpayload_pb.RegistrationGroupAddedPayload, 216));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationGroupAddedPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationgroupaddedpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 216, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationgroupaddedpayload = function() {
-  return this.setRegistrationgroupaddedpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationgroupaddedpayload = function() {
-  return jspb.Message.getField(this, 216) != null;
-};
-
-
-/**
- * optional RegistrationGroupCategoriesAssignedPayload registrationGroupCategoriesAssignedPayload = 217;
- * @return {?proto.compservice.model.protobuf.RegistrationGroupCategoriesAssignedPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationgroupcategoriesassignedpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationGroupCategoriesAssignedPayload} */ (
-    jspb.Message.getWrapperField(this, eventpayload_pb.RegistrationGroupCategoriesAssignedPayload, 217));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationGroupCategoriesAssignedPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationgroupcategoriesassignedpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 217, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationgroupcategoriesassignedpayload = function() {
-  return this.setRegistrationgroupcategoriesassignedpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationgroupcategoriesassignedpayload = function() {
-  return jspb.Message.getField(this, 217) != null;
-};
-
-
-/**
- * optional RegistrationGroupDeletedPayload registrationGroupDeletedPayload = 218;
- * @return {?proto.compservice.model.protobuf.RegistrationGroupDeletedPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationgroupdeletedpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationGroupDeletedPayload} */ (
-    jspb.Message.getWrapperField(this, eventpayload_pb.RegistrationGroupDeletedPayload, 218));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationGroupDeletedPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationgroupdeletedpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 218, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationgroupdeletedpayload = function() {
-  return this.setRegistrationgroupdeletedpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationgroupdeletedpayload = function() {
-  return jspb.Message.getField(this, 218) != null;
-};
-
-
-/**
  * optional RegistrationInfoUpdatedPayload registrationInfoUpdatedPayload = 219;
  * @return {?proto.compservice.model.protobuf.RegistrationInfoUpdatedPayload}
  */
@@ -3022,80 +2524,6 @@ proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationinfoupda
  */
 proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationinfoupdatedpayload = function() {
   return jspb.Message.getField(this, 219) != null;
-};
-
-
-/**
- * optional RegistrationPeriodAddedPayload registrationPeriodAddedPayload = 220;
- * @return {?proto.compservice.model.protobuf.RegistrationPeriodAddedPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationperiodaddedpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationPeriodAddedPayload} */ (
-    jspb.Message.getWrapperField(this, eventpayload_pb.RegistrationPeriodAddedPayload, 220));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationPeriodAddedPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationperiodaddedpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 220, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationperiodaddedpayload = function() {
-  return this.setRegistrationperiodaddedpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationperiodaddedpayload = function() {
-  return jspb.Message.getField(this, 220) != null;
-};
-
-
-/**
- * optional RegistrationPeriodDeletedPayload registrationPeriodDeletedPayload = 221;
- * @return {?proto.compservice.model.protobuf.RegistrationPeriodDeletedPayload}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.getRegistrationperioddeletedpayload = function() {
-  return /** @type{?proto.compservice.model.protobuf.RegistrationPeriodDeletedPayload} */ (
-    jspb.Message.getWrapperField(this, eventpayload_pb.RegistrationPeriodDeletedPayload, 221));
-};
-
-
-/**
- * @param {?proto.compservice.model.protobuf.RegistrationPeriodDeletedPayload|undefined} value
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
-*/
-proto.compservice.model.protobuf.MessageInfo.prototype.setRegistrationperioddeletedpayload = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 221, proto.compservice.model.protobuf.MessageInfo.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.compservice.model.protobuf.MessageInfo} returns this
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.clearRegistrationperioddeletedpayload = function() {
-  return this.setRegistrationperioddeletedpayload(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.MessageInfo.prototype.hasRegistrationperioddeletedpayload = function() {
-  return jspb.Message.getField(this, 221) != null;
 };
 
 

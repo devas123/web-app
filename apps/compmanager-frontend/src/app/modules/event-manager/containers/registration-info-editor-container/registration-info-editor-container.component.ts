@@ -9,14 +9,7 @@ import {
   eventManagerGetSelectedEventRegistrationInfo,
   eventManagerGetSelectedEventTimeZone
 } from '../../redux/event-manager-reducers';
-import {
-  eventManagerAddRegistrationGroup, eventManagerAddRegistrationGroupToRegistrationPeriod,
-  eventManagerAddRegistrationPeriod,
-  eventManagerDeleteRegistrationGroup,
-  eventManagerDeleteRegistrationPeriod,
-  eventManagerLoadRegistrationInfo,
-  eventManagerUpdateRegistrationInfo
-} from '../../redux/event-manager-actions';
+import {eventManagerLoadRegistrationInfo, eventManagerUpdateRegistrationInfo} from '../../redux/event-manager-actions';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, startWith, switchMap, take} from 'rxjs/operators';
 import {
@@ -37,6 +30,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
 import {CategoryState, RegistrationInfo} from "@frontend-nx/protobuf";
+import produce from "immer";
 
 @Component({
   selector: 'app-registration-info-editor-container',
@@ -68,9 +62,9 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
         },
         {
           name: 'Add period',
-          action: () => combineLatest([this.competitionId$, this.timeZone$]).pipe(
-            filter(([competitionId, timezone]) => !!competitionId && !!timezone),
-            take(1)).subscribe(([competitionId, timezone]) => this.openAddPeriodModal(competitionId, timezone))
+          action: () => combineLatest([this.competitionId$, this.timeZone$, this.registrationInfo$]).pipe(
+            filter(([competitionId, timezone, registrationInfo]) => !!competitionId && !!timezone && !!registrationInfo),
+            take(1)).subscribe(([competitionId, timezone, registrationInfo]) => this.openAddPeriodModal(competitionId, timezone, registrationInfo))
         },
         {
           name: 'Clear',
@@ -102,14 +96,15 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
     }
   }
 
-  public openGroupModal({competitionId, periodId, periodRegistrationGroups}) {
+  public openGroupModal({competitionId, periodId, periodRegistrationGroups, registrationInfo}) {
     if (periodId) {
       this.store.pipe(select(eventManagerGetSelectedEventAvailableRegistrationGroups), take(1), map(groups => {
         this.modalService.open(new AddGroupModal({
           periodId,
           competitionId,
           existingGroups: objectValues(groups).filter(gr => !periodRegistrationGroups || (periodRegistrationGroups.indexOf(gr.id) < 0)),
-          haveDefaultGroup: !!objectValues(groups).find(g => g.defaultGroup)
+          haveDefaultGroup: !!objectValues(groups).find(g => g.defaultGroup),
+          registrationInfo: registrationInfo
         }))
           .onApprove((result: IAddRegistrationGroupResult) => this.addRegistrationInfoGroups(result))
           .onDeny(_ => {
@@ -118,8 +113,8 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
     }
   }
 
-  public openAddPeriodModal(competitionId, timeZone) {
-    this.modalService.open(new AddPeriodModal(competitionId, timeZone))
+  public openAddPeriodModal(competitionId, timeZone, registrationInfo) {
+    this.modalService.open(new AddPeriodModal(competitionId, timeZone, registrationInfo))
       .onApprove((result: IAddRegistrationPeriodResult) => this.addRegistrationInfoPeriod(result))
       .onDeny(_ => { /* deny callback */
       });
@@ -127,36 +122,46 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
 
   addRegistrationInfoGroups(data: IAddRegistrationGroupResult) {
     if (data && data.groups && data.registrationInfoId) {
-      if (data.createNew) {
-        this.store.dispatch(eventManagerAddRegistrationGroup({
-          competitionId: data.competitionId, periodId: data.periodId,
-          groups: data.groups.map(gr => ({
+      const {groups, periodId, registrationInfo, createNew, competitionId} = data;
+
+      if (createNew) {
+        const updatedRegInfo = produce(registrationInfo, draft => {
+          groups.map(gr => ({
             ...gr,
             registrationInfoId: data.registrationInfoId,
             categories: []
-          }))
+          })).forEach(group => {
+            draft.registrationGroups[group.id] = group;
+            if (draft.registrationPeriods) {
+              draft.registrationPeriods[periodId]?.registrationGroupIds?.push(group.id);
+            }
+          })
+        })
+        this.store.dispatch(eventManagerUpdateRegistrationInfo({
+          registrationInfo: updatedRegInfo,
+          competitionId
         }));
       } else {
-        data.groups.map(gr => eventManagerAddRegistrationGroupToRegistrationPeriod({
-          competitionId: data.competitionId,
-          periodId: data.periodId,
-          groupId: gr.id
-        }))
-          .forEach(e => this.store.dispatch(e));
+        const updatedRegInfo = produce(registrationInfo, draft => {
+          groups.forEach(gr => draft.registrationPeriods[periodId].registrationGroupIds.push(gr.id));
+        });
+        this.store.dispatch(eventManagerUpdateRegistrationInfo({
+          registrationInfo: updatedRegInfo,
+          competitionId
+        }));
       }
     }
   }
 
   addRegistrationInfoPeriod(data: IAddRegistrationPeriodResult) {
-    this.store.dispatch(eventManagerAddRegistrationPeriod({...data}));
-  }
-
-  deleteRegistrationInfoGroup(data: { competitionId: string, periodId: string, groupId: string }) {
-    this.store.dispatch(eventManagerDeleteRegistrationGroup({...data}));
-  }
-
-  deleteRegistrationInfoPeriod(data: { competitionId: string, periodId: string }) {
-    this.store.dispatch(eventManagerDeleteRegistrationPeriod({...data}));
+    const {competitionId, period, registrationInfo} = data;
+    const updatedRegInfo = produce(registrationInfo, draft => {
+      draft.registrationPeriods[period.id] = period;
+    });
+    this.store.dispatch(eventManagerUpdateRegistrationInfo({
+      registrationInfo: updatedRegInfo,
+      competitionId
+    }));
   }
 
   selectRegistrationGroup(groupId: string) {

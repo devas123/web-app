@@ -5,13 +5,11 @@ import {
   FullAcademyInfo,
   CategoryDescriptor,
   Competitor,
-  RegistrationPeriod,
   CompetitionProperties,
   FightResult,
   FightStatus,
   RegistrationInfo,
   StageStatus,
-  RegistrationGroup,
   StageDescriptor,
   CategoryRestriction,
   AdjacencyList,
@@ -88,21 +86,6 @@ export interface AddCompetitorPayload {
   competitor?: Competitor;
 }
 
-export interface AddRegistrationGroupPayload {
-  periodId: string;
-  groups: RegistrationGroup[];
-}
-
-export interface AddRegistrationPeriodPayload {
-  period?: RegistrationPeriod;
-}
-
-export interface AssignRegistrationGroupCategoriesPayload {
-  periodId: string;
-  groupId: string;
-  categories: string[];
-}
-
 export interface CategoryRegistrationStatusChangePayload {
   newStatus: boolean;
 }
@@ -139,15 +122,6 @@ export interface CreateCompetitionPayload {
 export interface CreateFakeCompetitorsPayload {
   numberOfCompetitors: number;
   numberOfAcademies: number;
-}
-
-export interface DeleteRegistrationGroupPayload {
-  periodId: string;
-  groupId: string;
-}
-
-export interface DeleteRegistrationPeriodPayload {
-  periodId: string;
 }
 
 export interface FightEditorApplyChangesPayload {
@@ -187,11 +161,6 @@ export interface PropagateCompetitorsPayload {
   propagateToStageId: string;
   previousStageId: string;
   selectorOverrides: CompetitorSelector[];
-}
-
-export interface RegistrationPeriodAddRegistrationGroupPayload {
-  groupId: string;
-  periodId: string;
 }
 
 export interface RemoveAcademyPayload {
@@ -421,232 +390,6 @@ export const AddCompetitorPayload = {
       object.competitor !== undefined && object.competitor !== null
         ? Competitor.fromPartial(object.competitor)
         : undefined;
-    return message;
-  },
-};
-
-function createBaseAddRegistrationGroupPayload(): AddRegistrationGroupPayload {
-  return { periodId: '', groups: [] };
-}
-
-export const AddRegistrationGroupPayload = {
-  encode(
-    message: AddRegistrationGroupPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.periodId !== '') {
-      writer.uint32(10).string(message.periodId);
-    }
-    for (const v of message.groups) {
-      RegistrationGroup.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): AddRegistrationGroupPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddRegistrationGroupPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.periodId = reader.string();
-          break;
-        case 2:
-          message.groups.push(
-            RegistrationGroup.decode(reader, reader.uint32())
-          );
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AddRegistrationGroupPayload {
-    return {
-      periodId: isSet(object.periodId) ? String(object.periodId) : '',
-      groups: Array.isArray(object?.groups)
-        ? object.groups.map((e: any) => RegistrationGroup.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: AddRegistrationGroupPayload): unknown {
-    const obj: any = {};
-    message.periodId !== undefined && (obj.periodId = message.periodId);
-    if (message.groups) {
-      obj.groups = message.groups.map((e) =>
-        e ? RegistrationGroup.toJSON(e) : undefined
-      );
-    } else {
-      obj.groups = [];
-    }
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AddRegistrationGroupPayload>, I>>(
-    object: I
-  ): AddRegistrationGroupPayload {
-    const message = createBaseAddRegistrationGroupPayload();
-    message.periodId = object.periodId ?? '';
-    message.groups =
-      object.groups?.map((e) => RegistrationGroup.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseAddRegistrationPeriodPayload(): AddRegistrationPeriodPayload {
-  return { period: undefined };
-}
-
-export const AddRegistrationPeriodPayload = {
-  encode(
-    message: AddRegistrationPeriodPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.period !== undefined) {
-      RegistrationPeriod.encode(
-        message.period,
-        writer.uint32(10).fork()
-      ).ldelim();
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): AddRegistrationPeriodPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddRegistrationPeriodPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.period = RegistrationPeriod.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AddRegistrationPeriodPayload {
-    return {
-      period: isSet(object.period)
-        ? RegistrationPeriod.fromJSON(object.period)
-        : undefined,
-    };
-  },
-
-  toJSON(message: AddRegistrationPeriodPayload): unknown {
-    const obj: any = {};
-    message.period !== undefined &&
-      (obj.period = message.period
-        ? RegistrationPeriod.toJSON(message.period)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<AddRegistrationPeriodPayload>, I>>(
-    object: I
-  ): AddRegistrationPeriodPayload {
-    const message = createBaseAddRegistrationPeriodPayload();
-    message.period =
-      object.period !== undefined && object.period !== null
-        ? RegistrationPeriod.fromPartial(object.period)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseAssignRegistrationGroupCategoriesPayload(): AssignRegistrationGroupCategoriesPayload {
-  return { periodId: '', groupId: '', categories: [] };
-}
-
-export const AssignRegistrationGroupCategoriesPayload = {
-  encode(
-    message: AssignRegistrationGroupCategoriesPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.periodId !== '') {
-      writer.uint32(10).string(message.periodId);
-    }
-    if (message.groupId !== '') {
-      writer.uint32(18).string(message.groupId);
-    }
-    for (const v of message.categories) {
-      writer.uint32(26).string(v!);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): AssignRegistrationGroupCategoriesPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAssignRegistrationGroupCategoriesPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.periodId = reader.string();
-          break;
-        case 2:
-          message.groupId = reader.string();
-          break;
-        case 3:
-          message.categories.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AssignRegistrationGroupCategoriesPayload {
-    return {
-      periodId: isSet(object.periodId) ? String(object.periodId) : '',
-      groupId: isSet(object.groupId) ? String(object.groupId) : '',
-      categories: Array.isArray(object?.categories)
-        ? object.categories.map((e: any) => String(e))
-        : [],
-    };
-  },
-
-  toJSON(message: AssignRegistrationGroupCategoriesPayload): unknown {
-    const obj: any = {};
-    message.periodId !== undefined && (obj.periodId = message.periodId);
-    message.groupId !== undefined && (obj.groupId = message.groupId);
-    if (message.categories) {
-      obj.categories = message.categories.map((e) => e);
-    } else {
-      obj.categories = [];
-    }
-    return obj;
-  },
-
-  fromPartial<
-    I extends Exact<DeepPartial<AssignRegistrationGroupCategoriesPayload>, I>
-  >(object: I): AssignRegistrationGroupCategoriesPayload {
-    const message = createBaseAssignRegistrationGroupCategoriesPayload();
-    message.periodId = object.periodId ?? '';
-    message.groupId = object.groupId ?? '';
-    message.categories = object.categories?.map((e) => e) || [];
     return message;
   },
 };
@@ -1196,129 +939,6 @@ export const CreateFakeCompetitorsPayload = {
     const message = createBaseCreateFakeCompetitorsPayload();
     message.numberOfCompetitors = object.numberOfCompetitors ?? 0;
     message.numberOfAcademies = object.numberOfAcademies ?? 0;
-    return message;
-  },
-};
-
-function createBaseDeleteRegistrationGroupPayload(): DeleteRegistrationGroupPayload {
-  return { periodId: '', groupId: '' };
-}
-
-export const DeleteRegistrationGroupPayload = {
-  encode(
-    message: DeleteRegistrationGroupPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.periodId !== '') {
-      writer.uint32(10).string(message.periodId);
-    }
-    if (message.groupId !== '') {
-      writer.uint32(18).string(message.groupId);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): DeleteRegistrationGroupPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteRegistrationGroupPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.periodId = reader.string();
-          break;
-        case 2:
-          message.groupId = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): DeleteRegistrationGroupPayload {
-    return {
-      periodId: isSet(object.periodId) ? String(object.periodId) : '',
-      groupId: isSet(object.groupId) ? String(object.groupId) : '',
-    };
-  },
-
-  toJSON(message: DeleteRegistrationGroupPayload): unknown {
-    const obj: any = {};
-    message.periodId !== undefined && (obj.periodId = message.periodId);
-    message.groupId !== undefined && (obj.groupId = message.groupId);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<DeleteRegistrationGroupPayload>, I>>(
-    object: I
-  ): DeleteRegistrationGroupPayload {
-    const message = createBaseDeleteRegistrationGroupPayload();
-    message.periodId = object.periodId ?? '';
-    message.groupId = object.groupId ?? '';
-    return message;
-  },
-};
-
-function createBaseDeleteRegistrationPeriodPayload(): DeleteRegistrationPeriodPayload {
-  return { periodId: '' };
-}
-
-export const DeleteRegistrationPeriodPayload = {
-  encode(
-    message: DeleteRegistrationPeriodPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.periodId !== '') {
-      writer.uint32(10).string(message.periodId);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): DeleteRegistrationPeriodPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDeleteRegistrationPeriodPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.periodId = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): DeleteRegistrationPeriodPayload {
-    return {
-      periodId: isSet(object.periodId) ? String(object.periodId) : '',
-    };
-  },
-
-  toJSON(message: DeleteRegistrationPeriodPayload): unknown {
-    const obj: any = {};
-    message.periodId !== undefined && (obj.periodId = message.periodId);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<DeleteRegistrationPeriodPayload>, I>>(
-    object: I
-  ): DeleteRegistrationPeriodPayload {
-    const message = createBaseDeleteRegistrationPeriodPayload();
-    message.periodId = object.periodId ?? '';
     return message;
   },
 };
@@ -1954,75 +1574,6 @@ export const PropagateCompetitorsPayload = {
     message.selectorOverrides =
       object.selectorOverrides?.map((e) => CompetitorSelector.fromPartial(e)) ||
       [];
-    return message;
-  },
-};
-
-function createBaseRegistrationPeriodAddRegistrationGroupPayload(): RegistrationPeriodAddRegistrationGroupPayload {
-  return { groupId: '', periodId: '' };
-}
-
-export const RegistrationPeriodAddRegistrationGroupPayload = {
-  encode(
-    message: RegistrationPeriodAddRegistrationGroupPayload,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.groupId !== '') {
-      writer.uint32(10).string(message.groupId);
-    }
-    if (message.periodId !== '') {
-      writer.uint32(18).string(message.periodId);
-    }
-    return writer;
-  },
-
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number
-  ): RegistrationPeriodAddRegistrationGroupPayload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRegistrationPeriodAddRegistrationGroupPayload();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.groupId = reader.string();
-          break;
-        case 2:
-          message.periodId = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): RegistrationPeriodAddRegistrationGroupPayload {
-    return {
-      groupId: isSet(object.groupId) ? String(object.groupId) : '',
-      periodId: isSet(object.periodId) ? String(object.periodId) : '',
-    };
-  },
-
-  toJSON(message: RegistrationPeriodAddRegistrationGroupPayload): unknown {
-    const obj: any = {};
-    message.groupId !== undefined && (obj.groupId = message.groupId);
-    message.periodId !== undefined && (obj.periodId = message.periodId);
-    return obj;
-  },
-
-  fromPartial<
-    I extends Exact<
-      DeepPartial<RegistrationPeriodAddRegistrationGroupPayload>,
-      I
-    >
-  >(object: I): RegistrationPeriodAddRegistrationGroupPayload {
-    const message = createBaseRegistrationPeriodAddRegistrationGroupPayload();
-    message.groupId = object.groupId ?? '';
-    message.periodId = object.periodId ?? '';
     return message;
   },
 };

@@ -12,7 +12,6 @@ import {
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
   EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
-  EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDefaultRestrictionsLoaded,
   eventManagerDisconnectSocket,
@@ -35,16 +34,11 @@ import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/
 export class EventManagerEffects {
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(EVENT_MANAGER_UPDATE_REGISTRATION_INFO,
-      CommandType.ADD_REGISTRATION_PERIOD_COMMAND,
-      CommandType.DELETE_REGISTRATION_PERIOD_COMMAND,
+    ofType(CommandType.UPDATE_REGISTRATION_INFO_COMMAND,
       CommandType.DROP_CATEGORY_BRACKETS_COMMAND,
       CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
       UPDATE_STAGE_STATUS_COMMAND,
       FIGHTS_EDITOR_APPLY_CHANGE,
-      CommandType.ADD_REGISTRATION_GROUP_COMMAND,
-      CommandType.ADD_REGISTRATION_GROUP_TO_REGISTRATION_PERIOD_COMMAND,
-      CommandType.DELETE_REGISTRATION_GROUP_COMMAND,
       CommandType.GENERATE_CATEGORIES_COMMAND,
       CommandType.UPDATE_COMPETITOR_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
