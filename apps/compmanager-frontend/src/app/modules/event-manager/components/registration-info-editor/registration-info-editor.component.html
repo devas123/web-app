@@ -1,7 +1,7 @@
 <div class="period_grid" [ngStyle]="ngStyle">
   <div class="ui basic segment message_line" *ngIf="unassignedCategoies && unassignedCategoies.length > 0">
     <div>{{unassignedCategoies.length}} Unassigned {{unassignedCategoies.length === 1 ? 'category' : 'categories'}}</div>
-    <button class="ui button" (click)="moveUnassignedCategoriesToDefault()">Assign to defaut</button>
+    <button class="ui button" (click)="moveUnassignedCategoriesToDefault()">Assign to default</button>
   </div>
   <div class="column" *ngFor="let p of getRegistrationPeriods()">
     <div class="ui fluid card">
