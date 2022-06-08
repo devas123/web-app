@@ -7,6 +7,7 @@ import {
   RegistrationInfo,
   RegistrationPeriod
 } from "@frontend-nx/protobuf";
+import produce from "immer";
 
 @Component({
   selector: 'app-registration-info-editor',
@@ -76,14 +77,16 @@ export class RegistrationInfoEditorComponent {
   }
 
   deleteGroupEvent(groupId: string, periodId: string) {
-    const per = this.registrationInfo.registrationPeriods[periodId]
-    per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
-    let shouldDeleteGroup = Object.values(this.registrationInfo.registrationPeriods).filter(p => p.id != periodId)
-      .every(p => !p.registrationGroupIds.includes(groupId));
-    if (shouldDeleteGroup) {
-      delete this.registrationInfo.registrationGroups[groupId];
-    }
-    this.registrationInfoUpdated.next(this.registrationInfo);
+    const updatedRegInfo = produce(this.registrationInfo, draft => {
+      const per = draft.registrationPeriods[periodId]
+      per.registrationGroupIds = per.registrationGroupIds.filter(id => id !== groupId);
+      let shouldDeleteGroup = Object.values(draft.registrationPeriods).filter(p => p.id != periodId)
+        .every(p => !p.registrationGroupIds.includes(groupId));
+      if (shouldDeleteGroup) {
+        delete draft.registrationGroups[groupId];
+      }
+    })
+    this.registrationInfoUpdated.next(updatedRegInfo);
   }
 
   deletePeriodEvent(periodId: string) {

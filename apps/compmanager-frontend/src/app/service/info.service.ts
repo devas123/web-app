@@ -47,7 +47,8 @@ import {
   SetFightResultPayload,
   StageDescriptor,
   UpdateCompetionPropertiesPayload,
-  UpdateCompetitorPayload
+  UpdateCompetitorPayload,
+  UpdateRegistrationInfoPayload
 } from "@frontend-nx/protobuf";
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
@@ -329,6 +330,13 @@ export class InfoService {
     };
     let cmd = <Command>{};
     switch (action.type) {
+      case CommandType.UPDATE_REGISTRATION_INFO_COMMAND: {
+        cmd.type = CommandType.UPDATE_REGISTRATION_INFO_COMMAND;
+        messageInfo.updateRegistrationInfoPayload = <UpdateRegistrationInfoPayload>{
+          registrationInfo: action.payload.registrationInfo
+        };
+        break;
+      }
       case CommandType.CREATE_COMPETITION_COMMAND:
         cmd.type = CommandType.CREATE_COMPETITION_COMMAND;
         messageInfo.createCompetitionPayload = <CreateCompetitionPayload>{
