@@ -63,12 +63,6 @@ export const categoryFilter = value => (cat: CategoryState) => {
 export const categoriesComparer = (a: CategoryState, b: CategoryState) => displayCategory(a.category).localeCompare(displayCategory(b.category));
 export const previewCategoriesComparer = (a: CategoryDescriptor, b: CategoryDescriptor) => displayCategory(a).localeCompare(displayCategory(b));
 
-export interface CompetitorGroupChange {
-  competitorId: string;
-  groupId: string;
-  changeType: GroupChangeType;
-}
-
 export interface FightEditorChange {
   fightId: string;
   competitors: string[];

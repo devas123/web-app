@@ -219,7 +219,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.compservice.model.protobuf.CompetitorRemovedPayload = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.compservice.model.protobuf.CompetitorRemovedPayload.repeatedFields_, null);
 };
 goog.inherits(proto.compservice.model.protobuf.CompetitorRemovedPayload, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -1867,6 +1867,13 @@ proto.compservice.model.protobuf.CompetitorAssignmentDescriptor.prototype.setRef
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.compservice.model.protobuf.CompetitorRemovedPayload.repeatedFields_ = [2];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1898,7 +1905,8 @@ proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.toObject = f
  */
 proto.compservice.model.protobuf.CompetitorRemovedPayload.toObject = function(includeInstance, msg) {
   var f, obj = {
-    fighterid: jspb.Message.getFieldWithDefault(msg, 1, "")
+    fighterid: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    categoriesList: (f = jspb.Message.getRepeatedField(msg, 2)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -1939,6 +1947,10 @@ proto.compservice.model.protobuf.CompetitorRemovedPayload.deserializeBinaryFromR
       var value = /** @type {string} */ (reader.readString());
       msg.setFighterid(value);
       break;
+    case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addCategories(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1975,6 +1987,13 @@ proto.compservice.model.protobuf.CompetitorRemovedPayload.serializeBinaryToWrite
       f
     );
   }
+  f = message.getCategoriesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -1993,6 +2012,43 @@ proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.getFighterid
  */
 proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.setFighterid = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * repeated string categories = 2;
+ * @return {!Array<string>}
+ */
+proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.getCategoriesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 2));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.compservice.model.protobuf.CompetitorRemovedPayload} returns this
+ */
+proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.setCategoriesList = function(value) {
+  return jspb.Message.setField(this, 2, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.compservice.model.protobuf.CompetitorRemovedPayload} returns this
+ */
+proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.addCategories = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.compservice.model.protobuf.CompetitorRemovedPayload} returns this
+ */
+proto.compservice.model.protobuf.CompetitorRemovedPayload.prototype.clearCategoriesList = function() {
+  return this.setCategoriesList([]);
 };
 
 

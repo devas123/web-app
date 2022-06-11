@@ -1,4 +1,5 @@
 import {
+  batchReducer,
   eventManagerGetSelectedEventSchedule,
   eventManagerGetSelectedEventSchedulePeriodsCollection,
   getSelectedEventProperties,
@@ -7,6 +8,7 @@ import {
   periodEntityAdapter,
 } from '../../../reducers/global-reducers';
 import {
+  BATCH_ACTION,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_ADDED,
   EVENT_MANAGER_CATEGORY_RESTRICTION_GROUP_ADDED,
@@ -93,6 +95,8 @@ function addConnections(state: CategoryConstructorState, root: string, parent: a
 function categoryConstructorStateReducer(st: CategoryConstructorState = initialCategoryConstructorState, action: any): CategoryConstructorState {
   return produce(st, state => {
     switch (action.type) {
+      case BATCH_ACTION:
+        return batchReducer(action, state, categoryConstructorStateReducer);
       case COMPETITION_UNSELECTED: {
         return initialCategoryConstructorState;
       }

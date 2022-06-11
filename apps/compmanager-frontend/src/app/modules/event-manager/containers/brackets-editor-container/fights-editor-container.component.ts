@@ -1,8 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {
-  CompetitorGroupChange,
-} from '../../../../commons/model/competition.model';
-import {BracketType, Competitor, FightDescription, StageDescriptor, StageStatus} from "@frontend-nx/protobuf";
+  BracketType,
+  Competitor,
+  CompetitorMovedToGroup,
+  FightDescription,
+  StageDescriptor,
+  StageStatus
+} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fights-editor-container',
@@ -32,7 +36,7 @@ export class FightsEditorContainerComponent {
   closeClicked = new EventEmitter<void>();
 
   @Output()
-  changeSaved = new EventEmitter<{ fights: FightDescription[], competitorGroupChanges: CompetitorGroupChange[] }>();
+  changeSaved = new EventEmitter<{ fights: FightDescription[], competitorMovedToGroups: CompetitorMovedToGroup[] }>();
 
   @Output()
   stageStatusChanged = new EventEmitter<{ stageId: string, status: StageStatus }>();
@@ -59,15 +63,15 @@ export class FightsEditorContainerComponent {
 
 
   dispatchChangeSavedEvent(change: FightDescription[]) {
-    this.changeSaved.next({fights: change, competitorGroupChanges: []});
+    this.changeSaved.next({fights: change, competitorMovedToGroups: []});
   }
 
   dipatchFightsSelectionClearedEvent() {
     this.closeClicked.next();
   }
 
-  dispatchGroupChangeSavedEvent(change: CompetitorGroupChange[]) {
-    this.changeSaved.next({fights: [], competitorGroupChanges: change});
+  dispatchGroupChangeSavedEvent(change: CompetitorMovedToGroup[]) {
+    this.changeSaved.next({fights: [], competitorMovedToGroups: change});
   }
 
   getStageStatuses() {

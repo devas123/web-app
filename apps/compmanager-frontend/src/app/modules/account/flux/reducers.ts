@@ -1,13 +1,16 @@
-import {CommonAction} from '../../../reducers/global-reducers';
+import {batchReducer, CommonAction} from '../../../reducers/global-reducers';
 import {AccountState, initialAccountState} from './account.state';
 import {ACCOUNT_ERROR, AUTHORIZE_USER, CHANGE_AVATAR, LOGOUT, USER_AUTHORIZED} from './actions';
 import {b64toBlob} from '../utils';
 import {HttpAuthService} from '../service/AuthService';
+import {BATCH_ACTION} from "../../event-manager/redux/event-manager-actions";
 
 
 export function accountStateReducer(state: AccountState = initialAccountState, action: CommonAction): AccountState {
   state = {...state, error: null};
   switch (action.type) {
+    case BATCH_ACTION:
+      return batchReducer(action, state, accountStateReducer);
     case AUTHORIZE_USER:
       return state;
     case USER_AUTHORIZED: {

@@ -7,7 +7,6 @@ import {
   eventManagerGetSelectedEventName
 } from '../../redux/event-manager-reducers';
 import {
-  CompetitorGroupChange,
   FightEditorChange,
   HeaderDescription
 } from '../../../../commons/model/competition.model';
@@ -30,7 +29,7 @@ import {
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {
-  CategoryDescriptor, CategoryState,
+  CategoryDescriptor, CategoryState, CompetitorMovedToGroup,
   FightDescription,
   FightResultOption,
   StageDescriptor,
@@ -145,7 +144,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.showResults = !this.showResults;
   }
 
-  sendTheChanges({fights, competitorGroupChanges}: { fights: FightDescription[], competitorGroupChanges: CompetitorGroupChange[] }) {
+  sendTheChanges({fights, competitorMovedToGroups}: { fights: FightDescription[], competitorMovedToGroups: CompetitorMovedToGroup[] }) {
     combineLatest([this.bracketsInfo.competition$, this.bracketsInfo.category$, this.bracketsInfo.stage$]).pipe(
       take(1),
       filter(([competition, category, stage]) => !!competition && !!category && !!stage),
@@ -153,7 +152,7 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
         bracketsChanges: fights.map(f => (<FightEditorChange>{
           fightId: f.id,
           competitors: f.scores && f.scores.map(s => s.competitorId).filter(c => !!c)
-        })), competitorGroupChanges, competitionId: competition.id, categoryId: category.id, stageId: stage.id
+        })), competitorMovedToGroups, competitionId: competition.id, categoryId: category.id, stageId: stage.id
       }))
     ).subscribe(action => this.store.dispatch(action));
     this.editMode = !this.editMode;

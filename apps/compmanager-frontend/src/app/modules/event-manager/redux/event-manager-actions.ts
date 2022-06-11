@@ -1,11 +1,6 @@
 // commands
-import {
-  AdjacencyList,
-  CompetitorGroupChange,
-  FightEditorChange,
-  HeaderDescription,
-} from '../../../commons/model/competition.model';
-import {createAction, props} from '@ngrx/store';
+import {AdjacencyList, FightEditorChange, HeaderDescription,} from '../../../commons/model/competition.model';
+import {Action, createAction, props} from '@ngrx/store';
 import {Dictionary} from '@ngrx/entity';
 import {
   CategoryDescriptor,
@@ -14,14 +9,13 @@ import {
   CommandType,
   CompetitionProperties,
   Competitor,
+  CompetitorMovedToGroup,
   FightDescription,
   FightResultOption,
   ManagedCompetition,
   MatDescription,
   Period,
-  RegistrationGroup,
   RegistrationInfo,
-  RegistrationPeriod,
   Schedule,
   ScheduleRequirement,
   StageDescriptor,
@@ -30,7 +24,7 @@ import {
 import {COMPETITION_LIST_LOADED} from "../../../actions/actions";
 import {ErrorCallback, SuccessCallback} from "../../../reducers/global-reducers";
 
-export const UPDATE_STAGE_STATUS_COMMAND = 'UPDATE_STAGE_STATUS_COMMAND';
+export const BATCH_ACTION = 'BATCH_ACTION';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
 export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
@@ -94,6 +88,7 @@ export const eventManagerHeaderClear = {
   type: EVENT_MANAGER_HEADER_REMOVE
 };
 
+export const batchAction = createAction(BATCH_ACTION, props<{actions: Action[]}>())
 export const eventManagerCategoriesCleared = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED);
 export const eventManagerPreviewCategoriesGenerated = createAction(EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED, props<{ competitionId: string, categories: CategoryDescriptor[] }>());
 export const generateCategoriesCommand = createAction(CommandType.GENERATE_CATEGORIES_COMMAND, props<{
@@ -113,7 +108,7 @@ export const eventManagerCategoryRestrictionRootAdded = createAction(EVENT_MANAG
 export const eventManagerCategoryRestrictionRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED, props<{ restrictionId: string }>());
 export const eventManagerLoadCategoryRestrictionsCommand = createAction(EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS);
 export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{ competitionId: string }>());
-export const updateScheduleStatusCommand = createAction(UPDATE_STAGE_STATUS_COMMAND, props<{ competitionId: string, categoryId: string, stageId: string, status: StageStatus }>());
+export const updateScheduleStatusCommand = createAction(CommandType.UPDATE_STAGE_STATUS_COMMAND, props<{ competitionId: string, categoryId: string, stageId: string, status: StageStatus }>());
 export const schedulePeriodsUpdated = createAction(EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED, props<{ periods: Period[], undispatchedRequirements: ScheduleRequirement[] }>());
 export const fightIdsByCategoryIdLoaded = createAction(FIGHT_IDS_BY_CATEGORY_ID_LOADED, props<{ fightIdsBycategoryId: Dictionary<string[]> }>());
 export const eventManagerLoadDefaultFightResults = createAction(EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS, props<{ competitionId: string }>());
@@ -121,7 +116,7 @@ export const eventManagerDefaultFightResultsLoaded = createAction(EVENT_MANAGER_
 export const eventManagerUpdateRegistrationInfo = createAction(CommandType.UPDATE_REGISTRATION_INFO_COMMAND, props<{ registrationInfo: RegistrationInfo, competitionId: string }>());
 export const eventManagerLoadRegistrationInfo = createAction(EVENT_MANAGER_LOAD_REGISTRATION_INFO, props<{ competitionId: string }>());
 export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND, props<{ competitionId: string, categoryId: string; newStatus: boolean }>());
-export const eventManagerFightsEditorSubmitChangesCommand = createAction(FIGHTS_EDITOR_APPLY_CHANGE, props<{ bracketsChanges: FightEditorChange[], competitorGroupChanges: CompetitorGroupChange[], competitionId: string, categoryId: string, stageId: string }>());
+export const eventManagerFightsEditorSubmitChangesCommand = createAction(CommandType.FIGHTS_EDITOR_APPLY_CHANGE, props<{ bracketsChanges: FightEditorChange[], competitorMovedToGroups: CompetitorMovedToGroup[], competitionId: string, categoryId: string, stageId: string }>());
 export const eventManagerCategoryBracketsStageSelected = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, props<{ competitionId: string, categoryId: string, selectedStageId: string }>());
 export const eventManagerCategoryBracketsStageFightsLoaded = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, props<{ fights: FightDescription[] }>());
 

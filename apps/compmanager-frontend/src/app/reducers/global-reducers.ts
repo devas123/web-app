@@ -29,6 +29,7 @@ import {
   stagesInitialState
 } from '../commons/model/competition.model';
 import {
+  BATCH_ACTION,
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
@@ -89,7 +90,8 @@ import {
   MatDescription,
   Period,
   RegistrationInfo,
-  ScheduleRequirement
+  ScheduleRequirement,
+  StageDescriptor
 } from "@frontend-nx/protobuf";
 
 export type SuccessCallback = (actions: Action[]) => any
@@ -209,6 +211,8 @@ export const metaReducers: MetaReducer<AppState>[] = !environment.production
 
 export function competitionListReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {
   switch (action.type) {
+    case BATCH_ACTION:
+      return batchReducer(action, state, competitionListReducer);
     case COMPETITION_LIST_LOADED:
       const payload = action.payload as ManagedCompetition[];
       return competitionPropertiesEntitiesAdapter.setAll(payload, state);
@@ -273,6 +277,8 @@ export function competitionListReducer(state: EventPropsEntities = competitionPr
 
 export function headerReducer(state: HeaderDescription = null, action: CommonAction): HeaderDescription {
   switch (action.type) {
+    case BATCH_ACTION:
+      return batchReducer(action, state, headerReducer);
     case EVENT_MANAGER_HEADER_SET: {
       return action.payload as HeaderDescription;
     }
@@ -283,10 +289,23 @@ export function headerReducer(state: HeaderDescription = null, action: CommonAct
   return state;
 }
 
+// type BatchReducer<T> = (reducer: (T, Action) => T) =>
+
+
+export function batchReducer<D>(action, state: D, reducer: (state: D, action: any) => D): D {
+  const actions = action.actions;
+  let newState = state;
+  for (let batchedAction of actions) {
+    newState = reducer(newState, batchedAction);
+  }
+  return newState;
+}
 
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
   return produce(st, state => {
     switch (action.type) {
+      case BATCH_ACTION:
+        return batchReducer(action, state, competitionStateReducer);
       case CommandType.GENERATE_BRACKETS_COMMAND: {
         state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         break;
@@ -581,7 +600,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           );
           state.selectedEventCategories = categoryEntityAdapter.updateMany(categoryUpdates, state.selectedEventCategories);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertOne(competitor, state.selectedEventCompetitors);
-          state.selectedEventCompetitors.total = state.selectedEventCompetitors.total + 1;
+          if (!state.selectedEventCategories.selectedCategoryId || competitor.categories.includes(state.selectedEventCategories.selectedCategoryId)) {
+            state.selectedEventCompetitors.total = state.selectedEventCompetitors.total + 1;
+          }
         }
         break;
       }
@@ -609,15 +630,53 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
+      case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {
+        const event = action as Event
+        const {newFights, updates, removedFighids} = event.messageInfo.fightEditorChangesAppliedPayload;
+        if (event.messageInfo.categoryId === state.selectedEventCategories.selectedCategoryId) {
+          state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.removeMany(removedFighids, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+          const selectedStageId = state.selectedEventCategories.selectedCategoryStages.selectedStageId;
+          if (selectedStageId) {
+            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(newFights.filter(f => f.stageId === selectedStageId), state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+            state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(updates.filter(f => f.stageId === selectedStageId), state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+          }
+        }
+        break;
+      }
+      case EventType.STAGE_STATUS_UPDATED: {
+        const event = action as Event
+        const {status, stageId} = event.messageInfo.stageStatusUpdatedPayload
+        const selectedStageId = state.selectedEventCategories.selectedCategoryStages.selectedStageId;
+        if (selectedStageId === stageId) {
+          const update = <Update<StageDescriptor>>{
+            id: stageId,
+            changes: {
+              stageStatus: status
+            }
+          }
+          state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.updateOne(update, state.selectedEventCategories.selectedCategoryStages);
+        }
+        break;
+      }
       case EventType.COMPETITOR_REMOVED: {
         const event = action as Event
-        if (event.messageInfo?.competitionId === state.competitionProperties.id) {
-          return {
-            ...state,
-            selectedEventCompetitors: competitorEntityAdapter.removeOne(event.messageInfo.competitorRemovedPayload.fighterId, state.selectedEventCompetitors)
-          };
+        const {categories, fighterId} = event.messageInfo.competitorRemovedPayload
+        state.selectedEventCompetitors = competitorEntityAdapter.removeOne(fighterId, state.selectedEventCompetitors)
+        const existingCategories = state.selectedEventCategories.entities;
+        const categoryUpdates = categories.filter(id => existingCategories.hasOwnProperty(id)).map(id =>
+          (<Update<CategoryState>>{
+            id,
+            changes: {
+              ...existingCategories[id],
+              numberOfCompetitors: existingCategories[id].numberOfCompetitors - 1
+            }
+          })
+        );
+        state.selectedEventCategories = categoryEntityAdapter.updateMany(categoryUpdates, state.selectedEventCategories);
+        if (!state.selectedEventCategories.selectedCategoryId || categories.includes(state.selectedEventCategories.selectedCategoryId)) {
+          state.selectedEventCompetitors.total = state.selectedEventCompetitors.total - 1;
         }
-        return state;
+        break;
       }
       case EventType.CATEGORY_ADDED: {
         const event = action as Event;

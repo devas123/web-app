@@ -4,10 +4,15 @@ import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {collectingReducer, uniqueFilter} from '../../../account/utils';
 import {Dictionary} from '@ngrx/entity';
 import * as _ from 'lodash';
-import {Competitor, FightDescription, GroupChangeType, StageDescriptor} from "@frontend-nx/protobuf";
-import {CompetitorGroupChange} from "../../../../commons/model/competition.model";
+import {
+  Competitor,
+  CompetitorMovedToGroup,
+  FightDescription,
+  GroupChangeType,
+  StageDescriptor
+} from "@frontend-nx/protobuf";
 
-const changePedicate = (groupId: string, competitorId: string, changeType: GroupChangeType) => (ch: CompetitorGroupChange) => ch.groupId === groupId && ch.competitorId === competitorId && ch.changeType === changeType;
+const changePedicate = (groupId: string, competitorId: string, changeType: GroupChangeType) => (ch: CompetitorMovedToGroup) => ch.groupId === groupId && ch.competitorId === competitorId && ch.changeType === changeType;
 
 @Component(
   {
@@ -67,7 +72,7 @@ export class GroupsEditorComponent {
   }
 
   @Output()
-  changeSaved = new EventEmitter<CompetitorGroupChange[]>();
+  changeSaved = new EventEmitter<CompetitorMovedToGroup[]>();
 
   @Output()
   closeClicked = new EventEmitter<void>();
@@ -89,7 +94,7 @@ export class GroupsEditorComponent {
   @Input()
   selectedStage: StageDescriptor;
 
-  _competitorGroupChanges: CompetitorGroupChange[] = [];
+  _competitorGroupChanges: CompetitorMovedToGroup[] = [];
   _competitorsByGroupsDictionary: Dictionary<string[]> = {};
 
   getGroupDescriptors() {
@@ -126,14 +131,14 @@ export class GroupsEditorComponent {
         if (removeChange) {
           draft.splice(draft.indexOf(removeChange, 1));
         } else {
-          draft.push(<CompetitorGroupChange>{competitorId, groupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_ADD});
+          draft.push(<CompetitorMovedToGroup>{competitorId, groupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_ADD});
         }
         if (fromGroupId) {
           const addChange = draft.find(changePedicate(fromGroupId, competitorId, GroupChangeType.GROUP_CHANGE_TYPE_ADD));
           if (addChange) {
             draft.splice(draft.indexOf(addChange, 1));
           } else {
-            draft.push(<CompetitorGroupChange>{competitorId, groupId: fromGroupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_REMOVE});
+            draft.push(<CompetitorMovedToGroup>{competitorId, groupId: fromGroupId, changeType: GroupChangeType.GROUP_CHANGE_TYPE_REMOVE});
           }
         }
       }

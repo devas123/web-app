@@ -69,15 +69,15 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
   };
 
   displayFight = (f: FightDescription, competitorPerspective: string) => {
-    if (f && f.fightResult && f.fightResult.winnerId) {
+    if (f && f.fightResult && f.fightResult.winnerId && f.fightResult.winnerId.length > 0) {
       let wol: string;
-      const score = f.scores.find(s => s.competitorId === competitorPerspective).score;
+      const score = f.scores.find(s => s.competitorId === competitorPerspective)?.score;
       if (competitorPerspective === f.fightResult.winnerId) {
         wol = W;
       } else {
         wol = L;
       }
-      return `<div class="score"><div>${wol}</div><div><span>${score.points}/${score.advantages}/${score.penalties}</span></div></div>`;
+      return `<div class="score"><div>${wol}</div><div><span>${score?.points}/${score?.advantages}/${score?.penalties}</span></div></div>`;
     } else if (f.mat && f.mat.id) {
       return `<span>${f.mat.name}/F#${f.numberOnMat + 1}</span>`;
     } else {

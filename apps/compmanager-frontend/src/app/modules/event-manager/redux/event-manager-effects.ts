@@ -1,10 +1,11 @@
-import {from, Observable, of, of as observableOf} from 'rxjs';
+import {Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {
+  batchAction,
   CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND,
   cometitionListLoaded,
   EVENT_MANAGER_CONNECT_SOCKET,
@@ -16,9 +17,7 @@ import {
   eventManagerDefaultRestrictionsLoaded,
   eventManagerDisconnectSocket,
   eventManagerPreviewCategoriesGenerated,
-  FIGHTS_EDITOR_APPLY_CHANGE,
-  GENERATE_PREVIEW_CATEGORIES_COMMAND,
-  UPDATE_STAGE_STATUS_COMMAND
+  GENERATE_PREVIEW_CATEGORIES_COMMAND
 } from './event-manager-actions';
 
 
@@ -37,16 +36,16 @@ export class EventManagerEffects {
     ofType(CommandType.UPDATE_REGISTRATION_INFO_COMMAND,
       CommandType.DROP_CATEGORY_BRACKETS_COMMAND,
       CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
-      UPDATE_STAGE_STATUS_COMMAND,
-      FIGHTS_EDITOR_APPLY_CHANGE,
+      CommandType.UPDATE_STAGE_STATUS_COMMAND,
+      CommandType.FIGHTS_EDITOR_APPLY_CHANGE,
       CommandType.GENERATE_CATEGORIES_COMMAND,
       CommandType.UPDATE_COMPETITOR_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
-    mergeMap((action: any) => {
+    concatMap((action: any) => {
       const command = InfoService.createCommandWithPayload(action);
       return this.infoService.sendCommandSync(command).pipe(
         tap(executeSuccessCallbacks(action)),
-        mergeMap((actions) => from(actions)),
+        map((actions) => batchAction({actions})),
         catchError(executeErrorCallbacks(action))
       )
     }),
@@ -62,8 +61,8 @@ export class EventManagerEffects {
       const command = InfoService.createCommandWithPayload(action);
       return this.infoService.sendCommandSync(command).pipe(
         tap(executeSuccessCallbacks(action)),
-        mergeMap((actions: Event[]) => {
-          return from(actions.sort((a,b) => b.localEventNumber - a.localEventNumber));
+        map((actions: Event[]) => {
+          return batchAction({actions: actions.sort((a, b) => b.localEventNumber - a.localEventNumber)});
         }),
         catchError(executeErrorCallbacks(action))
       )
@@ -135,7 +134,10 @@ export class EventManagerEffects {
       payload.restrictions = commandAsAny.restrictions;
       payload.restrictionNames = commandAsAny.restrictionNames;
       return this.infoService.generatePreliminaryCategories(payload, command.competitionId).pipe(
-        map(response => eventManagerPreviewCategoriesGenerated({ competitionId: command.competitionId, categories: response.categories }))
+        map(response => eventManagerPreviewCategoriesGenerated({
+          competitionId: command.competitionId,
+          categories: response.categories
+        }))
       )
     }),
   ));

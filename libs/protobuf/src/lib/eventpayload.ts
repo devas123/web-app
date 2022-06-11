@@ -68,6 +68,7 @@ export interface CompetitorAssignmentDescriptor {
 
 export interface CompetitorRemovedPayload {
   fighterId: string;
+  categories: string[];
 }
 
 export interface CompetitorsPropagatedToStagePayload {
@@ -741,7 +742,7 @@ export const CompetitorAssignmentDescriptor = {
 };
 
 function createBaseCompetitorRemovedPayload(): CompetitorRemovedPayload {
-  return { fighterId: '' };
+  return { fighterId: '', categories: [] };
 }
 
 export const CompetitorRemovedPayload = {
@@ -751,6 +752,9 @@ export const CompetitorRemovedPayload = {
   ): _m0.Writer {
     if (message.fighterId !== '') {
       writer.uint32(10).string(message.fighterId);
+    }
+    for (const v of message.categories) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -768,6 +772,9 @@ export const CompetitorRemovedPayload = {
         case 1:
           message.fighterId = reader.string();
           break;
+        case 2:
+          message.categories.push(reader.string());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -779,12 +786,20 @@ export const CompetitorRemovedPayload = {
   fromJSON(object: any): CompetitorRemovedPayload {
     return {
       fighterId: isSet(object.fighterId) ? String(object.fighterId) : '',
+      categories: Array.isArray(object?.categories)
+        ? object.categories.map((e: any) => String(e))
+        : [],
     };
   },
 
   toJSON(message: CompetitorRemovedPayload): unknown {
     const obj: any = {};
     message.fighterId !== undefined && (obj.fighterId = message.fighterId);
+    if (message.categories) {
+      obj.categories = message.categories.map((e) => e);
+    } else {
+      obj.categories = [];
+    }
     return obj;
   },
 
@@ -793,6 +808,7 @@ export const CompetitorRemovedPayload = {
   ): CompetitorRemovedPayload {
     const message = createBaseCompetitorRemovedPayload();
     message.fighterId = object.fighterId ?? '';
+    message.categories = object.categories?.map((e) => e) || [];
     return message;
   },
 };

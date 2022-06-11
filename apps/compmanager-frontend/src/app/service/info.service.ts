@@ -26,6 +26,7 @@ import {
   CreateCompetitionPayload,
   CreateFakeCompetitorsPayload,
   FightDescription,
+  FightEditorApplyChangesPayload,
   FightResultOption,
   GenerateBracketsPayload,
   GenerateCategoriesFromRestrictionsPayload,
@@ -48,7 +49,8 @@ import {
   StageDescriptor,
   UpdateCompetionPropertiesPayload,
   UpdateCompetitorPayload,
-  UpdateRegistrationInfoPayload
+  UpdateRegistrationInfoPayload,
+  UpdateStageStatusPayload
 } from "@frontend-nx/protobuf";
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
@@ -329,116 +331,108 @@ export class InfoService {
       competitorId: action.competitorId,
     };
     let cmd = <Command>{};
+    cmd.type = action.type;
     switch (action.type) {
+      case CommandType.UPDATE_STAGE_STATUS_COMMAND: {
+        cmd.type = CommandType.UPDATE_STAGE_STATUS_COMMAND;
+        messageInfo.updateStageStatusPayload = <UpdateStageStatusPayload>{
+          ...action.payload
+        };
+        break;
+      }
+      case CommandType.FIGHTS_EDITOR_APPLY_CHANGE: {
+        messageInfo.fightEditorApplyChangesPayload = <FightEditorApplyChangesPayload>{
+          ...action.payload
+        };
+        break;
+      }
       case CommandType.UPDATE_REGISTRATION_INFO_COMMAND: {
-        cmd.type = CommandType.UPDATE_REGISTRATION_INFO_COMMAND;
         messageInfo.updateRegistrationInfoPayload = <UpdateRegistrationInfoPayload>{
           registrationInfo: action.payload.registrationInfo
         };
         break;
       }
       case CommandType.CREATE_COMPETITION_COMMAND:
-        cmd.type = CommandType.CREATE_COMPETITION_COMMAND;
         messageInfo.createCompetitionPayload = <CreateCompetitionPayload>{
           reginfo: action.payload.regInfo,
           properties: action.payload.properties
         }
         break;
       case DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND:
-        cmd.type = CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND;
         messageInfo.changeFightOrderPayload = <ChangeFightOrderPayload>{
           ...action.payload
         }
         break;
       case DASHBOARD_SET_FIGHT_RESULT_COMMAND:
-        cmd.type = CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND;
         messageInfo.setFightResultPayload = <SetFightResultPayload>{
           ...action.payload
         }
         break;
       case CommandType.CREATE_FAKE_COMPETITORS_COMMAND:
-        cmd.type = CommandType.CREATE_FAKE_COMPETITORS_COMMAND;
         messageInfo.createFakeCompetitorsPayload = <CreateFakeCompetitorsPayload>{
           ...action.payload
         }
         break;
       case   CommandType.DROP_CATEGORY_BRACKETS_COMMAND:
-        cmd.type = CommandType.DROP_CATEGORY_BRACKETS_COMMAND;
         break;
       case     CommandType.UPDATE_COMPETITOR_COMMAND:
-        cmd.type = CommandType.UPDATE_COMPETITOR_COMMAND;
         messageInfo.updateCompetitorPayload = <UpdateCompetitorPayload>{
           competitor: action.payload.competitor
         }
         break;
       case     CommandType.GENERATE_CATEGORIES_COMMAND:
-        cmd.type = CommandType.GENERATE_CATEGORIES_COMMAND;
         messageInfo.generateCategoriesFromRestrictionsPayload = <GenerateCategoriesFromRestrictionsPayload>{
           ...action.payload
         }
         break;
       case     CommandType.GENERATE_BRACKETS_COMMAND:
-        cmd.type = CommandType.GENERATE_BRACKETS_COMMAND;
         messageInfo.generateBracketsPayload = <GenerateBracketsPayload>{
           stageDescriptors: action.payload.stageDescriptors
         }
         break;
       case allActions.START_COMPETITION_COMMAND:
-        cmd.type = CommandType.START_COMPETITION_COMMAND
         break;
       case   CommandType.DELETE_COMPETITION_COMMAND:
-        cmd.type = CommandType.DELETE_COMPETITION_COMMAND
         break;
       case   CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND:
-        cmd.type = CommandType.UPDATE_COMPETITION_PROPERTIES_COMMAND
         messageInfo.updateCompetionPropertiesPayload = <UpdateCompetionPropertiesPayload>{
           competitionProperties: action.payload.competitionProperties
         }
         break;
       case   CommandType.GENERATE_SCHEDULE_COMMAND:
-        cmd.type = CommandType.GENERATE_SCHEDULE_COMMAND
         messageInfo.generateSchedulePayload = <GenerateSchedulePayload>{
           ...action.payload
         }
         break;
       case   eventManagerActions.ADD_CATEGORY_COMMAND:
-        cmd.type = CommandType.ADD_CATEGORY_COMMAND
         messageInfo.addCategoryPayload = <AddCategoryPayload>{
           ...action.payload
         }
         break;
       case   CommandType.DELETE_CATEGORY_COMMAND:
-        cmd.type = CommandType.DELETE_CATEGORY_COMMAND
         break;
       case   CommandType.ADD_COMPETITOR_COMMAND:
-        cmd.type = CommandType.ADD_COMPETITOR_COMMAND
         messageInfo.addCompetitorPayload = <AddCompetitorPayload>{
           competitor: action.payload.competitor
         }
         break;
       case   CommandType.REMOVE_COMPETITOR_COMMAND:
-        cmd.type = CommandType.REMOVE_COMPETITOR_COMMAND
         messageInfo.removeCompetitorPayload = <RemoveCompetitorPayload>{
           competitorId: action.payload.competitorId
         }
         break;
       case   CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND:
-        cmd.type = CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND
         messageInfo.changeCompetitorCategoryPayload = <ChangeCompetitorCategoryPayload>{
           ...action.payload
         }
         break;
       case   CommandType.DROP_SCHEDULE_COMMAND:
-        cmd.type = CommandType.DROP_SCHEDULE_COMMAND
         break;
       case   CommandType.DROP_ALL_BRACKETS_COMMAND:
-        cmd.type = CommandType.DROP_ALL_BRACKETS_COMMAND
         break;
       case   CommandType.PUBLISH_COMPETITION_COMMAND:
-        cmd.type = CommandType.PUBLISH_COMPETITION_COMMAND
         break;
       case   CommandType.UNPUBLISH_COMPETITION_COMMAND:
-        cmd.type = CommandType.UNPUBLISH_COMPETITION_COMMAND
         break;
       case CommandType.ADD_ACADEMY_COMMAND:
         cmd.type = <CommandType>action.type;

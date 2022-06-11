@@ -1,4 +1,4 @@
-import {catchError, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {from, Observable, of as observableOf, of} from 'rxjs';
@@ -11,6 +11,7 @@ import {InfoService} from '../service/info.service';
 import {CommonAction} from '../reducers/global-reducers';
 import * as eventManagerActions from '../modules/event-manager/redux/event-manager-actions';
 import {
+  batchAction,
   COMPETITION_SELECTED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_SELECTED,
@@ -72,8 +73,7 @@ export class Effects {
     )));
 
   globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
-      allActions.START_COMPETITION_COMMAND,
-      eventManagerActions.ADD_CATEGORY_COMMAND),
+      allActions.START_COMPETITION_COMMAND),
     mergeMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommand(cmd, action.competitionId)
@@ -90,13 +90,14 @@ export class Effects {
       CommandType.CHANGE_COMPETITOR_CATEGORY_COMMAND,
       CommandType.DELETE_COMPETITION_COMMAND,
       CommandType.GENERATE_SCHEDULE_COMMAND,
+      eventManagerActions.ADD_CATEGORY_COMMAND,
       CommandType.ADD_COMPETITOR_COMMAND),
-    mergeMap((action: CommonAction) => {
+    concatMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommandSync(cmd)
         .pipe(
           tap(executeSuccessCallbacks(action)),
-          mergeMap((actions) => from(actions)),
+          map((actions) => batchAction({actions})),
           catchError(executeErrorCallbacks(action))
         );
     })));

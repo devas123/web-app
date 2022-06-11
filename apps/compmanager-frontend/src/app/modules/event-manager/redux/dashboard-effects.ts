@@ -1,6 +1,6 @@
 import {of, of as observableOf} from 'rxjs';
 
-import {catchError, exhaustMap, filter, map, mergeMap, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, concatMap, filter, map, mergeMap, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
@@ -93,14 +93,14 @@ export class DashboardEffects {
 
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, DASHBOARD_SET_FIGHT_RESULT_COMMAND),
-    exhaustMap(action => of(action).pipe(
+    concatMap(action => of(action).pipe(
       withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId)),
         this.store.pipe(select(getSelectedEventGetSelectedMatId)))
     )),
-    exhaustMap(([action, periodId]: [CommonAction, string, string]) => {
+    concatMap(([action, periodId]: [CommonAction, string, string]) => {
       const command = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommandSync(command)
-        .pipe(tap(console.log), take(1), exhaustMap(() => [refreshMatView(periodId, action.competitionId)]))
+        .pipe(tap(console.log), take(1), concatMap(() => [refreshMatView(periodId, action.competitionId)]))
     }))
   );
 
