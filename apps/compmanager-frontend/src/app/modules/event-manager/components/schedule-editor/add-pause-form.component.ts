@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
 import {MatDescription, ScheduleRequirement, ScheduleRequirementType} from "@frontend-nx/protobuf";
@@ -67,50 +67,53 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
           </div>
         </div>
         <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE'">
-          <div class="field"
-               [ngClass]="{error: startTime.invalid && (startTime.touched || startTime.dirty)}">
+          <compmanager-frontend-form-generic-field
+            [control]="startTime"
+          >
             <label>Start time</label>
-            <div class="ui input">
-              <input suiDatepicker
-                     name="startTime"
-                     placeholder="Start time"
-                     formControlName="startTime"
-                     [pickerMode]="'datetime'"
-                     [pickerUseNativeOnMobile]="false"
-                     autocomplete="off">
-            </div>
-          </div>
-          <div class="field"
-               [ngClass]="{error: endTime.invalid && (endTime.touched || endTime.dirty)}">
+            <input input suiDatepicker
+                   name="startTime"
+                   placeholder="Start time"
+                   [pickerMode]="'time'"
+                   [pickerInitialDate]="modal.context.periodStartTime"
+                   [pickerUseNativeOnMobile]="false"
+                   (pickerSelectedDateChange)="setStartTime($event)"
+                   autocomplete="off">
+          </compmanager-frontend-form-generic-field>
+          <compmanager-frontend-form-generic-field
+            [control]="endTime"
+          >
             <label>End time</label>
-            <div class="ui input">
-              <input suiDatepicker
-                     name="endTime"
-                     placeholder="End time"
-                     formControlName="endTime"
-                     [pickerMode]="'datetime'"
-                     [pickerUseNativeOnMobile]="false"
-                     autocomplete="off">
-            </div>
-          </div>
+            <input input suiDatepicker
+                   name="endTime"
+                   placeholder="End time"
+                   [pickerMode]="'time'"
+                   [pickerInitialDate]="modal.context.periodStartTime"
+                   [pickerUseNativeOnMobile]="false"
+                   (pickerSelectedDateChange)="setEndTime($event)"
+                   autocomplete="off">
+          </compmanager-frontend-form-generic-field>
         </div>
         <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE'">
-          <div class="three wide field"
-               [ngClass]="{error: durationSeconds.invalid && (durationSeconds.touched || durationSeconds.dirty)}">
+          <compmanager-frontend-form-generic-field
+            [control]="durationSeconds"
+          >
             <label>Duration</label>
-            <div class="ui input">
-              <input type="number" name="durationSeconds" placeholder="Minutes" formControlName="durationMinutes">
-            </div>
-          </div>
+            <input input type="number" name="durationSeconds" placeholder="Minutes" [formControl]="durationSeconds">
+          </compmanager-frontend-form-generic-field>
         </div>
       </div>
     </div>
     <div class="actions">
-      <button class="ui red button" (click)="modal.deny(undefined)">Cancel</button>
-      <button class="ui green button"
-              [disabled]="form.invalid || !((select?.selectedOptions && select?.selectedOptions?.length > 0) || _all)"
-              (click)="triggerAddPause()" autofocus>OK
-      </button>
+      <compmanager-frontend-button
+        [name]="'Cancel'"
+      ></compmanager-frontend-button>
+      <compmanager-frontend-submit-button
+        [name]="'OK'"
+        [disabled]="form.invalid || !((select?.selectedOptions && select?.selectedOptions?.length > 0) || _all)"
+        (click)="triggerAddPause()" autofocus>
+        >
+      </compmanager-frontend-submit-button>
     </div>
   `,
   styleUrls: ['./schedule-editor.component.scss'],
@@ -195,8 +198,8 @@ export class AddSchedulePauseFormComponent implements OnInit {
   ngOnInit() {
     this.pauseForm = this.fb.group({
       durationSeconds: [''],
-      startTime: [''],
-      endTime: [''],
+      startTime: [this.modal.context.periodStartTime, [Validators.required]],
+      endTime: [this.modal.context.periodStartTime, [Validators.required]],
       matId: [''],
       entryType: ['SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE']
     }, {validators: [this.formValidator]});
@@ -204,14 +207,30 @@ export class AddSchedulePauseFormComponent implements OnInit {
 
 
   get durationSeconds() {
-    return this.form.get('durationSeconds');
+    return this.form.get('durationSeconds') as FormControl;
   }
 
   get startTime() {
-    return this.form.get('startTime');
+    return this.form.get('startTime') as FormControl;
   }
 
   get endTime() {
-    return this.form.get('endTime');
+    return this.form.get('endTime') as FormControl;
+  }
+
+  setStartTime(startTime: Date) {
+    this.form.patchValue(
+      {
+        startTime
+      }
+    )
+  }
+
+  setEndTime(endTime: Date) {
+    this.form.patchValue(
+      {
+        endTime
+      }
+    )
   }
 }

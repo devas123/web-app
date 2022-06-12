@@ -31,6 +31,7 @@
               <compmanager-frontend-date-field
                 class="meta"
                 [date]="period?.startTime"
+                [showTime]="true"
                 [text]="'Begins '"
               ></compmanager-frontend-date-field>
               <button class="ui mini button margin-vertical" (click)="addPauseToPeriod(period?.id, period?.startTime)">

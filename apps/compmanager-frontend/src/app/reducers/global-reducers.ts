@@ -75,7 +75,7 @@ import {
   DASHBOARD_MATS_LOADED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
-import {generateUuid} from "../modules/account/utils";
+import {generateUuid, uniqueFilter} from "../modules/account/utils";
 import {
   CategoryDescriptor,
   CategoryState,
@@ -91,7 +91,7 @@ import {
   Period,
   RegistrationInfo,
   ScheduleRequirement,
-  StageDescriptor
+  StageDescriptor, StartTimeInfo
 } from "@frontend-nx/protobuf";
 
 export type SuccessCallback = (actions: Action[]) => any
@@ -709,38 +709,48 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EventType.SCHEDULE_GENERATED: {
         const event = action as Event;
-        const competitionId = event.messageInfo.competitionId;
         const payload = event.messageInfo.scheduleGeneratedPayload;
-        if (payload?.schedule) {
-          state.selectedEventSchedule.periods = periodEntityAdapter.setAll(payload?.schedule.periods, periodEntityInitialState);
-          state.selectedEventSchedule.competitionId = competitionId;
-          state.selectedEventMats = matEntityAdapter.setAll(payload?.schedule?.mats, matsInitialState);
-        }
+        state.selectedEventSchedule.periods = periodEntityAdapter.setAll(payload?.schedule.periods, periodEntityInitialState);
+        state.selectedEventMats = matEntityAdapter.setAll(payload?.schedule?.mats, matsInitialState);
         break;
       }
       case EventType.FIGHTS_START_TIME_UPDATED: {
+        // We need to make sure (in the effects), that the schedule is already generated and the periods/scheduleEntries are already there.
+        // I.e. the EventType.SCHEDULE_GENERATED event comes first
         const event = action as Event;
         const payload = event.messageInfo.fightStartTimeUpdatedPayload;
-        if (payload) {
-          const {newFights} = payload;
-          const mats = state.selectedEventMats.entities
-          if (newFights) {
-            const updates = newFights.map(f => {
-              return <Update<FightDescription>>{
-                id: f.fightId,
-                changes: {
-                  period: f.periodId,
-                  mat: mats[f.matId],
-                  numberOnMat: f.numberOnMat,
-                  startTime: f.startTime,
-                  scheduleEntryId: f.scheduleEntryId,
-                  invalid: f.invalid
-                }
+        const {newFights} = payload;
+        const mats = state.selectedEventMats.entities
+        if (newFights) {
+          const updates = newFights.map(f => {
+            return <Update<FightDescription>>{
+              id: f.fightId,
+              changes: {
+                period: f.periodId,
+                mat: mats[f.matId],
+                numberOnMat: f.numberOnMat,
+                startTime: f.startTime,
+                scheduleEntryId: f.scheduleEntryId,
+                invalid: f.invalid
               }
-            })
-            state.selectedEventCategories.selectedCategoryStages.selectedStageFights
-              = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
-          }
+            }
+          })
+          state.selectedEventCategories.selectedCategoryStages.selectedStageFights
+            = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+
+          const periods = state.selectedEventSchedule.periods;
+          newFights.forEach(f => {
+            const period = periods.entities[f.periodId]
+            const scheduleEntry = period.scheduleEntries.find(e => e.id === f.scheduleEntryId)
+            scheduleEntry.fightScheduleInfo = [...scheduleEntry.fightScheduleInfo, <StartTimeInfo>{
+              startTime: f.startTime,
+              matId: f.matId,
+              someId: f.fightId
+            }]
+          })
+          periods.ids.forEach(id => {
+            periods.entities[id].scheduleEntries = periods.entities[id].scheduleEntries.filter(uniqueFilter)
+          });
         }
         break;
       }

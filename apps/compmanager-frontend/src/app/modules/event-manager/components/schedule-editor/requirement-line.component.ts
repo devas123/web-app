@@ -5,10 +5,7 @@ import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
   selector: 'app-requirement-line',
   template: `
     <div class="item schedule_page flex-container"
-         [ngClass]="{'category-restriction': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES',
-             'pause': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE',
-             'fight-restriction': req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS',
-              'selected': selected && canSelect}" [style]="getRequirementStyle(req)">
+         [ngClass]="getNgClass()" [style]="getRequirementStyle(req)">
       <div cdkDragHandle class="handle"><i class="fas fa-arrows-alt"></i></div>
       <div>{{ getRequirementDisplay(req) }}</div>
       <div class="filler"></div>
@@ -56,6 +53,13 @@ export class RequirementLineComponent {
 
   @Output()
   edit = new EventEmitter<void>();
+
+  getNgClass() {
+    return {'category-restriction': this.req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_CATEGORIES',
+      'pause': this.req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE',
+      'fight-restriction': this.req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS',
+      'selected': this.selected && this.canSelect}
+  }
 
   getRequirementDisplay(req: ScheduleRequirement) {
     if (req.name && req.name.length > 0) {

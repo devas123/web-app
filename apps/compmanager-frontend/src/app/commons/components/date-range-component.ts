@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, HostBinding, Input} from "@angular/c
 @Component({
   selector: 'compmanager-frontend-date-range',
   template: `
-    <span [class]="hostclass">{{prefix}}{{startDate | date:getFormat()}}{{getTimeZone}} {{delimeter}} {{endDate | date:getFormat()}}{{getTimeZone}}</span>
+    <span [class]="hostclass">{{prefix}}{{startDate | date:getFormat()}}{{getTimeZone()}} {{delimeter}} {{endDate | date:getFormat()}}{{getTimeZone()}}</span>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
