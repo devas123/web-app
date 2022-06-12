@@ -11,11 +11,11 @@
           <div class="card">
             <div class="content">
               <div class="meta">Categories</div>
-              <app-categories-list [periodId]="null"
+              <app-categories-list [periodId]="undefined"
                                    [allCategories]="categories"
                                    [linesToDisplay]="filteredCategories"
                                    (splitIconCicked)="openSplitModal($event)"
-                                   (itemDropped)="onItemDropBack($event, null)"
+                                   (itemDropped)="onItemDropBack($event, undefined)"
                                    (requirementRemoveClicked)="removeRequirement($event.req)"></app-categories-list>
             </div>
           </div>
@@ -43,11 +43,11 @@
                 [categories]="categories"
                 [requirements]="getScheduleRequirementsWithoutMat(period?.id)"
                 [periodId]="period.id"
-                [matId]="null"
+                [matId]="undefined"
                 [timeZone]="timeZone"
                 [allRequirements]="_requirements"
                 (splitIconCicked)="openSplitModal({req: $event})"
-                (itemDropped)="onItemDrop($event.event, $event.periodId, null)"
+                (itemDropped)="onItemDrop($event.event, $event.periodId, undefined)"
                 (requirementRemoved)="removeRequirement($event)"
                 (requirementSelectionChanged)="changeSelectionStatus($event)"></app-requirements-display>
               <div class="inner-list list-container mat-grid"

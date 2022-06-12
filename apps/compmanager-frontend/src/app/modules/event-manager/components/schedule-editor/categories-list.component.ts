@@ -38,7 +38,7 @@ import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
             cdkDrag (cdkDragStarted)="dragStart()"
             (cdkDragEnded)="dragEnd()"
             [cdkDragData]="{fromPeriod: periodId, req: catReq.req}"
-            [matId]="null"
+            [matId]="undefined"
             [selected]="false"
             [canSelect]="false"
             [req]="catReq.req"

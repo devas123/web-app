@@ -385,8 +385,8 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   private moveRequirementToUndispatched(req: ScheduleRequirement) {
     this._requirements = produce(this._requirements, d => {
       const draft = d.find(sr => sr.id === req.id);
-      draft.matId = null;
-      draft.periodId = null;
+      draft.matId = undefined;
+      draft.periodId = undefined;
     });
   }
 
@@ -462,7 +462,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       const entryType = entryTypes[0];
       const unionCategoryIds = selectedReqs.map(sr => sr.categoryIds).reduce(collectingReducer, []).filter(uniqueFilter);
       const unionFightIds = selectedReqs.map(sr => sr.fightIds).reduce(collectingReducer, []).filter(uniqueFilter);
-      const newSr = this.createSrFromFightIds(null)(null)(entryType)(unionFightIds, unionCategoryIds);
+      const newSr = this.createSrFromFightIds(undefined)(undefined)(entryType)(unionFightIds, unionCategoryIds);
       if (periods && periods.length === 1) {
         newSr.periodId = periods[0];
         if (mats && mats.length === 1) {
@@ -500,7 +500,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
       if (defaultCat) {
         defaultCat.fightIds.push(fightId);
       } else {
-        const defaultSr = this.createSrFromFightIds(null)(null)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES)([fightId], [cat]);
+        const defaultSr = this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES)([fightId], [cat]);
         draft.push(defaultSr);
       }
     });
@@ -523,7 +523,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
     if (catReq.cat) {
       const categoryId = catReq.cat.id;
       this.getAllRequirements().filter(sr => sr.entryType === ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS && sr.categoryIds.indexOf(categoryId) >= 0);
-      this.modalService.open(new SplitCategoryModal(this.competitionId, categoryId, this.createSrFromFightIds(null)(null)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS),
+      this.modalService.open(new SplitCategoryModal(this.competitionId, categoryId, this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS),
         this.getAllRequirements().filter(sr => sr.entryType === ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS && sr.categoryIds.indexOf(categoryId) >= 0), this.getFightsColors([])))
         .onApprove((result: ISplitCategoryResult) => {
           if (result.requirements && result.requirements.filter(fs => fs.fightIds && fs.fightIds.length > 0).length > 0) {
@@ -533,7 +533,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
             this._requirements.push(...newRequirements);
             this.updateRequirements(dispatchedRequirements);
             if (remainingFights && remainingFights.length > 0) {
-              const defaultSr = this.createSrFromFightIds(null)(null)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES)(remainingFights, [categoryId]);
+              const defaultSr = this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES)(remainingFights, [categoryId]);
               this._requirements.push(defaultSr);
             }
             this.persistUpdates();
@@ -541,7 +541,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
         });
     } else if (catReq.req) {
       this.modalService.open(new EditRequirementModal(this.competitionId, this.categories, this.filteredCategories.filter(cr => cr.cat).map(cr => cr.cat.id), this.fightIdsByCategoryId,
-        this.getFightsColors([catReq.req.id]), catReq.req, this.createSrFromFightIds(null)(null)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS)))
+        this.getFightsColors([catReq.req.id]), catReq.req, this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS)))
         .onApprove((result: IEditRequirementResult) => {
           if (result.requirement) {
             if (result.requirement.categoryIds.length > 0 && result.requirement.fightIds.length > 0) {
@@ -562,7 +562,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
                 }
                 if (result.requirement.entryType === ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES) {
                   const categories = remainingFights.map(id => this.categoryForFightId(id)).filter(uniqueFilter);
-                  const remainingRequirement = this.createSrFromFightIds(null)(null)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS)(remainingFights, categories);
+                  const remainingRequirement = this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_FIGHTS)(remainingFights, categories);
                   this._requirements = this.updateRequirement(remainingRequirement, this._requirements);
                 }
               }

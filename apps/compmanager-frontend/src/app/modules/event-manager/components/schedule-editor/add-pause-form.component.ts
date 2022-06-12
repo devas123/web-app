@@ -138,13 +138,13 @@ export class AddSchedulePauseFormComponent implements OnInit {
           if (s.getTime() < periodStartTime.getTime()) {
             return {'startsBeforePeriod': true};
           }
-          return null;
+          return undefined;
         }
         return {'invalidDates': true};
       }
       case 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE': {
         if (durationSeconds) {
-          return null;
+          return undefined;
         }
         return {'invalidDuration': true};
       }

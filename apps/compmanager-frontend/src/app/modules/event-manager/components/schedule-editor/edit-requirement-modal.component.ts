@@ -156,7 +156,7 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
     });
     this.affectedCategoryIds.add(catId);
     if (this.selectedCategory === catId) {
-      this.selectedCategory = null;
+      this.selectedCategory = undefined;
       this.bracketsInfo.clearCategorySelection(this.modal.context.competitionId);
     }
   }
