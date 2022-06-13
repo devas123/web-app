@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {format, parseISO} from 'date-fns';
+import {format} from 'date-fns';
 import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
 
 @Component({
@@ -10,28 +10,27 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
       <div *ngFor="let mat of mats" class="mat-container" [ngClass]="{'single-mat': mats?.length === 1}">
         <p>{{mat.name}}</p>
         <div class="inner-list">
-          <div class="item schedule_page flex-container clickable"  [style]="getEntryStyle(entry)"
+          <div class="item schedule_page flex-container clickable" [style]="getEntryStyle(entry)"
                (mouseenter)="highlightCategory(entry.categoryIds)"
                (mouseleave)="clearCategoryHighLight(entry.categoryIds)"
-               [ngClass]="{group_selected: isCategorySelected(entry.categoryIds), 'pause': entry.entryType === 'RELATIVE_PAUSE' || entry.entryType === 'FIXED_PAUSE'}"
+               [ngClass]="getNgClass(entry)"
                *ngFor="let entry of getMatEntries(mat.id)">
-            <ng-container *ngIf="entry.entryType !== 'RELATIVE_PAUSE' && entry.entryType !== 'FIXED_PAUSE'">
+            <ng-container *ngIf="isNotPause(entry)">
               <span class="break_word" *ngFor="let cat of entry.categoryIds">{{categoryFormat(cat)}}</span>
               <span class="flexible"></span>
               <span>{{getEntryStartTimeForMat(mat.id, entry)}}</span>
               <span class="break_word">{{getEntryFightsForMat(mat.id, entry)?.length}} fights</span>
             </ng-container>
-            <ng-container *ngIf="entry.entryType === 'RELATIVE_PAUSE'">
+            <ng-container *ngIf="entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE'">
               <span>Pause</span>
               <span>{{entry.duration}} minutes</span>
             </ng-container>
-            <ng-container *ngIf="entry.entryType === 'FIXED_PAUSE'">
+            <ng-container *ngIf="entry.entryType === 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'">
               <span>Pause</span>
               <compmanager-frontend-date-range
                 [startDate]="entry.startTime"
                 [endDate]="entry.endTime"
                 [format]="'hh:mm'"
-                [timeZone]="timeZone"
                 [delimeter]="'till'"
                 [prefix]="'From '"
               ></compmanager-frontend-date-range>
@@ -78,6 +77,12 @@ export class ScheduleMatDisplayComponent {
 
   @Output()
   categoryClicked = new EventEmitter<string>();
+
+  getNgClass(entry: ScheduleEntry) { return {'group_selected': this.isCategorySelected(entry.categoryIds), 'pause': entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE' || entry.entryType === 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'} }
+
+  isNotPause(entry: ScheduleEntry) {
+    return entry.entryType !== 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE' && entry.entryType !== 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'
+  }
 
   getMatEntries(matId) {
     return this.scheduleEntries?.filter(e => e.fightScheduleInfo.find(f => f.matId === matId));

@@ -26,25 +26,25 @@ import {ScheduleEntry, ScheduleEntryType} from "@frontend-nx/protobuf";
             *ngIf="!isPause(scheduleEntry)"
             class="description"
             [date]="scheduleEntry?.startTime"
+            [format]="'hh:mm'"
             [showTime]="true"
             [text]="'Starts at '"
-            [timeZone]="timeZone"
           ></compmanager-frontend-date-field>
           <div class="description" *ngIf="isRelativePause(scheduleEntry)">{{scheduleEntry.duration}} min</div>
           <ng-container *ngIf="isFixedPause(scheduleEntry)">
             <compmanager-frontend-date-field
               class="description"
               [date]="scheduleEntry?.startTime"
+              [format]="'hh:mm'"
               [showTime]="true"
               [text]="'Starts at '"
-              [timeZone]="timeZone"
             ></compmanager-frontend-date-field>
             <compmanager-frontend-date-field
               class="description"
               [date]="scheduleEntry?.endTime"
+              [format]="'hh:mm'"
               [showTime]="true"
               [text]="'Ends at '"
-              [timeZone]="timeZone"
             ></compmanager-frontend-date-field>
           </ng-container>
         </div>
@@ -111,7 +111,7 @@ export class ScheduleEntryDisplayComponent {
 
   getEntryMatId(scheduleEntry: ScheduleEntry) {
     if (!_.isEmpty(scheduleEntry.fightScheduleInfo)) {
-      const matIds = scheduleEntry.fightScheduleInfo.map(f => f.matId).filter(uniqueFilter);
+      const matIds = scheduleEntry.fightScheduleInfo.map(f => f.matId).filter(id => !!id && id.length > 0).filter(uniqueFilter);
       if (matIds.length === 1) {
         return this.matFormat(matIds[0]);
       } else {
