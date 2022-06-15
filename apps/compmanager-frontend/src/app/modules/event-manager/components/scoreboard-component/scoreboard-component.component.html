@@ -45,7 +45,7 @@
     <div class="info">
       <div class="info__round">
         <div class="info__round-box">
-          <div class="info__category">{{displayCategory(category)}}</div>
+          <div class="info__category">{{displayCategory(category?.category)}}</div>
           <div class="info__round-name" *ngIf="stageName">{{fight?.fightName || stageName}}</div>
         </div>
       </div>

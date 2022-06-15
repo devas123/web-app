@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import * as _ from 'lodash';
-import {CategoryDescriptor, Competitor, FightDescription} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, Competitor, FightDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fight-display',
@@ -47,11 +47,11 @@ export class FightDisplayComponent {
   competitorClicked = new EventEmitter<Competitor>();
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
 
   displayCategory(id: string) {
-    return !!this.categories && this.categories.find(c => c.id === id) && AddFighterComponent.displayCategory(this.categories.find(c => c.id === id));
+    return !!this.categories && this.categories.find(c => c.id === id) && AddFighterComponent.displayCategory(this.categories.find(c => c.id === id)?.category);
   }
 
   get fightScores() {

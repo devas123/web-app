@@ -1,10 +1,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
-import {
-  dragEndEvent,
-  dragStartEvent,
-} from '../../../../commons/model/competition.model';
+import {dragEndEvent, dragStartEvent,} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CategoryDescriptor, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mat-display',
@@ -23,7 +20,7 @@ import {CategoryDescriptor, Competitor, FightDescription, MatDescription} from "
         </div>
       </a>
     </div>
-    <div class="meta">{{('(TODO: mat?.numberOfFights)' || 0) + ' fights'}}</div>
+    <div class="meta">{{'TODO' + ' fights'}}</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['mats-overview-component.component.scss']
@@ -37,7 +34,7 @@ export class MatDisplayComponent  {
   mat: MatDescription;
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
   matFights: FightDescription[];

@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inp
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
-import {CategoryDescriptor, MatDescription, Period, Schedule, ScheduleEntryType} from "@frontend-nx/protobuf";
+import {CategoryState, MatDescription, Period, ScheduleEntryType} from "@frontend-nx/protobuf";
 import {InternalScheduleState} from "../../reducers/global-reducers";
 
 @Component({
@@ -50,7 +50,6 @@ import {InternalScheduleState} from "../../reducers/global-reducers";
           <div class="extra content">
             <span *ngIf="showTotalFights">Total fights: {{getFightsNumberForPeriod(period)}}</span>
             <br/>
-            <span *ngIf="showDuration">Duration: {{getPeriodDuration(period) || 'N/A'}} <span *ngIf="getPeriodDuration(period)">h</span></span>
           </div>
         </div>
       </div>
@@ -79,7 +78,7 @@ export class ScheduleDisplayComponent  {
   competitionId: string;
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
   schedule: InternalScheduleState;
@@ -97,26 +96,17 @@ export class ScheduleDisplayComponent  {
 
   matsView = <Dictionary<boolean>>{};
 
-  getPeriodDuration= (p: Period) => undefined
-
-
   getFightsNumberForPeriod = (period: Period) => {
     if (!period || !period.scheduleEntries || period.scheduleEntries.length === 0) {
       return 0;
     }
     return period.scheduleEntries.map(e => e.fightScheduleInfo.length).reduce((previousValue, currentValue) => previousValue + currentValue);
   };
-  categoryName = (cat: CategoryDescriptor) => AddFighterComponent.displayCategory(cat);
+  categoryName = (cat: CategoryState) => AddFighterComponent.displayCategory(cat.category);
 
   getPeriodEntries(period: Period) {
     return (period.scheduleEntries.filter(e => e.entryType !== ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE) && produce(period.scheduleEntries, draft => {
       draft.sort((a, b) => a.startTime?.getTime() - b.startTime?.getTime());
-    })) || [];
-  }
-
-  getPeriodFixedPauses(period: Period) {
-    return (period.scheduleEntries.filter(e => e.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE) && produce(period.scheduleEntries, draft => {
-      draft.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
     })) || [];
   }
 
@@ -141,8 +131,6 @@ export class ScheduleDisplayComponent  {
       return id;
     }
   };
-
-
 
   getPeriodMats(id: string) {
     return this.mats.filter(mat => mat.periodId === id);

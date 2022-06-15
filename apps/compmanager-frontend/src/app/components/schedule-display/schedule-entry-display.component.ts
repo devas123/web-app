@@ -7,17 +7,17 @@ import {ScheduleEntry, ScheduleEntryType} from "@frontend-nx/protobuf";
   selector: 'app-schedule-entry-display',
   template: `
     <div class="ui middle aligned divided list">
-      <a class="item" *ngFor="let scheduleEntry of scheduleEntries" [style]="getEntryStyle(scheduleEntry)">
+      <a class="item" *ngFor="let scheduleEntry of scheduleEntries?.filter(isNotPause)"
+         [style]="getEntryStyle(scheduleEntry)">
         <i class="users icon"></i>
         <div class="content">
-          <div class="header" *ngIf="scheduleEntry.name && !isPause(scheduleEntry)">{{scheduleEntry.name}}</div>
-          <div class="header" *ngIf="isPause(scheduleEntry)">Pause</div>
-          <ng-container *ngIf="!isPause(scheduleEntry)">
+          <div class="header" *ngIf="scheduleEntry.name">{{scheduleEntry.name}}</div>
+          <ng-container>
             <div class="category_hoverable"
                  (mouseenter)="highlightCategory(categoryId)"
                  (mouseleave)="clearCategoryHighLight(categoryId)"
                  (click)="goToCategoryEditor(categoryId)"
-                 [ngClass]="{pause: isPause(scheduleEntry),header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: highlightedCategories?.has(categoryId)}"
+                 [ngClass]="{header: isFirst && !scheduleEntry.name, description: !isFirst || scheduleEntry.name, group_selected: highlightedCategories?.has(categoryId)}"
                  *ngFor="let categoryId of scheduleEntry.categoryIds; first as isFirst">{{!!categoryFormat ? categoryFormat(categoryId) : categoryId | truncate}}</div>
             <div class="description">{{scheduleEntry?.fightScheduleInfo.length}} fights</div>
           </ng-container>
@@ -30,23 +30,6 @@ import {ScheduleEntry, ScheduleEntryType} from "@frontend-nx/protobuf";
             [showTime]="true"
             [text]="'Starts at '"
           ></compmanager-frontend-date-field>
-          <div class="description" *ngIf="isRelativePause(scheduleEntry)">{{scheduleEntry.duration}} min</div>
-          <ng-container *ngIf="isFixedPause(scheduleEntry)">
-            <compmanager-frontend-date-field
-              class="description"
-              [date]="scheduleEntry?.startTime"
-              [format]="'hh:mm'"
-              [showTime]="true"
-              [text]="'Starts at '"
-            ></compmanager-frontend-date-field>
-            <compmanager-frontend-date-field
-              class="description"
-              [date]="scheduleEntry?.endTime"
-              [format]="'hh:mm'"
-              [showTime]="true"
-              [text]="'Ends at '"
-            ></compmanager-frontend-date-field>
-          </ng-container>
         </div>
       </a>
     </div>
@@ -84,13 +67,7 @@ export class ScheduleEntryDisplayComponent {
     return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE || scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE;
   }
 
-  isRelativePause(scheduleEntry: ScheduleEntry) {
-    return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE;
-  }
-
-  isFixedPause(scheduleEntry: ScheduleEntry) {
-    return scheduleEntry.entryType === ScheduleEntryType.SCHEDULE_ENTRY_TYPE_FIXED_PAUSE;
-  }
+  isNotPause = (scheduleEntry: ScheduleEntry) => !this.isPause(scheduleEntry)
 
   getEntryStyle(req: ScheduleEntry) {
     return (req.color && `border: 2px solid ${req.color}`) || '';

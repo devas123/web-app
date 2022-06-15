@@ -39,14 +39,14 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
           starts.
         </div>
         <div class="field">
-          <sui-checkbox (checkChange)="_all = $event">
+          <sui-checkbox (checkChange)="setMats(modal.context.mats)">
             Add to all mats
           </sui-checkbox>
         </div>
-        <sui-multi-select *ngIf="!_all"
-                          [options]="modal.context.mats"
+        <sui-multi-select [options]="modal.context.mats"
                           placeholder="Area"
                           labelField="name"
+                          (selectedOptionsChange)="setMats($event)"
                           [optionFormatter]="matOptionFormatter"
                           [isSearchable]="false"
                           [isDisabled]="false"
@@ -59,11 +59,11 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
           <label>Pause type</label>
           <div class="field">
             <input type="radio" name="entryType" [value]="'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE'"
-                   formControlName="entryType">Fixed
+                   [formControl]="entryTypeControl()">Fixed
           </div>
           <div class="field">
             <input type="radio" name="entryType" [value]="'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE'"
-                   formControlName="entryType">Relative
+                   [formControl]="entryTypeControl()">Relative
           </div>
         </div>
         <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE'">
@@ -94,23 +94,23 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
                    autocomplete="off">
           </compmanager-frontend-form-generic-field>
         </div>
-        <div class="fields" *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE'">
-          <compmanager-frontend-form-generic-field
-            [control]="durationSeconds"
-          >
-            <label>Duration</label>
-            <input input type="number" name="durationSeconds" placeholder="Minutes" [formControl]="durationSeconds">
-          </compmanager-frontend-form-generic-field>
-        </div>
+        <compmanager-frontend-form-generic-field
+          *ngIf="entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE'"
+          [control]="durationMinutes"
+        >
+          <label>Duration</label>
+          <input input type="number" name="durationMinutes" placeholder="Minutes" [formControl]="durationMinutes">
+        </compmanager-frontend-form-generic-field>
       </div>
     </div>
     <div class="actions">
       <compmanager-frontend-button
         [name]="'Cancel'"
+        (click)="modal.deny(undefined)"
       ></compmanager-frontend-button>
       <compmanager-frontend-submit-button
         [name]="'OK'"
-        [disabled]="form.invalid || !((select?.selectedOptions && select?.selectedOptions?.length > 0) || _all)"
+        [disabled]="unableToSubmit()"
         (click)="triggerAddPause()" autofocus>
         >
       </compmanager-frontend-submit-button>
@@ -121,14 +121,18 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
 })
 export class AddSchedulePauseFormComponent implements OnInit {
   @ViewChild('multiSelect')
-  select: SuiMultiSelect<MatDescription, MatDescription>;
-  _all = false;
+  matsSelect: SuiMultiSelect<MatDescription, MatDescription>;
   pauseForm: FormGroup;
+
+  unableToSubmit() {
+    return this.form.invalid || this.mats.length === 0
+  }
+
   private formValidator: ValidatorFn = control => {
     const entryType = control.get('entryType').value as ScheduleRequirementType;
     const startTime = control.get('startTime').value;
     const endTime = control.get('endTime').value;
-    const durationSeconds = control.get('durationSeconds').value;
+    const durationMinutes = control.get('durationMinutes').value;
     switch (entryType) {
       case 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE': {
         if (startTime && endTime) {
@@ -141,13 +145,13 @@ export class AddSchedulePauseFormComponent implements OnInit {
           if (s.getTime() < periodStartTime.getTime()) {
             return {'startsBeforePeriod': true};
           }
-          return undefined;
+          return null;
         }
         return {'invalidDates': true};
       }
       case 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE': {
-        if (durationSeconds) {
-          return undefined;
+        if (durationMinutes) {
+          return null;
         }
         return {'invalidDuration': true};
       }
@@ -160,21 +164,30 @@ export class AddSchedulePauseFormComponent implements OnInit {
     return this.pauseForm;
   }
 
-  get entryType() {
-    return this.form.get('entryType').value;
+  entryTypeControl() {
+    return this.form.get('entryType') as FormControl;
   }
 
-  get matId() {
-    return this.form.get('matId').value;
+  matsControl() {
+    return this.form.get('mats') as FormControl;
+  }
+
+  get entryType() {
+    return this.entryTypeControl().value;
+  }
+
+  get mats() {
+    return this.matsControl().value;
   }
 
   triggerAddPause() {
-    if (this.form && (!this.select || (this.select.selectedOptions && this.select.selectedOptions.length > 0) || this._all)) {
-      const toMats = this._all ? this.modal.context.mats : this.select.selectedOptions;
+    if (!this.unableToSubmit()) {
+      const toMats = this.mats;
       switch (this.entryType) {
         case 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE': {
           const pauseReq = this.pauseForm.value as ScheduleRequirement;
           pauseReq.entryType = this.entryType;
+          pauseReq.durationSeconds = this.durationMinutes.value * 60
           this.modal.approve({pauseRequirement: pauseReq, toMats: toMats.map(m => m.id)});
           break;
         }
@@ -197,17 +210,17 @@ export class AddSchedulePauseFormComponent implements OnInit {
 
   ngOnInit() {
     this.pauseForm = this.fb.group({
-      durationSeconds: [''],
-      startTime: [this.modal.context.periodStartTime, [Validators.required]],
-      endTime: [this.modal.context.periodStartTime, [Validators.required]],
-      matId: [''],
-      entryType: ['SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE']
+      durationMinutes: [undefined],
+      startTime: [this.modal.context.periodStartTime],
+      endTime: [this.modal.context.periodStartTime],
+      mats: [[], [Validators.required]],
+      entryType: ['SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE', [Validators.required]]
     }, {validators: [this.formValidator]});
   }
 
 
-  get durationSeconds() {
-    return this.form.get('durationSeconds') as FormControl;
+  get durationMinutes() {
+    return this.form.get('durationMinutes') as FormControl;
   }
 
   get startTime() {
@@ -232,5 +245,15 @@ export class AddSchedulePauseFormComponent implements OnInit {
         endTime
       }
     )
+  }
+
+  setMats(mats: MatDescription[]) {
+    this.form.patchValue(
+      {
+        mats
+      }
+    )
+    this.matsSelect.selectedOptions = mats;
+
   }
 }

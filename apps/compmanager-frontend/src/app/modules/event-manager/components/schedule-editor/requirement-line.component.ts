@@ -74,8 +74,8 @@ export class RequirementLineComponent {
     if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIGHTS') {
       return req.fightIds && req.fightIds.length + ' Fights';
     }
-    if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_FIXED_PAUSE') {
-      return `Pause ${req.durationSeconds} min`;
+    if (req.entryType === 'SCHEDULE_REQUIREMENT_TYPE_RELATIVE_PAUSE') {
+      return `Pause ${req.durationSeconds / 60} min`;
     }
   }
 

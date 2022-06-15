@@ -12,8 +12,8 @@ import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import produce from 'immer';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 import {
-  CategoryDescriptor,
-  Competitor,
+  CategoryDescriptor, CategoryState,
+  Competitor, CompScore,
   FightDescription,
   FightResult,
   FightResultOption,
@@ -62,7 +62,7 @@ export class ScoreboardComponentComponent implements  AfterContentInit {
   fight: FightDescription;
 
   @Input()
-  category: CategoryDescriptor;
+  category: CategoryState;
 
   stageName;
 
@@ -115,7 +115,7 @@ export class ScoreboardComponentComponent implements  AfterContentInit {
 
   displayCategory = (cat: CategoryDescriptor) => AddFighterComponent.displayCategory(cat);
 
-  getScore = (compScore: { competitorId: string, score: Score }) => {
+  getScore = (compScore: CompScore) => {
     return compScore && compScore.score;
   };
 

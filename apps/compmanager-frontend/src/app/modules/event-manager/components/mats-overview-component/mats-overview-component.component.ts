@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 import * as _ from 'lodash';
-import {CategoryDescriptor, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -31,7 +31,7 @@ export class MatsOverviewComponentComponent  {
   mats: MatDescription[];
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
   competitors: Competitor[];

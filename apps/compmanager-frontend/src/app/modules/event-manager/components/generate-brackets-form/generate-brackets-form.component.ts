@@ -360,6 +360,7 @@ export class GenerateBracketsFormComponent implements OnInit {
           }];
         }
       }
+      draft.fightDuration = draft.fightDuration * 60;
       draft.stageResultDescriptor.fightResultOptions = draft.stageResultDescriptor.fightResultOptions.filter(o => !!o);
       draft.inputDescriptor.selectors = draft.inputDescriptor.selectors.filter(o => !!o);
       draft.stageResultDescriptor.additionalGroupSortingDescriptors = draft.stageResultDescriptor.additionalGroupSortingDescriptors.filter(o => !!o);

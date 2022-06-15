@@ -23,7 +23,7 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
             </ng-container>
             <ng-container *ngIf="entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE'">
               <span>Pause</span>
-              <span>{{entry.duration}} minutes</span>
+              <span>{{entry.duration / 60}} minutes</span>
             </ng-container>
             <ng-container *ngIf="entry.entryType === 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'">
               <span>Pause</span>
@@ -37,7 +37,7 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
             </ng-container>
           </div>
         </div>
-        <section><!--{{mat.numberOfFights}}--> TODO fights</section>
+        <section>{{getTotalMatFights(mat.id)}} fights</section>
       </div>
     </div>
   `,
@@ -78,7 +78,12 @@ export class ScheduleMatDisplayComponent {
   @Output()
   categoryClicked = new EventEmitter<string>();
 
-  getNgClass(entry: ScheduleEntry) { return {'group_selected': this.isCategorySelected(entry.categoryIds), 'pause': entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE' || entry.entryType === 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'} }
+  getNgClass(entry: ScheduleEntry) {
+    return {
+      'group_selected': this.isCategorySelected(entry.categoryIds),
+      'pause': entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE' || entry.entryType === 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'
+    }
+  }
 
   isNotPause(entry: ScheduleEntry) {
     return entry.entryType !== 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE' && entry.entryType !== 'SCHEDULE_ENTRY_TYPE_FIXED_PAUSE'
@@ -90,6 +95,14 @@ export class ScheduleMatDisplayComponent {
 
   getEntryFightsForMat(matId: string, entry: ScheduleEntry) {
     return entry.fightScheduleInfo.filter(f => f.matId === matId);
+  }
+
+  getTotalMatFights(matId: string) {
+    const fightCounts = this.scheduleEntries?.map(e => e.fightScheduleInfo.filter(fsi => fsi.matId === matId)?.length || 0);
+    if (fightCounts?.length > 0) {
+      return fightCounts.reduce((a, b) => (a || 0) + (b || 0));
+    }
+    return 0
   }
 
   getEntryStartTimeForMat(matId: string, entry: ScheduleEntry) {
