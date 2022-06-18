@@ -737,19 +737,24 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           })
           state.selectedEventCategories.selectedCategoryStages.selectedStageFights
             = fightEntityAdapter.updateMany(updates, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+          state.selectedEventMats.matsFights = fightEntityAdapter.updateMany(updates, state.selectedEventMats.matsFights)
 
           const periods = state.selectedEventSchedule.periods;
           newFights.forEach(f => {
             const period = periods.entities[f.periodId]
             const scheduleEntry = period.scheduleEntries.find(e => e.id === f.scheduleEntryId)
-            scheduleEntry.fightScheduleInfo = [...scheduleEntry.fightScheduleInfo, <StartTimeInfo>{
-              startTime: f.startTime,
-              matId: f.matId,
-              someId: f.fightId
-            }]
+            if (Boolean(scheduleEntry)) {
+              scheduleEntry.fightScheduleInfo = [...scheduleEntry.fightScheduleInfo, <StartTimeInfo>{
+                startTime: f.startTime,
+                matId: f.matId,
+                someId: f.fightId
+              }]
+            }
           })
           periods.ids.forEach(id => {
-            periods.entities[id].scheduleEntries = periods.entities[id].scheduleEntries.filter(uniqueFilter)
+            if (Boolean(periods.entities[id].scheduleEntries)) {
+              periods.entities[id].scheduleEntries = periods.entities[id].scheduleEntries.filter(uniqueFilter)
+            }
           });
         }
         break;

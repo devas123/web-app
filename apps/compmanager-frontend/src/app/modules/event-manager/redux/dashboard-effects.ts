@@ -31,6 +31,8 @@ import {
   REFRESH_MATS_VIEW,
   refreshMatView
 } from './dashboard-actions';
+import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
+import {batchAction} from "./event-manager-actions";
 
 @Injectable()
 export class DashboardEffects {
@@ -93,16 +95,16 @@ export class DashboardEffects {
 
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, DASHBOARD_SET_FIGHT_RESULT_COMMAND),
-    concatMap(action => of(action).pipe(
-      withLatestFrom(this.store.pipe(select(getSelectedEventSelectedPeriodId)),
-        this.store.pipe(select(getSelectedEventGetSelectedMatId)))
-    )),
-    concatMap(([action, periodId]: [CommonAction, string, string]) => {
-      const command = InfoService.createCommandWithPayload(action)
-      return this.infoService.sendCommandSync(command)
-        .pipe(tap(console.log), take(1), concatMap(() => [refreshMatView(periodId, action.competitionId)]))
-    }))
-  );
+    concatMap((action: CommonAction) => {
+      let cmd = InfoService.createCommandWithPayload(action)
+      return this.infoService.sendCommandSync(cmd)
+        .pipe(
+          tap(executeSuccessCallbacks(action)),
+          map((actions) => batchAction({actions})),
+          catchError(executeErrorCallbacks(action))
+        );
+    })
+  ));
 
   constructor(private actions$: Actions,
               private infoService: InfoService,

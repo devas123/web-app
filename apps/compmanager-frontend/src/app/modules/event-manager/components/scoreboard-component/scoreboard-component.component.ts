@@ -20,6 +20,7 @@ import {
   Score
 } from "@frontend-nx/protobuf";
 
+const numberOfSecondsInMinute = 60;
 
 @Component({
   selector: 'app-scoreboard-component',
@@ -27,7 +28,7 @@ import {
   styleUrls: ['./scoreboard-component.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScoreboardComponentComponent implements  AfterContentInit {
+export class ScoreboardComponentComponent implements AfterContentInit {
 
   @Input()
   fightResultOptions: FightResultOption[];
@@ -36,12 +37,16 @@ export class ScoreboardComponentComponent implements  AfterContentInit {
   set selectedFight(f: FightDescription) {
     if (f) {
       this.fight = produce(f, d => {
-        d.scores.forEach( sc => {
-          sc.score = (!!sc.score && Object.keys(sc.score).length > 0) ? sc.score : <Score>{advantages: 0, penalties: 0, points: 0};
+        d.scores.forEach(sc => {
+          sc.score = (!!sc.score && Object.keys(sc.score).length > 0) ? sc.score : <Score>{
+            advantages: 0,
+            penalties: 0,
+            points: 0
+          };
         });
       });
-      this.currentFightMinutes = f.duration;
-      this.currentFightSeconds = 0;
+      this.currentFightMinutes = Math.floor(f.duration / numberOfSecondsInMinute);
+      this.currentFightSeconds = f.duration % numberOfSecondsInMinute;
       this.stageName = `Round ${f.round + 1}`;
     }
   }
@@ -151,8 +156,8 @@ export class ScoreboardComponentComponent implements  AfterContentInit {
   ngAfterContentInit(): void {
     if (this.fight) {
       this.stageName = this.fight.status;
-      this.currentFightMinutes = this.fight.duration;
-      this.currentFightSeconds = 0;
+      this.currentFightMinutes = Math.floor(this.fight.duration / numberOfSecondsInMinute);
+      this.currentFightSeconds = this.fight.duration % numberOfSecondsInMinute;
     }
   }
 }
