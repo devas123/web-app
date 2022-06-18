@@ -30,7 +30,6 @@ export const EventType = {
   FIGHTS_EDITOR_CHANGE_APPLIED: 'FIGHTS_EDITOR_CHANGE_APPLIED',
   FIGHTS_START_TIME_CLEANED: 'FIGHTS_START_TIME_CLEANED',
   FIGHTS_START_TIME_UPDATED: 'FIGHTS_START_TIME_UPDATED',
-  FIGHT_ORDER_CHANGED: 'FIGHT_ORDER_CHANGED',
   MATS_UPDATED: 'MATS_UPDATED',
   REGISTRATION_INFO_UPDATED: 'REGISTRATION_INFO_UPDATED',
   SCHEDULE_DROPPED: 'SCHEDULE_DROPPED',
@@ -117,9 +116,6 @@ export function eventTypeFromJSON(object: any): EventType {
     case 24:
     case 'FIGHTS_START_TIME_UPDATED':
       return EventType.FIGHTS_START_TIME_UPDATED;
-    case 25:
-    case 'FIGHT_ORDER_CHANGED':
-      return EventType.FIGHT_ORDER_CHANGED;
     case 26:
     case 'MATS_UPDATED':
       return EventType.MATS_UPDATED;
@@ -194,8 +190,6 @@ export function eventTypeToJSON(object: EventType): string {
       return 'FIGHTS_START_TIME_CLEANED';
     case EventType.FIGHTS_START_TIME_UPDATED:
       return 'FIGHTS_START_TIME_UPDATED';
-    case EventType.FIGHT_ORDER_CHANGED:
-      return 'FIGHT_ORDER_CHANGED';
     case EventType.MATS_UPDATED:
       return 'MATS_UPDATED';
     case EventType.REGISTRATION_INFO_UPDATED:
@@ -265,8 +259,6 @@ export function eventTypeToNumber(object: EventType): number {
       return 23;
     case EventType.FIGHTS_START_TIME_UPDATED:
       return 24;
-    case EventType.FIGHT_ORDER_CHANGED:
-      return 25;
     case EventType.MATS_UPDATED:
       return 26;
     case EventType.REGISTRATION_INFO_UPDATED:
