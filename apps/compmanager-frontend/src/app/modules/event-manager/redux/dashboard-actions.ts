@@ -1,7 +1,7 @@
 // commands
 import {createAction, props} from '@ngrx/store';
 import {IScoreboardFightResultSet} from './dashboard-reducers';
-import {Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
+import {CommandType, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
@@ -17,8 +17,6 @@ export interface IDashboardFightScheduleChangedPayload {
 export const DASHBOARD_LOAD_MATS_COMMAND = 'DASHBOARD_LOAD_MATS_COMMAND';
 export const DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND = 'DASHBOARD_LOAD_FIGHT_IF_NEEDED_COMMAND';
 export const DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND = 'DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND';
-export const DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND = 'DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND';
-export const DASHBOARD_SET_FIGHT_RESULT_COMMAND = 'DASHBOARD_SET_FIGHT_RESULT_COMMAND';
 
 
 // events
@@ -48,8 +46,8 @@ export const dashboardMatFightsUnloaded = {type: DASHBOARD_MAT_FIGHTS_UNLOADED};
 export const dashboardSocketConnected = {type: DASHBOARD_SOCKET_CONNECTED};
 export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED};
 
-export const dashboardFightOrderChangeCommand = createAction(DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
-export const dashboardSetFightResultCommand = createAction(DASHBOARD_SET_FIGHT_RESULT_COMMAND, props<IScoreboardFightResultSet>());
+export const dashboardFightOrderChangeCommand = createAction(CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
+export const dashboardSetFightResultCommand = createAction(CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND, props<IScoreboardFightResultSet>());
 
 
 export const dashboardPeriodSelected = (periodId, competitionId) => ({
@@ -68,7 +66,7 @@ export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId
 export const dashboardMatFightsLoaded = (fights: FightDescription[], competitors: Competitor[], matId: string) => ({
   type: DASHBOARD_MAT_FIGHTS_LOADED,
   matId,
-  payload: { fights, competitors }
+  payload: {fights, competitors}
 });
 
 export const dashboardUnloadState = {type: DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND};

@@ -54,10 +54,6 @@ import {
 } from "@frontend-nx/protobuf";
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
-import {
-  DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND,
-  DASHBOARD_SET_FIGHT_RESULT_COMMAND
-} from "../modules/event-manager/redux/dashboard-actions";
 import {CommandCallback, CommandExecutionResult} from "../../../../../libs/protobuf/src/lib/callback";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
@@ -358,12 +354,12 @@ export class InfoService {
           properties: action.payload.properties
         }
         break;
-      case DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND:
+      case CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND:
         messageInfo.changeFightOrderPayload = <ChangeFightOrderPayload>{
           ...action.payload
         }
         break;
-      case DASHBOARD_SET_FIGHT_RESULT_COMMAND:
+      case CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND:
         messageInfo.setFightResultPayload = <SetFightResultPayload>{
           ...action.payload
         }

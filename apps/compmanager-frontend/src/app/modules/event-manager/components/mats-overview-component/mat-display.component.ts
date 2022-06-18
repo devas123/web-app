@@ -65,7 +65,7 @@ export class MatDisplayComponent  {
   drop(event: CdkDragDrop<FightDescription[], any>, matId: string) {
     const fight = event.item.data as FightDescription;
     if (fight && !(fight.mat?.id === matId && event.previousIndex === event.currentIndex)) {
-      const newOrderOnMat = event.container.data[event.currentIndex].numberOnMat;
+      const newOrderOnMat = event.container.data[event.currentIndex]?.numberOnMat ?? event.container.data.length;
       this.fightMatChanged.next({
         categoryId: fight.categoryId,
         currentMatId: fight.mat.id,
