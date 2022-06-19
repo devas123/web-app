@@ -43,10 +43,10 @@
           <div class="ui statistic">
             <ng-container *ngIf="categoryStartTime">
               <div class="label">
-                Starts at
+                Starts
               </div>
               <p></p>
-              <compmanager-frontend-date-field class="text value" [date]="categoryStartTime"></compmanager-frontend-date-field>
+              <compmanager-frontend-date-field class="text value" [showTime]="true" [date]="categoryStartTime"></compmanager-frontend-date-field>
             </ng-container>
             <ng-container *ngIf="!categoryStartTime">
               <div class="text value">

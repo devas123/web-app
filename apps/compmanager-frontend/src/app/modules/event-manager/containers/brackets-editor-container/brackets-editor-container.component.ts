@@ -144,7 +144,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
     this.showResults = !this.showResults;
   }
 
-  sendTheChanges({fights, competitorMovedToGroups}: { fights: FightDescription[], competitorMovedToGroups: CompetitorMovedToGroup[] }) {
+  sendTheChanges({
+                   fights,
+                   competitorMovedToGroups
+                 }: { fights: FightDescription[], competitorMovedToGroups: CompetitorMovedToGroup[] }) {
     combineLatest([this.bracketsInfo.competition$, this.bracketsInfo.category$, this.bracketsInfo.stage$]).pipe(
       take(1),
       filter(([competition, category, stage]) => !!competition && !!category && !!stage),
@@ -173,7 +176,11 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
   }
 
   generateBrackets(stages: StageDescriptor[]) {
-    this.sendCommandFromCategoryId(categoryId => eventManagerGenerateBrackets({competitionId: this.competitionId, categoryId, stageDescriptors: stages}));
+    this.sendCommandFromCategoryId(categoryId => eventManagerGenerateBrackets({
+      competitionId: this.competitionId,
+      categoryId,
+      stageDescriptors: stages
+    }));
   }
 
   private sendCommandFromCategoryId(actionBuilder: (categoryId) => any) {
@@ -192,7 +199,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
 
   updateStageStatus(event: { stageId: string; status: StageStatus }) {
     if (this.competitionId && event.stageId && event.status && this.categoryId) {
-      this.store.dispatch(updateScheduleStatusCommand({competitionId: this.competitionId, categoryId: this.categoryId, ...event}));
+      this.store.dispatch(updateScheduleStatusCommand({
+        competitionId: this.competitionId,
+        categoryId: this.categoryId, ...event
+      }));
     }
   }
 }

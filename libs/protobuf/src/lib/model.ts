@@ -1431,6 +1431,7 @@ export interface CategoryState {
   category?: CategoryDescriptor;
   fightsNumber: number;
   numberOfCompetitors: number;
+  startDate?: Date | undefined;
 }
 
 export interface CompetitionProperties {
@@ -4867,6 +4868,7 @@ function createBaseCategoryState(): CategoryState {
     category: undefined,
     fightsNumber: 0,
     numberOfCompetitors: 0,
+    startDate: undefined,
   };
 }
 
@@ -4893,6 +4895,12 @@ export const CategoryState = {
     if (message.numberOfCompetitors !== 0) {
       writer.uint32(40).int32(message.numberOfCompetitors);
     }
+    if (message.startDate !== undefined) {
+      Timestamp.encode(
+        toTimestamp(message.startDate),
+        writer.uint32(66).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -4918,6 +4926,11 @@ export const CategoryState = {
         case 5:
           message.numberOfCompetitors = reader.int32();
           break;
+        case 8:
+          message.startDate = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32())
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4941,6 +4954,9 @@ export const CategoryState = {
       numberOfCompetitors: isSet(object.numberOfCompetitors)
         ? Number(object.numberOfCompetitors)
         : 0,
+      startDate: isSet(object.startDate)
+        ? fromJsonTimestamp(object.startDate)
+        : undefined,
     };
   },
 
@@ -4957,6 +4973,8 @@ export const CategoryState = {
       (obj.fightsNumber = Math.round(message.fightsNumber));
     message.numberOfCompetitors !== undefined &&
       (obj.numberOfCompetitors = Math.round(message.numberOfCompetitors));
+    message.startDate !== undefined &&
+      (obj.startDate = message.startDate.toISOString());
     return obj;
   },
 
@@ -4972,6 +4990,7 @@ export const CategoryState = {
         : undefined;
     message.fightsNumber = object.fightsNumber ?? 0;
     message.numberOfCompetitors = object.numberOfCompetitors ?? 0;
+    message.startDate = object.startDate ?? undefined;
     return message;
   },
 };

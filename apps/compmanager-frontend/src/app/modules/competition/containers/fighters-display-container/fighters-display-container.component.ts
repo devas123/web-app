@@ -10,12 +10,12 @@ import {
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventCompetitorsTotal,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategory
+  eventManagerGetSelectedEventName
 } from '../../../event-manager/redux/event-manager-reducers';
 import {AddFighterComponent} from '../../../event-manager/components/add-fighter/add-fighter.component';
 import {eventManagerCompetitionFightersPageChanged} from '../../../event-manager/redux/event-manager-actions';
 import {CategoryDescriptor, CategoryState, Competitor} from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../../../service/data.provider.service";
 
 @Component({
     selector: 'app-fighters-display-container',
@@ -41,9 +41,9 @@ export class FightersDisplayContainerComponent  {
     searchString$ = new BehaviorSubject<string>(null);
 
 
-    constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute) {
+    constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private dataProviderService: DataProviderService) {
         this.competitionId$ = this.store.pipe(select(getSelectedEventId));
-        this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+        this.category$ = dataProviderService.categoryInterest$;
         this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
         this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
         this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));

@@ -9135,7 +9135,8 @@ proto.compservice.model.protobuf.CategoryState.toObject = function(includeInstan
     competitionid: jspb.Message.getFieldWithDefault(msg, 2, ""),
     category: (f = msg.getCategory()) && proto.compservice.model.protobuf.CategoryDescriptor.toObject(includeInstance, f),
     fightsnumber: jspb.Message.getFieldWithDefault(msg, 4, 0),
-    numberofcompetitors: jspb.Message.getFieldWithDefault(msg, 5, 0)
+    numberofcompetitors: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    startdate: (f = msg.getStartdate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -9192,6 +9193,11 @@ proto.compservice.model.protobuf.CategoryState.deserializeBinaryFromReader = fun
     case 5:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setNumberofcompetitors(value);
+      break;
+    case 8:
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
+      msg.setStartdate(value);
       break;
     default:
       reader.skipField();
@@ -9256,6 +9262,14 @@ proto.compservice.model.protobuf.CategoryState.serializeBinaryToWriter = functio
     writer.writeInt32(
       5,
       f
+    );
+  }
+  f = message.getStartdate();
+  if (f != null) {
+    writer.writeMessage(
+      8,
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -9367,6 +9381,43 @@ proto.compservice.model.protobuf.CategoryState.prototype.getNumberofcompetitors 
  */
 proto.compservice.model.protobuf.CategoryState.prototype.setNumberofcompetitors = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional google.protobuf.Timestamp startDate = 8;
+ * @return {?proto.google.protobuf.Timestamp}
+ */
+proto.compservice.model.protobuf.CategoryState.prototype.getStartdate = function() {
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 8));
+};
+
+
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.compservice.model.protobuf.CategoryState} returns this
+*/
+proto.compservice.model.protobuf.CategoryState.prototype.setStartdate = function(value) {
+  return jspb.Message.setWrapperField(this, 8, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.compservice.model.protobuf.CategoryState} returns this
+ */
+proto.compservice.model.protobuf.CategoryState.prototype.clearStartdate = function() {
+  return this.setStartdate(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.CategoryState.prototype.hasStartdate = function() {
+  return jspb.Message.getField(this, 8) != null;
 };
 
 

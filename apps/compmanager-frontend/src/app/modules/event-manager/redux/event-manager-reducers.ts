@@ -40,7 +40,6 @@ import {
 } from '../../../commons/model/competition.model';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
-import {collectingReducer} from '../../account/utils';
 import produce from 'immer';
 import * as _ from 'lodash';
 
@@ -197,23 +196,21 @@ const {
 } = categoryEntityAdapter.getSelectors(getSelectedEventCategoriesCollection)
 
 export const eventManagerGetSelectedEventSelectedCategoryId = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryId);
-export const getSelectedEventSelectedCategoryState = createSelector(eventManagerGetSelectedEventSelectedCategoryId, getSelectedEventCategoryEntities, (id , entities) => id && entities[id]);
+export const getSelectedEventSelectedCategoryState = createSelector(eventManagerGetSelectedEventSelectedCategoryId, getSelectedEventCategoryEntities, (id, entities) => id && entities[id]);
 export const eventManagerGetSelectedEventSelectedCategoryStagesCollection = createSelector(getSelectedEventCategoriesCollection, cats => cats.selectedCategoryStages);
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageId = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stages => stages.selectedStageId);
 
-const {
+export const {
   // select the dictionary of user entities
   selectEntities: eventManagerGetSelectedEventSelectedCategoryStagesDictionary,
 
   // select the array of users
-  selectAll: eventManagerGetSelectedEventSelectedCategoryALLStages
-
+  selectAll: eventManagerGetSelectedEventSelectedCategorySelectedStages
   // select the total user count
 } = stagesEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryStagesCollection);
 
-export const eventManagerGetSelectedEventSelectedCategorySelectedStages = eventManagerGetSelectedEventSelectedCategoryALLStages;
-export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(getSelectedEventCategoriesCollection, eventManagerGetSelectedEventSelectedCategoryStagesCollection, (category, stages) =>
-  category.categoryStateLoading || stages.fightsAreLoading);
+export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, (stages) =>
+  stages.fightsAreLoading);
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStage =
   createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageId, eventManagerGetSelectedEventSelectedCategoryStagesDictionary, (stageId, stages) => stageId && stages[stageId]);
@@ -245,7 +242,7 @@ export const eventManagerGetSelectedEventSelectedCategory = createSelector(
     return selectedId && entities[selectedId];
   }
 );
-export const eventManagerGetSelectedEventCategory = props =>  createSelector(eventManagerGetSelectedEventCategoriesDictionary,
+export const eventManagerGetSelectedEventCategory = props => createSelector(eventManagerGetSelectedEventCategoriesDictionary,
   (dict) => props.id && dict[props.id]);
 
 export const eventManagerGetCategoryIdForFightId = props => createSelector(getSelectedEventScheduleFightsByCategoryId,
@@ -266,18 +263,7 @@ export const eventManagerGetSelectedEventScheduleEmpty = createSelector(selectAl
   return !(!!periods && periods.length > 0 && periods.find(p => p.scheduleEntries && p.scheduleEntries.length > 0));
 });
 
-export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelector(eventManagerGetSelectedEventSchedule,
-  eventManagerGetSelectedEventSelectedCategoryId,
-  selectAllPeriods, (schedule, categoryId, periods) => {
-    if (schedule && categoryId && periods) {
-      const scheduleEntries = periods.map(value => value.scheduleEntries).reduce(collectingReducer, []);
-      const entry = scheduleEntries
-        .filter(value => value.categoryIds.includes(categoryId))
-        .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())[0];
-      return entry && entry.startTime;
-    }
-  });
-
+export const eventManagerGetSelectedEventSelectedCategoryStartTime = createSelector(eventManagerGetSelectedEventSelectedCategory, (category) => category?.startDate);
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFights = eventManagerGetSelectedEventSelectedCategorySelectedStageAllFights;
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights =
@@ -289,10 +275,9 @@ export const eventManagerGetSelectedEventCompetitorsCollection = createSelector(
 
 export const {
   selectEntities: eventManagerGetSelectedEventCompetitorsDictionary,
-  selectAll: eventManagerGetSelectedEventAllCompetitors
+  selectAll: eventManagerGetSelectedEventCompetitors
 } = competitorEntityAdapter.getSelectors(eventManagerGetSelectedEventCompetitorsCollection);
 
-export const eventManagerGetSelectedEventCompetitors = eventManagerGetSelectedEventAllCompetitors;
 export const eventManagerGetSelectedEventCompetitorsTotal = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.total);
 export const eventManagerGetSelectedEventCompetitorsSelectedCompetitorId = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.selectedCompetitorId);
 export const eventManagerGetSelectedEventCompetitorsPageSize = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.pageSize);

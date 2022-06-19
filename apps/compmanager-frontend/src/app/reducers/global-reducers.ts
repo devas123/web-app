@@ -462,7 +462,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const {competitionId, categoryId, payload} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
           state.selectedEventCategories = categoryEntityAdapter.addOne(payload, state.selectedEventCategories);
-          state.selectedEventCategories.categoryStateLoading = false;
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         }
         break;
@@ -551,7 +550,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_SELECTED: {
         if (action.competitionId === state.competitionProperties.id) {
           state.selectedEventCategories.selectedCategoryId = action.categoryId;
-          state.selectedEventCategories.categoryStateLoading = true;
         }
         break;
       }
@@ -567,7 +565,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (action.competitionId === state.competitionProperties.id) {
           state.selectedEventCategories.selectedCategoryId = null;
           state.selectedEventCategories.selectedCategoryStages = stagesInitialState;
-          state.selectedEventCategories.categoryStateLoading = false;
         }
         break;
       }
@@ -619,16 +616,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          return {
-            ...state,
-            selectedEventCompetitors: {
-              ...state.selectedEventCompetitors,
-              pageNumber: action.payload
-            }
-          };
-        }
-        return state;
+        state.selectedEventCompetitors.pageNumber = action.payload;
+        break;
       }
       case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {
         const event = action as Event

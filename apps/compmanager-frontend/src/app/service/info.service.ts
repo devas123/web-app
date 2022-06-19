@@ -210,7 +210,7 @@ export class InfoService {
   }
 
 
-  getCompetitorsForCompetition(competitionId: string, categoryId: string, pageNumber: string, pageSize: string, searchString?: string): Observable<GetCompetitorsResponse> {
+  getCompetitorsForCompetition(competitionId: string, categoryId: string, pageNumber: number, pageSize: number, searchString?: string): Observable<GetCompetitorsResponse> {
     const pn = +pageNumber || 1
     const ps = +pageSize || 0
     const startAt = (pn - 1) * ps

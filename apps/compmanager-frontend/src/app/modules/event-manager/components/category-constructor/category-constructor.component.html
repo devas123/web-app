@@ -13,11 +13,7 @@
 <h4>Please select restrictions</h4>
 <div class="create-category-grid">
   <div class="restriction-column" *ngFor="let name of restrictionNames; index as i">
-    <div class="restriction-item header">
-      <span>{{name}}</span>
-      <div class="filler"></div>
-      <a class="right-floated-close" (click)="deleteColumn(name)"><i class="ui close icon"></i></a>
-    </div>
+    <cf-restriction-header [name]="name" (columnRemoved)="deleteColumn(name)" [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)" ></cf-restriction-header>
     <app-restriction-item *ngFor="let restriction of restrictionGroups[name]"
                           [canSelect]="(selectedPath.length > 0 && selectedPath.length === i)"
                           [typeInTree]="treeInclusionType(restriction.restrictionId, i)"

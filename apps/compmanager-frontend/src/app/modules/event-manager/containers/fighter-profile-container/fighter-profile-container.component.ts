@@ -16,7 +16,6 @@ import {
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCompetitor,
 } from '../../redux/event-manager-reducers';
 import {Location} from '@angular/common';
@@ -27,6 +26,7 @@ import {
 } from '../../../../commons/directives/common-classes';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {CategoryState, Competitor} from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../../../service/data.provider.service";
 
 @Component({
   selector: 'app-fighter-profile-container',
@@ -39,7 +39,7 @@ export class FighterProfileContainerComponent extends CompetitionManagerModuleRo
   categories$: Observable<CategoryState[]>;
   private subs = new Subscription();
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService, private dataProviderService: DataProviderService) {
     super(store, <ComponentCommonMetadataProvider>{
       menu: [
         {
@@ -71,7 +71,7 @@ export class FighterProfileContainerComponent extends CompetitionManagerModuleRo
       select(eventManagerGetSelectedEventSelectedCompetitor),
       filter(f => !!f)
     );
-    this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.category$ = dataProviderService.categoryInterest$;
     this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
     this.subs.add(route.params.pipe(
         map(params => params['fighterId']),

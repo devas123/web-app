@@ -29,6 +29,8 @@ import {MiscEffects} from './effects/misc';
 import {CommonBracketsInfoContainer} from './commons/classes/common-brackets-container.component';
 import {CommonScheduleInfoContainerService} from './commons/classes/common-schedule-info-container.service';
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-semantic-ui';
+import {DataProviderService} from "./service/data.provider.service";
+import {SelectorsService} from "./service/selectors.service";
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-s
   ],
   providers: [HttpClient,
     InfoService,
+    DataProviderService,
+    SelectorsService,
     MenuService,
     HttpAuthService,
     AccountService,

@@ -11,7 +11,7 @@ import {
   Competitor,
   CompetitorMovedToGroup,
   FightDescription,
-  FightResultOption,
+  FightResultOption, GetCompetitorsResponse,
   ManagedCompetition,
   MatDescription,
   Period,
@@ -256,7 +256,7 @@ export const eventManagerCompetitionFightersPageChanged = (competitionId: string
   payload: pageNumber
 });
 
-export const eventManagerFightersForCompetitionLoaded = (competitionId, payload, replace?: boolean) => ({
+export const eventManagerFightersForCompetitionLoaded = (competitionId, payload: GetCompetitorsResponse, replace?: boolean) => ({
   type: EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   competitionId,
   payload: {...payload, replace}

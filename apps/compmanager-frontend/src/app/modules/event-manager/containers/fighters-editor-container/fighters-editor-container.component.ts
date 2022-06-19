@@ -8,8 +8,7 @@ import {
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventCompetitorsTotal,
-  eventManagerGetSelectedEventName,
-  eventManagerGetSelectedEventSelectedCategory
+  eventManagerGetSelectedEventName
 } from '../../redux/event-manager-reducers';
 import {
   eventManagerCompetitionFightersPageChanged,
@@ -25,6 +24,7 @@ import {
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {AddFighterComponent} from '../../components/add-fighter/add-fighter.component';
 import {CategoryDescriptor, CategoryState, Competitor} from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../../../service/data.provider.service";
 
 @Component({
   selector: 'app-fighters-container',
@@ -50,7 +50,7 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
   searchString$ = new BehaviorSubject<string>(null);
 
 
-  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService) {
+  constructor(store: Store<AppState>, private router: Router, private route: ActivatedRoute, private location: Location, menuService: MenuService, private dataProviderService: DataProviderService) {
     super(store, <ComponentCommonMetadataProvider>{
       header: store.pipe(select(eventManagerGetSelectedEventName)).pipe(filter(name => !!name), take(1), map(name => ({
         header: 'Competitors',
@@ -76,7 +76,7 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
       ]
     }, menuService);
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
-    this.category$ = this.store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.category$ = dataProviderService.categoryInterest$;
     this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
     this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
     this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));

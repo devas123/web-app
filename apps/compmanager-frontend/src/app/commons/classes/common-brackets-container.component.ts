@@ -3,14 +3,10 @@ import {AppState, getSelectedEventId, getSelectedEventProperties} from '../../re
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventCategories,
-  eventManagerGetSelectedEventCompetitors,
-  eventManagerGetSelectedEventSelectedCategory,
   eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
   eventManagerGetSelectedEventSelectedCategorySelectedStage,
   eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType,
-  eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights,
-  eventManagerGetSelectedEventSelectedCategorySelectedStages,
   eventManagerGetSelectedEventSelectedCategoryStagesAreLoading
 } from '../../modules/event-manager/redux/event-manager-reducers';
 import {filter, map, take, withLatestFrom} from 'rxjs/operators';
@@ -29,6 +25,7 @@ import {
   FightDescription,
   StageDescriptor
 } from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../service/data.provider.service";
 
 @Injectable()
 export class CommonBracketsInfoContainer {
@@ -48,17 +45,17 @@ export class CommonBracketsInfoContainer {
   competitors$: Observable<Competitor[]>;
 
 
-  constructor(private store: Store<AppState>, private observer: BreakpointObserver) {
+  constructor(private store: Store<AppState>, private observer: BreakpointObserver, private dataProviderService: DataProviderService) {
+    this.stages$ = dataProviderService.stages$;
+    this.fights$ = dataProviderService.stageFights$;
     this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
-    this.stages$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStages));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));
     this.bracketsType$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType));
-    this.fights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights));
     this.firstRoundFights$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStageFirstRoundFights));
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading));
-    this.competitors$ = store.pipe(select(eventManagerGetSelectedEventCompetitors));
-    this.category$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategory));
+    this.competitors$ = dataProviderService.fighters$;
+    this.category$ = dataProviderService.categoryInterest$;
     this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
     this.numberOfCompetitor$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));
     this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
