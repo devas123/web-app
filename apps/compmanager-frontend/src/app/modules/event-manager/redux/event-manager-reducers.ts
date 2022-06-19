@@ -71,7 +71,7 @@ function removeRestriction(state: CategoryConstructorState, restrictionId: any) 
     _.remove(e.vertices, id => id === restrictionId);
     e.vertices.forEach(v => _.remove(v.children, c => c === restrictionId));
   });
-  _.remove(state.restrictions, r => r.id === restrictionId);
+  _.remove(state.restrictions, r => r.restrictionId === restrictionId);
 }
 
 function removeEdgeFromTree(state: CategoryConstructorState, root: string, parent: any, child: any) {

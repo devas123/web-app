@@ -11,7 +11,6 @@ import {
 } from '../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventScheduleEmpty,
   eventManagerGetSelectedEventTimeZone,
   getSelectedEventPeriods,
@@ -21,6 +20,7 @@ import {filter, map, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
 import {CategoryState, CompetitionProperties, MatDescription, Period, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../service/data.provider.service";
 
 @Injectable()
 export class CommonScheduleInfoContainerService {
@@ -37,13 +37,13 @@ export class CommonScheduleInfoContainerService {
   fightsByCategoryId$: Observable<Dictionary<string[]>>;
 
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private dataProviderService: DataProviderService) {
     this.schedule$ = store.pipe(select(eventManagerGetSelectedEventSchedule));
     this.periods$ = store.pipe(select(getSelectedEventPeriods));
     this.undispatchedRequirements$ = store.pipe(select(getSelectedEventUndispatchedRequirements));
     this.scheduleEmpty$ = this.store.pipe(select(eventManagerGetSelectedEventScheduleEmpty));
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.selectedCompetitionProperties$ = store.pipe(select(getSelectedEventProperties));
     this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));

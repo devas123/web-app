@@ -1,5 +1,4 @@
 import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
-import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {from, Observable, of as observableOf, of} from 'rxjs';
 import {Action} from '@ngrx/store';
@@ -13,33 +12,18 @@ import * as eventManagerActions from '../modules/event-manager/redux/event-manag
 import {
   batchAction,
   COMPETITION_SELECTED,
-  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
-  EVENT_MANAGER_CATEGORY_SELECTED,
-  EVENT_MANAGER_CATEGORY_STAGES_LOADED,
-  EVENT_MANAGER_CATEGORY_STATE_LOADED,
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
   EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
   EVENT_MANAGER_LOAD_REGISTRATION_INFO,
   EVENT_MANAGER_SCHEDULE_LOADED,
-  eventManagerCategoriesLoaded,
   eventManagerFighterLoaded,
   eventManagerFightersForCompetitionLoaded,
   eventManagerScheduleLoaded,
   fightIdsByCategoryIdLoaded,
-  LOAD_CATEGORIES_COMMAND,
-  LOAD_SCHEDULE_COMMAND,
-  loadCategories
+  LOAD_SCHEDULE_COMMAND
 } from '../modules/event-manager/redux/event-manager-actions';
 import {Dictionary} from '@ngrx/entity';
-import {
-  CategoryState,
-  CommandType,
-  Competitor,
-  FightDescription,
-  ManagedCompetition,
-  RegistrationInfo,
-  Schedule
-} from "@frontend-nx/protobuf";
+import {CommandType, Competitor, ManagedCompetition, RegistrationInfo, Schedule} from "@frontend-nx/protobuf";
 import {executeErrorCallbacks, executeSuccessCallbacks} from "../reducers/compmanager-utils";
 
 @Injectable()
@@ -111,15 +95,6 @@ export class Effects {
   competitionSelected$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(COMPETITION_SELECTED),
     map((action: CommonAction) => competitionMiscActions.loadCompetitionProperties(action.competitionId))));
 
-  loadMyCategories$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(LOAD_CATEGORIES_COMMAND),
-    switchMap((action: CommonAction) => {
-      return this.infoService.getCategories(action.payload).pipe(map(payload => {
-        const categories = (payload || []) as CategoryState[];
-        return eventManagerCategoriesLoaded(action.payload, categories);
-      }), catchError(error => observableOf(errorEvent(error))));
-    })));
-
   loadSelectedEventSchedule$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(LOAD_SCHEDULE_COMMAND),
     switchMap((action: CommonAction) => {
@@ -137,11 +112,6 @@ export class Effects {
         return fightIdsByCategoryIdLoaded({fightIdsBycategoryId});
       }), catchError(error => observableOf(errorEvent(error))));
     })));
-
-
-  competitionSelectedLoadCategories$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(COMPETITION_SELECTED),
-    map((action: CommonAction) => loadCategories(action.competitionId))));
 
   eventManagerLoadFightersForCompetition$ = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION),

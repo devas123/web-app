@@ -3,7 +3,6 @@ import {select, Store} from '@ngrx/store';
 import {AppState, getSelectedEventId} from '../../reducers/global-reducers';
 import {Observable} from 'rxjs';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventTimeZone
 } from '../../modules/event-manager/redux/event-manager-reducers';
@@ -64,6 +63,6 @@ export abstract class BasicCompetitionInfoContainer extends CompetitionManagerMo
     this.competitionName$ = store.pipe(select(eventManagerGetSelectedEventName));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.timeZone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = menuService.dataProviderService.categoriesInterest$;
   }
 }

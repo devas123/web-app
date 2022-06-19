@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {select, Store} from "@ngrx/store";
 import {AppState, getSelectedEventId} from "../reducers/global-reducers";
 import {
+  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
@@ -21,6 +22,10 @@ export class SelectorsService {
 
   category$: Observable<CategoryState> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategory)
+  );
+
+  categories$: Observable<CategoryState[]> = this.store.pipe(
+    select(eventManagerGetSelectedEventCategories)
   );
 
   stages$: Observable<StageDescriptor[]> = this.store.pipe(

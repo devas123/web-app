@@ -14,7 +14,6 @@ import {
   eventManagerUpdateCompetitorCommand
 } from '../../redux/event-manager-actions';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventSelectedCompetitor,
 } from '../../redux/event-manager-reducers';
@@ -72,7 +71,7 @@ export class FighterProfileContainerComponent extends CompetitionManagerModuleRo
       filter(f => !!f)
     );
     this.category$ = dataProviderService.categoryInterest$;
-    this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
     this.subs.add(route.params.pipe(
         map(params => params['fighterId']),
         map(fighterId => eventManagerFighterSelected(fighterId))
@@ -91,7 +90,10 @@ export class FighterProfileContainerComponent extends CompetitionManagerModuleRo
 
   sendChangeCompetitorCommand(payload: { fighter: Competitor }) {
     const {fighter} = payload;
-    this.store.dispatch(eventManagerUpdateCompetitorCommand({competitionId: fighter.competitionId, competitor: fighter}))
+    this.store.dispatch(eventManagerUpdateCompetitorCommand({
+      competitionId: fighter.competitionId,
+      competitor: fighter
+    }))
   }
 
   ngOnDestroy() {

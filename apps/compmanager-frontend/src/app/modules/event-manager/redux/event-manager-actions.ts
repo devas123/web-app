@@ -11,7 +11,8 @@ import {
   Competitor,
   CompetitorMovedToGroup,
   FightDescription,
-  FightResultOption, GetCompetitorsResponse,
+  FightResultOption,
+  GetCompetitorsResponse,
   ManagedCompetition,
   MatDescription,
   Period,
@@ -26,7 +27,6 @@ import {ErrorCallback, SuccessCallback} from "../../../reducers/global-reducers"
 
 export const BATCH_ACTION = 'BATCH_ACTION';
 export const EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND = 'EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND';
-export const LOAD_CATEGORIES_COMMAND = 'LOAD_CATEGORIES_COMMAND';
 export const LOAD_SCHEDULE_COMMAND = 'LOAD_SCHEDULE_COMMAND';
 export const ADD_CATEGORY_COMMAND = 'ADD_CATEGORY_COMMAND';
 export const GENERATE_PREVIEW_CATEGORIES_COMMAND = 'GENERATE_PREVIEW_CATEGORIES_COMMAND';
@@ -137,10 +137,9 @@ export const cometitionListLoaded = (competitionProperties: ManagedCompetition[]
   payload: competitionProperties
 });
 
-export const eventManagerCategoriesLoaded = (competitionId: string, categories: CategoryState[]) => ({
+export const eventManagerCategoriesLoaded = (categories: CategoryState[]) => ({
   type: EVENT_MANAGER_CATEGORIES_LOADED,
   payload: categories,
-  competitionId
 });
 
 export const eventManagerScheduleLoaded = (competitionId: string, schedule: Schedule) => ({
@@ -153,11 +152,6 @@ export const eventManagerCategoryMoved = (competitionId: string, payload: any) =
   type: EVENT_MANAGER_CATEGORY_MOVED,
   payload,
   competitionId
-});
-
-export const loadCategories = (competitionId: string) => ({
-  type: LOAD_CATEGORIES_COMMAND,
-  payload: competitionId
 });
 
 export const competitionSelected = (competitionId: string) => ({

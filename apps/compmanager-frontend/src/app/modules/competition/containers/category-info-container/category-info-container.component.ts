@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
 import {AppState, getSelectedEventProperties} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {eventManagerGetSelectedEventCategories} from '../../../event-manager/redux/event-manager-reducers';
 import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
+import {DataProviderService} from "../../../../service/data.provider.service";
 
 @Component({
   selector: 'app-category-info-container',
@@ -15,8 +15,8 @@ export class CategoryInfoContainerComponent  {
 
   categories$: Observable<CategoryState[]>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, dataProviderService: DataProviderService) {
     this.properties$ = store.pipe(select(getSelectedEventProperties));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
   }
 }

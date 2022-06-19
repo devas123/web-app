@@ -26,8 +26,7 @@
       display-section
     >
       <div class="description">Start Date</div>
-      <compmanager-frontend-date-field class="header" [date]="properties?.startDate"
-                                       [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+      <compmanager-frontend-date-field class="header" [date]="properties?.startDate"></compmanager-frontend-date-field>
     </compmanager-frontend-left-floated-container>
   </compmanager-frontend-editable-field>
   <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
@@ -45,8 +44,7 @@
       display-section
     >
       <div class="description">End Date</div>
-      <compmanager-frontend-date-field class="header" [date]="properties?.endDate"
-                                       [timeZone]="properties?.timeZone"></compmanager-frontend-date-field>
+      <compmanager-frontend-date-field class="header" [date]="properties?.endDate"></compmanager-frontend-date-field>
     </compmanager-frontend-left-floated-container>
   </compmanager-frontend-editable-field>
   <div class="item">
@@ -80,8 +78,8 @@
       </compmanager-frontend-transparent-right-floated-container>
     </compmanager-frontend-left-floated-container>
     <compmanager-frontend-left-floated-display display-section
-      [name]="'Time Zone'"
-      [value]="properties?.timeZone"
+                                               [name]="'Time Zone'"
+                                               [value]="properties?.timeZone"
     ></compmanager-frontend-left-floated-display>
   </compmanager-frontend-editable-field>
   <compmanager-frontend-editable-field class="item" (contentChanged)="submitForm()">
@@ -101,8 +99,8 @@
       </compmanager-frontend-transparent-right-floated-container>
     </compmanager-frontend-left-floated-container>
     <compmanager-frontend-left-floated-display display-section
-      [name]="'Status'"
-      [value]="properties?.status"
+                                               [name]="'Status'"
+                                               [value]="properties?.status"
     ></compmanager-frontend-left-floated-display>
   </compmanager-frontend-editable-field>
 </div>

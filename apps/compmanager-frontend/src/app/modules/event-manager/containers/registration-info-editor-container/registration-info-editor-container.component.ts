@@ -4,7 +4,6 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {
   eventManagerGetSelectedEventAvailableRegistrationGroups,
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventName,
   eventManagerGetSelectedEventRegistrationInfo,
   eventManagerGetSelectedEventTimeZone
@@ -83,7 +82,7 @@ export class RegistrationInfoEditorContainerComponent extends CompetitionManager
     this.registrationInfo$ = store.select(eventManagerGetSelectedEventRegistrationInfo);
     this.competitionId$ = store.select(getSelectedEventId);
     this.timeZone$ = store.select(eventManagerGetSelectedEventTimeZone);
-    this.categories$ = store.select(eventManagerGetSelectedEventCategories);
+    this.categories$ = menuService.dataProviderService.categoriesInterest$;
   }
 
   public goBack() {

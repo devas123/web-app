@@ -3,7 +3,6 @@ import {AppState, getSelectedEventProperties,} from '../../../../reducers/global
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventRegistrationPeriods,
   eventManagerGetSelectedEventTimeZone
 } from '../../../event-manager/redux/event-manager-reducers';
@@ -11,6 +10,7 @@ import {ChildActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {filter, map, startWith} from 'rxjs/operators';
 import {CategoryState, CompetitionProperties} from "@frontend-nx/protobuf";
 import {MenuItem, RegistrationPeriodCollection} from "../../../../commons/model/competition.model";
+import {DataProviderService} from "../../../../service/data.provider.service";
 
 @Component({
   selector: 'competition-main-info',
@@ -27,9 +27,9 @@ export class CompetitionMainInfoComponent  {
   categories$: Observable<CategoryState[]>;
   url$: Observable<string>;
 
-  constructor(private store: Store<AppState>, private router: Router) {
+  constructor(private store: Store<AppState>, private router: Router, private dataProviderService: DataProviderService) {
     this.properties$ = store.pipe(select(getSelectedEventProperties));
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
     this.timezone$ = store.pipe(select(eventManagerGetSelectedEventTimeZone));
     this.registrationPeriod$ = store.pipe(select(eventManagerGetSelectedEventRegistrationPeriods));
     this.url$ = this.router.events.pipe(filter(e => e instanceof NavigationEnd || e instanceof ChildActivationEnd), map((e: NavigationEnd | ChildActivationEnd) => {

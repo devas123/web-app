@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 
 import {Store} from "@ngrx/store";
 import {
+  eventManagerCategoriesLoaded,
   eventManagerCategoryBracketsStageFightsLoaded,
   eventManagerCategoryStagesLoaded,
   eventManagerCategoryStateLoaded,
@@ -32,6 +33,19 @@ export class DataProviderService {
   categoryInterest$ = using(
     () => this.requireCategory$.subscribe(),
     () => this.selectors.category$
+  )
+  private requireCategories$ = this.selectors.competitionId$.pipe(
+    filter((competitionId) => Boolean(competitionId)),
+    switchMap((competitionId) => this.infoService.getCategories(competitionId)),
+    tap(categories => {
+      if (categories) this.store.dispatch(eventManagerCategoriesLoaded(categories))
+    }),
+    share(),
+  );
+
+  categoriesInterest$ = using(
+    () => this.requireCategories$.subscribe(),
+    () => this.selectors.categories$
   )
 
   private requireStages$ = this.categoryInterest$.pipe(

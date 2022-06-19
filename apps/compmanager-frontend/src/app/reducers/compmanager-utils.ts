@@ -34,6 +34,6 @@ export const replaceUnderscore = (s: string) => s.replace(/_/gi, ' ')
 export const defaultClassifierFormatter = (cs: SelectorClassifier) => replaceUnderscore(cs.substring('SELECTOR_CLASSIFIER_'.length))
 export const defaultAdditionalGroupSortingFormatter = (opt: AdditionalGroupSortingDescriptor) => defaultGroupSortSpercifierFormatter(opt.groupSortSpecifier) + (opt.groupSortSpecifier == 'GROUP_SORT_SPECIFIER_MANUAL' ? '' : (':' + defaultGroupSortDirectionsFormatter(opt.groupSortDirection)));
 export const defaultGroupSortSpercifierFormatter = (g: GroupSortSpecifier) => replaceUnderscore(g.substring('GROUP_SORT_SPECIFIER_'.length))
-export const defaultGroupSortDirectionsFormatter = (g:GroupSortDirection) => replaceUnderscore(g.substring('GROUP_SORT_DIRECTION_'.length))
+export const defaultGroupSortDirectionsFormatter = (g: GroupSortDirection) => replaceUnderscore(g.substring('GROUP_SORT_DIRECTION_'.length))
 export const defaultBracketTypesFormatter = (bt: BracketType) => replaceUnderscore(bt.substring('BRACKET_TYPE_'.length))
 export const defaultStageTypesFormatter = (st: StageType) => replaceUnderscore(st.substring('STAGE_TYPE_'.length))

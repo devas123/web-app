@@ -1,6 +1,6 @@
 import {Observable, of, of as observableOf} from 'rxjs';
 
-import {catchError, concatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, debounceTime, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
@@ -127,6 +127,7 @@ export class EventManagerEffects {
 
   loadGeneratedCategories$ = createEffect(() => this.actions$.pipe(
     ofType(GENERATE_PREVIEW_CATEGORIES_COMMAND),
+    debounceTime(500),
     switchMap((command: CommonAction) => {
       const payload = <GenerateCategoriesFromRestrictionsPayload>{};
       const commandAsAny = command as any;

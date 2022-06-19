@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
@@ -77,7 +76,7 @@ export class FightersEditorContainerComponent extends CompetitionManagerModuleRo
     }, menuService);
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
     this.category$ = dataProviderService.categoryInterest$;
-    this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
     this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
     this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));
     this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize));

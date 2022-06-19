@@ -461,7 +461,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_STATE_LOADED: {
         const {competitionId, categoryId, payload} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
-          state.selectedEventCategories = categoryEntityAdapter.addOne(payload, state.selectedEventCategories);
+          state.selectedEventCategories = categoryEntityAdapter.upsertOne(payload, state.selectedEventCategories);
           state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         }
         break;
@@ -480,11 +480,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
 
       case EVENT_MANAGER_CATEGORIES_LOADED: {
-        const competitionId = action.competitionId;
         const categoriesRaw = action.payload as CategoryState[];
-        if (competitionId && categoriesRaw && competitionId === state.competitionProperties.id) {
-          state.selectedEventCategories = categoryEntityAdapter.upsertMany(categoriesRaw, state.selectedEventCategories);
-        }
+        state.selectedEventCategories = categoryEntityAdapter.upsertMany(categoriesRaw, state.selectedEventCategories);
         break
       }
 

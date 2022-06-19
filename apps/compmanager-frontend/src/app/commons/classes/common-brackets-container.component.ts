@@ -2,7 +2,6 @@ import {Observable} from 'rxjs';
 import {AppState, getSelectedEventId, getSelectedEventProperties} from '../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors,
   eventManagerGetSelectedEventSelectedCategorySelectedStage,
   eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType,
@@ -56,7 +55,7 @@ export class CommonBracketsInfoContainer {
     this.fightsAreLoading$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading));
     this.competitors$ = dataProviderService.fighters$;
     this.category$ = dataProviderService.categoryInterest$;
-    this.categories$ = store.pipe(select(eventManagerGetSelectedEventCategories));
+    this.categories$ = dataProviderService.categoriesInterest$;
     this.numberOfCompetitor$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategoryNumberOfCompetitors));
     this.bucketsize$ = observer.observe([Breakpoints.Handset, Breakpoints.Small]).pipe(
       map(b => b.matches)

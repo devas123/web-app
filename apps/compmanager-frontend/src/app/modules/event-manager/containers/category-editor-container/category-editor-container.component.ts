@@ -1,18 +1,12 @@
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {
-  AppState,
-  getSelectedEventId,
-  getSelectedEventProperties
-} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId, getSelectedEventProperties} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {
   eventManagerGetSelectedEventName,
   getSelectedEventSelectedCategoryState
 } from '../../redux/event-manager-reducers';
-import {
-  HeaderDescription
-} from '../../../../commons/model/competition.model';
+import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
   deleteCategory,

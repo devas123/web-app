@@ -5,7 +5,6 @@ import {select, Store} from '@ngrx/store';
 
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
-  eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
@@ -44,7 +43,7 @@ export class FightersDisplayContainerComponent  {
     constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, private dataProviderService: DataProviderService) {
         this.competitionId$ = this.store.pipe(select(getSelectedEventId));
         this.category$ = dataProviderService.categoryInterest$;
-        this.categories$ = this.store.pipe(select(eventManagerGetSelectedEventCategories));
+        this.categories$ = dataProviderService.categoriesInterest$;
         this.competitionName$ = this.store.pipe(select(eventManagerGetSelectedEventName));
         this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));
         this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize));

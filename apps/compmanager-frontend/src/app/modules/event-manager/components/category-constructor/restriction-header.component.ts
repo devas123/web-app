@@ -6,8 +6,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
     <div class="restriction-item header">
       <span>{{name}}</span>
       <div class="filler"></div>
-      <compmanager-frontend-link-icon class="right-floated-close" (click)="columnRemoved.next()" *ngIf="canSelect"
-                                      [iconClass]="'getIconClass'"></compmanager-frontend-link-icon>
+      <compmanager-frontend-link-icon class="right-floated-close" (click)="groupToggled.next(allSelected)" *ngIf="canSelect"
+                                      [iconClass]="getIconClass()"></compmanager-frontend-link-icon>
       <compmanager-frontend-link-icon class="right-floated-close" (click)="columnRemoved.next()"
                                       [iconClass]="'ui close'"></compmanager-frontend-link-icon>
     </div>
@@ -28,6 +28,9 @@ export class RestrictionHeaderComponent {
 
   @Output()
   columnRemoved = new EventEmitter<void>();
+
+  @Output()
+  groupToggled = new EventEmitter<boolean>();
 
   getIconClass() {
     return this.allSelected ? 'minus' : 'check';

@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {AdjacencyList} from '../../../../commons/model/competition.model';
+import {AdjacencyList, AdjacencyListEntry} from '../../../../commons/model/competition.model';
 import * as _ from 'lodash';
 import {Dictionary} from '@ngrx/entity';
 import {TypeInTree} from './restriction-item';
@@ -26,7 +26,8 @@ import {CategoryRestriction} from "@frontend-nx/protobuf";
 })
 export class CategoryConstructorComponent implements OnChanges {
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(private cd: ChangeDetectorRef) {
+  }
 
   @Input()
   set restrictions(value: CategoryRestriction[]) {
@@ -122,37 +123,88 @@ export class CategoryConstructorComponent implements OnChanges {
     }
   }
 
+  toggleLinkGroup(groupName: string, index: number, allAdded: boolean) {
+    const restrictions = this.restrictionGroups[groupName];
+    const root = this.root;
+    if (Boolean(restrictions) && restrictions.length > 0 && Boolean(root)) {
+      if (allAdded) {
+        const restrictionId = restrictions[0]?.restrictionId
+        const parent = this.getParent(restrictionId, index);
+        if (parent) {
+          restrictions.map(r => r.restrictionId).forEach(id => {
+            this.sendRestrictionUnlinkedEvent([parent], id, root)
+          });
+        }
+      } else {
+        restrictions.map(r => r.restrictionId).forEach(id => this.sendRestrictionLinkedEvent(index, id, root));
+      }
+    }
+  }
+
   toggleLink(id: string, index: number) {
     if (index === 0) {
       this.selectRootAndAddAdjacencyList(id);
     } else {
       const root = this.root;
-      if (root
+      if (Boolean(root)
         && this.adjacencyLists
         && index > 0
         && id !== root
         && !this.adjacencyLists.find(l => l.root === id)) {
-        const listForRoot = this.adjacencyLists.find(l => l.root === root);
-        if (listForRoot) {
-          const parent = listForRoot.vertices.filter(v => v.children.includes(id) && this.selectedPath.includes(v.id));
+        const adjacencyListForRoot = this.adjacencyLists.find(l => l.root === root);
+        if (adjacencyListForRoot) {
+          const parent = adjacencyListForRoot.vertices.filter(v => v.children.includes(id) && this.selectedPath.includes(v.id));
           if (parent && parent.length > 0) {
-            parent.forEach(p => {
-              this.restrictionUnLinked.next({restrictionId: id, root: root, parent: p.id});
-            });
+            this.sendRestrictionUnlinkedEvent(parent, id, root);
           } else {
-            const parentColumnIds = this.restrictionGroups[this.restrictionNames[index - 1]].map(r => r.restrictionId);
-            let parentIds = parentColumnIds.filter(pid => this.selectedPath.includes(pid));
-            if (index === 1) {
-              parentIds = [root];
-            }
-            if (parentIds && parentIds.length > 0) {
-              this.restrictionLinked.next({restrictionId: id, root: root, parent: parentIds});
-            }
+            this.sendRestrictionLinkedEvent(index, id, root);
           }
         }
       }
     }
     this.sendGeneratePreviewCategories();
+  }
+
+  private sendRestrictionUnlinkedEvent(parent: AdjacencyListEntry<string>[], id: string, root: string) {
+    parent.forEach(p => {
+      this.restrictionUnLinked.next({restrictionId: id, root: root, parent: p.id});
+    });
+  }
+
+  private sendRestrictionLinkedEvent(index: number, id: string, root: string) {
+    const parentColumnIds = this.restrictionGroups[this.restrictionNames[index - 1]].map(r => r.restrictionId);
+    let parentIds = parentColumnIds?.filter(pid => this.selectedPath.includes(pid));
+    if (index === 1) {
+      parentIds = [root];
+    }
+    if (parentIds?.length > 0) {
+      this.restrictionLinked.next({restrictionId: id, root: root, parent: parentIds});
+    }
+  }
+
+  getParent(id: string, index: number): AdjacencyListEntry<string> | undefined {
+    if (index === 0) {
+      return undefined
+    }
+    const adjacencyListForRoot = this.adjacencyLists.find(l => l.root === this.root);
+    const parent = adjacencyListForRoot?.vertices?.filter(v => v.children.includes(id) && this.selectedPath.includes(v.id));
+    if (parent?.length > 0) {
+      return parent[0];
+    }
+    return undefined
+  }
+
+  allRestrictionsInGroupSelected(groupName: string, index: number): boolean {
+    const restrictions = this.restrictionGroups[groupName];
+    if (Boolean(restrictions) && restrictions.length > 0) {
+      const restriction = restrictions[0];
+      const parent = this.getParent(restriction.restrictionId, index);
+      if (!parent) {
+        return false;
+      }
+      return this.isRestrictionInTree(parent.id, index - 1) && this.isConnectedToAllChildren(parent.id, index - 1);
+    }
+    return false;
   }
 
   addRestrictionName(element: HTMLInputElement) {
@@ -310,5 +362,9 @@ export class CategoryConstructorComponent implements OnChanges {
     } else {
       this.clearPreviewCategories.next();
     }
+  }
+
+  deleteRestriction(restrictionId: string) {
+    this.removeRestrictionClicked.next(restrictionId)
   }
 }

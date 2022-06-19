@@ -70,6 +70,10 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
           action: () => this.goBack()
         },
         {
+          name: 'Drop all',
+          action: () => this.dropAllBrackets(),
+        },
+        {
           name: 'Edit stage',
           showCondition: () => combineLatest([this.bracketsInfo.stages$, this.bracketsInfo.competition$, of(this.editMode)])
             .pipe(map(([stages, competition, editMode]) => !editMode && (stages && stages.length > 0) && (!!competition && !competition.bracketsPublished))),
@@ -93,12 +97,6 @@ export class BracketsEditorContainerComponent extends BasicCompetitionInfoContai
         {
           name: 'Drop selected',
           action: () => this.dropSelectedBrackets(),
-          showCondition: () => combineLatest([this.bracketsInfo.stages$, this.bracketsInfo.competition$])
-            .pipe(map(([stages, competition]) => (!stages || stages.length === 0) && (!!competition && !competition.bracketsPublished))).pipe(map(res => !res))
-        },
-        {
-          name: 'Drop all',
-          action: () => this.dropAllBrackets(),
           showCondition: () => combineLatest([this.bracketsInfo.stages$, this.bracketsInfo.competition$])
             .pipe(map(([stages, competition]) => (!stages || stages.length === 0) && (!!competition && !competition.bracketsPublished))).pipe(map(res => !res))
         },
