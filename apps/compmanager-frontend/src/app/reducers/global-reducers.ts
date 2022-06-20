@@ -572,21 +572,16 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          const {pageInfo, competitors} = action.payload;
-          state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, {
-            ...competitorsInitialState,
-            selectedCompetitorId: state.selectedEventCompetitors?.selectedCompetitorId,
-            total: pageInfo.total,
-            pageNumber: pageInfo.page + 1
-          });
-        }
+        const {pageInfo, competitors} = action.payload;
+        state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, state.selectedEventCompetitors);
+        state.selectedEventCompetitors.competitorsFilter.total = pageInfo.total
+        state.selectedEventCompetitors.competitorsFilter.pageNumber = pageInfo.page + 1
         break;
       }
       case EventType.COMPETITOR_ADDED: {
         const event = action as Event;
         let newEventCompetitors = state.selectedEventCompetitors;
-        if (newEventCompetitors.ids.length < newEventCompetitors.pageSize) {
+        if (newEventCompetitors.ids.length < newEventCompetitors.competitorsFilter.pageSize) {
           const competitor = event.messageInfo.competitorAddedPayload.competitor;
           const existingCategories = state.selectedEventCategories.entities;
           const categoryUpdates = competitor.categories.filter(id => existingCategories.hasOwnProperty(id)).map(id =>
@@ -601,7 +596,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.selectedEventCategories = categoryEntityAdapter.updateMany(categoryUpdates, state.selectedEventCategories);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertOne(competitor, state.selectedEventCompetitors);
           if (!state.selectedEventCategories.selectedCategoryId || competitor.categories.includes(state.selectedEventCategories.selectedCategoryId)) {
-            state.selectedEventCompetitors.total = state.selectedEventCompetitors.total + 1;
+            state.selectedEventCompetitors.competitorsFilter.total = state.selectedEventCompetitors.competitorsFilter.total + 1;
           }
         }
         break;
@@ -619,7 +614,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
-        state.selectedEventCompetitors.pageNumber = action.payload;
+        state.selectedEventCompetitors.competitorsFilter.pageNumber = action.payload;
         break;
       }
       case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {
@@ -666,7 +661,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         );
         state.selectedEventCategories = categoryEntityAdapter.updateMany(categoryUpdates, state.selectedEventCategories);
         if (!state.selectedEventCategories.selectedCategoryId || categories.includes(state.selectedEventCategories.selectedCategoryId)) {
-          state.selectedEventCompetitors.total = state.selectedEventCompetitors.total - 1;
+          state.selectedEventCompetitors.competitorsFilter.total = state.selectedEventCompetitors.competitorsFilter.total - 1;
         }
         break;
       }
@@ -778,6 +773,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const fights = _.flatten(payload.mats.map(m => m.topFiveFights))
           state.selectedEventMats.matsFights = fightEntityAdapter.upsertMany(fights, fightsInitialState)
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
+          state.selectedEventCompetitors.competitorsFilter.needCompetitors = false;
         }
         break;
       }

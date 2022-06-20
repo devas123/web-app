@@ -278,10 +278,10 @@ export const {
   selectAll: eventManagerGetSelectedEventCompetitors
 } = competitorEntityAdapter.getSelectors(eventManagerGetSelectedEventCompetitorsCollection);
 
-export const eventManagerGetSelectedEventCompetitorsTotal = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.total);
+export const eventManagerGetSelectedEventCompetitorsTotal = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.total);
 export const eventManagerGetSelectedEventCompetitorsSelectedCompetitorId = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.selectedCompetitorId);
-export const eventManagerGetSelectedEventCompetitorsPageSize = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.pageSize);
-export const eventManagerGetSelectedEventCompetitorsPageNumber = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.pageNumber);
+export const eventManagerGetSelectedEventCompetitorsPageSize = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.pageSize);
+export const eventManagerGetSelectedEventCompetitorsPageNumber = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.pageNumber);
 export const eventManagerGetSelectedEventSelectedCompetitor = createSelector(
   eventManagerGetSelectedEventCompetitorsDictionary,
   eventManagerGetSelectedEventCompetitorsSelectedCompetitorId,

@@ -119,6 +119,11 @@ export interface FightsCollection extends EntityState<FightDescription> {
 
 export interface CompetitorsCollection extends EntityState<Competitor> {
   selectedCompetitorId: string | null;
+  competitorsFilter: CompetitorsFilter;
+}
+
+export interface CompetitorsFilter {
+  needCompetitors: boolean;
   total: number;
   pageSize: number;
   pageNumber: number;
@@ -202,9 +207,12 @@ export const initialCategoryConstructorState: CategoryConstructorState = {
 
 export const competitorsInitialState: CompetitorsCollection = competitorEntityAdapter.getInitialState({
   selectedCompetitorId: null,
-  total: 0,
-  pageSize: 15,
-  pageNumber: 1
+  competitorsFilter: {
+    needCompetitors: false,
+    total: 0,
+    pageSize: 15,
+    pageNumber: 1
+  }
 });
 
 export const categoriesInitialState: CategoriesCollection = categoryEntityAdapter.getInitialState({
