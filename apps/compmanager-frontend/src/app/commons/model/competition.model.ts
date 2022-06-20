@@ -108,7 +108,7 @@ export interface GroupDescriptor {
 
 export interface CategoryBracketsStageCollection extends EntityState<StageDescriptor> {
   selectedStageId: string | null;
-  fightsAreLoading: boolean;
+  needFights: boolean;
   selectedStageFights: FightsCollection;
 }
 
@@ -189,7 +189,7 @@ export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitia
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({
   selectedStageId: null,
-  fightsAreLoading: false,
+  needFights: true,
   selectedStageFights: fightsInitialState
 });
 

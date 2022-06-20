@@ -33,7 +33,8 @@ import {
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
-  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING,
+  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED,
+  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
   EVENT_MANAGER_CATEGORY_SELECTED,
@@ -91,7 +92,8 @@ import {
   Period,
   RegistrationInfo,
   ScheduleRequirement,
-  StageDescriptor, StartTimeInfo
+  StageDescriptor,
+  StartTimeInfo
 } from "@frontend-nx/protobuf";
 
 export type SuccessCallback = (actions: Action[]) => any
@@ -307,7 +309,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case BATCH_ACTION:
         return batchReducer(action, state, competitionStateReducer);
       case CommandType.GENERATE_BRACKETS_COMMAND: {
-        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
+        state.selectedEventCategories.selectedCategoryStages.needFights = true;
         break;
       }
       case EventType.BRACKETS_GENERATED: {
@@ -328,7 +330,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const payload = event.messageInfo.fightsAddedToStagePayload;
           if (payload.stageId === state.selectedEventCategories.selectedCategoryStages.selectedStageId) {
             state.selectedEventCategories.selectedCategoryStages.selectedStageFights = fightEntityAdapter.upsertMany(payload.fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
-            state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
+            state.selectedEventCategories.selectedCategoryStages.needFights = false;
           }
         }
         break;
@@ -339,6 +341,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         if (state.selectedEventCategories.selectedCategoryStages.selectedStageId !== action.selectedStageId) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
+          state.selectedEventCategories.selectedCategoryStages.needFights = true;
         }
         break;
       }
@@ -447,7 +450,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING: {
-        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
+        state.selectedEventCategories.selectedCategoryStages.needFights = false;
         break;
       }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED: {
@@ -455,8 +458,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (fights && fights.length > 0) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageFights
             = fightEntityAdapter.setAll(fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
+          state.selectedEventCategories.selectedCategoryStages.needFights = false;
         }
-        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
         break;
       }
 
@@ -474,9 +477,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(categoryStages, state.selectedEventCategories.selectedCategoryStages);
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = selectedStageId;
         }
-        if (!categoryStages || categoryStages.length === 0) {
-          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
-        }
+        state.selectedEventCategories.selectedCategoryStages.needFights = categoryStages?.length > 0;
         break;
       }
 

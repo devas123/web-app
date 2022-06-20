@@ -210,7 +210,7 @@ export const {
 } = stagesEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryStagesCollection);
 
 export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, (stages) =>
-  stages.fightsAreLoading);
+  stages.needFights);
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStage =
   createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageId, eventManagerGetSelectedEventSelectedCategoryStagesDictionary, (stageId, stages) => stageId && stages[stageId]);

@@ -44,7 +44,7 @@ export class SelectorsService {
   selectedStageId$: Observable<string> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategorySelectedStageId)
   );
-  fightsLoading$: Observable<boolean> = this.store.pipe(
+  needFights$: Observable<boolean> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading)
   );
   competitorsPageSize$: Observable<number> = this.store.pipe(

@@ -73,8 +73,8 @@ export class DataProviderService {
     this.selectors.categoryId$,
     this.selectors.competitionId$,
     this.selectors.selectedStageId$,
-    this.selectors.fightsLoading$]).pipe(
-    filter(([_, categoryId, competitionId, stageId, fightsLoading]) => Boolean(categoryId) && Boolean(competitionId) && Boolean(stageId) && !fightsLoading),
+    this.selectors.needFights$]).pipe(
+    filter(([_, categoryId, competitionId, stageId, needFights]) => Boolean(categoryId) && Boolean(competitionId) && Boolean(stageId) && needFights),
     tap(() => this.store.dispatch(eventManagerCategoryBracketsStageFightsLoading())),
     switchMap(([_, categoryId, competitionId, stageId]) => this.infoService.getCategoryStageFights(competitionId, categoryId, stageId)),
     tap(fights => {
