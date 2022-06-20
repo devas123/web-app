@@ -23,8 +23,7 @@ import {
 } from '../../redux/dashboard-actions';
 import {
   eventManagerGetCategoryIdForFightId,
-  eventManagerGetSelectedEventCategory,
-  eventManagerGetSelectedEventCompetitors
+  eventManagerGetSelectedEventCategory
 } from '../../redux/event-manager-reducers';
 import {
   CompetitionManagerModuleRouterEntryComponent,
@@ -99,9 +98,7 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
       select(dashboardGetSelectedPeriodMatSelectedFightFightResultOptions)
     );
 
-    this.competitors$ = this.store.pipe(
-      select(eventManagerGetSelectedEventCompetitors)
-    );
+    this.competitors$ = this.menuService.dataProviderService.fighters$;
 
     this.fightCategory$ = this.selectedFight$.pipe(
       filter(f => !!f),

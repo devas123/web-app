@@ -34,7 +34,6 @@ export const GENERATE_PREVIEW_CATEGORIES_COMMAND = 'GENERATE_PREVIEW_CATEGORIES_
 export const CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND = 'CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND';
 export const EVENT_MANAGER_CONNECT_SOCKET = 'EVENT_MANAGER_CONNECT_SOCKET';
 export const EVENT_MANAGER_DISCONNECT_SOCKET = 'EVENT_MANAGER_DISCONNECT_SOCKET';
-export const EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION = 'EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION';
 export const EVENT_MANAGER_DROP_SCHEDULE_COMMAND = 'DROP_SCHEDULE_COMMAND';
 export const EVENT_MANAGER_LOAD_FIGHTER_COMMAND = 'EVENT_MANAGER_LOAD_FIGHTER_COMMAND';
 export const EVENT_MANAGER_LOAD_REGISTRATION_INFO = 'EVENT_MANAGER_LOAD_REGISTRATION_INFO';
@@ -233,18 +232,6 @@ export const competitionUnselected = ({
   type: COMPETITION_UNSELECTED
 });
 export const eventManagerRemoveCompetitor = createAction(CommandType.REMOVE_COMPETITOR_COMMAND, props<{ competitorId: string, competitionId: string }>())
-
-export const eventManagerLoadFightersForCompetition = (competitionId, categoryId, pageNumber, pageSize, searchString?, replace?: boolean) => ({
-  type: EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
-  competitionId,
-  categoryId,
-  payload: {
-    pageSize,
-    pageNumber,
-    searchString,
-    replace
-  }
-});
 
 export const eventManagerCompetitionFightersPageChanged = (competitionId: string, categoryId, pageNumber: number) => ({
   type: EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,

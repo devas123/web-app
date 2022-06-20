@@ -551,9 +551,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         break;
       }
       case EVENT_MANAGER_CATEGORY_SELECTED: {
-        if (action.competitionId === state.competitionProperties.id) {
-          state.selectedEventCategories.selectedCategoryId = action.categoryId;
-        }
+        state.selectedEventCategories.selectedCategoryId = action.categoryId;
+        state.selectedEventCompetitors.competitorsFilter.needCompetitors = true;
         break;
       }
       case EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED: {
@@ -573,9 +572,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED: {
         const {pageInfo, competitors} = action.payload;
-        state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, state.selectedEventCompetitors);
-        state.selectedEventCompetitors.competitorsFilter.total = pageInfo.total
-        state.selectedEventCompetitors.competitorsFilter.pageNumber = pageInfo.page + 1
+        state.selectedEventCompetitors = competitorEntityAdapter.setAll(competitors, {
+          ...state.selectedEventCompetitors,
+          competitorsFilter: {
+            ...state.selectedEventCompetitors.competitorsFilter,
+            total: pageInfo.total,
+            pageNumber: pageInfo.page + 1,
+            needCompetitors: false
+          }
+        });
         break;
       }
       case EventType.COMPETITOR_ADDED: {
@@ -615,6 +620,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
         state.selectedEventCompetitors.competitorsFilter.pageNumber = action.payload;
+        state.selectedEventCompetitors.competitorsFilter.needCompetitors = action.payload;
         break;
       }
       case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {
@@ -773,7 +779,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const fights = _.flatten(payload.mats.map(m => m.topFiveFights))
           state.selectedEventMats.matsFights = fightEntityAdapter.upsertMany(fights, fightsInitialState)
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
-          state.selectedEventCompetitors.competitorsFilter.needCompetitors = false;
         }
         break;
       }

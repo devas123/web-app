@@ -13,11 +13,9 @@ import {
   batchAction,
   COMPETITION_SELECTED,
   EVENT_MANAGER_LOAD_FIGHTER_COMMAND,
-  EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION,
   EVENT_MANAGER_LOAD_REGISTRATION_INFO,
   EVENT_MANAGER_SCHEDULE_LOADED,
   eventManagerFighterLoaded,
-  eventManagerFightersForCompetitionLoaded,
   eventManagerScheduleLoaded,
   fightIdsByCategoryIdLoaded,
   LOAD_SCHEDULE_COMMAND
@@ -111,23 +109,6 @@ export class Effects {
         const fightIdsBycategoryId = (payload || {}) as Dictionary<string[]>;
         return fightIdsByCategoryIdLoaded({fightIdsBycategoryId});
       }), catchError(error => observableOf(errorEvent(error))));
-    })));
-
-  eventManagerLoadFightersForCompetition$ = createEffect(() => this.actions$.pipe(
-    ofType(EVENT_MANAGER_LOAD_FIGHTERS_FOR_COMPETITION),
-    switchMap((action: CommonAction) => {
-      const {pageSize, pageNumber, searchString, replace} = action.payload;
-      const {competitionId, categoryId} = action;
-      return this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, searchString)
-        .pipe(
-          map(response => {
-            if (response.pageInfo.total != null && response.pageInfo.page != null) {
-              return eventManagerFightersForCompetitionLoaded(competitionId, response, replace);
-            } else {
-              return errorEvent('Error occured while loading: ' + JSON.stringify(response));
-            }
-          })
-        );
     })));
 
   loadFighter$: Observable<Action> = createEffect(() => this.actions$.pipe(

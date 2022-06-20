@@ -5,7 +5,6 @@ import {select, Store} from '@ngrx/store';
 
 import {ActivatedRoute, QueryParamsHandling, Router} from '@angular/router';
 import {
-  eventManagerGetSelectedEventCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventCompetitorsTotal,
@@ -48,7 +47,7 @@ export class FightersDisplayContainerComponent  {
         this.totalCompetitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsTotal));
         this.pageSize$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageSize));
         this.pageNumber$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitorsPageNumber));
-        this.competitors$ = this.store.pipe(select(eventManagerGetSelectedEventCompetitors));
+        this.competitors$ = this.dataProviderService.fighters$;
         this.subs.add(this.searchString$.subscribe(str => this.setSearchString(str)));
     }
 

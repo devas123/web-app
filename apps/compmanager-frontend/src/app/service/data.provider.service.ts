@@ -8,7 +8,8 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
-  eventManagerCategoryBracketsStageFightsLoaded, eventManagerCategoryBracketsStageFightsLoading,
+  eventManagerCategoryBracketsStageFightsLoaded,
+  eventManagerCategoryBracketsStageFightsLoading,
   eventManagerCategoryStagesLoaded,
   eventManagerCategoryStateLoaded,
   eventManagerFightersForCompetitionLoaded
@@ -90,9 +91,14 @@ export class DataProviderService {
     () => this.selectors.stageFights$
   )
 
-  private requireFighters$ = combineLatest([this.selectors.competitionId$, this.selectors.categoryId$, this.selectors.competitorsPageSize$, this.selectors.competitorsPageNumber$]).pipe(
-    filter(([competitionId]) => Boolean(competitionId)),
-    switchMap(([competitionId, categoryId, pageSize, pageNumber]) => this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, undefined)
+  private requireFighters$ = combineLatest([
+    this.selectors.competitionId$,
+    this.selectors.needCompetitors$,
+    this.selectors.categoryId$,
+    this.selectors.competitorsPageSize$,
+    this.selectors.competitorsPageNumber$]).pipe(
+    filter(([competitionId, needCompetitors]) => Boolean(competitionId) && needCompetitors),
+    switchMap(([competitionId, _, categoryId, pageSize, pageNumber]) => this.infoService.getCompetitorsForCompetition(competitionId, categoryId, pageNumber, pageSize, undefined)
       .pipe(
         tap(response => {
           if (response.pageInfo.total != null && response.pageInfo.page != null) {
@@ -100,6 +106,7 @@ export class DataProviderService {
           }
         })
       )),
+    share()
   )
 
   fighters$: Observable<Competitor[]> = using(

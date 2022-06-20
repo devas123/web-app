@@ -4,6 +4,7 @@ import {AppState, getSelectedEventId} from "../reducers/global-reducers";
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
+  eventManagerGetSelectedEventCompetitorsNeedCompetitors,
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventSelectedCategory,
@@ -46,6 +47,9 @@ export class SelectorsService {
   );
   needFights$: Observable<boolean> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading)
+  );
+  needCompetitors$: Observable<boolean> = this.store.pipe(
+    select(eventManagerGetSelectedEventCompetitorsNeedCompetitors)
   );
   competitorsPageSize$: Observable<number> = this.store.pipe(
     select(eventManagerGetSelectedEventCompetitorsPageSize)

@@ -281,6 +281,7 @@ export const {
 export const eventManagerGetSelectedEventCompetitorsTotal = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.total);
 export const eventManagerGetSelectedEventCompetitorsSelectedCompetitorId = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.selectedCompetitorId);
 export const eventManagerGetSelectedEventCompetitorsPageSize = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.pageSize);
+export const eventManagerGetSelectedEventCompetitorsNeedCompetitors = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.needCompetitors);
 export const eventManagerGetSelectedEventCompetitorsPageNumber = createSelector(eventManagerGetSelectedEventCompetitorsCollection, state => state.competitorsFilter.pageNumber);
 export const eventManagerGetSelectedEventSelectedCompetitor = createSelector(
   eventManagerGetSelectedEventCompetitorsDictionary,
