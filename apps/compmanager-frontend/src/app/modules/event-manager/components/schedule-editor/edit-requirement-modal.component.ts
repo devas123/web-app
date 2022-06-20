@@ -6,13 +6,13 @@ import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {defaultActiveSelectionColor, uniqueFilter} from '../../../account/utils';
 import {ColorEvent} from 'ngx-color';
-import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {CategoryState, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 export interface IEditRequirementContext {
   competitionId: string;
   fightIdsByCategoryId: Dictionary<string[]>;
   fightsColors: Dictionary<string[]>;
-  allCategories: CategoryDescriptor[];
+  allCategories: CategoryState[];
   undispatchedCategories: string[];
   requirement: ScheduleRequirement;
   requirementFactory: (fightIds, categoryId) => ScheduleRequirement;
@@ -24,7 +24,7 @@ export interface IEditRequirementResult {
 }
 
 export class EditRequirementModal extends ComponentModalConfig<IEditRequirementContext, IEditRequirementResult, void> {
-  constructor(competitionId: string, allCategories: CategoryDescriptor[], undispatchedCategories: string[], fightIdsByCategoryId: Dictionary<string[]>, fightsColors: Dictionary<string[]>, requirement: ScheduleRequirement,
+  constructor(competitionId: string, allCategories: CategoryState[], undispatchedCategories: string[], fightIdsByCategoryId: Dictionary<string[]>, fightsColors: Dictionary<string[]>, requirement: ScheduleRequirement,
               requirementFactory: (fightIds, categoryId) => ScheduleRequirement, size = ModalSize.Large) {
     super(EditRequirementModalComponent, {competitionId, undispatchedCategories, allCategories, fightIdsByCategoryId, requirementFactory, fightsColors, requirement});
     this.isClosable = true;
@@ -117,7 +117,7 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
   affectedCategoryIds = new Set<string>();
   showColorPicker = false;
   showFightsPicker = false;
-  categoryFormatter = (category: CategoryDescriptor) => displayCategory(category, 10);
+  categoryFormatter = (category: CategoryState) => displayCategory(category.category, 10);
 
   getFightsForCategoryId(id: string) {
     return this.fightIdsByCategoryId[id] || [];
@@ -196,7 +196,7 @@ export class EditRequirementModalComponent implements OnInit, OnDestroy {
     this.bracketsInfo.clearCategorySelection(this.modal.context.competitionId);
   }
 
-  addCategory(event: CategoryDescriptor) {
+  addCategory(event: CategoryState) {
     if (event) {
       this.affectedCategoryIds.add(event.id);
       this.requirement = produce(this.requirement, draft => {

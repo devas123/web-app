@@ -5,8 +5,7 @@
                        [competitors]="competitors"
                        [categories]="categories"
                        [mat]="mat"
-                       [matFights]="getMatFights(mat?.id)"
-                       [title]="mat?.name"
+                       [title]="mat?.matDescription?.name"
                        (detailsViewSelected)="selectMat($event?.id)"
       (fightMatChanged)="fightMatChanged($event)">
       </app-mat-display>

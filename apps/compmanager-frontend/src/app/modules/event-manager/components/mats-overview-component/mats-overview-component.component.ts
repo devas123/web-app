@@ -1,14 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import * as _ from 'lodash';
-import {CategoryDescriptor, CategoryState, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, MatState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -19,16 +11,13 @@ import {CategoryDescriptor, CategoryState, Competitor, FightDescription, MatDesc
 export class MatsOverviewComponentComponent  {
 
   @Input()
-  matsFights: FightDescription[];
-
-  @Input()
   periodId: string;
 
   @Input()
   competitionId: string;
 
   @Input()
-  mats: MatDescription[];
+  mats: MatState[];
 
   @Input()
   categories: CategoryState[];
@@ -57,10 +46,6 @@ export class MatsOverviewComponentComponent  {
 
   fightMatChanged($event: any) {
     this.fightScheduleChanged.next({...$event, competitionId: this.competitionId, periodId: this.periodId});
-  }
-
-  getMatFights(id: string) {
-    return _.take(this.matsFights.filter(f => f.mat?.id === id).sort((a, b) => a.numberOnMat - b.numberOnMat), 5);
   }
 
   dragEnd() {

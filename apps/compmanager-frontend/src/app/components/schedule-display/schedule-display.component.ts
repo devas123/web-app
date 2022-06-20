@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inp
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
-import {CategoryState, MatDescription, Period, ScheduleEntryType} from "@frontend-nx/protobuf";
+import {CategoryState, MatState, Period, ScheduleEntryType} from "@frontend-nx/protobuf";
 import {InternalScheduleState} from "../../reducers/global-reducers";
 
 @Component({
@@ -66,7 +66,7 @@ export class ScheduleDisplayComponent  {
   private fightIdsByCategoryId: Dictionary<string[]>;
 
   @Input()
-  mats: MatDescription[];
+  mats: MatState[];
 
   @Input()
   scheduleEmpty = true;
@@ -112,7 +112,7 @@ export class ScheduleDisplayComponent  {
 
   matName = (periodId: string) => (matId: string) => {
     if (matId) {
-      return this.mats.find(m => m.id === matId && m.periodId === periodId).name;
+      return this.mats.find(m => m?.matDescription.id === matId && m.matDescription.periodId === periodId)?.matDescription?.name;
     } else {
       return `Unknown ${matId}`;
     }
@@ -133,7 +133,7 @@ export class ScheduleDisplayComponent  {
   };
 
   getPeriodMats(id: string) {
-    return this.mats.filter(mat => mat.periodId === id);
+    return this.mats.filter(mat => mat?.matDescription?.periodId === id);
   }
 
   highlightCategory(categoryIds: string[]) {

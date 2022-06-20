@@ -19,7 +19,7 @@ import {
 import {filter, map, take} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
-import {CategoryState, CompetitionProperties, MatDescription, Period, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {CategoryState, CompetitionProperties, MatState, Period, ScheduleRequirement} from "@frontend-nx/protobuf";
 import {DataProviderService} from "../../service/data.provider.service";
 
 @Injectable()
@@ -31,7 +31,7 @@ export class CommonScheduleInfoContainerService {
   competitionId$: Observable<string>;
   periods$: Observable<Period[]>;
   undispatchedRequirements$: Observable<ScheduleRequirement[]>;
-  mats$: Observable<MatDescription[]>;
+  mats$: Observable<MatState[]>;
   selectedCompetitionProperties$: Observable<CompetitionProperties>;
   selectedPeriod$: Observable<Period>;
   fightsByCategoryId$: Observable<Dictionary<string[]>>;

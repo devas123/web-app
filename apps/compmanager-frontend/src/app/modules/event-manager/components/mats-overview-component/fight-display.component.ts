@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
 import * as _ from 'lodash';
-import {CategoryDescriptor, CategoryState, Competitor, FightDescription} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, FightDescription} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-fight-display',

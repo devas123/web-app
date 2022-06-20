@@ -15,6 +15,7 @@ import {
   GetCompetitorsResponse,
   ManagedCompetition,
   MatDescription,
+  MatState,
   Period,
   RegistrationInfo,
   Schedule,
@@ -166,7 +167,7 @@ export const eventManagerAddCategory = (competitionId, category: CategoryDescrip
   payload: {category}
 });
 
-export const eventManagerPeriodAdded = (competitionId, period: Period, mats: MatDescription[]) => ({
+export const eventManagerPeriodAdded = (competitionId, period: Period, mats: MatState[]) => ({
   type: EVENT_MANAGER_PERIOD_ADDED,
   competitionId,
   payload: {period, mats}

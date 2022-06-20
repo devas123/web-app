@@ -1,7 +1,20 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {AddSchedulePeriodModal, IAddSchedulePeriodResult} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
+import {
+  AddSchedulePeriodModal,
+  IAddSchedulePeriodResult
+} from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 import {Dictionary} from '@ngrx/entity';
 import produce from 'immer';
 import {AddSchedulePauseModal, IAddSchedulePauseResult} from './add-pause-form.component';
@@ -10,15 +23,16 @@ import {EditRequirementModal, IEditRequirementResult} from './edit-requirement-m
 import {collectingReducer, defaultSelectionColor, generateUuid, uniqueFilter} from '../../../account/utils';
 import {
   CategoryDescriptor,
-  MatDescription,
+  CategoryState,
+  MatState,
   Period,
-  Schedule,
   ScheduleRequirement,
   ScheduleRequirementType
 } from "@frontend-nx/protobuf";
+import {InternalScheduleState} from "../../../../reducers/global-reducers";
 
 export interface CatReq {
-  cat?: CategoryDescriptor;
+  cat?: CategoryState;
   req?: ScheduleRequirement;
 }
 
@@ -75,13 +89,13 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   competitionId: string;
 
   @Input()
-  schedule: Schedule;
+  schedule: InternalScheduleState;
 
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Input()
-  mats: MatDescription[];
+  mats: MatState[];
 
   @Input()
   showEditor;
@@ -90,13 +104,13 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   scheduleDropped = new EventEmitter<string>();
 
   @Output()
-  periodAdded = new EventEmitter<{ period: Period, mats: MatDescription[] }>();
+  periodAdded = new EventEmitter<{ period: Period, mats: MatState[] }>();
 
   @Output()
   periodRemoved = new EventEmitter<string>();
 
   @Output()
-  generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[], mats: MatDescription[] }>();
+  generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[], mats: MatState[] }>();
 
   @Output()
   periodsUpdated = new EventEmitter<{ periods: Period[], undispatchedRequirements: ScheduleRequirement[] }>();
@@ -120,7 +134,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   getPeriodMats(periodId: string) {
-    return (this.mats && this.mats.filter(m => m.periodId === periodId).sort((a, b) => a.matOrder - b.matOrder)) || [];
+    return (this.mats && this.mats.filter(m => m.matDescription.periodId === periodId).sort((a, b) => a.matDescription.matOrder - b.matDescription.matOrder)) || [];
   }
 
   getScheduleRequirementsForMat(matId: string, periodId: string) {
@@ -277,7 +291,10 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   persistUpdates() {
     this.cleanupEmptyRequirements();
-    this.periodsUpdated.next({periods: this.periods, undispatchedRequirements: this.undispatchedRequirements.map(cr => cr.req).filter(v => !!v)});
+    this.periodsUpdated.next({
+      periods: this.periods,
+      undispatchedRequirements: this.undispatchedRequirements.map(cr => cr.req).filter(v => !!v)
+    });
   }
 
   cleanupEmptyRequirements() {
@@ -406,10 +423,10 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   addPauseToPeriod(periodId: string, periodStartTime: Date) {
     this.modalService.open(new AddSchedulePauseModal(this.competitionId, periodId, periodStartTime,
-      this.timeZone, this.mats.filter(m => m.periodId === periodId)))
+      this.timeZone, this.mats.filter(m => m.matDescription?.periodId === periodId)))
       .onApprove((result: IAddSchedulePauseResult) => {
-        this.mats.filter(m => !!m.id && result.toMats.indexOf(m.id) >= 0)
-          .forEach(mat => this.addPauseScheduleRequirementToPeriod(periodId, mat.id, result.pauseRequirement));
+        this.mats.filter(m => !!m.matDescription?.id && result.toMats.indexOf(m.matDescription?.id) >= 0)
+          .forEach(mat => this.addPauseScheduleRequirementToPeriod(periodId, mat.matDescription?.id, result.pauseRequirement));
         this.persistUpdates();
       });
   }
@@ -419,7 +436,10 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   }
 
   dispatchSpareFights(categoryIds: string[], fightIds: string[]) {
-    const fightGroups = categoryIds.map(cid => ({cid, fights: this.fightIdsByCategoryId[cid].filter(fid => fightIds.includes(fid))})).filter(dic => dic.fights && dic.fights.length > 0);
+    const fightGroups = categoryIds.map(cid => ({
+      cid,
+      fights: this.fightIdsByCategoryId[cid].filter(fid => fightIds.includes(fid))
+    })).filter(dic => dic.fights && dic.fights.length > 0);
     fightGroups.forEach(fg => this.moveFightsToDefaultCategoryRequirement(fg.cid, fg.fights));
   }
 

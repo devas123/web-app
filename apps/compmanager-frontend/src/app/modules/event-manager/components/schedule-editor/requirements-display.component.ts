@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Dictionary} from '@ngrx/entity';
-import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   template: `
@@ -68,7 +68,7 @@ export class RequirementsDisplayComponent implements  OnChanges {
   }
 
   @Input()
-  set categories(val: CategoryDescriptor[]) {
+  set categories(val: CategoryState[]) {
     this._categories = val || [];
   }
 
@@ -98,7 +98,7 @@ export class RequirementsDisplayComponent implements  OnChanges {
   @Input()
   selectedReqs: Set<string> = new Set<string>();
 
-  private _categories: CategoryDescriptor[];
+  private _categories: CategoryState[];
 
   @Output()
   itemDropped = new EventEmitter<{ event: CdkDragDrop<any, any>, periodId: string }>();
@@ -109,7 +109,7 @@ export class RequirementsDisplayComponent implements  OnChanges {
   @Output()
   requirementSelectionChanged = new EventEmitter<{ id: string, value: boolean }>();
 
-  _categoriesByRequirementId: Dictionary<CategoryDescriptor[]>;
+  _categoriesByRequirementId: Dictionary<CategoryState[]>;
 
   dragStart() {
     this.el.nativeElement.dispatchEvent(

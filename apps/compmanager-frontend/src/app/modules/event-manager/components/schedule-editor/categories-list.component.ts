@@ -10,7 +10,7 @@ import {
 import {dragEndEvent, dragStartEvent} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {CatReq} from './schedule-editor.component';
-import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   template: `
@@ -87,14 +87,14 @@ export class CategoriesListComponent {
   linesToDisplay: CatReq[];
 
   @Input()
-  allCategories: CategoryDescriptor[];
+  allCategories: CategoryState[];
 
   @Output()
   itemDropped = new EventEmitter<CdkDragDrop<any, any>>();
   @Output()
   splitIconCicked = new EventEmitter<CatReq>();
   @Output()
-  infoIconClicked = new EventEmitter<CategoryDescriptor>();
+  infoIconClicked = new EventEmitter<CategoryState>();
 
   @Output()
   requirementRemoveClicked = new EventEmitter<CatReq>();

@@ -88,7 +88,7 @@ import {
   FightDescription,
   FightResultOption,
   ManagedCompetition,
-  MatDescription,
+  MatDescription, MatState,
   Period,
   RegistrationInfo,
   ScheduleRequirement,
@@ -113,13 +113,13 @@ export interface CommonAction extends Action {
 }
 
 
-export interface MatsCollection extends EntityState<MatDescription> {
+export interface MatsCollection extends EntityState<MatState> {
   selectedMatId: string | null;
   matsFights: FightsCollection;
 }
 
-export const matEntityAdapter: EntityAdapter<MatDescription> = createEntityAdapter<MatDescription>({
-  selectId: (c: MatDescription) => c.id || btoa(c.name + c.periodId),
+export const matEntityAdapter: EntityAdapter<MatState> = createEntityAdapter<MatState>({
+  selectId: (c: MatState) => c.matDescription.id || btoa(c.matDescription.name + c.matDescription.periodId),
   sortComparer: false
 });
 
@@ -535,7 +535,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (action.competitionId === state.competitionProperties.id && payload.periods) {
           const periods = payload.periods as Period[];
           const mats = payload.mats as MatDescription[];
-          state.selectedEventMats = matEntityAdapter.setAll(mats, state.selectedEventMats);
+          state.selectedEventMats = matEntityAdapter.setAll(mats.map(m => (<MatState>{
+            matDescription: m,
+            numberOfFights: 0,
+            topFiveFights: []
+          })), state.selectedEventMats);
           state.selectedEventSchedule.periods = periodEntityAdapter.setAll(periods, state.selectedEventSchedule.periods);
           state.selectedEventSchedule.competitionId = payload.id;
         }
@@ -691,7 +695,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const periodId = action.payload;
           state.selectedEventSchedule.periods = periodEntityAdapter.removeOne(periodId, state.selectedEventSchedule.periods);
           const mats = _.values(state.selectedEventMats.entities);
-          state.selectedEventMats = matEntityAdapter.setAll(mats.filter(m => m.periodId !== periodId), state.selectedEventMats);
+          state.selectedEventMats = matEntityAdapter.setAll(mats.filter(m => m.matDescription.periodId !== periodId), state.selectedEventMats);
         }
         break;
       }
@@ -699,7 +703,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const event = action as Event;
         const payload = event.messageInfo.scheduleGeneratedPayload;
         state.selectedEventSchedule.periods = periodEntityAdapter.setAll(payload?.schedule.periods, periodEntityInitialState);
-        state.selectedEventMats = matEntityAdapter.setAll(payload?.schedule?.mats, matsInitialState);
+        state.selectedEventMats = matEntityAdapter.setAll(payload?.schedule?.mats.map(m => (<MatState>{
+          matDescription: m,
+          numberOfFights: 0,
+          topFiveFights: []
+        })), matsInitialState);
         break;
       }
       case EventType.FIGHTS_START_TIME_UPDATED: {
@@ -715,7 +723,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
               id: f.fightId,
               changes: {
                 period: f.periodId,
-                mat: mats[f.matId],
+                mat: mats[f.matId]?.matDescription,
                 numberOnMat: f.numberOnMat,
                 startTime: f.startTime,
                 scheduleEntryId: f.scheduleEntryId,
@@ -765,11 +773,8 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case DASHBOARD_MATS_LOADED: {
         if (action.payload) {
-          const payload = action.payload as { mats: { matDescription: MatDescription, numberOfFights: number, topFiveFights: FightDescription[] }[], competitors: Competitor[] };
-          state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats.map(m => (<MatDescription>{
-            ...m.matDescription,
-            numberOfFights: m.numberOfFights
-          })), state.selectedEventMats);
+          const payload = action.payload as { mats: MatState[], competitors: Competitor[] };
+          state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats, state.selectedEventMats);
           const fights = _.flatten(payload.mats.map(m => m.topFiveFights))
           state.selectedEventMats.matsFights = fightEntityAdapter.upsertMany(fights, fightsInitialState)
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
@@ -891,7 +896,7 @@ export const {
 } = matEntityAdapter.getSelectors(getSelectedEventMatsCollection);
 export const getSelectedEventMats = getSelectedEventAllMats;
 export const dashboardGetSelectedPeriodMats = createSelector(getSelectedEventAllMats, getSelectedEventSelectedPeriodId,
-  (mats, periodId) => (mats && mats.filter(m => m.periodId === periodId)) || []);
+  (mats, periodId) => (mats && mats.filter(m => m?.matDescription?.periodId === periodId)) || []);
 export const getSelectedEventGetSelectedMatId = createSelector(getSelectedEventMatsCollection, state => state && state.selectedMatId);
 export const getSelectedEventGetSelectedMat = createSelector(getSelectedEventGetSelectedMatId, getSelectedEventMatsDictionary, (id, dic) => id && dic[id]);
 export const dashboardGetSelectedPeriodMatsFightsCollection = createSelector(getSelectedEventMatsCollection, state => (state && state.matsFights) || fightsInitialState);

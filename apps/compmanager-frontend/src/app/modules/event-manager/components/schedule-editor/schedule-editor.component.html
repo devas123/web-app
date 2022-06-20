@@ -54,19 +54,19 @@
               <div class="inner-list list-container mat-grid"
                    [ngClass]="{'single-mat': getPeriodMats(period?.id)?.length === 1}">
                 <div *ngFor="let mat of getPeriodMats(period.id)" class="mat-container">
-                  <section>{{mat.name}}</section>
+                  <section>{{mat.matDescription.name}}</section>
                   <app-requirements-display
                     [selectedReqs]="_selectedReqs"
                     (requirementRemoved)="removeRequirement($event)"
                     [categories]="categories"
-                    [requirements]="getScheduleRequirementsForMat(mat.id, period?.id)"
+                    [requirements]="getScheduleRequirementsForMat(mat.matDescription.id, period?.id)"
                     [periodId]="period.id"
-                    [matId]="mat.id"
+                    [matId]="mat.matDescription.id"
                     [timeZone]="timeZone"
                     [allRequirements]="_requirements"
                     (splitIconCicked)="openSplitModal({req: $event})"
                     (requirementSelectionChanged)="changeSelectionStatus($event)"
-                    (itemDropped)="onItemDrop($event.event, $event.periodId, mat.id)"></app-requirements-display>
+                    (itemDropped)="onItemDrop($event.event, $event.periodId, mat.matDescription.id)"></app-requirements-display>
                 </div>
               </div>
             </div>

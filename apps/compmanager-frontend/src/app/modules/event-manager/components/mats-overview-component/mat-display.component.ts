@@ -1,17 +1,19 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {dragEndEvent, dragStartEvent,} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import {CategoryState, Competitor, FightDescription, MatDescription} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, FightDescription, MatDescription, MatState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mat-display',
   template: `
-    <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat)">Area view</button>
+    <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat?.matDescription)">Area
+      view
+    </button>
     <div class="header">{{title}}</div>
-    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="matFights"
-         (cdkDropListDropped)="drop($event, mat?.id)">
-      <a class="item draggable" *ngFor="let fight of matFights" cdkDrag (cdkDragStarted)="dragStart()"
-          (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
+    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="mat.topFiveFights"
+         (cdkDropListDropped)="drop($event, mat.matDescription?.id)">
+      <a class="item draggable" *ngFor="let fight of mat.topFiveFights" cdkDrag (cdkDragStarted)="dragStart()"
+         (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
         <div class="content">
           <app-fight-display [fight]="fight"
                              [categories]="categories"
@@ -20,24 +22,22 @@ import {CategoryState, Competitor, FightDescription, MatDescription} from "@fron
         </div>
       </a>
     </div>
-    <div class="meta">{{'TODO' + ' fights'}}</div>
+    <div class="meta">{{mat.numberOfFights}} fights</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['mats-overview-component.component.scss']
 })
-export class MatDisplayComponent  {
+export class MatDisplayComponent {
 
   @Input()
   title: string;
 
   @Input()
-  mat: MatDescription;
+  mat: MatState;
 
   @Input()
   categories: CategoryState[];
 
-  @Input()
-  matFights: FightDescription[];
 
   @Input()
   competitors: Competitor[];

@@ -10,7 +10,7 @@ import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semant
 import {InfoService} from '../../../../service/info.service';
 import produce from 'immer';
 import {generateUuid} from '../../../account/utils';
-import {MatDescription, Period} from "@frontend-nx/protobuf";
+import {MatDescription, MatState, Period} from "@frontend-nx/protobuf";
 
 export interface IAddSchedulePeriodContext {
   competitionId: string;
@@ -19,7 +19,7 @@ export interface IAddSchedulePeriodContext {
 
 export interface IAddSchedulePeriodResult {
   properties: Period;
-  mats: MatDescription[];
+  mats: MatState[];
 }
 
 export class AddSchedulePeriodModal extends ComponentModalConfig<IAddSchedulePeriodContext, IAddSchedulePeriodResult, void> {
@@ -147,7 +147,10 @@ export class AddSchedulePeriodFormComponent implements OnInit {
         });
       });
       this.periodForm.reset();
-      this.modal.approve({properties, mats});
+      this.modal.approve({
+        properties,
+        mats: mats.map(m => (<MatState>{matDescription: m, numberOfFights: 0, topFiveFights: []}))
+      });
     }
   }
 
@@ -205,7 +208,6 @@ export class AddSchedulePeriodFormComponent implements OnInit {
   addMat() {
     this.matDescriptionsArray.push(this.createMatDescrControl());
   }
-
 
 
   updateStartTime(date: Date) {

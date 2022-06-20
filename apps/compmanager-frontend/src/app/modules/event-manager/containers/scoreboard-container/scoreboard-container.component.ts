@@ -57,7 +57,7 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
         filter(([p, m]) => !!p && !!m && !!m),
         map(([per, mat]) => <HeaderDescription>{
           header: 'Area view',
-          subheader: `${per.name} / ${mat.name}`
+          subheader: `${per.name} / ${mat.matDescription.name}`
         })),
       menu: [
         {

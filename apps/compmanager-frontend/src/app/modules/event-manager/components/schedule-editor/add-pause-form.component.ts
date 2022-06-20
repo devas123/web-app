@@ -2,14 +2,14 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal, SuiMultiSelect} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
-import {MatDescription, ScheduleRequirement, ScheduleRequirementType} from "@frontend-nx/protobuf";
+import {MatState, ScheduleRequirement, ScheduleRequirementType} from "@frontend-nx/protobuf";
 
 export interface IAddSchedulePauseContext {
   competitionId: string;
   periodId: string;
   periodStartTime: Date;
   timeZone: string;
-  mats: MatDescription[];
+  mats: MatState[];
 }
 
 export interface IAddSchedulePauseResult {
@@ -121,7 +121,7 @@ export class AddSchedulePauseModal extends ComponentModalConfig<IAddSchedulePaus
 })
 export class AddSchedulePauseFormComponent implements OnInit {
   @ViewChild('multiSelect')
-  matsSelect: SuiMultiSelect<MatDescription, MatDescription>;
+  matsSelect: SuiMultiSelect<MatState, MatState>;
   pauseForm: FormGroup;
 
   unableToSubmit() {
@@ -157,7 +157,7 @@ export class AddSchedulePauseFormComponent implements OnInit {
       }
     }
   };
-  matOptionFormatter = (mat: MatDescription) => mat.name;
+  matOptionFormatter = (mat: MatState) => mat?.matDescription?.name;
 
 
   get form() {
@@ -247,7 +247,7 @@ export class AddSchedulePauseFormComponent implements OnInit {
     )
   }
 
-  setMats(mats: MatDescription[]) {
+  setMats(mats: MatState[]) {
     this.form.patchValue(
       {
         mats

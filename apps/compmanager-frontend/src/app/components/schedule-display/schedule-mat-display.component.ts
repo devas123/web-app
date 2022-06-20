@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {format} from 'date-fns';
-import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
+import {MatState, Period, ScheduleEntry} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-schedule-mat-display',
@@ -8,18 +8,18 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
     <div class="inner-list list-container mat-grid margin-horizontal"
          [ngClass]="{'single-mat': mats?.length === 1}">
       <div *ngFor="let mat of mats" class="mat-container" [ngClass]="{'single-mat': mats?.length === 1}">
-        <p>{{mat.name}}</p>
+        <p>{{mat.matDescription.name}}</p>
         <div class="inner-list">
           <div class="item schedule_page flex-container clickable" [style]="getEntryStyle(entry)"
                (mouseenter)="highlightCategory(entry.categoryIds)"
                (mouseleave)="clearCategoryHighLight(entry.categoryIds)"
                [ngClass]="getNgClass(entry)"
-               *ngFor="let entry of getMatEntries(mat.id)">
+               *ngFor="let entry of getMatEntries(mat.matDescription.id)">
             <ng-container *ngIf="isNotPause(entry)">
               <span class="break_word" *ngFor="let cat of entry.categoryIds">{{categoryFormat(cat)}}</span>
               <span class="flexible"></span>
-              <span>{{getEntryStartTimeForMat(mat.id, entry)}}</span>
-              <span class="break_word">{{getEntryFightsForMat(mat.id, entry)?.length}} fights</span>
+              <span>{{getEntryStartTimeForMat(mat.matDescription.id, entry)}}</span>
+              <span class="break_word">{{getEntryFightsForMat(mat.matDescription.id, entry)?.length}} fights</span>
             </ng-container>
             <ng-container *ngIf="entry.entryType === 'SCHEDULE_ENTRY_TYPE_RELATIVE_PAUSE'">
               <span>Pause</span>
@@ -37,7 +37,7 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
             </ng-container>
           </div>
         </div>
-        <section>{{getTotalMatFights(mat.id)}} fights</section>
+        <section>{{getTotalMatFights(mat.matDescription.id)}} fights</section>
       </div>
     </div>
   `,
@@ -47,7 +47,7 @@ import {MatDescription, Period, ScheduleEntry} from "@frontend-nx/protobuf";
 export class ScheduleMatDisplayComponent {
 
   @Input()
-  mats: MatDescription[];
+  mats: MatState[];
 
 
   @Input()

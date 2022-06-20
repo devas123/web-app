@@ -38,7 +38,7 @@ export class PeriodsManagementContainerComponent extends BasicCompetitionInfoCon
   }
 
   getPeriodMatsLength(periodId: string) {
-    return this.scheduleInfo.mats$.pipe(map(ms => ms.filter(m => m.periodId === periodId).length));
+    return this.scheduleInfo.mats$.pipe(map(ms => ms.filter(m => m.matDescription?.periodId === periodId).length));
   }
 
   navigateBack() {

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
-import {CategoryDescriptor, ScheduleRequirement} from "@frontend-nx/protobuf";
+import {CategoryDescriptor, CategoryState, ScheduleRequirement} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-requirement-line',
@@ -43,7 +43,7 @@ export class RequirementLineComponent {
   canSelect = true;
 
   @Input()
-  requirementCategories: CategoryDescriptor[];
+  requirementCategories: CategoryState[];
 
   @Output()
   selectionChanged = new EventEmitter<boolean>();
