@@ -33,7 +33,7 @@ import {
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
-  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED,
+  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
   EVENT_MANAGER_CATEGORY_SELECTED,
@@ -339,7 +339,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         if (state.selectedEventCategories.selectedCategoryStages.selectedStageId !== action.selectedStageId) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
-          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         }
         break;
       }
@@ -447,12 +446,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         return state;
       }
-
+      case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING: {
+        state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
+        break;
+      }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED: {
         const {fights} = action;
         if (fights && fights.length > 0) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageFights
-            = fightEntityAdapter.setAll(fights, fightsInitialState);
+            = fightEntityAdapter.setAll(fights, state.selectedEventCategories.selectedCategoryStages.selectedStageFights);
         }
         state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = false;
         break;
@@ -462,7 +464,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         const {competitionId, categoryId, payload} = action;
         if (state.competitionProperties.id === competitionId && state.selectedEventCategories.selectedCategoryId === categoryId && payload) {
           state.selectedEventCategories = categoryEntityAdapter.upsertOne(payload, state.selectedEventCategories);
-          state.selectedEventCategories.selectedCategoryStages.fightsAreLoading = true;
         }
         break;
       }

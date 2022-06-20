@@ -60,6 +60,7 @@ export const EVENT_MANAGER_PREVIEW_CATEGORIES_GENERATED = 'EVENT_MANAGER_PREVIEW
 export const EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED = 'EVENT_MANAGER_PREVIEW_CATEGORIES_CLEARED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED';
 export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED';
+export const EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING = 'EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING';
 export const EVENT_MANAGER_CATEGORY_UNSELECTED = 'EVENT_MANAGER_CATEGORY_UNSELECTED';
 export const COMPETITION_UNSELECTED = 'COMPETITION_UNSELECTED';
 
@@ -119,6 +120,7 @@ export const eventManagerSetCategoryRegistrationStatus = createAction(CHANGE_CAT
 export const eventManagerFightsEditorSubmitChangesCommand = createAction(CommandType.FIGHTS_EDITOR_APPLY_CHANGE, props<{ bracketsChanges: FightEditorChange[], competitorMovedToGroups: CompetitorMovedToGroup[], competitionId: string, categoryId: string, stageId: string }>());
 export const eventManagerCategoryBracketsStageSelected = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED, props<{ competitionId: string, categoryId: string, selectedStageId: string }>());
 export const eventManagerCategoryBracketsStageFightsLoaded = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED, props<{ fights: FightDescription[] }>());
+export const eventManagerCategoryBracketsStageFightsLoading = createAction(EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING);
 
 export const eventManagerHeaderSet = (payload: HeaderDescription) => ({
   type: EVENT_MANAGER_HEADER_SET,

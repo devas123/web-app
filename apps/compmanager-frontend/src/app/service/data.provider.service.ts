@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
-  eventManagerCategoryBracketsStageFightsLoaded,
+  eventManagerCategoryBracketsStageFightsLoaded, eventManagerCategoryBracketsStageFightsLoading,
   eventManagerCategoryStagesLoaded,
   eventManagerCategoryStateLoaded,
   eventManagerFightersForCompetitionLoaded
@@ -68,8 +68,14 @@ export class DataProviderService {
     () => this.selectors.stages$
   )
 
-  private requireStageFights$ = combineLatest([this.stages$, this.selectors.categoryId$, this.selectors.competitionId$, this.selectors.selectedStageId$]).pipe(
-    filter(([_, categoryId, competitionId, stageId]) => Boolean(categoryId) && Boolean(competitionId) && Boolean(stageId)),
+  private requireStageFights$ = combineLatest([
+    this.stages$,
+    this.selectors.categoryId$,
+    this.selectors.competitionId$,
+    this.selectors.selectedStageId$,
+    this.selectors.fightsLoading$]).pipe(
+    filter(([_, categoryId, competitionId, stageId, fightsLoading]) => Boolean(categoryId) && Boolean(competitionId) && Boolean(stageId) && !fightsLoading),
+    tap(() => this.store.dispatch(eventManagerCategoryBracketsStageFightsLoading())),
     switchMap(([_, categoryId, competitionId, stageId]) => this.infoService.getCategoryStageFights(competitionId, categoryId, stageId)),
     tap(fights => {
       if (fights) {

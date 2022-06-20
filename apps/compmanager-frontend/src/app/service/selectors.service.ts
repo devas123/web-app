@@ -11,6 +11,7 @@ import {
   eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStageId,
   eventManagerGetSelectedEventSelectedCategorySelectedStages,
+  eventManagerGetSelectedEventSelectedCategoryStagesAreLoading,
 } from "../modules/event-manager/redux/event-manager-reducers";
 import {Observable} from "rxjs";
 import {CategoryState, Competitor, FightDescription, StageDescriptor} from "@frontend-nx/protobuf";
@@ -42,6 +43,9 @@ export class SelectorsService {
 
   selectedStageId$: Observable<string> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategorySelectedStageId)
+  );
+  fightsLoading$: Observable<boolean> = this.store.pipe(
+    select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading)
   );
   competitorsPageSize$: Observable<number> = this.store.pipe(
     select(eventManagerGetSelectedEventCompetitorsPageSize)
