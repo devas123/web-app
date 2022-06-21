@@ -44,6 +44,7 @@ export interface PageInfo {
 export interface MatsQueryResult {
   competitors: Competitor[];
   mats: MatState[];
+  topFiveFightsForEachMat: FightDescription[];
 }
 
 export interface QueryServiceResponse {
@@ -518,7 +519,7 @@ export const PageInfo = {
 };
 
 function createBaseMatsQueryResult(): MatsQueryResult {
-  return { competitors: [], mats: [] };
+  return { competitors: [], mats: [], topFiveFightsForEachMat: [] };
 }
 
 export const MatsQueryResult = {
@@ -531,6 +532,9 @@ export const MatsQueryResult = {
     }
     for (const v of message.mats) {
       MatState.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.topFiveFightsForEachMat) {
+      FightDescription.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -548,6 +552,11 @@ export const MatsQueryResult = {
         case 2:
           message.mats.push(MatState.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.topFiveFightsForEachMat.push(
+            FightDescription.decode(reader, reader.uint32())
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -563,6 +572,11 @@ export const MatsQueryResult = {
         : [],
       mats: Array.isArray(object?.mats)
         ? object.mats.map((e: any) => MatState.fromJSON(e))
+        : [],
+      topFiveFightsForEachMat: Array.isArray(object?.topFiveFightsForEachMat)
+        ? object.topFiveFightsForEachMat.map((e: any) =>
+            FightDescription.fromJSON(e)
+          )
         : [],
     };
   },
@@ -581,6 +595,13 @@ export const MatsQueryResult = {
     } else {
       obj.mats = [];
     }
+    if (message.topFiveFightsForEachMat) {
+      obj.topFiveFightsForEachMat = message.topFiveFightsForEachMat.map((e) =>
+        e ? FightDescription.toJSON(e) : undefined
+      );
+    } else {
+      obj.topFiveFightsForEachMat = [];
+    }
     return obj;
   },
 
@@ -591,6 +612,10 @@ export const MatsQueryResult = {
     message.competitors =
       object.competitors?.map((e) => Competitor.fromPartial(e)) || [];
     message.mats = object.mats?.map((e) => MatState.fromPartial(e)) || [];
+    message.topFiveFightsForEachMat =
+      object.topFiveFightsForEachMat?.map((e) =>
+        FightDescription.fromPartial(e)
+      ) || [];
     return message;
   },
 };

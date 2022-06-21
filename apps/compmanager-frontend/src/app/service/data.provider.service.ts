@@ -86,9 +86,9 @@ export class DataProviderService {
     share()
   )
 
-  stageFights$: Observable<FightDescription[]> = using(
+  fightsInterest$: Observable<FightDescription[]> = using(
     () => this.requireStageFights$.subscribe(),
-    () => this.selectors.stageFights$
+    () => this.selectors.fights$
   )
 
   private requireFighters$ = combineLatest([

@@ -6,6 +6,7 @@ import {MenuItem} from '../../commons/model/competition.model';
 import {IImplicitContext, SuiSidebar} from '@frontend-nx/ng2-semantic-ui';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DataProviderService} from "../../service/data.provider.service";
+import {SelectorsService} from "../../service/selectors.service";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class MenuService {
 
   private embeddedViews: EmbeddedViewRef<any>[] = [];
 
-  constructor(private observer: BreakpointObserver, private router: Router, private route: ActivatedRoute, public dataProviderService: DataProviderService) {
+  constructor(private observer: BreakpointObserver, private router: Router, private route: ActivatedRoute, public dataProviderService: DataProviderService, public selectors: SelectorsService) {
     this._displaySidebar$ = observer.observe([Breakpoints.Handset, Breakpoints.Small, Breakpoints.Medium]).pipe(map(p => p.matches));
   }
 

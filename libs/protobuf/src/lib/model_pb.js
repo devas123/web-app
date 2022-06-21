@@ -906,7 +906,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.compservice.model.protobuf.MatState = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.compservice.model.protobuf.MatState.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.compservice.model.protobuf.MatState, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -14672,13 +14672,6 @@ proto.compservice.model.protobuf.Competitor.prototype.setPromo = function(value)
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.compservice.model.protobuf.MatState.repeatedFields_ = [3];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -14711,9 +14704,7 @@ proto.compservice.model.protobuf.MatState.prototype.toObject = function(opt_incl
 proto.compservice.model.protobuf.MatState.toObject = function(includeInstance, msg) {
   var f, obj = {
     matdescription: (f = msg.getMatdescription()) && proto.compservice.model.protobuf.MatDescription.toObject(includeInstance, f),
-    numberoffights: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    topfivefightsList: jspb.Message.toObjectList(msg.getTopfivefightsList(),
-    proto.compservice.model.protobuf.FightDescription.toObject, includeInstance)
+    numberoffights: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -14759,11 +14750,6 @@ proto.compservice.model.protobuf.MatState.deserializeBinaryFromReader = function
       var value = /** @type {number} */ (reader.readInt32());
       msg.setNumberoffights(value);
       break;
-    case 3:
-      var value = new proto.compservice.model.protobuf.FightDescription;
-      reader.readMessage(value,proto.compservice.model.protobuf.FightDescription.deserializeBinaryFromReader);
-      msg.addTopfivefights(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -14806,14 +14792,6 @@ proto.compservice.model.protobuf.MatState.serializeBinaryToWriter = function(mes
     writer.writeInt32(
       2,
       f
-    );
-  }
-  f = message.getTopfivefightsList();
-  if (f.length > 0) {
-    writer.writeRepeatedMessage(
-      3,
-      f,
-      proto.compservice.model.protobuf.FightDescription.serializeBinaryToWriter
     );
   }
 };
@@ -14871,44 +14849,6 @@ proto.compservice.model.protobuf.MatState.prototype.getNumberoffights = function
  */
 proto.compservice.model.protobuf.MatState.prototype.setNumberoffights = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
-};
-
-
-/**
- * repeated FightDescription topFiveFights = 3;
- * @return {!Array<!proto.compservice.model.protobuf.FightDescription>}
- */
-proto.compservice.model.protobuf.MatState.prototype.getTopfivefightsList = function() {
-  return /** @type{!Array<!proto.compservice.model.protobuf.FightDescription>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.compservice.model.protobuf.FightDescription, 3));
-};
-
-
-/**
- * @param {!Array<!proto.compservice.model.protobuf.FightDescription>} value
- * @return {!proto.compservice.model.protobuf.MatState} returns this
-*/
-proto.compservice.model.protobuf.MatState.prototype.setTopfivefightsList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 3, value);
-};
-
-
-/**
- * @param {!proto.compservice.model.protobuf.FightDescription=} opt_value
- * @param {number=} opt_index
- * @return {!proto.compservice.model.protobuf.FightDescription}
- */
-proto.compservice.model.protobuf.MatState.prototype.addTopfivefights = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.compservice.model.protobuf.FightDescription, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.compservice.model.protobuf.MatState} returns this
- */
-proto.compservice.model.protobuf.MatState.prototype.clearTopfivefightsList = function() {
-  return this.setTopfivefightsList([]);
 };
 
 

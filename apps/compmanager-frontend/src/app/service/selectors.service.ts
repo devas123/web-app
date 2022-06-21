@@ -34,7 +34,7 @@ export class SelectorsService {
     select(eventManagerGetSelectedEventSelectedCategorySelectedStages)
   );
 
-  stageFights$: Observable<FightDescription[]> = this.store.pipe(
+  fights$: Observable<FightDescription[]> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights)
   );
 

@@ -1567,7 +1567,7 @@ proto.compservice.model.protobuf.PageInfo.prototype.hasResultsonpage = function(
  * @private {!Array<number>}
  * @const
  */
-proto.compservice.model.protobuf.MatsQueryResult.repeatedFields_ = [1,2];
+proto.compservice.model.protobuf.MatsQueryResult.repeatedFields_ = [1,2,3];
 
 
 
@@ -1603,7 +1603,9 @@ proto.compservice.model.protobuf.MatsQueryResult.toObject = function(includeInst
     competitorsList: jspb.Message.toObjectList(msg.getCompetitorsList(),
     model_pb.Competitor.toObject, includeInstance),
     matsList: jspb.Message.toObjectList(msg.getMatsList(),
-    model_pb.MatState.toObject, includeInstance)
+    model_pb.MatState.toObject, includeInstance),
+    topfivefightsforeachmatList: jspb.Message.toObjectList(msg.getTopfivefightsforeachmatList(),
+    model_pb.FightDescription.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -1650,6 +1652,11 @@ proto.compservice.model.protobuf.MatsQueryResult.deserializeBinaryFromReader = f
       reader.readMessage(value,model_pb.MatState.deserializeBinaryFromReader);
       msg.addMats(value);
       break;
+    case 3:
+      var value = new model_pb.FightDescription;
+      reader.readMessage(value,model_pb.FightDescription.deserializeBinaryFromReader);
+      msg.addTopfivefightsforeachmat(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1693,6 +1700,14 @@ proto.compservice.model.protobuf.MatsQueryResult.serializeBinaryToWriter = funct
       2,
       f,
       model_pb.MatState.serializeBinaryToWriter
+    );
+  }
+  f = message.getTopfivefightsforeachmatList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      3,
+      f,
+      model_pb.FightDescription.serializeBinaryToWriter
     );
   }
 };
@@ -1771,6 +1786,44 @@ proto.compservice.model.protobuf.MatsQueryResult.prototype.addMats = function(op
  */
 proto.compservice.model.protobuf.MatsQueryResult.prototype.clearMatsList = function() {
   return this.setMatsList([]);
+};
+
+
+/**
+ * repeated FightDescription topFiveFightsForEachMat = 3;
+ * @return {!Array<!proto.compservice.model.protobuf.FightDescription>}
+ */
+proto.compservice.model.protobuf.MatsQueryResult.prototype.getTopfivefightsforeachmatList = function() {
+  return /** @type{!Array<!proto.compservice.model.protobuf.FightDescription>} */ (
+    jspb.Message.getRepeatedWrapperField(this, model_pb.FightDescription, 3));
+};
+
+
+/**
+ * @param {!Array<!proto.compservice.model.protobuf.FightDescription>} value
+ * @return {!proto.compservice.model.protobuf.MatsQueryResult} returns this
+*/
+proto.compservice.model.protobuf.MatsQueryResult.prototype.setTopfivefightsforeachmatList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
+};
+
+
+/**
+ * @param {!proto.compservice.model.protobuf.FightDescription=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.compservice.model.protobuf.FightDescription}
+ */
+proto.compservice.model.protobuf.MatsQueryResult.prototype.addTopfivefightsforeachmat = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.compservice.model.protobuf.FightDescription, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.compservice.model.protobuf.MatsQueryResult} returns this
+ */
+proto.compservice.model.protobuf.MatsQueryResult.prototype.clearTopfivefightsforeachmatList = function() {
+  return this.setTopfivefightsforeachmatList([]);
 };
 
 

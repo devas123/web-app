@@ -1,7 +1,7 @@
 // commands
 import {createAction, props} from '@ngrx/store';
 import {IScoreboardFightResultSet} from './dashboard-reducers';
-import {CommandType, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
+import {CommandType, Competitor, FightDescription, FightResultOption, MatsQueryResult} from "@frontend-nx/protobuf";
 
 export interface IDashboardFightScheduleChangedPayload {
   competitionId: string;
@@ -56,7 +56,7 @@ export const dashboardPeriodSelected = (periodId, competitionId) => ({
   competitionId
 });
 
-export const dashboardMatsLoaded = (mats: any[], competitionId: string, periodId: string) => ({
+export const dashboardMatsLoaded = (mats: MatsQueryResult, competitionId: string, periodId: string) => ({
   type: DASHBOARD_MATS_LOADED,
   competitionId,
   periodId,

@@ -46,7 +46,7 @@ export class CommonBracketsInfoContainer {
 
   constructor(private store: Store<AppState>, private observer: BreakpointObserver, private dataProviderService: DataProviderService) {
     this.stages$ = dataProviderService.stages$;
-    this.fights$ = dataProviderService.stageFights$;
+    this.fights$ = dataProviderService.fightsInterest$;
     this.competition$ = store.pipe(select(getSelectedEventProperties));
     this.competitionId$ = store.pipe(select(getSelectedEventId));
     this.stage$ = store.pipe(select(eventManagerGetSelectedEventSelectedCategorySelectedStage));

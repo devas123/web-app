@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
-import {CategoryState, Competitor, MatState} from "@frontend-nx/protobuf";
+import {CategoryState, Competitor, FightDescription, MatState} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-mats-overview-component',
@@ -9,6 +9,10 @@ import {CategoryState, Competitor, MatState} from "@frontend-nx/protobuf";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatsOverviewComponentComponent  {
+
+
+  @Input()
+  fights: FightDescription[];
 
   @Input()
   periodId: string;

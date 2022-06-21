@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Out
 import {dragEndEvent, dragStartEvent,} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {CategoryState, Competitor, FightDescription, MatDescription, MatState} from "@frontend-nx/protobuf";
+import {Dictionary} from "@ngrx/entity";
+import * as _ from 'lodash'
 
 @Component({
   selector: 'app-mat-display',
@@ -10,9 +12,9 @@ import {CategoryState, Competitor, FightDescription, MatDescription, MatState} f
       view
     </button>
     <div class="header">{{title}}</div>
-    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="mat.topFiveFights"
+    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="_fightsByMat[mat.matDescription.id]"
          (cdkDropListDropped)="drop($event, mat.matDescription?.id)">
-      <a class="item draggable" *ngFor="let fight of mat.topFiveFights" cdkDrag (cdkDragStarted)="dragStart()"
+      <a class="item draggable" *ngFor="let fight of _fightsByMat[mat.matDescription.id]" cdkDrag (cdkDragStarted)="dragStart()"
          (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
         <div class="content">
           <app-fight-display [fight]="fight"
@@ -29,6 +31,8 @@ import {CategoryState, Competitor, FightDescription, MatDescription, MatState} f
 })
 export class MatDisplayComponent {
 
+  _fightsByMat: Dictionary<FightDescription[]>
+
   @Input()
   title: string;
 
@@ -37,6 +41,11 @@ export class MatDisplayComponent {
 
   @Input()
   categories: CategoryState[];
+
+  @Input()
+  set fights(value: FightDescription[]) {
+    this._fightsByMat = _.groupBy(value, f => f.mat.id)
+  }
 
 
   @Input()

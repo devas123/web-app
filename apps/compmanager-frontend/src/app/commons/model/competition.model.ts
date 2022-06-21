@@ -109,7 +109,6 @@ export interface GroupDescriptor {
 export interface CategoryBracketsStageCollection extends EntityState<StageDescriptor> {
   selectedStageId: string | null;
   needFights: boolean;
-  selectedStageFights: FightsCollection;
 }
 
 export interface FightsCollection extends EntityState<FightDescription> {

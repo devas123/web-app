@@ -24,7 +24,7 @@ import {
 } from './dashboard-actions';
 import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
 import {batchAction} from "./event-manager-actions";
-import {CommandType} from "@frontend-nx/protobuf";
+import {CommandType, MatsQueryResult} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class DashboardEffects {
@@ -55,14 +55,9 @@ export class DashboardEffects {
     ofType(DASHBOARD_LOAD_MATS_COMMAND),
     mergeMap((command: any) => {
       return this.infoService.getPeriodMats(command.competitionId, command.periodId).pipe(
+        map((result: MatsQueryResult) => dashboardMatsLoaded(result, command.competitionId, command.periodId)),
         catchError(error => observableOf(errorEvent(error))),
-        map((result: any) => {
-          if (!result || result.type === ERROR_EVENT) {
-            return result;
-          } else {
-            return dashboardMatsLoaded(result, command.competitionId, command.periodId);
-          }
-        }));
+      );
     })));
 
   dashboardUnload$ = createEffect(() => this.actions$.pipe(

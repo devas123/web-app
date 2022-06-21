@@ -1594,7 +1594,6 @@ export interface Competitor {
 export interface MatState {
   matDescription?: MatDescription;
   numberOfFights: number;
-  topFiveFights: FightDescription[];
 }
 
 export interface FightStartTimePair {
@@ -7408,7 +7407,7 @@ export const Competitor = {
 };
 
 function createBaseMatState(): MatState {
-  return { matDescription: undefined, numberOfFights: 0, topFiveFights: [] };
+  return { matDescription: undefined, numberOfFights: 0 };
 }
 
 export const MatState = {
@@ -7424,9 +7423,6 @@ export const MatState = {
     }
     if (message.numberOfFights !== 0) {
       writer.uint32(16).int32(message.numberOfFights);
-    }
-    for (const v of message.topFiveFights) {
-      FightDescription.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -7447,11 +7443,6 @@ export const MatState = {
         case 2:
           message.numberOfFights = reader.int32();
           break;
-        case 3:
-          message.topFiveFights.push(
-            FightDescription.decode(reader, reader.uint32())
-          );
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7468,9 +7459,6 @@ export const MatState = {
       numberOfFights: isSet(object.numberOfFights)
         ? Number(object.numberOfFights)
         : 0,
-      topFiveFights: Array.isArray(object?.topFiveFights)
-        ? object.topFiveFights.map((e: any) => FightDescription.fromJSON(e))
-        : [],
     };
   },
 
@@ -7482,13 +7470,6 @@ export const MatState = {
         : undefined);
     message.numberOfFights !== undefined &&
       (obj.numberOfFights = Math.round(message.numberOfFights));
-    if (message.topFiveFights) {
-      obj.topFiveFights = message.topFiveFights.map((e) =>
-        e ? FightDescription.toJSON(e) : undefined
-      );
-    } else {
-      obj.topFiveFights = [];
-    }
     return obj;
   },
 
@@ -7499,8 +7480,6 @@ export const MatState = {
         ? MatDescription.fromPartial(object.matDescription)
         : undefined;
     message.numberOfFights = object.numberOfFights ?? 0;
-    message.topFiveFights =
-      object.topFiveFights?.map((e) => FightDescription.fromPartial(e)) || [];
     return message;
   },
 };

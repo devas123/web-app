@@ -4,4 +4,5 @@
                              (matDetailsClicked)="navigateToMat($event)"
                              [periodId]="(selectedPeriod$ | async)?.id"
                              [competitionId]="competitionId$ | async"
+                             [fights]="fights$ | async"
                              (fightScheduleChanged)="sendFightScheduleChanged($event)"></app-mats-overview-component>

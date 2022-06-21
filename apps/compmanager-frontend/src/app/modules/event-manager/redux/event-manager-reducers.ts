@@ -215,8 +215,8 @@ export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = crea
 export const eventManagerGetSelectedEventSelectedCategorySelectedStage =
   createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageId, eventManagerGetSelectedEventSelectedCategoryStagesDictionary, (stageId, stages) => stageId && stages[stageId]);
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection =
-  createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, stage =>
-    (stage && stage.selectedStageFights) || fightsInitialState);
+  createSelector(getSelectedEventState, stage =>
+    (stage && stage.fights) || fightsInitialState);
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType = createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStage, stage => stage && stage.bracketType);
 

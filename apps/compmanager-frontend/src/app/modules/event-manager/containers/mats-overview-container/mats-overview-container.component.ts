@@ -18,7 +18,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 import {dashboardFightOrderChangeCommand, IDashboardFightScheduleChangedPayload} from '../../redux/dashboard-actions';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
-import {MatState, Period} from "@frontend-nx/protobuf";
+import {FightDescription, MatState, Period} from "@frontend-nx/protobuf";
 
 @Component({
   templateUrl: './mats-overview-container.component.html',
@@ -28,6 +28,7 @@ export class MatsOverviewContainerComponent extends CompetitionManagerModuleRout
   selectedPeriod$: Observable<Period>;
   selectedPeriodMats$: Observable<MatState[]>;
   competitionId$: Observable<string>;
+  fights$: Observable<FightDescription[]>;
 
   constructor(private location: Location, private router: Router, private route: ActivatedRoute, store: Store<AppState>, private cd: ChangeDetectorRef,
               public info: CommonBracketsInfoContainer, menuService: MenuService) {
@@ -47,6 +48,7 @@ export class MatsOverviewContainerComponent extends CompetitionManagerModuleRout
     this.competitionId$ = info.competitionId$;
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));
+    this.fights$ = menuService.selectors.fights$;
   }
 
   navigateBack() {
