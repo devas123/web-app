@@ -2,7 +2,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../../../reducers/global-reducers';
 import {DASHBOARD_SOCKET_CONNECTED, DASHBOARD_SOCKET_DISCONNECTED} from './dashboard-actions';
 import {getEventManagerState} from './reducers';
-import {CompScore, FightResult} from "@frontend-nx/protobuf";
+import {CompScore, FightResult, FightStatus} from "@frontend-nx/protobuf";
 
 
 export interface DashboardState {
@@ -33,4 +33,5 @@ export interface IScoreboardFightResultSet {
   fightId: string;
   fightResult: FightResult;
   scores: CompScore[];
+  status: FightStatus;
 }

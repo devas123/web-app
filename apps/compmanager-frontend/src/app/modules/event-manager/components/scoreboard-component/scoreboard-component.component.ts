@@ -16,7 +16,7 @@ import {
   Competitor, CompScore,
   FightDescription,
   FightResult,
-  FightResultOption,
+  FightResultOption, FightStatus,
   Score
 } from "@frontend-nx/protobuf";
 
@@ -148,8 +148,8 @@ export class ScoreboardComponentComponent implements AfterContentInit {
         resultTypeId: `${resultType.id}`,
         winnerId: competitor.id
       },
-      scores: this.fight.scores
-
+      scores: this.fight.scores,
+      status: FightStatus.FIGHT_STATUS_FINISHED
     });
   }
 
