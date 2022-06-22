@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {select, Store} from "@ngrx/store";
-import {AppState, getSelectedEventId} from "../reducers/global-reducers";
+import {AppState, dashboardGetSelectedPeriodSelectedFight, getSelectedEventId} from "../reducers/global-reducers";
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
@@ -8,14 +8,15 @@ import {
   eventManagerGetSelectedEventCompetitorsPageNumber,
   eventManagerGetSelectedEventCompetitorsPageSize,
   eventManagerGetSelectedEventSelectedCategory,
+  eventManagerGetSelectedEventSelectedCategoryFightsFilter,
   eventManagerGetSelectedEventSelectedCategoryId,
   eventManagerGetSelectedEventSelectedCategorySelectedStageFights,
   eventManagerGetSelectedEventSelectedCategorySelectedStageId,
   eventManagerGetSelectedEventSelectedCategorySelectedStages,
-  eventManagerGetSelectedEventSelectedCategoryStagesAreLoading,
 } from "../modules/event-manager/redux/event-manager-reducers";
 import {Observable} from "rxjs";
 import {CategoryState, Competitor, FightDescription, StageDescriptor} from "@frontend-nx/protobuf";
+import {FightsFilter} from "../commons/model/competition.model";
 
 @Injectable()
 export class SelectorsService {
@@ -38,6 +39,10 @@ export class SelectorsService {
     select(eventManagerGetSelectedEventSelectedCategorySelectedStageFights)
   );
 
+  selectedFight$: Observable<FightDescription> = this.store.pipe(
+    select(dashboardGetSelectedPeriodSelectedFight)
+  );
+
   fighters$: Observable<Competitor[]> = this.store.pipe(
     select(eventManagerGetSelectedEventCompetitors)
   )
@@ -45,8 +50,8 @@ export class SelectorsService {
   selectedStageId$: Observable<string> = this.store.pipe(
     select(eventManagerGetSelectedEventSelectedCategorySelectedStageId)
   );
-  needFights$: Observable<boolean> = this.store.pipe(
-    select(eventManagerGetSelectedEventSelectedCategoryStagesAreLoading)
+  fightsFilter$: Observable<FightsFilter> = this.store.pipe(
+    select(eventManagerGetSelectedEventSelectedCategoryFightsFilter)
   );
   needCompetitors$: Observable<boolean> = this.store.pipe(
     select(eventManagerGetSelectedEventCompetitorsNeedCompetitors)

@@ -28,57 +28,11 @@ import {CommandType, MatsQueryResult} from "@frontend-nx/protobuf";
 
 @Injectable()
 export class DashboardEffects {
-  dashboardLoadAllMatsFights$ = createEffect(() => this.actions$.pipe(
-    ofType(PERIOD_SELECTED, REFRESH_MATS_VIEW),
-    withLatestFrom(this.store.pipe(
-      select(getSelectedEventId),
-      filter(competitionId => !!competitionId))),
-    switchMap(([command, competitionId]: [CommonAction, string]) =>
-      [dashboardLoadPeriodMatsCommand({competitionId, periodId: command.payload})])));
-
-  dashboardLoadMatFights$ = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_MAT_SELECTED),
-    filter((command: any) => command && !!command.payload),
-    mergeMap((command: any) => {
-      return this.infoService.getMatFights(command.competitionId, command.payload).pipe(
-        catchError(error => observableOf(errorEvent(error))),
-        map((result: any) => {
-          if (!result || result.type === ERROR_EVENT) {
-            return result;
-          } else {
-            return dashboardMatFightsLoaded(result.fights, result.competitors, command.payload);
-          }
-        }));
-    })));
-
-  dashboardLoadMats$ = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_LOAD_MATS_COMMAND),
-    mergeMap((command: any) => {
-      return this.infoService.getPeriodMats(command.competitionId, command.periodId).pipe(
-        map((result: MatsQueryResult) => dashboardMatsLoaded(result, command.competitionId, command.periodId)),
-        catchError(error => observableOf(errorEvent(error))),
-      );
-    })));
 
   dashboardUnload$ = createEffect(() => this.actions$.pipe(
     ofType(DASHBOARD_UNLOAD_DASHBOARD_STATE_COMMAND),
     switchMap(() => of(dashboardMatFightsUnloaded))
   ));
-
-  dashboardLoadFightResultOptions$ = createEffect(() => this.actions$.pipe(
-    ofType(DASHBOARD_FIGHT_SELECTED),
-    withLatestFrom(this.store.pipe(select(getSelectedEventId))),
-    filter(([command, competitionId]) => !!command && !!competitionId),
-    mergeMap(([command, competitionId]: [CommonAction, string]) => {
-      return this.infoService.getFight(competitionId, command.payload, command.categoryId).pipe(
-        map(result => dashboardFightLoaded({
-          competitionId: competitionId,
-          fightId: command.payload,
-          fightresultOptions: result.options,
-          fight: result.fight
-        })),
-        catchError(error => observableOf(errorEvent(error))));
-    })));
 
   dashboardForwardCommandsSync$ = createEffect(() => this.actions$.pipe(
     ofType(CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND),

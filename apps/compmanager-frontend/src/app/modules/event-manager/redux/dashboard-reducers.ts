@@ -1,5 +1,5 @@
 import {createSelector} from '@ngrx/store';
-import {AppState} from '../../../reducers/global-reducers';
+import {AppState, SuccessCallback} from '../../../reducers/global-reducers';
 import {DASHBOARD_SOCKET_CONNECTED, DASHBOARD_SOCKET_DISCONNECTED} from './dashboard-actions';
 import {getEventManagerState} from './reducers';
 import {CompScore, FightResult, FightStatus} from "@frontend-nx/protobuf";
@@ -29,9 +29,11 @@ export interface State extends AppState {
 export interface IScoreboardFightResultSet {
   competitionId: string;
   categoryId: string;
+  periodId: string;
   matId: string;
   fightId: string;
   fightResult: FightResult;
   scores: CompScore[];
   status: FightStatus;
+  successCallback: SuccessCallback;
 }

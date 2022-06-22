@@ -465,7 +465,7 @@ export class InfoService {
       );
   }
 
-  getPeriodMats(competitionId: any, periodId: any): Observable<MatsQueryResult> {
+  getPeriodMats(competitionId: any, periodId: string): Observable<MatsQueryResult> {
     return this.httpGet(competitionIdPrefix(competitionId)(`period/${periodId}/mat`), {
       headers: this.headers
     })
@@ -474,20 +474,20 @@ export class InfoService {
       );
   }
 
-  getFight(competitionId: string, fightId: string, categoryId: string): Observable<{ fight: FightDescription, options: FightResultOption[] }> {
-    return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/fight/${fightId}`), {
+  getFight(competitionId: string, fightId: string): Observable<{ fight: FightDescription, options: FightResultOption[] }> {
+    return this.httpGet(competitionIdPrefix(competitionId)(`fight/${fightId}`), {
       headers: this.headers
     }).pipe(
       map(r => r.getFightByIdResponse?.fightDescription),
-      mergeMap(result => this.getFightResultOptions(competitionId, categoryId, result?.stageId)
+      mergeMap(result => this.getFightResultOptions(competitionId, result?.stageId)
         .pipe(
           map(options => ({fight: result, options}))
         ))
     );
   }
 
-  getFightResultOptions(competitionId: string, categoryId: string, stageId: string): Observable<FightResultOption[]> {
-    return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/resultoptions`), {
+  getFightResultOptions(competitionId: string, stageId: string): Observable<FightResultOption[]> {
+    return this.httpGet(competitionIdPrefix(competitionId)(`stage/${stageId}/resultoptions`), {
       headers: this.headers
     })
       .pipe(

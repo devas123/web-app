@@ -33,7 +33,7 @@ import {
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
-  EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED,
+  EVENT_MANAGER_FIGHTS_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
@@ -66,6 +66,7 @@ import {
 } from '../actions/actions';
 import {COMPETITION_PROPERTIES_LOADED} from '../actions/misc';
 import {
+  DASHBOARD_CLAIM_FIGHTS,
   DASHBOARD_FIGHT_LOADED,
   DASHBOARD_FIGHT_SELECTED,
   DASHBOARD_FIGHT_UNSELECTED,
@@ -99,6 +100,11 @@ import {
 
 export type SuccessCallback = (actions: Action[]) => any
 export type ErrorCallback = (error: any) => any
+
+const noNeedFights = {
+  needFights: false
+};
+
 
 export interface AppState {
   events: EventPropsEntities;
@@ -311,7 +317,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case BATCH_ACTION:
         return batchReducer(action, state, competitionStateReducer);
       case CommandType.GENERATE_BRACKETS_COMMAND: {
-        state.selectedEventCategories.selectedCategoryStages.needFights = true;
+        state.fights.filter = {
+          needFights: true,
+        }
+
         break;
       }
       case EventType.BRACKETS_GENERATED: {
@@ -332,7 +341,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const payload = event.messageInfo.fightsAddedToStagePayload;
           if (payload.stageId === state.selectedEventCategories.selectedCategoryStages.selectedStageId) {
             state.fights = fightEntityAdapter.upsertMany(payload.fights, state.fights);
-            state.selectedEventCategories.selectedCategoryStages.needFights = false;
+            state.fights.filter = noNeedFights;
           }
         }
         break;
@@ -343,7 +352,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED: {
         if (state.selectedEventCategories.selectedCategoryStages.selectedStageId !== action.selectedStageId) {
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = action.selectedStageId;
-          state.selectedEventCategories.selectedCategoryStages.needFights = true;
+          state.fights.filter = {
+            needFights: true,
+            byStageId: true
+          }
         }
         break;
       }
@@ -452,15 +464,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         return state;
       }
       case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING: {
-        state.selectedEventCategories.selectedCategoryStages.needFights = false;
+        state.fights.filter = noNeedFights;
         break;
       }
-      case EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADED: {
+      case EVENT_MANAGER_FIGHTS_LOADED: {
         const {fights} = action;
         if (fights && fights.length > 0) {
           state.fights
             = fightEntityAdapter.setAll(fights, state.fights);
-          state.selectedEventCategories.selectedCategoryStages.needFights = false;
+          state.fights.filter = noNeedFights;
         }
         break;
       }
@@ -479,7 +491,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(categoryStages, state.selectedEventCategories.selectedCategoryStages);
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = selectedStageId;
         }
-        state.selectedEventCategories.selectedCategoryStages.needFights = categoryStages?.length > 0;
+        let haveStages = categoryStages?.length > 0;
+        state.fights.filter = {
+          needFights: haveStages,
+          byStageId: haveStages
+        }
         break;
       }
 
@@ -608,6 +624,14 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         }
         break;
       }
+      case DASHBOARD_CLAIM_FIGHTS: {
+        const {periodId} = action;
+        state.fights.filter = {
+          needFights: true,
+          byPeriodId: periodId
+        }
+        break;
+      }
       case EventType.COMPETITOR_CATEGORY_CHANGED: {
         const event = action as Event;
         const payload = event.messageInfo.changeCompetitorCategoryPayload
@@ -623,19 +647,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED: {
         state.selectedEventCompetitors.competitorsFilter.pageNumber = action.payload;
         state.selectedEventCompetitors.competitorsFilter.needCompetitors = action.payload;
-        break;
-      }
-      case EventType.DASHBOARD_FIGHT_COMPETITORS_ASSIGNED: {
-        const event = action as Event;
-        const {assignments} = event.messageInfo.fightCompetitorsAssignedPayload;
-        const fightsDict = state.fights.entities;
-        const updates = assignments.map(assignment => {
-          const f = fightsDict[assignment.toFightId]
-          return <Update<FightDescription>>{
-            id: assignment.toFightId,
-            changes: {}
-          }
-        })
         break;
       }
       case EventType.DASHBOARD_FIGHT_RESULT_SET: {
@@ -804,13 +815,15 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         if (action.payload) {
           const payload = action.payload as { mats: MatState[], competitors: Competitor[], topFiveFightsForEachMat: FightDescription[] };
           state.selectedEventMats = matEntityAdapter.upsertMany(payload.mats, state.selectedEventMats);
-          state.fights = fightEntityAdapter.setAll(payload.topFiveFightsForEachMat, fightsInitialState)
+          state.fights.filter = noNeedFights;
+          state.fights = fightEntityAdapter.setAll(payload.topFiveFightsForEachMat, state.fights)
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(payload.competitors, competitorsInitialState)
         }
         break;
       }
       case DASHBOARD_FIGHT_LOADED: {
         if (state.fights.selectedFightId === action.fightId) {
+          state.fights.filter = noNeedFights;
           state.fights.selectedFightFightResultOptions = action.fightresultOptions || [];
           if (action.fight) {
             state.fights = fightEntityAdapter.upsertOne(action.fight, state.fights);
@@ -820,6 +833,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case DASHBOARD_MAT_SELECTED: {
         state.selectedEventMats.selectedMatId = action.payload;
+        state.fights.filter = {
+          needFights: true,
+          byMatId: action.payload
+        }
         break;
       }
       case DASHBOARD_MAT_UNSELECTED: {
@@ -832,6 +849,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const currentMatFights = _.flowRight(_.curryRight(_.filter)(f => f.matId !== action.matId), _.values)(state.fights.entities) as FightDescription[];
           state.fights = fightEntityAdapter.setAll([...fights, ...currentMatFights], state.fights);
           state.selectedEventCompetitors = competitorEntityAdapter.upsertMany(competitors, state.selectedEventCompetitors);
+          state.fights.filter = noNeedFights
         }
         break;
       }
@@ -842,6 +860,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case DASHBOARD_FIGHT_SELECTED: {
         state.fights.selectedFightId = action.payload;
+        state.fights.filter = {
+          needFights: true,
+          byId: action.payload
+        }
         break;
       }
       case DASHBOARD_FIGHT_UNSELECTED: {
@@ -873,6 +895,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       }
       case PERIOD_SELECTED: {
         state.selectedEventSchedule.periods.selectedPeriodId = action.payload;
+        state.fights.filter = {
+          needFights: true,
+          byPeriodId: action.payload
+        }
         break;
       }
       case EventType.SCHEDULE_DROPPED: {

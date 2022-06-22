@@ -142,6 +142,7 @@ export class ScoreboardComponentComponent implements AfterContentInit {
       categoryId: this.fight.categoryId,
       competitionId: this.fight.competitionId,
       matId: this.fight.mat.id,
+      periodId: this.fight.period,
       fightId: this.fight.id,
       fightResult: <FightResult>{
         reason: '',

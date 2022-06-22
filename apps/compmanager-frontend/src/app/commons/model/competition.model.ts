@@ -11,7 +11,6 @@ import {
   Competitor,
   FightDescription,
   FightResultOption,
-  GroupChangeType,
   RegistrationGroup,
   RegistrationPeriod,
   StageDescriptor
@@ -107,13 +106,26 @@ export interface GroupDescriptor {
 
 
 export interface CategoryBracketsStageCollection extends EntityState<StageDescriptor> {
-  selectedStageId: string | null;
-  needFights: boolean;
+  selectedStageId?: string;
 }
 
 export interface FightsCollection extends EntityState<FightDescription> {
-  selectedFightId: string | null;
+  selectedFightId?: string;
   selectedFightFightResultOptions: FightResultOption[] | null;
+  filter: FightsFilter
+}
+
+export interface FightsFilter {
+  needFights: boolean;
+  byId?: string;
+  byPeriodId?: string;
+  byMatId?: string;
+  byStageId?: boolean;
+}
+
+export interface PeriodAndMat {
+  periodId: string
+  matId: string
 }
 
 export interface CompetitorsCollection extends EntityState<Competitor> {
@@ -188,12 +200,14 @@ export const previewCategoriesEntityAdapter: EntityAdapter<CategoryDescriptor> =
 
 export const fightsInitialState: FightsCollection = fightEntityAdapter.getInitialState({
   selectedFightId: null,
-  selectedFightFightResultOptions: []
+  selectedFightFightResultOptions: [],
+  filter: <FightsFilter>{
+    needFights: false
+  }
 });
 
 export const stagesInitialState: CategoryBracketsStageCollection = stagesEntityAdapter.getInitialState({
   selectedStageId: null,
-  needFights: true,
   selectedStageFights: fightsInitialState
 });
 

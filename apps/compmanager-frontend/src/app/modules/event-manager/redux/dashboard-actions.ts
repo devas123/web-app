@@ -33,6 +33,7 @@ export const DASHBOARD_MAT_FIGHTS_LOADED = 'DASHBOARD_MAT_FIGHTS_LOADED';
 export const DASHBOARD_MAT_FIGHTS_UNLOADED = 'DASHBOARD_MAT_FIGHTS_UNLOADED';
 export const DASHBOARD_SOCKET_CONNECTED = 'DASHBOARD_SOCKET_CONNECTED';
 export const DASHBOARD_SOCKET_DISCONNECTED = 'DASHBOARD_SOCKET_DISCONNECTED';
+export const DASHBOARD_CLAIM_FIGHTS = 'DASHBOARD_CLAIM_FIGHTS';
 
 export const refreshMatView = (periodId, competitionId) => ({
   type: REFRESH_MATS_VIEW,
@@ -48,6 +49,7 @@ export const dashboardSocketDisconnected = {type: DASHBOARD_SOCKET_DISCONNECTED}
 
 export const dashboardFightOrderChangeCommand = createAction(CommandType.DASHBOARD_FIGHT_ORDER_CHANGE_COMMAND, props<IDashboardFightScheduleChangedPayload>());
 export const dashboardSetFightResultCommand = createAction(CommandType.DASHBOARD_SET_FIGHT_RESULT_COMMAND, props<IScoreboardFightResultSet>());
+export const dashboardClaimFights = createAction(DASHBOARD_CLAIM_FIGHTS, props<{ matId: string, periodId: string }>());
 
 
 export const dashboardPeriodSelected = (periodId, competitionId) => ({

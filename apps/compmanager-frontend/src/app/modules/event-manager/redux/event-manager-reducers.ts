@@ -209,14 +209,20 @@ export const {
   // select the total user count
 } = stagesEntityAdapter.getSelectors(eventManagerGetSelectedEventSelectedCategoryStagesCollection);
 
-export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, (stages) =>
-  stages.needFights);
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStage =
   createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageId, eventManagerGetSelectedEventSelectedCategoryStagesDictionary, (stageId, stages) => stageId && stages[stageId]);
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection =
   createSelector(getSelectedEventState, stage =>
     (stage && stage.fights) || fightsInitialState);
+
+export const eventManagerGetSelectedEventSelectedCategoryFightsFilter = createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection, (fights) =>
+  fights?.filter);
+
+
+export const eventManagerGetSelectedEventSelectedCategoryStagesAreLoading = createSelector(eventManagerGetSelectedEventSelectedCategoryStagesCollection, eventManagerGetSelectedEventSelectedCategorySelectedStageFightsCollection, (stages, fights) =>
+  Boolean(stages.selectedStageId) && fights?.filter?.needFights);
+
 
 export const eventManagerGetSelectedEventSelectedCategorySelectedStageBracketsType = createSelector(eventManagerGetSelectedEventSelectedCategorySelectedStage, stage => stage && stage.bracketType);
 

@@ -48,7 +48,7 @@ export class MatsOverviewContainerComponent extends CompetitionManagerModuleRout
     this.competitionId$ = info.competitionId$;
     this.selectedPeriodMats$ = this.store.pipe(select(dashboardGetSelectedPeriodMats));
     this.selectedPeriod$ = this.store.pipe(select(getSelectedEventSelectedPeriod));
-    this.fights$ = menuService.selectors.fights$;
+    this.fights$ = menuService.dataProviderService.fightsInterest$;
   }
 
   navigateBack() {

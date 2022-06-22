@@ -8,14 +8,18 @@ import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
-  eventManagerCategoryBracketsStageFightsLoaded,
-  eventManagerCategoryBracketsStageFightsLoading,
   eventManagerCategoryStagesLoaded,
   eventManagerCategoryStateLoaded,
-  eventManagerFightersForCompetitionLoaded
+  eventManagerFightersForCompetitionLoaded,
+  eventManagerFightsLoaded
 } from "../modules/event-manager/redux/event-manager-actions";
 import {combineLatest, Observable, using} from "rxjs";
 import {Competitor, FightDescription} from "@frontend-nx/protobuf";
+import {
+  dashboardFightLoaded,
+  dashboardMatFightsLoaded,
+  dashboardMatsLoaded
+} from "../modules/event-manager/redux/dashboard-actions";
 
 @Injectable()
 export class DataProviderService {
@@ -69,18 +73,59 @@ export class DataProviderService {
     () => this.selectors.stages$
   )
 
+  private requireFight$ = combineLatest([
+    this.selectors.competitionId$,
+    this.selectors.fightsFilter$]).pipe(
+    filter(([competitionId, fightsFilter]) => fightsFilter.needFights && Boolean(fightsFilter.byId) && Boolean(competitionId)),
+    switchMap(([competitionId, filter]) => {
+      if (Boolean(filter.byId)) {
+        return this.infoService.getFight(competitionId, filter.byId)
+          .pipe(
+            tap(result => this.store.dispatch(dashboardFightLoaded({
+                competitionId: competitionId,
+                fightId: filter.byId,
+                fightresultOptions: result.options,
+                fight: result.fight
+              }))
+            )
+          )
+      }
+    }),
+    share()
+  )
+
+
   private requireStageFights$ = combineLatest([
-    this.stages$,
     this.selectors.categoryId$,
     this.selectors.competitionId$,
     this.selectors.selectedStageId$,
-    this.selectors.needFights$]).pipe(
-    filter(([_, categoryId, competitionId, stageId, needFights]) => Boolean(categoryId) && Boolean(competitionId) && Boolean(stageId) && needFights),
-    tap(() => this.store.dispatch(eventManagerCategoryBracketsStageFightsLoading())),
-    switchMap(([_, categoryId, competitionId, stageId]) => this.infoService.getCategoryStageFights(competitionId, categoryId, stageId)),
-    tap(fights => {
-      if (fights) {
-        this.store.dispatch(eventManagerCategoryBracketsStageFightsLoaded({fights}))
+    this.selectors.fightsFilter$]).pipe(
+    filter(([_, competitionId, _d, fightsFilter]) => fightsFilter.needFights && !Boolean(fightsFilter.byId) && Boolean(competitionId)),
+    switchMap(([categoryId, competitionId, stageId, filter]) => {
+      if (filter.byStageId && stageId && categoryId) {
+        return this.infoService.getCategoryStageFights(competitionId, categoryId, stageId).pipe(
+          tap(fights => {
+            if (fights) {
+              this.store.dispatch(eventManagerFightsLoaded({fights}))
+            }
+          })
+        )
+      }
+      if (Boolean(filter.byPeriodId)) {
+        return this.infoService.getPeriodMats(competitionId, filter.byPeriodId)
+          .pipe(
+            tap(mats => {
+              if (mats) {
+                this.store.dispatch(dashboardMatsLoaded(mats, competitionId, filter.byPeriodId))
+              }
+            })
+          )
+      }
+      if (Boolean(filter.byMatId)) {
+        return this.infoService.getMatFights(competitionId, filter.byMatId)
+          .pipe(
+            tap(result => this.store.dispatch(dashboardMatFightsLoaded(result.fights, result.competitors, filter.byMatId)))
+          )
       }
     }),
     share()
@@ -89,6 +134,11 @@ export class DataProviderService {
   fightsInterest$: Observable<FightDescription[]> = using(
     () => this.requireStageFights$.subscribe(),
     () => this.selectors.fights$
+  )
+
+  selectedFightInterest$: Observable<FightDescription> = using(
+    () => this.requireFight$.subscribe(),
+    () => this.selectors.selectedFight$
   )
 
   private requireFighters$ = combineLatest([

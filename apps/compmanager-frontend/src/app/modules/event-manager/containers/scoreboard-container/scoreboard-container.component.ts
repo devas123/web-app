@@ -1,8 +1,7 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {
   AppState,
   dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
-  dashboardGetSelectedPeriodSelectedFight,
   dashboardGetSelectedPeriodSelectedMatFights,
   getSelectedEventGetSelectedMat,
   getSelectedEventId,
@@ -14,12 +13,12 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
-import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {
+  dashboardClaimFights,
   dashboardFightSelected,
   dashboardFightUnselected,
-  dashboardSetFightResultCommand,
-  refreshMatView
+  dashboardSetFightResultCommand
 } from '../../redux/dashboard-actions';
 import {
   eventManagerGetCategoryIdForFightId,
@@ -37,7 +36,7 @@ import {CategoryState, Competitor, FightDescription, FightResultOption} from "@f
   templateUrl: './scoreboard-container.component.html',
   styleUrls: ['./scoreboard-container.component.scss']
 })
-export class ScoreboardContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
+export class ScoreboardContainerComponent extends CompetitionManagerModuleRouterEntryComponent {
 
   subs = new Subscription();
 
@@ -83,16 +82,13 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
         )))
     ).subscribe(this.store));
 
-    this.matFights$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedMatFights)
-    );
+    this.matFights$ = this.menuService.dataProviderService.fightsInterest$;
+
     this.selectedPeriodId$ = this.store.pipe(
       select(getSelectedEventSelectedPeriodId)
     );
 
-    this.selectedFight$ = this.store.pipe(
-      select(dashboardGetSelectedPeriodSelectedFight)
-    );
+    this.selectedFight$ = this.menuService.dataProviderService.selectedFightInterest$
 
     this.selectedFightFightResultOptions$ = this.store.pipe(
       select(dashboardGetSelectedPeriodMatSelectedFightFightResultOptions)
@@ -127,14 +123,13 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
     }
   }
 
-  ngOnDestroy(): void {
-    this.selectedPeriodId$.pipe(withLatestFrom(this.store.pipe(select(getSelectedEventId))), filter(([periodId, eventId]) => !!periodId && !!eventId),
-      map(([periodId, eventId]) => refreshMatView(periodId, eventId)), take(1))
-      .subscribe(this.store);
-    this.subs.unsubscribe();
-  }
-
   sendFightResult(fightResult: IScoreboardFightResultSet) {
-    this.store.dispatch(dashboardSetFightResultCommand(fightResult));
+    this.store.dispatch(dashboardSetFightResultCommand({
+      ...fightResult,
+      successCallback: () => this.store.dispatch(dashboardClaimFights({
+        matId: fightResult.matId,
+        periodId: fightResult.periodId
+      }))
+    }));
   }
 }
