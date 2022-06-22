@@ -57,7 +57,7 @@
               y="80%">{{getCompetitor(fight?.scores[ci]?.competitorId)?.academy | getacademy:15}}
             </svg:text>
             <!--      score      -->
-            <svg:svg *ngIf="fight?.status === 'FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
+            <svg:svg *ngIf="fight?.status === 'FIGHT_STATUS_FINISHED' && fight.scores[ci]?.score" x="70%" width="30%">
               <svg:g>
                 <svg:rect
                   x="33%"
@@ -144,7 +144,7 @@
             y="80%">{{getCompetitor(thirdPlaceFight?.scores[ci]?.competitorId)?.academy | getacademy:15}}
           </svg:text>
           <!--      score      -->
-          <svg:svg *ngIf="thirdPlaceFight?.status === 'FINISHED' && thirdPlaceFight.scores[ci]?.score" x="70%"
+          <svg:svg *ngIf="thirdPlaceFight?.status === 'FIGHT_STATUS_FINISHED' && thirdPlaceFight.scores[ci]?.score" x="70%"
                    width="30%">
             <svg:g>
               <svg:rect
