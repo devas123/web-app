@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {
   AppState,
   dashboardGetSelectedPeriodMatSelectedFightFightResultOptions,
-  dashboardGetSelectedPeriodSelectedMatFights,
   getSelectedEventGetSelectedMat,
   getSelectedEventId,
   getSelectedEventSelectedPeriod,
@@ -76,7 +75,7 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
             if (fightId && categoryId) {
               return dashboardFightSelected(fightId, categoryId);
             } else {
-              return dashboardFightUnselected;
+              return dashboardFightUnselected();
             }
           }
         )))
@@ -126,10 +125,13 @@ export class ScoreboardContainerComponent extends CompetitionManagerModuleRouter
   sendFightResult(fightResult: IScoreboardFightResultSet) {
     this.store.dispatch(dashboardSetFightResultCommand({
       ...fightResult,
-      successCallback: () => this.store.dispatch(dashboardClaimFights({
-        matId: fightResult.matId,
-        periodId: fightResult.periodId
-      }))
+      successCallback: () => {
+        this.store.dispatch(dashboardClaimFights({
+          matId: fightResult.matId,
+          periodId: fightResult.periodId
+        }));
+        this.store.dispatch(dashboardFightUnselected());
+      }
     }));
   }
 }

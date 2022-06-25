@@ -38,7 +38,7 @@ export class Effects {
           return allActions.competitionsLoaded(payload);
         }),
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
-    )));
+    )), {useEffectsErrorHandler: true});
 
   loadRegistrationInfo$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_REGISTRATION_INFO),
@@ -48,14 +48,14 @@ export class Effects {
           return allActions.registrationInfoLoaded(payload);
         }),
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
-    )));
+    )), {useEffectsErrorHandler: true});
 
   globalCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       allActions.START_COMPETITION_COMMAND),
     mergeMap((action: CommonAction) => {
       let cmd = InfoService.createCommandWithPayload(action)
       return this.infoService.sendCommand(cmd, action.competitionId)
-    })), {dispatch: false});
+    })), {dispatch: false, useEffectsErrorHandler: true});
 
   globalCommandsSync$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(
       CommandType.DELETE_CATEGORY_COMMAND,
@@ -78,7 +78,7 @@ export class Effects {
           map((actions) => batchAction({actions})),
           catchError(executeErrorCallbacks(action))
         );
-    })));
+    })), {useEffectsErrorHandler: true});
 
   createCompetition$: Observable<Action> = createEffect(() => this.actions$.pipe(ofType(CommandType.CREATE_COMPETITION_COMMAND),
     mergeMap(action =>

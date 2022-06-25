@@ -3,7 +3,6 @@ import {Router} from '@angular/router';
 import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {dashboardUnloadState} from '../../redux/dashboard-actions';
 import {filter, map} from 'rxjs/operators';
 import {loadScheduleCommand} from '../../redux/event-manager-actions';
 
@@ -28,7 +27,6 @@ export class DashboardContainerComponent implements  OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-    this.store.dispatch(dashboardUnloadState);
   }
 
 }
