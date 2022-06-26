@@ -37,5 +37,6 @@ yarn run start
 
 This command will start the application at http://localhost:4200/
 
+Then you have 1 week to make it all work before release, otherwise you'll be punished
 
 
