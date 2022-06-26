@@ -1290,12 +1290,16 @@ export interface FightResultOption {
   loserAdditionalPoints?: number | undefined;
 }
 
+export interface FightReference {
+  fightId: string;
+  referenceType: FightReferenceType;
+}
+
 export interface FightDescription {
   id: string;
   categoryId: string;
   fightName?: string | undefined;
-  winFight?: string | undefined;
-  loseFight?: string | undefined;
+  connections: FightReference[];
   scores: CompScore[];
   duration: number;
   round: number;
@@ -3021,13 +3025,86 @@ export const FightResultOption = {
   },
 };
 
+function createBaseFightReference(): FightReference {
+  return {
+    fightId: '',
+    referenceType: FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN,
+  };
+}
+
+export const FightReference = {
+  encode(
+    message: FightReference,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.fightId !== '') {
+      writer.uint32(10).string(message.fightId);
+    }
+    if (
+      message.referenceType !== FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN
+    ) {
+      writer
+        .uint32(16)
+        .int32(fightReferenceTypeToNumber(message.referenceType));
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FightReference {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFightReference();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.fightId = reader.string();
+          break;
+        case 2:
+          message.referenceType = fightReferenceTypeFromJSON(reader.int32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FightReference {
+    return {
+      fightId: isSet(object.fightId) ? String(object.fightId) : '',
+      referenceType: isSet(object.referenceType)
+        ? fightReferenceTypeFromJSON(object.referenceType)
+        : FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN,
+    };
+  },
+
+  toJSON(message: FightReference): unknown {
+    const obj: any = {};
+    message.fightId !== undefined && (obj.fightId = message.fightId);
+    message.referenceType !== undefined &&
+      (obj.referenceType = fightReferenceTypeToJSON(message.referenceType));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FightReference>, I>>(
+    object: I
+  ): FightReference {
+    const message = createBaseFightReference();
+    message.fightId = object.fightId ?? '';
+    message.referenceType =
+      object.referenceType ?? FightReferenceType.FIGHT_REFERENCE_TYPE_UNKNOWN;
+    return message;
+  },
+};
+
 function createBaseFightDescription(): FightDescription {
   return {
     id: '',
     categoryId: '',
     fightName: undefined,
-    winFight: undefined,
-    loseFight: undefined,
+    connections: [],
     scores: [],
     duration: 0,
     round: 0,
@@ -3062,11 +3139,8 @@ export const FightDescription = {
     if (message.fightName !== undefined) {
       writer.uint32(26).string(message.fightName);
     }
-    if (message.winFight !== undefined) {
-      writer.uint32(34).string(message.winFight);
-    }
-    if (message.loseFight !== undefined) {
-      writer.uint32(42).string(message.loseFight);
+    for (const v of message.connections) {
+      FightReference.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.scores) {
       CompScore.encode(v!, writer.uint32(50).fork()).ldelim();
@@ -3145,10 +3219,9 @@ export const FightDescription = {
           message.fightName = reader.string();
           break;
         case 4:
-          message.winFight = reader.string();
-          break;
-        case 5:
-          message.loseFight = reader.string();
+          message.connections.push(
+            FightReference.decode(reader, reader.uint32())
+          );
           break;
         case 6:
           message.scores.push(CompScore.decode(reader, reader.uint32()));
@@ -3216,8 +3289,9 @@ export const FightDescription = {
       id: isSet(object.id) ? String(object.id) : '',
       categoryId: isSet(object.categoryId) ? String(object.categoryId) : '',
       fightName: isSet(object.fightName) ? String(object.fightName) : undefined,
-      winFight: isSet(object.winFight) ? String(object.winFight) : undefined,
-      loseFight: isSet(object.loseFight) ? String(object.loseFight) : undefined,
+      connections: Array.isArray(object?.connections)
+        ? object.connections.map((e: any) => FightReference.fromJSON(e))
+        : [],
       scores: Array.isArray(object?.scores)
         ? object.scores.map((e: any) => CompScore.fromJSON(e))
         : [],
@@ -3261,8 +3335,13 @@ export const FightDescription = {
     message.id !== undefined && (obj.id = message.id);
     message.categoryId !== undefined && (obj.categoryId = message.categoryId);
     message.fightName !== undefined && (obj.fightName = message.fightName);
-    message.winFight !== undefined && (obj.winFight = message.winFight);
-    message.loseFight !== undefined && (obj.loseFight = message.loseFight);
+    if (message.connections) {
+      obj.connections = message.connections.map((e) =>
+        e ? FightReference.toJSON(e) : undefined
+      );
+    } else {
+      obj.connections = [];
+    }
     if (message.scores) {
       obj.scores = message.scores.map((e) =>
         e ? CompScore.toJSON(e) : undefined
@@ -3309,8 +3388,8 @@ export const FightDescription = {
     message.id = object.id ?? '';
     message.categoryId = object.categoryId ?? '';
     message.fightName = object.fightName ?? undefined;
-    message.winFight = object.winFight ?? undefined;
-    message.loseFight = object.loseFight ?? undefined;
+    message.connections =
+      object.connections?.map((e) => FightReference.fromPartial(e)) || [];
     message.scores = object.scores?.map((e) => CompScore.fromPartial(e)) || [];
     message.duration = object.duration ?? 0;
     message.round = object.round ?? 0;

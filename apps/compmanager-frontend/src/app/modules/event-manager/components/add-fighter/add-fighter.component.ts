@@ -4,7 +4,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {
   Academy,
-  CategoryDescriptor,
+  CategoryDescriptor, CategoryState,
   Competitor,
   CompetitorRegistrationStatus,
   FullAcademyInfo
@@ -22,7 +22,7 @@ export class AddFighterComponent  {
 
   form: FormGroup;
   @Input()
-  categories: CategoryDescriptor[];
+  categories: CategoryState[];
 
   @Output()
   closeClicked = new EventEmitter();
@@ -39,9 +39,8 @@ export class AddFighterComponent  {
   }
 
 
-  optionsFilter = (options: CategoryDescriptor[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat).toLowerCase().includes(filter.toLowerCase()));
-  academyOptionsFilter = (options: FullAcademyInfo[], filter: string) => options.filter(acad => acad.id && acad.name?.toLowerCase()?.includes(filter.toLowerCase()));
-  formatter = (option: CategoryDescriptor, _query?: string) => AddFighterComponent.displayCategory(option);
+  optionsFilter = (options: CategoryState[], filter: string) => options.filter(cat => cat.id && AddFighterComponent.displayCategory(cat?.category).toLowerCase().includes(filter.toLowerCase()));
+  formatter = (option: CategoryState, _query?: string) => AddFighterComponent.displayCategory(option?.category);
   academyFormatter = (option: FullAcademyInfo, _query?: string) => option?.name.trim();
   academyLookup: LookupFn<FullAcademyInfo> = (query: string, _initial?: FullAcademyInfo) => {
     if (_initial) {

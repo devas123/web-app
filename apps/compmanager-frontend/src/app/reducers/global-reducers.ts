@@ -650,25 +650,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         state.selectedEventCompetitors.competitorsFilter.needCompetitors = action.payload;
         break;
       }
-      case EventType.DASHBOARD_FIGHT_RESULT_SET: {
-        const event = action as Event
-        const {fightResult, fightId, status, scores} = event.messageInfo.setFightResultPayload
-        const update = <Update<FightDescription>>{
-          id: fightId,
-          changes: {
-            fightResult,
-            status,
-            scores
-          }
-        };
-        const fightEntities = state.fights.entities
-        if (Boolean(fightEntities[fightId])) {
-          state.fights = fightEntityAdapter.updateOne(update, {
-            ...state.fights
-          });
-        }
-        break;
-      }
       case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {
         const event = action as Event
         const {newFights, updates, removedFighids} = event.messageInfo.fightEditorChangesAppliedPayload;

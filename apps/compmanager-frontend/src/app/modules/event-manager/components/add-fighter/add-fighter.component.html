@@ -75,7 +75,7 @@
   (click)="submitForm()"
   >
   </compmanager-frontend-submit-button>
-  <compmanager-frontend-form-error-list [isDismissable]="false">
+  <compmanager-frontend-form-error-list [isDismissable]="false" *ngIf="form.invalid && form.dirty">
     <compmanager-frontend-form-error-message
       [control]="email"
       [name]="'Email'">
