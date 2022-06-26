@@ -24,6 +24,7 @@ import {collectingReducer, defaultSelectionColor, generateUuid, uniqueFilter} fr
 import {
   CategoryDescriptor,
   CategoryState,
+  MatDescription,
   MatState,
   Period,
   ScheduleRequirement,
@@ -34,6 +35,12 @@ import {InternalScheduleState} from "../../../../reducers/global-reducers";
 export interface CatReq {
   cat?: CategoryState;
   req?: ScheduleRequirement;
+}
+
+export interface IGenerateSchedulePayload {
+  competitionId: String,
+  periods: Period[],
+  mats: MatDescription[]
 }
 
 @Component({
@@ -110,7 +117,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
   periodRemoved = new EventEmitter<string>();
 
   @Output()
-  generateSchedule = new EventEmitter<{ competitionId: String, periods: Period[], mats: MatState[] }>();
+  generateSchedule = new EventEmitter<IGenerateSchedulePayload>();
 
   @Output()
   periodsUpdated = new EventEmitter<{ periods: Period[], undispatchedRequirements: ScheduleRequirement[] }>();
@@ -147,7 +154,7 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
 
   sendGenerateSchedule() {
     this.generateSchedule.next({
-      competitionId: this.competitionId, periods: this.periods, mats: this.mats
+      competitionId: this.competitionId, periods: this.periods, mats: this.mats.map(m => m.matDescription)
     });
   }
 

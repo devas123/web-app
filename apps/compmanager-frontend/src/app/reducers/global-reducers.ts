@@ -322,7 +322,6 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
         state.fights.filter = {
           needFights: true,
         }
-
         break;
       }
       case EventType.BRACKETS_GENERATED: {
@@ -333,17 +332,9 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           const firstStage = stages.find(s => s.stageOrder === minStage);
           state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.setAll(stages, state.selectedEventCategories.selectedCategoryStages);
           state.selectedEventCategories.selectedCategoryStages.selectedStageId = firstStage.id;
-          state.fights = fightsInitialState;
-        }
-        break;
-      }
-      case EventType.FIGHTS_ADDED_TO_STAGE: {
-        const event = action as Event;
-        if (state.selectedEventCategories.selectedCategoryId === event.messageInfo.categoryId) {
-          const payload = event.messageInfo.fightsAddedToStagePayload;
-          if (payload.stageId === state.selectedEventCategories.selectedCategoryStages.selectedStageId) {
-            state.fights = fightEntityAdapter.upsertMany(payload.fights, state.fights);
-            state.fights.filter = noNeedFights;
+          state.fights.filter = {
+            needFights: true,
+            byStageId: true
           }
         }
         break;
@@ -670,9 +661,12 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
             scores
           }
         };
-        state.fights = fightEntityAdapter.updateOne(update, {
-          ...state.fights
-        });
+        const fightEntities = state.fights.entities
+        if (Boolean(fightEntities[fightId])) {
+          state.fights = fightEntityAdapter.updateOne(update, {
+            ...state.fights
+          });
+        }
         break;
       }
       case EventType.FIGHTS_EDITOR_CHANGE_APPLIED: {

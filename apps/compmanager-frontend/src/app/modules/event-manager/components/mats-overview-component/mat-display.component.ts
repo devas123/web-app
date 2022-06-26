@@ -8,23 +8,26 @@ import * as _ from 'lodash'
 @Component({
   selector: 'app-mat-display',
   template: `
-    <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat?.matDescription)">Area
-      view
-    </button>
-    <div class="header">{{title}}</div>
-    <div class="ui middle aligned list" cdkDropList [cdkDropListData]="_fightsByMat[mat.matDescription.id]"
-         (cdkDropListDropped)="drop($event, mat.matDescription?.id)">
-      <a class="item draggable" *ngFor="let fight of _fightsByMat[mat.matDescription.id]" cdkDrag (cdkDragStarted)="dragStart()"
-         (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
-        <div class="content">
-          <app-fight-display [fight]="fight"
-                             [categories]="categories"
-                             [competitors]="competitors"
-                             (competitorClicked)="competitorClicked.next($event)"></app-fight-display>
-        </div>
-      </a>
-    </div>
-    <div class="meta">{{mat.numberOfFights}} fights</div>
+    <ng-container *ngIf="_fightsByMat">
+      <button class="tiny ui compact right floated button" (click)="detailsViewSelected.next(mat?.matDescription)">Area
+        view
+      </button>
+      <div class="header">{{title}}</div>
+      <div class="ui middle aligned list" cdkDropList [cdkDropListData]="_fightsByMat[mat.matDescription.id]"
+           (cdkDropListDropped)="drop($event, mat.matDescription?.id)">
+        <a class="item draggable" *ngFor="let fight of _fightsByMat[mat.matDescription.id]" cdkDrag
+           (cdkDragStarted)="dragStart()"
+           (cdkDragEnded)="dragEnd()" [cdkDragData]="fight">
+          <div class="content">
+            <app-fight-display [fight]="fight"
+                               [categories]="categories"
+                               [competitors]="competitors"
+                               (competitorClicked)="competitorClicked.next($event)"></app-fight-display>
+          </div>
+        </a>
+      </div>
+      <div class="meta">{{mat.numberOfFights}} fights</div>
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['mats-overview-component.component.scss']
@@ -44,7 +47,7 @@ export class MatDisplayComponent {
 
   @Input()
   set fights(value: FightDescription[]) {
-    this._fightsByMat = _.groupBy(value, f => f.mat.id)
+    this._fightsByMat = _.groupBy(value, f => f.mat?.id ?? '')
   }
 
 

@@ -26,7 +26,7 @@ import {InfoService} from '../../../service/info.service';
 import {EventManagerService} from '../event-manager.service';
 import {LOGOUT} from '../../account/flux/actions';
 import {errorEvent} from '../../../actions/actions';
-import {CommandType, Event, GenerateCategoriesFromRestrictionsPayload, ManagedCompetition} from "@frontend-nx/protobuf";
+import {CommandType, GenerateCategoriesFromRestrictionsPayload, ManagedCompetition} from "@frontend-nx/protobuf";
 import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/compmanager-utils";
 
 @Injectable()
@@ -40,13 +40,14 @@ export class EventManagerEffects {
       CommandType.FIGHTS_EDITOR_APPLY_CHANGE,
       CommandType.GENERATE_CATEGORIES_COMMAND,
       CommandType.UPDATE_COMPETITOR_COMMAND,
+      CommandType.GENERATE_BRACKETS_COMMAND,
       CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
     concatMap((action: any) => {
       const command = InfoService.createCommandWithPayload(action);
       return this.infoService.sendCommandSync(command).pipe(
         tap(executeSuccessCallbacks(action)),
+        catchError(executeErrorCallbacks(action)),
         map((actions) => batchAction({actions})),
-        catchError(executeErrorCallbacks(action))
       )
     }),
     catchError(error => {
@@ -54,25 +55,6 @@ export class EventManagerEffects {
       return of(errorEvent(JSON.stringify(error)));
     })
   ));
-
-  generateBrackets$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(CommandType.GENERATE_BRACKETS_COMMAND),
-    mergeMap((action: any) => {
-      const command = InfoService.createCommandWithPayload(action);
-      return this.infoService.sendCommandSync(command).pipe(
-        tap(executeSuccessCallbacks(action)),
-        map((actions: Event[]) => {
-          return batchAction({actions: actions.sort((a, b) => b.localEventNumber - a.localEventNumber)});
-        }),
-        catchError(executeErrorCallbacks(action))
-      )
-    }),
-    catchError(error => {
-      console.error(error);
-      return of(errorEvent(JSON.stringify(error)));
-    })
-  ));
-
 
   loadMyCompetitions$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND),

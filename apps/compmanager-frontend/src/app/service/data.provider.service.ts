@@ -13,7 +13,7 @@ import {
   eventManagerFightersForCompetitionLoaded,
   eventManagerFightsLoaded
 } from "../modules/event-manager/redux/event-manager-actions";
-import {combineLatest, Observable, using} from "rxjs";
+import {combineLatest, Observable, of, using} from "rxjs";
 import {Competitor, FightDescription} from "@frontend-nx/protobuf";
 import {
   dashboardFightLoaded,
@@ -78,18 +78,16 @@ export class DataProviderService {
     this.selectors.fightsFilter$]).pipe(
     filter(([competitionId, fightsFilter]) => fightsFilter.needFights && Boolean(fightsFilter.byId) && Boolean(competitionId)),
     switchMap(([competitionId, filter]) => {
-      if (Boolean(filter.byId)) {
-        return this.infoService.getFight(competitionId, filter.byId)
-          .pipe(
-            tap(result => this.store.dispatch(dashboardFightLoaded({
-                competitionId: competitionId,
-                fightId: filter.byId,
-                fightresultOptions: result.options,
-                fight: result.fight
-              }))
-            )
+      return this.infoService.getFight(competitionId, filter.byId)
+        .pipe(
+          tap(result => this.store.dispatch(dashboardFightLoaded({
+              competitionId: competitionId,
+              fightId: filter.byId,
+              fightresultOptions: result.options,
+              fight: result.fight
+            }))
           )
-      }
+        )
     }),
     share()
   )
@@ -127,6 +125,7 @@ export class DataProviderService {
             tap(result => this.store.dispatch(dashboardMatFightsLoaded(result.fights, result.competitors, filter.byMatId)))
           )
       }
+      return of();
     }),
     share()
   )

@@ -23,7 +23,7 @@ export class DashboardEffects {
           catchError(executeErrorCallbacks(action))
         );
     })
-  ), {dispatch: false, useEffectsErrorHandler: true});
+  ), {useEffectsErrorHandler: true});
 
   constructor(private actions$: Actions,
               private infoService: InfoService) {
