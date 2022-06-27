@@ -658,8 +658,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
           state.fights = fightEntityAdapter.removeMany(removedFighids, state.fights);
           const selectedStageId = state.selectedEventCategories.selectedCategoryStages.selectedStageId;
           if (selectedStageId) {
-            state.fights = fightEntityAdapter.upsertMany(newFights.filter(f => f.stageId === selectedStageId), state.fights);
-            state.fights = fightEntityAdapter.upsertMany(updates.filter(f => f.stageId === selectedStageId), state.fights);
+            state.fights = fightEntityAdapter.upsertMany([...newFights, ...updates].filter(f => f.stageId === selectedStageId), state.fights);
           }
         }
         break;
