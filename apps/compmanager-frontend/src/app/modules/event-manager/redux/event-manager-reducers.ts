@@ -92,10 +92,11 @@ function addConnections(state: CategoryConstructorState, root: string, parent: a
 }
 
 function categoryConstructorStateReducer(st: CategoryConstructorState = initialCategoryConstructorState, action: any): CategoryConstructorState {
+  if (action.type === BATCH_ACTION) {
+    return batchReducer(action, st, categoryConstructorStateReducer);
+  }
   return produce(st, state => {
     switch (action.type) {
-      case BATCH_ACTION:
-        return batchReducer(action, state, categoryConstructorStateReducer);
       case COMPETITION_UNSELECTED: {
         return initialCategoryConstructorState;
       }

@@ -14,7 +14,7 @@ import {
       <div class="ui basic segment">
           <section>Set status</section>
           <div class="ui horizontal selection list">
-              <div class="item" [ngClass]="{selected: status === _status}" *ngFor="let status of getStageStatuses()" (click)="setStatus(status)">{{ status }}</div>
+              <div class="item" [ngClass]="{selected: status === _status}" *ngFor="let status of getStageStatuses()" (click)="setStatus(status)">{{ formatStatus(status) }}</div>
           </div>
       </div>
       <app-groups-editor *ngIf="bracketType === 'BRACKET_TYPE_GROUP'"
@@ -75,7 +75,11 @@ export class FightsEditorContainerComponent {
   }
 
   getStageStatuses() {
-    return Object.values(StageStatus).map(v => v as StageStatus);
+    return Object.values(StageStatus).map(v => v as StageStatus).filter(v => v != StageStatus.STAGE_STATUS_UNKNOWN);
+  }
+
+  formatStatus(v: StageStatus) {
+    return v.substring('STAGE_STATUS_'.length);
   }
 
   setStatus(status: StageStatus) {

@@ -51,7 +51,6 @@ export class EventManagerEffects {
       )
     }),
     catchError(error => {
-      console.error(error);
       return of(errorEvent(JSON.stringify(error)));
     })
   ));

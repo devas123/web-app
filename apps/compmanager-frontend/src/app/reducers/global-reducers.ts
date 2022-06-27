@@ -33,7 +33,6 @@ import {
   COMPETITION_SELECTED,
   COMPETITION_UNSELECTED,
   EVENT_MANAGER_CATEGORIES_LOADED,
-  EVENT_MANAGER_FIGHTS_LOADED,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_FIGHTS_LOADING,
   EVENT_MANAGER_CATEGORY_BRACKETS_STAGE_SELECTED,
   EVENT_MANAGER_CATEGORY_MOVED,
@@ -47,6 +46,7 @@ import {
   EVENT_MANAGER_FIGHTER_UNSELECTED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED,
   EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED,
+  EVENT_MANAGER_FIGHTS_LOADED,
   EVENT_MANAGER_HEADER_REMOVE,
   EVENT_MANAGER_HEADER_SET,
   EVENT_MANAGER_PERIOD_ADDED,
@@ -314,10 +314,11 @@ export function batchReducer<D>(action, state: D, reducer: (state: D, action: an
 }
 
 export function competitionStateReducer(st: CompetitionState = initialCompetitionState, action) {
+  if (action.type === BATCH_ACTION) {
+    return batchReducer(action, st, competitionStateReducer);
+  }
   return produce(st, state => {
     switch (action.type) {
-      case BATCH_ACTION:
-        return batchReducer(action, state, competitionStateReducer);
       case CommandType.GENERATE_BRACKETS_COMMAND: {
         state.fights.filter = {
           needFights: true,
@@ -674,7 +675,7 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
               stageStatus: status
             }
           }
-          state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.updateOne(update, state.selectedEventCategories.selectedCategoryStages);
+          state.selectedEventCategories.selectedCategoryStages = stagesEntityAdapter.updateOne(update, state.selectedEventCategories.selectedCategoryStages)
         }
         break;
       }
