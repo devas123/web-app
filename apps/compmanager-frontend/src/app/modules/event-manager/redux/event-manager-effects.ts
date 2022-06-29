@@ -33,7 +33,8 @@ import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/
 export class EventManagerEffects {
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
-    ofType(CommandType.UPDATE_REGISTRATION_INFO_COMMAND,
+    ofType(
+      CommandType.UPDATE_REGISTRATION_INFO_COMMAND,
       CommandType.DROP_CATEGORY_BRACKETS_COMMAND,
       CommandType.CREATE_FAKE_COMPETITORS_COMMAND,
       CommandType.UPDATE_STAGE_STATUS_COMMAND,
@@ -41,7 +42,8 @@ export class EventManagerEffects {
       CommandType.GENERATE_CATEGORIES_COMMAND,
       CommandType.UPDATE_COMPETITOR_COMMAND,
       CommandType.GENERATE_BRACKETS_COMMAND,
-      CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND),
+      CHANGE_CATEGORY_REGISTRATION_STATUS_COMMAND
+    ),
     concatMap((action: any) => {
       const command = InfoService.createCommandWithPayload(action);
       return this.infoService.sendCommandSync(command).pipe(
