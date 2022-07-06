@@ -557,11 +557,15 @@ export class ScheduleEditorComponent implements OnInit, OnChanges {
             const remainingFights = this.fightIdsByCategoryId[categoryId].filter(f => !result.requirements.find(sf => sf.fightIds.indexOf(f) >= 0));
             const dispatchedRequirements = result.requirements.filter(r => this._requirements.find(sr => sr.id === r.id));
             const newRequirements = result.requirements.filter(r => !this._requirements.find(sr => sr.id === r.id));
-            this._requirements.push(...newRequirements);
+            this._requirements = produce(this._requirements, draft => {
+              draft.push(...newRequirements)
+            });
             this.updateRequirements(dispatchedRequirements);
             if (remainingFights && remainingFights.length > 0) {
               const defaultSr = this.createSrFromFightIds(undefined)(undefined)(ScheduleRequirementType.SCHEDULE_REQUIREMENT_TYPE_CATEGORIES)(remainingFights, [categoryId]);
-              this._requirements.push(defaultSr);
+              this._requirements = produce(this._requirements, draft => {
+                draft.push(defaultSr)
+              });
             }
             this.persistUpdates();
           }

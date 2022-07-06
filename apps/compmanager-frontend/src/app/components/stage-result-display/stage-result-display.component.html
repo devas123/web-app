@@ -1,5 +1,5 @@
 <ng-container *ngIf="!!stage">
-  <table class="ui compact table" *ngIf="stage?.bracketType !== 'GROUP'">
+  <table class="ui compact table" *ngIf="stage?.bracketType !== 'BRACKET_TYPE_GROUP'">
     <thead>
     <tr>
       <th>Name</th>
@@ -15,7 +15,7 @@
     </tr>
     </tbody>
   </table>
-  <ng-container *ngIf="stage?.bracketType === 'GROUP'">
+  <ng-container *ngIf="stage?.bracketType === 'BRACKET_TYPE_GROUP'">
     <table class="ui compact table" *ngFor="let group of getGroupIds()">
       <thead>
       <tr>

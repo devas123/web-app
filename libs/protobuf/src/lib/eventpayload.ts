@@ -2,6 +2,8 @@
 import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import {
+  DiGraph,
+  CategoryFightsIndex,
   CategoryDescriptor,
   CompetitionProperties,
   RegistrationInfo,
@@ -29,6 +31,8 @@ import { Timestamp } from './google/protobuf/timestamp';
 
 export interface BracketsGeneratedPayload {
   stages: StageDescriptor[];
+  stageGraph?: DiGraph;
+  categoryFightsIndex?: CategoryFightsIndex;
 }
 
 export interface CategoryAddedPayload {
@@ -129,7 +133,7 @@ export interface StageStatusUpdatedPayload {
 }
 
 function createBaseBracketsGeneratedPayload(): BracketsGeneratedPayload {
-  return { stages: [] };
+  return { stages: [], stageGraph: undefined, categoryFightsIndex: undefined };
 }
 
 export const BracketsGeneratedPayload = {
@@ -139,6 +143,15 @@ export const BracketsGeneratedPayload = {
   ): _m0.Writer {
     for (const v of message.stages) {
       StageDescriptor.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.stageGraph !== undefined) {
+      DiGraph.encode(message.stageGraph, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.categoryFightsIndex !== undefined) {
+      CategoryFightsIndex.encode(
+        message.categoryFightsIndex,
+        writer.uint32(26).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -156,6 +169,15 @@ export const BracketsGeneratedPayload = {
         case 1:
           message.stages.push(StageDescriptor.decode(reader, reader.uint32()));
           break;
+        case 2:
+          message.stageGraph = DiGraph.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.categoryFightsIndex = CategoryFightsIndex.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -169,6 +191,12 @@ export const BracketsGeneratedPayload = {
       stages: Array.isArray(object?.stages)
         ? object.stages.map((e: any) => StageDescriptor.fromJSON(e))
         : [],
+      stageGraph: isSet(object.stageGraph)
+        ? DiGraph.fromJSON(object.stageGraph)
+        : undefined,
+      categoryFightsIndex: isSet(object.categoryFightsIndex)
+        ? CategoryFightsIndex.fromJSON(object.categoryFightsIndex)
+        : undefined,
     };
   },
 
@@ -181,6 +209,14 @@ export const BracketsGeneratedPayload = {
     } else {
       obj.stages = [];
     }
+    message.stageGraph !== undefined &&
+      (obj.stageGraph = message.stageGraph
+        ? DiGraph.toJSON(message.stageGraph)
+        : undefined);
+    message.categoryFightsIndex !== undefined &&
+      (obj.categoryFightsIndex = message.categoryFightsIndex
+        ? CategoryFightsIndex.toJSON(message.categoryFightsIndex)
+        : undefined);
     return obj;
   },
 
@@ -190,6 +226,15 @@ export const BracketsGeneratedPayload = {
     const message = createBaseBracketsGeneratedPayload();
     message.stages =
       object.stages?.map((e) => StageDescriptor.fromPartial(e)) || [];
+    message.stageGraph =
+      object.stageGraph !== undefined && object.stageGraph !== null
+        ? DiGraph.fromPartial(object.stageGraph)
+        : undefined;
+    message.categoryFightsIndex =
+      object.categoryFightsIndex !== undefined &&
+      object.categoryFightsIndex !== null
+        ? CategoryFightsIndex.fromPartial(object.categoryFightsIndex)
+        : undefined;
     return message;
   },
 };

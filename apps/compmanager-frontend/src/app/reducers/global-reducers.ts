@@ -73,7 +73,7 @@ import {
   DASHBOARD_MAT_FIGHTS_LOADED,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MAT_UNSELECTED,
-  DASHBOARD_MATS_LOADED,
+  DASHBOARD_MATS_LOADED, DASHBOARD_PERIOD_UNSELECTED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid, uniqueFilter} from "../modules/account/utils";
@@ -860,6 +860,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
       case EVENT_MANAGER_FIGHTER_SELECTED: {
         const {payload} = action;
         state.selectedEventCompetitors.selectedCompetitorId = payload;
+        break;
+      }
+      case DASHBOARD_PERIOD_UNSELECTED: {
+        state.fights.selectedFightId
         break;
       }
       case EVENT_MANAGER_FIGHTER_UNSELECTED: {

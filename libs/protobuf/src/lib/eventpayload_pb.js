@@ -521,7 +521,9 @@ proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.toObject = f
 proto.compservice.model.protobuf.BracketsGeneratedPayload.toObject = function(includeInstance, msg) {
   var f, obj = {
     stagesList: jspb.Message.toObjectList(msg.getStagesList(),
-    model_pb.StageDescriptor.toObject, includeInstance)
+    model_pb.StageDescriptor.toObject, includeInstance),
+    stagegraph: (f = msg.getStagegraph()) && model_pb.DiGraph.toObject(includeInstance, f),
+    categoryfightsindex: (f = msg.getCategoryfightsindex()) && model_pb.CategoryFightsIndex.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -563,6 +565,16 @@ proto.compservice.model.protobuf.BracketsGeneratedPayload.deserializeBinaryFromR
       reader.readMessage(value,model_pb.StageDescriptor.deserializeBinaryFromReader);
       msg.addStages(value);
       break;
+    case 2:
+      var value = new model_pb.DiGraph;
+      reader.readMessage(value,model_pb.DiGraph.deserializeBinaryFromReader);
+      msg.setStagegraph(value);
+      break;
+    case 3:
+      var value = new model_pb.CategoryFightsIndex;
+      reader.readMessage(value,model_pb.CategoryFightsIndex.deserializeBinaryFromReader);
+      msg.setCategoryfightsindex(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -598,6 +610,22 @@ proto.compservice.model.protobuf.BracketsGeneratedPayload.serializeBinaryToWrite
       1,
       f,
       model_pb.StageDescriptor.serializeBinaryToWriter
+    );
+  }
+  f = message.getStagegraph();
+  if (f != null) {
+    writer.writeMessage(
+      2,
+      f,
+      model_pb.DiGraph.serializeBinaryToWriter
+    );
+  }
+  f = message.getCategoryfightsindex();
+  if (f != null) {
+    writer.writeMessage(
+      3,
+      f,
+      model_pb.CategoryFightsIndex.serializeBinaryToWriter
     );
   }
 };
@@ -638,6 +666,80 @@ proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.addStages = 
  */
 proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.clearStagesList = function() {
   return this.setStagesList([]);
+};
+
+
+/**
+ * optional DiGraph stageGraph = 2;
+ * @return {?proto.compservice.model.protobuf.DiGraph}
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.getStagegraph = function() {
+  return /** @type{?proto.compservice.model.protobuf.DiGraph} */ (
+    jspb.Message.getWrapperField(this, model_pb.DiGraph, 2));
+};
+
+
+/**
+ * @param {?proto.compservice.model.protobuf.DiGraph|undefined} value
+ * @return {!proto.compservice.model.protobuf.BracketsGeneratedPayload} returns this
+*/
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.setStagegraph = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.compservice.model.protobuf.BracketsGeneratedPayload} returns this
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.clearStagegraph = function() {
+  return this.setStagegraph(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.hasStagegraph = function() {
+  return jspb.Message.getField(this, 2) != null;
+};
+
+
+/**
+ * optional CategoryFightsIndex categoryFightsIndex = 3;
+ * @return {?proto.compservice.model.protobuf.CategoryFightsIndex}
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.getCategoryfightsindex = function() {
+  return /** @type{?proto.compservice.model.protobuf.CategoryFightsIndex} */ (
+    jspb.Message.getWrapperField(this, model_pb.CategoryFightsIndex, 3));
+};
+
+
+/**
+ * @param {?proto.compservice.model.protobuf.CategoryFightsIndex|undefined} value
+ * @return {!proto.compservice.model.protobuf.BracketsGeneratedPayload} returns this
+*/
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.setCategoryfightsindex = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.compservice.model.protobuf.BracketsGeneratedPayload} returns this
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.clearCategoryfightsindex = function() {
+  return this.setCategoryfightsindex(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.BracketsGeneratedPayload.prototype.hasCategoryfightsindex = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 

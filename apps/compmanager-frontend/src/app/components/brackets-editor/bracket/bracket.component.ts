@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
-import {BracketType, Competitor, FightDescription, StageRoundType} from "@frontend-nx/protobuf";
+import {BracketType, Competitor, FightDescription, FightResultOption, StageRoundType} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-bracket',
@@ -15,6 +15,9 @@ export class BracketComponent extends CommonFightsEditorComponent  {
     this._fights = fights.filter(f => f.roundType !== StageRoundType.STAGE_ROUND_TYPE_LOSER_BRACKETS);
     this._loserFights = fights.filter(f => f.roundType === StageRoundType.STAGE_ROUND_TYPE_LOSER_BRACKETS);
   }
+
+  @Input()
+  fightResultOptions: FightResultOption[]
 
   @Input()
   bracketsType: BracketType;

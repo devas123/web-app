@@ -1494,6 +1494,8 @@ export interface CommandProcessorCompetitionState {
   registrationInfo?: RegistrationInfo | undefined;
   schedule?: Schedule | undefined;
   revision: number;
+  stageGraph?: DiGraph | undefined;
+  categoryIdToFightsIndex: { [key: string]: CategoryFightsIndex };
 }
 
 export interface CommandProcessorCompetitionState_CompetitorsEntry {
@@ -1514,6 +1516,58 @@ export interface CommandProcessorCompetitionState_FightsEntry {
 export interface CommandProcessorCompetitionState_CategoriesEntry {
   key: string;
   value?: CategoryDescriptor;
+}
+
+export interface CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry {
+  key: string;
+  value?: CategoryFightsIndex;
+}
+
+export interface DiGraph {
+  outgoingConnections: { [key: string]: IdList };
+  incomingConnections: { [key: string]: IdList };
+}
+
+export interface DiGraph_OutgoingConnectionsEntry {
+  key: string;
+  value?: IdList;
+}
+
+export interface DiGraph_IncomingConnectionsEntry {
+  key: string;
+  value?: IdList;
+}
+
+export interface FightDigraph {
+  outgoingConnections: { [key: string]: FightReferenceList };
+  incomingConnections: { [key: string]: FightReferenceList };
+}
+
+export interface FightDigraph_OutgoingConnectionsEntry {
+  key: string;
+  value?: FightReferenceList;
+}
+
+export interface FightDigraph_IncomingConnectionsEntry {
+  key: string;
+  value?: FightReferenceList;
+}
+
+export interface CategoryFightsIndex {
+  stageIdToFightsGraph: { [key: string]: FightDigraph };
+}
+
+export interface CategoryFightsIndex_StageIdToFightsGraphEntry {
+  key: string;
+  value?: FightDigraph;
+}
+
+export interface IdList {
+  ids: string[];
+}
+
+export interface FightReferenceList {
+  references: FightReference[];
 }
 
 export interface CompetitionState {
@@ -5765,6 +5819,8 @@ function createBaseCommandProcessorCompetitionState(): CommandProcessorCompetiti
     registrationInfo: undefined,
     schedule: undefined,
     revision: 0,
+    stageGraph: undefined,
+    categoryIdToFightsIndex: {},
   };
 }
 
@@ -5818,6 +5874,15 @@ export const CommandProcessorCompetitionState = {
     if (message.revision !== 0) {
       writer.uint32(2400).int32(message.revision);
     }
+    if (message.stageGraph !== undefined) {
+      DiGraph.encode(message.stageGraph, writer.uint32(3202).fork()).ldelim();
+    }
+    Object.entries(message.categoryIdToFightsIndex).forEach(([key, value]) => {
+      CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry.encode(
+        { key: key as any, value },
+        writer.uint32(4002).fork()
+      ).ldelim();
+    });
     return writer;
   },
 
@@ -5890,6 +5955,19 @@ export const CommandProcessorCompetitionState = {
         case 300:
           message.revision = reader.int32();
           break;
+        case 400:
+          message.stageGraph = DiGraph.decode(reader, reader.uint32());
+          break;
+        case 500:
+          const entry500 =
+            CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry.decode(
+              reader,
+              reader.uint32()
+            );
+          if (entry500.value !== undefined) {
+            message.categoryIdToFightsIndex[entry500.key] = entry500.value;
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5943,6 +6021,17 @@ export const CommandProcessorCompetitionState = {
         ? Schedule.fromJSON(object.schedule)
         : undefined,
       revision: isSet(object.revision) ? Number(object.revision) : 0,
+      stageGraph: isSet(object.stageGraph)
+        ? DiGraph.fromJSON(object.stageGraph)
+        : undefined,
+      categoryIdToFightsIndex: isObject(object.categoryIdToFightsIndex)
+        ? Object.entries(object.categoryIdToFightsIndex).reduce<{
+            [key: string]: CategoryFightsIndex;
+          }>((acc, [key, value]) => {
+            acc[key] = CategoryFightsIndex.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
     };
   },
 
@@ -5987,6 +6076,16 @@ export const CommandProcessorCompetitionState = {
         : undefined);
     message.revision !== undefined &&
       (obj.revision = Math.round(message.revision));
+    message.stageGraph !== undefined &&
+      (obj.stageGraph = message.stageGraph
+        ? DiGraph.toJSON(message.stageGraph)
+        : undefined);
+    obj.categoryIdToFightsIndex = {};
+    if (message.categoryIdToFightsIndex) {
+      Object.entries(message.categoryIdToFightsIndex).forEach(([k, v]) => {
+        obj.categoryIdToFightsIndex[k] = CategoryFightsIndex.toJSON(v);
+      });
+    }
     return obj;
   },
 
@@ -6041,6 +6140,18 @@ export const CommandProcessorCompetitionState = {
         ? Schedule.fromPartial(object.schedule)
         : undefined;
     message.revision = object.revision ?? 0;
+    message.stageGraph =
+      object.stageGraph !== undefined && object.stageGraph !== null
+        ? DiGraph.fromPartial(object.stageGraph)
+        : undefined;
+    message.categoryIdToFightsIndex = Object.entries(
+      object.categoryIdToFightsIndex ?? {}
+    ).reduce<{ [key: string]: CategoryFightsIndex }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = CategoryFightsIndex.fromPartial(value);
+      }
+      return acc;
+    }, {});
     return message;
   },
 };
@@ -6356,6 +6467,904 @@ export const CommandProcessorCompetitionState_CategoriesEntry = {
       object.value !== undefined && object.value !== null
         ? CategoryDescriptor.fromPartial(object.value)
         : undefined;
+    return message;
+  },
+};
+
+function createBaseCommandProcessorCompetitionState_CategoryIdToFightsIndexEntry(): CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry {
+  return { key: '', value: undefined };
+}
+
+export const CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry = {
+  encode(
+    message: CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      CategoryFightsIndex.encode(
+        message.value,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message =
+      createBaseCommandProcessorCompetitionState_CategoryIdToFightsIndexEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = CategoryFightsIndex.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(
+    object: any
+  ): CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? CategoryFightsIndex.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(
+    message: CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry
+  ): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? CategoryFightsIndex.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry>,
+      I
+    >
+  >(object: I): CommandProcessorCompetitionState_CategoryIdToFightsIndexEntry {
+    const message =
+      createBaseCommandProcessorCompetitionState_CategoryIdToFightsIndexEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? CategoryFightsIndex.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseDiGraph(): DiGraph {
+  return { outgoingConnections: {}, incomingConnections: {} };
+}
+
+export const DiGraph = {
+  encode(
+    message: DiGraph,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    Object.entries(message.outgoingConnections).forEach(([key, value]) => {
+      DiGraph_OutgoingConnectionsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork()
+      ).ldelim();
+    });
+    Object.entries(message.incomingConnections).forEach(([key, value]) => {
+      DiGraph_IncomingConnectionsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(18).fork()
+      ).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DiGraph {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDiGraph();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          const entry1 = DiGraph_OutgoingConnectionsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry1.value !== undefined) {
+            message.outgoingConnections[entry1.key] = entry1.value;
+          }
+          break;
+        case 2:
+          const entry2 = DiGraph_IncomingConnectionsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry2.value !== undefined) {
+            message.incomingConnections[entry2.key] = entry2.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DiGraph {
+    return {
+      outgoingConnections: isObject(object.outgoingConnections)
+        ? Object.entries(object.outgoingConnections).reduce<{
+            [key: string]: IdList;
+          }>((acc, [key, value]) => {
+            acc[key] = IdList.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      incomingConnections: isObject(object.incomingConnections)
+        ? Object.entries(object.incomingConnections).reduce<{
+            [key: string]: IdList;
+          }>((acc, [key, value]) => {
+            acc[key] = IdList.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
+  },
+
+  toJSON(message: DiGraph): unknown {
+    const obj: any = {};
+    obj.outgoingConnections = {};
+    if (message.outgoingConnections) {
+      Object.entries(message.outgoingConnections).forEach(([k, v]) => {
+        obj.outgoingConnections[k] = IdList.toJSON(v);
+      });
+    }
+    obj.incomingConnections = {};
+    if (message.incomingConnections) {
+      Object.entries(message.incomingConnections).forEach(([k, v]) => {
+        obj.incomingConnections[k] = IdList.toJSON(v);
+      });
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DiGraph>, I>>(object: I): DiGraph {
+    const message = createBaseDiGraph();
+    message.outgoingConnections = Object.entries(
+      object.outgoingConnections ?? {}
+    ).reduce<{ [key: string]: IdList }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = IdList.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.incomingConnections = Object.entries(
+      object.incomingConnections ?? {}
+    ).reduce<{ [key: string]: IdList }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = IdList.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    return message;
+  },
+};
+
+function createBaseDiGraph_OutgoingConnectionsEntry(): DiGraph_OutgoingConnectionsEntry {
+  return { key: '', value: undefined };
+}
+
+export const DiGraph_OutgoingConnectionsEntry = {
+  encode(
+    message: DiGraph_OutgoingConnectionsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      IdList.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DiGraph_OutgoingConnectionsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDiGraph_OutgoingConnectionsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = IdList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DiGraph_OutgoingConnectionsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? IdList.fromJSON(object.value) : undefined,
+    };
+  },
+
+  toJSON(message: DiGraph_OutgoingConnectionsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value ? IdList.toJSON(message.value) : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<DiGraph_OutgoingConnectionsEntry>, I>
+  >(object: I): DiGraph_OutgoingConnectionsEntry {
+    const message = createBaseDiGraph_OutgoingConnectionsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? IdList.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseDiGraph_IncomingConnectionsEntry(): DiGraph_IncomingConnectionsEntry {
+  return { key: '', value: undefined };
+}
+
+export const DiGraph_IncomingConnectionsEntry = {
+  encode(
+    message: DiGraph_IncomingConnectionsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      IdList.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DiGraph_IncomingConnectionsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDiGraph_IncomingConnectionsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = IdList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DiGraph_IncomingConnectionsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? IdList.fromJSON(object.value) : undefined,
+    };
+  },
+
+  toJSON(message: DiGraph_IncomingConnectionsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value ? IdList.toJSON(message.value) : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<DiGraph_IncomingConnectionsEntry>, I>
+  >(object: I): DiGraph_IncomingConnectionsEntry {
+    const message = createBaseDiGraph_IncomingConnectionsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? IdList.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseFightDigraph(): FightDigraph {
+  return { outgoingConnections: {}, incomingConnections: {} };
+}
+
+export const FightDigraph = {
+  encode(
+    message: FightDigraph,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    Object.entries(message.outgoingConnections).forEach(([key, value]) => {
+      FightDigraph_OutgoingConnectionsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork()
+      ).ldelim();
+    });
+    Object.entries(message.incomingConnections).forEach(([key, value]) => {
+      FightDigraph_IncomingConnectionsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(18).fork()
+      ).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FightDigraph {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFightDigraph();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          const entry1 = FightDigraph_OutgoingConnectionsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry1.value !== undefined) {
+            message.outgoingConnections[entry1.key] = entry1.value;
+          }
+          break;
+        case 2:
+          const entry2 = FightDigraph_IncomingConnectionsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry2.value !== undefined) {
+            message.incomingConnections[entry2.key] = entry2.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FightDigraph {
+    return {
+      outgoingConnections: isObject(object.outgoingConnections)
+        ? Object.entries(object.outgoingConnections).reduce<{
+            [key: string]: FightReferenceList;
+          }>((acc, [key, value]) => {
+            acc[key] = FightReferenceList.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      incomingConnections: isObject(object.incomingConnections)
+        ? Object.entries(object.incomingConnections).reduce<{
+            [key: string]: FightReferenceList;
+          }>((acc, [key, value]) => {
+            acc[key] = FightReferenceList.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
+  },
+
+  toJSON(message: FightDigraph): unknown {
+    const obj: any = {};
+    obj.outgoingConnections = {};
+    if (message.outgoingConnections) {
+      Object.entries(message.outgoingConnections).forEach(([k, v]) => {
+        obj.outgoingConnections[k] = FightReferenceList.toJSON(v);
+      });
+    }
+    obj.incomingConnections = {};
+    if (message.incomingConnections) {
+      Object.entries(message.incomingConnections).forEach(([k, v]) => {
+        obj.incomingConnections[k] = FightReferenceList.toJSON(v);
+      });
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FightDigraph>, I>>(
+    object: I
+  ): FightDigraph {
+    const message = createBaseFightDigraph();
+    message.outgoingConnections = Object.entries(
+      object.outgoingConnections ?? {}
+    ).reduce<{ [key: string]: FightReferenceList }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = FightReferenceList.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    message.incomingConnections = Object.entries(
+      object.incomingConnections ?? {}
+    ).reduce<{ [key: string]: FightReferenceList }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = FightReferenceList.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    return message;
+  },
+};
+
+function createBaseFightDigraph_OutgoingConnectionsEntry(): FightDigraph_OutgoingConnectionsEntry {
+  return { key: '', value: undefined };
+}
+
+export const FightDigraph_OutgoingConnectionsEntry = {
+  encode(
+    message: FightDigraph_OutgoingConnectionsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      FightReferenceList.encode(
+        message.value,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): FightDigraph_OutgoingConnectionsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFightDigraph_OutgoingConnectionsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = FightReferenceList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FightDigraph_OutgoingConnectionsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? FightReferenceList.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: FightDigraph_OutgoingConnectionsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? FightReferenceList.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<FightDigraph_OutgoingConnectionsEntry>, I>
+  >(object: I): FightDigraph_OutgoingConnectionsEntry {
+    const message = createBaseFightDigraph_OutgoingConnectionsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? FightReferenceList.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseFightDigraph_IncomingConnectionsEntry(): FightDigraph_IncomingConnectionsEntry {
+  return { key: '', value: undefined };
+}
+
+export const FightDigraph_IncomingConnectionsEntry = {
+  encode(
+    message: FightDigraph_IncomingConnectionsEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      FightReferenceList.encode(
+        message.value,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): FightDigraph_IncomingConnectionsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFightDigraph_IncomingConnectionsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = FightReferenceList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FightDigraph_IncomingConnectionsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? FightReferenceList.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: FightDigraph_IncomingConnectionsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? FightReferenceList.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<FightDigraph_IncomingConnectionsEntry>, I>
+  >(object: I): FightDigraph_IncomingConnectionsEntry {
+    const message = createBaseFightDigraph_IncomingConnectionsEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? FightReferenceList.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseCategoryFightsIndex(): CategoryFightsIndex {
+  return { stageIdToFightsGraph: {} };
+}
+
+export const CategoryFightsIndex = {
+  encode(
+    message: CategoryFightsIndex,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    Object.entries(message.stageIdToFightsGraph).forEach(([key, value]) => {
+      CategoryFightsIndex_StageIdToFightsGraphEntry.encode(
+        { key: key as any, value },
+        writer.uint32(10).fork()
+      ).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CategoryFightsIndex {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCategoryFightsIndex();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          const entry1 = CategoryFightsIndex_StageIdToFightsGraphEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry1.value !== undefined) {
+            message.stageIdToFightsGraph[entry1.key] = entry1.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CategoryFightsIndex {
+    return {
+      stageIdToFightsGraph: isObject(object.stageIdToFightsGraph)
+        ? Object.entries(object.stageIdToFightsGraph).reduce<{
+            [key: string]: FightDigraph;
+          }>((acc, [key, value]) => {
+            acc[key] = FightDigraph.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
+  },
+
+  toJSON(message: CategoryFightsIndex): unknown {
+    const obj: any = {};
+    obj.stageIdToFightsGraph = {};
+    if (message.stageIdToFightsGraph) {
+      Object.entries(message.stageIdToFightsGraph).forEach(([k, v]) => {
+        obj.stageIdToFightsGraph[k] = FightDigraph.toJSON(v);
+      });
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CategoryFightsIndex>, I>>(
+    object: I
+  ): CategoryFightsIndex {
+    const message = createBaseCategoryFightsIndex();
+    message.stageIdToFightsGraph = Object.entries(
+      object.stageIdToFightsGraph ?? {}
+    ).reduce<{ [key: string]: FightDigraph }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = FightDigraph.fromPartial(value);
+      }
+      return acc;
+    }, {});
+    return message;
+  },
+};
+
+function createBaseCategoryFightsIndex_StageIdToFightsGraphEntry(): CategoryFightsIndex_StageIdToFightsGraphEntry {
+  return { key: '', value: undefined };
+}
+
+export const CategoryFightsIndex_StageIdToFightsGraphEntry = {
+  encode(
+    message: CategoryFightsIndex_StageIdToFightsGraphEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      FightDigraph.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CategoryFightsIndex_StageIdToFightsGraphEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCategoryFightsIndex_StageIdToFightsGraphEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = FightDigraph.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CategoryFightsIndex_StageIdToFightsGraphEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value)
+        ? FightDigraph.fromJSON(object.value)
+        : undefined,
+    };
+  },
+
+  toJSON(message: CategoryFightsIndex_StageIdToFightsGraphEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined &&
+      (obj.value = message.value
+        ? FightDigraph.toJSON(message.value)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<CategoryFightsIndex_StageIdToFightsGraphEntry>,
+      I
+    >
+  >(object: I): CategoryFightsIndex_StageIdToFightsGraphEntry {
+    const message = createBaseCategoryFightsIndex_StageIdToFightsGraphEntry();
+    message.key = object.key ?? '';
+    message.value =
+      object.value !== undefined && object.value !== null
+        ? FightDigraph.fromPartial(object.value)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseIdList(): IdList {
+  return { ids: [] };
+}
+
+export const IdList = {
+  encode(
+    message: IdList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IdList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIdList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.ids.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IdList {
+    return {
+      ids: Array.isArray(object?.ids)
+        ? object.ids.map((e: any) => String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: IdList): unknown {
+    const obj: any = {};
+    if (message.ids) {
+      obj.ids = message.ids.map((e) => e);
+    } else {
+      obj.ids = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<IdList>, I>>(object: I): IdList {
+    const message = createBaseIdList();
+    message.ids = object.ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseFightReferenceList(): FightReferenceList {
+  return { references: [] };
+}
+
+export const FightReferenceList = {
+  encode(
+    message: FightReferenceList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.references) {
+      FightReference.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FightReferenceList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFightReferenceList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.references.push(
+            FightReference.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FightReferenceList {
+    return {
+      references: Array.isArray(object?.references)
+        ? object.references.map((e: any) => FightReference.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: FightReferenceList): unknown {
+    const obj: any = {};
+    if (message.references) {
+      obj.references = message.references.map((e) =>
+        e ? FightReference.toJSON(e) : undefined
+      );
+    } else {
+      obj.references = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FightReferenceList>, I>>(
+    object: I
+  ): FightReferenceList {
+    const message = createBaseFightReferenceList();
+    message.references =
+      object.references?.map((e) => FightReference.fromPartial(e)) || [];
     return message;
   },
 };

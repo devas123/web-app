@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Dictionary} from '@ngrx/entity';
 import {CommonFightsEditorComponent} from '../common-fights-editor.component';
-import {BracketType, Competitor, FightDescription} from "@frontend-nx/protobuf";
+import {BracketType, Competitor, FightDescription, FightResultOption} from "@frontend-nx/protobuf";
 
 
 @Component({
@@ -14,6 +14,7 @@ import {BracketType, Competitor, FightDescription} from "@frontend-nx/protobuf";
                          [changeFightsIds]="changeFightsIds"
                          [competitors]="competitors"
                          [groupName]="'Group ' + (i + 1)"
+                         [fightResultOptions]="fightResultOptions"
                          (fightSelected)="fightSelected.next($event)"></app-group-display>
     </div>`,
   styles: [`
@@ -29,6 +30,9 @@ export class MultipleGroupsDisplayComponent extends CommonFightsEditorComponent 
 
   @Input()
   competitors: Competitor[] = [];
+
+  @Input()
+  fightResultOptions: FightResultOption[]
 
 
   _fightsByGroups: Dictionary<FightDescription[]> = {} as Dictionary<FightDescription[]>;

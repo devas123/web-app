@@ -179,7 +179,7 @@ export const competitorEntityAdapter: EntityAdapter<Competitor> = createEntityAd
 
 export const fightEntityAdapter: EntityAdapter<FightDescription> = createEntityAdapter<FightDescription>({
   selectId: (fight: FightDescription) => fight.id,
-  sortComparer: false
+  sortComparer: (a, b) => a.numberOnMat - b.numberOnMat
 });
 
 export const stagesEntityAdapter: EntityAdapter<StageDescriptor> = createEntityAdapter<StageDescriptor>({

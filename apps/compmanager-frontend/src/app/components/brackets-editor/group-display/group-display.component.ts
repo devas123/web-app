@@ -7,10 +7,18 @@ import {
   defaultUncompletableColor,
   uniqueFilter
 } from '../../../modules/account/utils';
-import {BracketType, Competitor, CompScore, FightDescription, FightStatus} from "@frontend-nx/protobuf";
+import {
+  BracketType,
+  Competitor,
+  CompScore,
+  FightDescription,
+  FightResultOption,
+  FightStatus
+} from "@frontend-nx/protobuf";
 
 const W = `<span class="green centered">W</span>`;
 const L = `<span class="red centered">L</span>`;
+const D = `<span class="gray centered">Draw</span>`;
 
 @Component({
   selector: 'app-group-display',
@@ -20,6 +28,9 @@ const L = `<span class="red centered">L</span>`;
   encapsulation: ViewEncapsulation.None
 })
 export class GroupDisplayComponent extends CommonFightsEditorComponent implements OnChanges {
+
+  @Input()
+  fightResultOptions: FightResultOption[]
 
   @Input()
   set fights(value: FightDescription[]) {
@@ -72,7 +83,9 @@ export class GroupDisplayComponent extends CommonFightsEditorComponent implement
     if (f && f.fightResult && f.fightResult.winnerId && f.fightResult.winnerId.length > 0) {
       let wol: string;
       const score = f.scores.find(s => s.competitorId === competitorPerspective)?.score;
-      if (competitorPerspective === f.fightResult.winnerId) {
+      if (this.fightResultOptions?.find(o => o.id === f.fightResult.resultTypeId)?.draw) {
+        wol = D;
+      } else if (competitorPerspective === f.fightResult.winnerId) {
         wol = W;
       } else {
         wol = L;

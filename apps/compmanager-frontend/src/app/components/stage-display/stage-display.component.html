@@ -13,12 +13,15 @@
   <p></p>
 </div>
 <ng-container *ngIf="!fightsAreLoading">
-  <button *ngIf="unseededCompetitors?.length > 0 && selectedStage?.stageOrder === 0" class="ui button margin-vertical" (click)="unseededCompetitorsClicked.next()">{{unseededCompetitors?.length}} competitors not seeded.</button>
+  <button *ngIf="unseededCompetitors?.length > 0 && selectedStage?.stageOrder === 0" class="ui button margin-vertical"
+          (click)="unseededCompetitorsClicked.next()">{{unseededCompetitors?.length}} competitors not seeded.
+  </button>
   <app-bracket
     [stageType]="selectedStage?.stageType"
     [fights]="fights"
     [bracketsType]="selectedStage?.bracketType"
     [bucketsize]="bucketSize"
+    [fightResultOptions]="selectedStage?.stageResultDescriptor?.fightResultOptions"
     [editMode]="editMode"
     (fightSelected)="selectFight($event)"
     [competitors]="competitors"
