@@ -17,6 +17,7 @@ message MatFightsQueryResult {
   repeated FightDescription fights = 2;
 }
 
+
 message PageInfo {
   int32 total = 1;
   int32 page = 2;
@@ -27,6 +28,16 @@ message MatsQueryResult {
   repeated Competitor competitors = 1;
   repeated MatState mats = 2;
   repeated FightDescription topFiveFightsForEachMat = 3;
+}
+
+message QueryServiceRequest {
+  oneof payload {
+    AddCompetitionInfoRequest addCompetitionInfoRequest = 1;
+  }
+}
+
+message AddCompetitionInfoRequest {
+  bytes competitionInfo = 1;
 }
 
 message QueryServiceResponse {
@@ -57,6 +68,7 @@ message QueryServiceResponse {
     GetStageFightsResponse         getStageFightsResponse = 24 ;
     GetAcademiesResponse getAcademiesResponse = 25;
     GetAcademyResponse getAcademyResponse = 26;
+    ErrorResponse errorResponse = 2700;
   }
 }
 
@@ -76,7 +88,7 @@ message GetCompetitionPropertiesResponse{
   optional CompetitionProperties competitionProperties = 1;
 }
 message GetCompetitionInfoTemplateResponse{
-  optional string template = 1;
+  bytes template = 1;
 }
 message GetScheduleResponse{
   optional Schedule schedule = 1;
@@ -132,6 +144,11 @@ message GetStageByIdResponse{
 }
 message GetStageFightsResponse{
   repeated FightDescription fights = 1;
+}
+
+message ErrorResponse {
+  optional string errorMessage = 1;
+  optional string errorReason = 2;
 }
 
 message GetAcademiesResponse {

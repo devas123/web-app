@@ -48,6 +48,8 @@ export const EVENT_MANAGER_FIGHTER_LOADED = 'EVENT_MANAGER_FIGHTER_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_LOADED';
 export const EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED = 'EVENT_MANAGER_FIGHTERS_FOR_COMPETITION_PAGE_UPDATED';
 export const EVENT_MANAGER_CATEGORIES_LOADED = 'EVENT_MANAGER_CATEGORIES_LOADED';
+export const EVENT_MANAGER_COMPETITION_INFO_LOADED = 'EVENT_MANAGER_COMPETITION_INFO_LOADED';
+export const EVENT_MANAGER_SAVE_COMPETITION_INFO = 'EVENT_MANAGER_SAVE_COMPETITION_INFO';
 export const EVENT_MANAGER_SCHEDULE_LOADED = 'EVENT_MANAGER_SCHEDULE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STATE_LOADED = 'EVENT_MANAGER_CATEGORY_STATE_LOADED';
 export const EVENT_MANAGER_CATEGORY_STAGES_LOADED = 'EVENT_MANAGER_CATEGORY_STAGES_LOADED';
@@ -106,6 +108,8 @@ export const eventManagerCategoryRestrictionGroupAdded = createAction(EVENT_MANA
 export const eventManagerCategoryRestrictionGroupRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_GROUP_REMOVED,
   props<{ name: string }>());
 export const eventManagerCategoryRestrictionRootAdded = createAction(EVENT_MANAGER_CATEGORY_ROOT_ADDED, props<{ root: string }>());
+export const eventManagerCompetitionInfoLoaded = createAction(EVENT_MANAGER_COMPETITION_INFO_LOADED, props<{ infoTemplate: string }>());
+export const eventManagerSaveCompetitionInfo = createAction(EVENT_MANAGER_SAVE_COMPETITION_INFO, props<{ infoTemplate: string }>());
 export const eventManagerCategoryRestrictionRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED, props<{ restrictionId: string }>());
 export const eventManagerLoadCategoryRestrictionsCommand = createAction(EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS);
 export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{ competitionId: string }>());

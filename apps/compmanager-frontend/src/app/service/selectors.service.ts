@@ -1,6 +1,11 @@
 import {Injectable} from "@angular/core";
 import {select, Store} from "@ngrx/store";
-import {AppState, dashboardGetSelectedPeriodSelectedFight, getSelectedEventId} from "../reducers/global-reducers";
+import {
+  AppState,
+  dashboardGetSelectedPeriodSelectedFight,
+  getSelectedEventId,
+  getSelectedEventInfoTemplate
+} from "../reducers/global-reducers";
 import {
   eventManagerGetSelectedEventCategories,
   eventManagerGetSelectedEventCompetitors,
@@ -68,6 +73,10 @@ export class SelectorsService {
 
   competitionId$: Observable<string> = this.store.pipe(
     select(getSelectedEventId)
+  );
+
+  competitionInfo$: Observable<string> = this.store.pipe(
+    select(getSelectedEventInfoTemplate)
   );
 
 }

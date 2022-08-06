@@ -47,6 +47,14 @@ export interface MatsQueryResult {
   topFiveFightsForEachMat: FightDescription[];
 }
 
+export interface QueryServiceRequest {
+  addCompetitionInfoRequest?: AddCompetitionInfoRequest | undefined;
+}
+
+export interface AddCompetitionInfoRequest {
+  competitionInfo: Uint8Array;
+}
+
 export interface QueryServiceResponse {
   getDefaultRestrictionsResponse?: GetDefaultRestrictionsResponse | undefined;
   getDefaultFightResultsResponse?: GetDefaultFightResultsResponse | undefined;
@@ -82,6 +90,7 @@ export interface QueryServiceResponse {
   getStageFightsResponse?: GetStageFightsResponse | undefined;
   getAcademiesResponse?: GetAcademiesResponse | undefined;
   getAcademyResponse?: GetAcademyResponse | undefined;
+  errorResponse?: ErrorResponse | undefined;
 }
 
 export interface GetDefaultRestrictionsResponse {
@@ -105,7 +114,7 @@ export interface GetCompetitionPropertiesResponse {
 }
 
 export interface GetCompetitionInfoTemplateResponse {
-  template?: string | undefined;
+  template: Uint8Array;
 }
 
 export interface GetScheduleResponse {
@@ -189,6 +198,11 @@ export interface GetStageByIdResponse {
 
 export interface GetStageFightsResponse {
   fights: FightDescription[];
+}
+
+export interface ErrorResponse {
+  errorMessage?: string | undefined;
+  errorReason?: string | undefined;
 }
 
 export interface GetAcademiesResponse {
@@ -620,6 +634,141 @@ export const MatsQueryResult = {
   },
 };
 
+function createBaseQueryServiceRequest(): QueryServiceRequest {
+  return { addCompetitionInfoRequest: undefined };
+}
+
+export const QueryServiceRequest = {
+  encode(
+    message: QueryServiceRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.addCompetitionInfoRequest !== undefined) {
+      AddCompetitionInfoRequest.encode(
+        message.addCompetitionInfoRequest,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryServiceRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryServiceRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.addCompetitionInfoRequest = AddCompetitionInfoRequest.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryServiceRequest {
+    return {
+      addCompetitionInfoRequest: isSet(object.addCompetitionInfoRequest)
+        ? AddCompetitionInfoRequest.fromJSON(object.addCompetitionInfoRequest)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryServiceRequest): unknown {
+    const obj: any = {};
+    message.addCompetitionInfoRequest !== undefined &&
+      (obj.addCompetitionInfoRequest = message.addCompetitionInfoRequest
+        ? AddCompetitionInfoRequest.toJSON(message.addCompetitionInfoRequest)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryServiceRequest>, I>>(
+    object: I
+  ): QueryServiceRequest {
+    const message = createBaseQueryServiceRequest();
+    message.addCompetitionInfoRequest =
+      object.addCompetitionInfoRequest !== undefined &&
+      object.addCompetitionInfoRequest !== null
+        ? AddCompetitionInfoRequest.fromPartial(
+            object.addCompetitionInfoRequest
+          )
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseAddCompetitionInfoRequest(): AddCompetitionInfoRequest {
+  return { competitionInfo: new Uint8Array() };
+}
+
+export const AddCompetitionInfoRequest = {
+  encode(
+    message: AddCompetitionInfoRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.competitionInfo.length !== 0) {
+      writer.uint32(10).bytes(message.competitionInfo);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AddCompetitionInfoRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddCompetitionInfoRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.competitionInfo = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddCompetitionInfoRequest {
+    return {
+      competitionInfo: isSet(object.competitionInfo)
+        ? bytesFromBase64(object.competitionInfo)
+        : new Uint8Array(),
+    };
+  },
+
+  toJSON(message: AddCompetitionInfoRequest): unknown {
+    const obj: any = {};
+    message.competitionInfo !== undefined &&
+      (obj.competitionInfo = base64FromBytes(
+        message.competitionInfo !== undefined
+          ? message.competitionInfo
+          : new Uint8Array()
+      ));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AddCompetitionInfoRequest>, I>>(
+    object: I
+  ): AddCompetitionInfoRequest {
+    const message = createBaseAddCompetitionInfoRequest();
+    message.competitionInfo = object.competitionInfo ?? new Uint8Array();
+    return message;
+  },
+};
+
 function createBaseQueryServiceResponse(): QueryServiceResponse {
   return {
     getDefaultRestrictionsResponse: undefined,
@@ -648,6 +797,7 @@ function createBaseQueryServiceResponse(): QueryServiceResponse {
     getStageFightsResponse: undefined,
     getAcademiesResponse: undefined,
     getAcademyResponse: undefined,
+    errorResponse: undefined,
   };
 }
 
@@ -812,6 +962,12 @@ export const QueryServiceResponse = {
         writer.uint32(210).fork()
       ).ldelim();
     }
+    if (message.errorResponse !== undefined) {
+      ErrorResponse.encode(
+        message.errorResponse,
+        writer.uint32(21602).fork()
+      ).ldelim();
+    }
     return writer;
   },
 
@@ -962,6 +1118,9 @@ export const QueryServiceResponse = {
             reader.uint32()
           );
           break;
+        case 2700:
+          message.errorResponse = ErrorResponse.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1081,6 +1240,9 @@ export const QueryServiceResponse = {
         : undefined,
       getAcademyResponse: isSet(object.getAcademyResponse)
         ? GetAcademyResponse.fromJSON(object.getAcademyResponse)
+        : undefined,
+      errorResponse: isSet(object.errorResponse)
+        ? ErrorResponse.fromJSON(object.errorResponse)
         : undefined,
     };
   },
@@ -1216,6 +1378,10 @@ export const QueryServiceResponse = {
     message.getAcademyResponse !== undefined &&
       (obj.getAcademyResponse = message.getAcademyResponse
         ? GetAcademyResponse.toJSON(message.getAcademyResponse)
+        : undefined);
+    message.errorResponse !== undefined &&
+      (obj.errorResponse = message.errorResponse
+        ? ErrorResponse.toJSON(message.errorResponse)
         : undefined);
     return obj;
   },
@@ -1373,6 +1539,10 @@ export const QueryServiceResponse = {
       object.getAcademyResponse !== undefined &&
       object.getAcademyResponse !== null
         ? GetAcademyResponse.fromPartial(object.getAcademyResponse)
+        : undefined;
+    message.errorResponse =
+      object.errorResponse !== undefined && object.errorResponse !== null
+        ? ErrorResponse.fromPartial(object.errorResponse)
         : undefined;
     return message;
   },
@@ -1730,7 +1900,7 @@ export const GetCompetitionPropertiesResponse = {
 };
 
 function createBaseGetCompetitionInfoTemplateResponse(): GetCompetitionInfoTemplateResponse {
-  return { template: undefined };
+  return { template: new Uint8Array() };
 }
 
 export const GetCompetitionInfoTemplateResponse = {
@@ -1738,8 +1908,8 @@ export const GetCompetitionInfoTemplateResponse = {
     message: GetCompetitionInfoTemplateResponse,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    if (message.template !== undefined) {
-      writer.uint32(10).string(message.template);
+    if (message.template.length !== 0) {
+      writer.uint32(10).bytes(message.template);
     }
     return writer;
   },
@@ -1755,7 +1925,7 @@ export const GetCompetitionInfoTemplateResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.template = reader.string();
+          message.template = reader.bytes();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1767,13 +1937,18 @@ export const GetCompetitionInfoTemplateResponse = {
 
   fromJSON(object: any): GetCompetitionInfoTemplateResponse {
     return {
-      template: isSet(object.template) ? String(object.template) : undefined,
+      template: isSet(object.template)
+        ? bytesFromBase64(object.template)
+        : new Uint8Array(),
     };
   },
 
   toJSON(message: GetCompetitionInfoTemplateResponse): unknown {
     const obj: any = {};
-    message.template !== undefined && (obj.template = message.template);
+    message.template !== undefined &&
+      (obj.template = base64FromBytes(
+        message.template !== undefined ? message.template : new Uint8Array()
+      ));
     return obj;
   },
 
@@ -1781,7 +1956,7 @@ export const GetCompetitionInfoTemplateResponse = {
     I extends Exact<DeepPartial<GetCompetitionInfoTemplateResponse>, I>
   >(object: I): GetCompetitionInfoTemplateResponse {
     const message = createBaseGetCompetitionInfoTemplateResponse();
-    message.template = object.template ?? undefined;
+    message.template = object.template ?? new Uint8Array();
     return message;
   },
 };
@@ -3200,6 +3375,75 @@ export const GetStageFightsResponse = {
   },
 };
 
+function createBaseErrorResponse(): ErrorResponse {
+  return { errorMessage: undefined, errorReason: undefined };
+}
+
+export const ErrorResponse = {
+  encode(
+    message: ErrorResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.errorMessage !== undefined) {
+      writer.uint32(10).string(message.errorMessage);
+    }
+    if (message.errorReason !== undefined) {
+      writer.uint32(18).string(message.errorReason);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ErrorResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseErrorResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.errorMessage = reader.string();
+          break;
+        case 2:
+          message.errorReason = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ErrorResponse {
+    return {
+      errorMessage: isSet(object.errorMessage)
+        ? String(object.errorMessage)
+        : undefined,
+      errorReason: isSet(object.errorReason)
+        ? String(object.errorReason)
+        : undefined,
+    };
+  },
+
+  toJSON(message: ErrorResponse): unknown {
+    const obj: any = {};
+    message.errorMessage !== undefined &&
+      (obj.errorMessage = message.errorMessage);
+    message.errorReason !== undefined &&
+      (obj.errorReason = message.errorReason);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ErrorResponse>, I>>(
+    object: I
+  ): ErrorResponse {
+    const message = createBaseErrorResponse();
+    message.errorMessage = object.errorMessage ?? undefined;
+    message.errorReason = object.errorReason ?? undefined;
+    return message;
+  },
+};
+
 function createBaseGetAcademiesResponse(): GetAcademiesResponse {
   return { academies: [], pageInfo: undefined };
 }
@@ -3349,6 +3593,40 @@ export const GetAcademyResponse = {
     return message;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
+
+const atob: (b64: string) => string =
+  globalThis.atob ||
+  ((b64) => globalThis.Buffer.from(b64, 'base64').toString('binary'));
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+const btoa: (bin: string) => string =
+  globalThis.btoa ||
+  ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  arr.forEach((byte) => {
+    bin.push(String.fromCharCode(byte));
+  });
+  return btoa(bin.join(''));
+}
 
 type Builtin =
   | Date

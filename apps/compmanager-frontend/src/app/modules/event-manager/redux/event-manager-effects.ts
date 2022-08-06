@@ -12,7 +12,7 @@ import {
   EVENT_MANAGER_DISCONNECT_SOCKET,
   EVENT_MANAGER_LOAD_COMPETITIONS_COMMAND,
   EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS,
-  EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS,
+  EVENT_MANAGER_LOAD_DEFAULT_FIGHT_RESULTS, EVENT_MANAGER_SAVE_COMPETITION_INFO, eventManagerCompetitionInfoLoaded,
   eventManagerDefaultFightResultsLoaded,
   eventManagerDefaultRestrictionsLoaded,
   eventManagerDisconnectSocket,
@@ -31,6 +31,18 @@ import {executeErrorCallbacks, executeSuccessCallbacks} from "../../../reducers/
 
 @Injectable()
 export class EventManagerEffects {
+  saveCompetitionInfoTemplate$: Observable<Action> = createEffect(() => this.actions$.pipe(
+    ofType(EVENT_MANAGER_SAVE_COMPETITION_INFO),
+    concatMap((action: any) => {
+      return this.infoService.saveCompetitionInfoTemplate(action.competitionId, action.infoTemplate).pipe(
+        catchError(executeErrorCallbacks(action)),
+        map(() => eventManagerCompetitionInfoLoaded({infoTemplate: action.infoTemplate})),
+      )
+    }),
+    catchError(error => {
+      return of(errorEvent(JSON.stringify(error)));
+    })
+  ))
 
   syncCommands$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(

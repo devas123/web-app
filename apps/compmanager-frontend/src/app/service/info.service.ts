@@ -1,5 +1,5 @@
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, mergeMap, tap, timeout} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, switchMap, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
@@ -93,6 +93,9 @@ export class InfoService {
 
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  private decoder = new TextDecoder()
+  private encoder = new TextEncoder()
 
   static commandFields = [
     'payload',
@@ -257,6 +260,30 @@ export class InfoService {
         map(r => r.getCompetitionPropertiesResponse?.competitionProperties)
       );
   }
+
+  getCompetitionInfoTemplate(competitionId: string): Observable<string> {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/info`, {
+      headers: this.headers
+    })
+      .pipe(
+        map(r => this.decoder.decode(r.getCompetitionInfoTemplateResponse?.template))
+      );
+  }
+
+  saveCompetitionInfoTemplate(competitionId: string, competitionInfoTemplate: string): Observable<QueryServiceResponse> {
+    return this.sendByteArrayToEndpoint(`${competitionQueryEndpoint}/${competitionId}/info`, this.encoder.encode(competitionInfoTemplate), this.defaultTimeout)
+      .pipe(
+        switchMap(arrayBuffer => {
+          const response = QueryServiceResponse.decode(new Uint8Array(arrayBuffer))
+          if (Boolean(response.errorResponse)) {
+            return throwError(response.errorResponse)
+          } else {
+            return of(response)
+          }
+        })
+      )
+  }
+
 
   getRegistrationInfo(competitionId: string): Observable<RegistrationInfo> {
     const params = {competitionId};

@@ -1444,7 +1444,6 @@ export interface CompetitionProperties {
   staffIds: string[];
   emailNotificationsEnabled: boolean;
   competitionName: string;
-  emailTemplate?: string | undefined;
   promoCodes: PromoCode[];
   startDate?: Date;
   schedulePublished: boolean;
@@ -1575,6 +1574,7 @@ export interface CompetitionState {
   categories: CategoryState[];
   properties?: CompetitionProperties;
   schedule?: Schedule;
+  infoTemplate?: Uint8Array | undefined;
 }
 
 export interface Schedule {
@@ -5134,7 +5134,6 @@ function createBaseCompetitionProperties(): CompetitionProperties {
     staffIds: [],
     emailNotificationsEnabled: false,
     competitionName: '',
-    emailTemplate: undefined,
     promoCodes: [],
     startDate: undefined,
     schedulePublished: false,
@@ -5165,9 +5164,6 @@ export const CompetitionProperties = {
     }
     if (message.competitionName !== '') {
       writer.uint32(42).string(message.competitionName);
-    }
-    if (message.emailTemplate !== undefined) {
-      writer.uint32(50).string(message.emailTemplate);
     }
     for (const v of message.promoCodes) {
       PromoCode.encode(v!, writer.uint32(58).fork()).ldelim();
@@ -5230,9 +5226,6 @@ export const CompetitionProperties = {
         case 5:
           message.competitionName = reader.string();
           break;
-        case 6:
-          message.emailTemplate = reader.string();
-          break;
         case 7:
           message.promoCodes.push(PromoCode.decode(reader, reader.uint32()));
           break;
@@ -5284,9 +5277,6 @@ export const CompetitionProperties = {
       competitionName: isSet(object.competitionName)
         ? String(object.competitionName)
         : '',
-      emailTemplate: isSet(object.emailTemplate)
-        ? String(object.emailTemplate)
-        : undefined,
       promoCodes: Array.isArray(object?.promoCodes)
         ? object.promoCodes.map((e: any) => PromoCode.fromJSON(e))
         : [],
@@ -5325,8 +5315,6 @@ export const CompetitionProperties = {
       (obj.emailNotificationsEnabled = message.emailNotificationsEnabled);
     message.competitionName !== undefined &&
       (obj.competitionName = message.competitionName);
-    message.emailTemplate !== undefined &&
-      (obj.emailTemplate = message.emailTemplate);
     if (message.promoCodes) {
       obj.promoCodes = message.promoCodes.map((e) =>
         e ? PromoCode.toJSON(e) : undefined
@@ -5360,7 +5348,6 @@ export const CompetitionProperties = {
     message.emailNotificationsEnabled =
       object.emailNotificationsEnabled ?? false;
     message.competitionName = object.competitionName ?? '';
-    message.emailTemplate = object.emailTemplate ?? undefined;
     message.promoCodes =
       object.promoCodes?.map((e) => PromoCode.fromPartial(e)) || [];
     message.startDate = object.startDate ?? undefined;
@@ -7370,7 +7357,13 @@ export const FightReferenceList = {
 };
 
 function createBaseCompetitionState(): CompetitionState {
-  return { id: '', categories: [], properties: undefined, schedule: undefined };
+  return {
+    id: '',
+    categories: [],
+    properties: undefined,
+    schedule: undefined,
+    infoTemplate: undefined,
+  };
 }
 
 export const CompetitionState = {
@@ -7392,6 +7385,9 @@ export const CompetitionState = {
     }
     if (message.schedule !== undefined) {
       Schedule.encode(message.schedule, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.infoTemplate !== undefined) {
+      writer.uint32(42).bytes(message.infoTemplate);
     }
     return writer;
   },
@@ -7420,6 +7416,9 @@ export const CompetitionState = {
         case 4:
           message.schedule = Schedule.decode(reader, reader.uint32());
           break;
+        case 5:
+          message.infoTemplate = reader.bytes();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7439,6 +7438,9 @@ export const CompetitionState = {
         : undefined,
       schedule: isSet(object.schedule)
         ? Schedule.fromJSON(object.schedule)
+        : undefined,
+      infoTemplate: isSet(object.infoTemplate)
+        ? bytesFromBase64(object.infoTemplate)
         : undefined,
     };
   },
@@ -7461,6 +7463,11 @@ export const CompetitionState = {
       (obj.schedule = message.schedule
         ? Schedule.toJSON(message.schedule)
         : undefined);
+    message.infoTemplate !== undefined &&
+      (obj.infoTemplate =
+        message.infoTemplate !== undefined
+          ? base64FromBytes(message.infoTemplate)
+          : undefined);
     return obj;
   },
 
@@ -7479,6 +7486,7 @@ export const CompetitionState = {
       object.schedule !== undefined && object.schedule !== null
         ? Schedule.fromPartial(object.schedule)
         : undefined;
+    message.infoTemplate = object.infoTemplate ?? undefined;
     return message;
   },
 };
@@ -8723,6 +8731,29 @@ var globalThis: any = (() => {
   if (typeof global !== 'undefined') return global;
   throw 'Unable to locate global object';
 })();
+
+const atob: (b64: string) => string =
+  globalThis.atob ||
+  ((b64) => globalThis.Buffer.from(b64, 'base64').toString('binary'));
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+const btoa: (bin: string) => string =
+  globalThis.btoa ||
+  ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  arr.forEach((byte) => {
+    bin.push(String.fromCharCode(byte));
+  });
+  return btoa(bin.join(''));
+}
 
 type Builtin =
   | Date

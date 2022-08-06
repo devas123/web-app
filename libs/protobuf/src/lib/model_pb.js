@@ -9714,7 +9714,6 @@ proto.compservice.model.protobuf.CompetitionProperties.toObject = function(inclu
     staffidsList: (f = jspb.Message.getRepeatedField(msg, 3)) == null ? undefined : f,
     emailnotificationsenabled: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
     competitionname: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    emailtemplate: jspb.Message.getFieldWithDefault(msg, 6, ""),
     promocodesList: jspb.Message.toObjectList(msg.getPromocodesList(),
     proto.compservice.model.protobuf.PromoCode.toObject, includeInstance),
     startdate: (f = msg.getStartdate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
@@ -9779,10 +9778,6 @@ proto.compservice.model.protobuf.CompetitionProperties.deserializeBinaryFromRead
     case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.setCompetitionname(value);
-      break;
-    case 6:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setEmailtemplate(value);
       break;
     case 7:
       var value = new proto.compservice.model.protobuf.PromoCode;
@@ -9881,13 +9876,6 @@ proto.compservice.model.protobuf.CompetitionProperties.serializeBinaryToWriter =
   if (f.length > 0) {
     writer.writeString(
       5,
-      f
-    );
-  }
-  f = /** @type {string} */ (jspb.Message.getField(message, 6));
-  if (f != null) {
-    writer.writeString(
-      6,
       f
     );
   }
@@ -10060,42 +10048,6 @@ proto.compservice.model.protobuf.CompetitionProperties.prototype.getCompetitionn
  */
 proto.compservice.model.protobuf.CompetitionProperties.prototype.setCompetitionname = function(value) {
   return jspb.Message.setProto3StringField(this, 5, value);
-};
-
-
-/**
- * optional string emailTemplate = 6;
- * @return {string}
- */
-proto.compservice.model.protobuf.CompetitionProperties.prototype.getEmailtemplate = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.compservice.model.protobuf.CompetitionProperties} returns this
- */
-proto.compservice.model.protobuf.CompetitionProperties.prototype.setEmailtemplate = function(value) {
-  return jspb.Message.setField(this, 6, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.compservice.model.protobuf.CompetitionProperties} returns this
- */
-proto.compservice.model.protobuf.CompetitionProperties.prototype.clearEmailtemplate = function() {
-  return jspb.Message.setField(this, 6, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.compservice.model.protobuf.CompetitionProperties.prototype.hasEmailtemplate = function() {
-  return jspb.Message.getField(this, 6) != null;
 };
 
 
@@ -12756,7 +12708,8 @@ proto.compservice.model.protobuf.CompetitionState.toObject = function(includeIns
     categoriesList: jspb.Message.toObjectList(msg.getCategoriesList(),
     proto.compservice.model.protobuf.CategoryState.toObject, includeInstance),
     properties: (f = msg.getProperties()) && proto.compservice.model.protobuf.CompetitionProperties.toObject(includeInstance, f),
-    schedule: (f = msg.getSchedule()) && proto.compservice.model.protobuf.Schedule.toObject(includeInstance, f)
+    schedule: (f = msg.getSchedule()) && proto.compservice.model.protobuf.Schedule.toObject(includeInstance, f),
+    infotemplate: msg.getInfotemplate_asB64()
   };
 
   if (includeInstance) {
@@ -12811,6 +12764,10 @@ proto.compservice.model.protobuf.CompetitionState.deserializeBinaryFromReader = 
       var value = new proto.compservice.model.protobuf.Schedule;
       reader.readMessage(value,proto.compservice.model.protobuf.Schedule.deserializeBinaryFromReader);
       msg.setSchedule(value);
+      break;
+    case 5:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setInfotemplate(value);
       break;
     default:
       reader.skipField();
@@ -12870,6 +12827,13 @@ proto.compservice.model.protobuf.CompetitionState.serializeBinaryToWriter = func
       4,
       f,
       proto.compservice.model.protobuf.Schedule.serializeBinaryToWriter
+    );
+  }
+  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 5));
+  if (f != null) {
+    writer.writeBytes(
+      5,
+      f
     );
   }
 };
@@ -13002,6 +12966,66 @@ proto.compservice.model.protobuf.CompetitionState.prototype.clearSchedule = func
  */
 proto.compservice.model.protobuf.CompetitionState.prototype.hasSchedule = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional bytes infoTemplate = 5;
+ * @return {!(string|Uint8Array)}
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.getInfotemplate = function() {
+  return /** @type {!(string|Uint8Array)} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * optional bytes infoTemplate = 5;
+ * This is a type-conversion wrapper around `getInfotemplate()`
+ * @return {string}
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.getInfotemplate_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getInfotemplate()));
+};
+
+
+/**
+ * optional bytes infoTemplate = 5;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getInfotemplate()`
+ * @return {!Uint8Array}
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.getInfotemplate_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getInfotemplate()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.compservice.model.protobuf.CompetitionState} returns this
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.setInfotemplate = function(value) {
+  return jspb.Message.setField(this, 5, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.compservice.model.protobuf.CompetitionState} returns this
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.clearInfotemplate = function() {
+  return jspb.Message.setField(this, 5, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.CompetitionState.prototype.hasInfotemplate = function() {
+  return jspb.Message.getField(this, 5) != null;
 };
 
 

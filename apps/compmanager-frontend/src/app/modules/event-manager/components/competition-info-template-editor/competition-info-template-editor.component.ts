@@ -17,8 +17,6 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
   @Input()
   showPreview: boolean;
-  @Input()
-  showEditor = true;
 
   private static compileMarkdown(value: string): string {
     return marked.parser(marked.lexer(value));
@@ -26,32 +24,8 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
   private static getPlaceHolder() {
     return (
-      '# Title \n' +
-      '## Title\n' +
-      '### Title\n' +
-      '#### Title\n\n' +
-
-      '**bold**\n\n' +
-
-      '*italic*\n\n' +
-
-      'inline `code`\n\n' +
-
-      '### code block\n' +
-      '```\n' +
-      `const foo = () => {
-        return 1;
-      }\n` +
-
-      '```\n\n' +
-
-      '### unorderd list\n' +
-      '- item 1\n' +
-      '* item 2\n\n' +
-
-      '### orderd list\n\n' +
-      '1. item a\n' +
-      '2. item b'
+      '# Add competition info here \n' +
+      'This editor supports [markdown](https://www.markdownguide.org)\n'
     );
   }
 

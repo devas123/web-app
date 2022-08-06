@@ -151,6 +151,7 @@ export interface CompetitionState {
   competitionProperties: CompetitionProperties;
   registrationInfo: RegistrationInfo;
   fights: FightsCollection;
+  selectedEventInfoTemplate?: string
 }
 
 export const competitionPropertiesEntitiesAdapter: EntityAdapter<ManagedCompetition> = createEntityAdapter<ManagedCompetition>({
@@ -191,7 +192,8 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventDefaultFightResultOptions: [],
   competitionProperties: <CompetitionProperties>{},
   selectedEventMats: matsInitialState,
-  fights: fightsInitialState
+  fights: fightsInitialState,
+  selectedEventInfoTemplate: null
 };
 
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
@@ -918,6 +920,7 @@ export const getSelectedEventState = createSelector(state => state, (state: AppS
 
 
 export const getSelectedEventProperties = createSelector(getSelectedEventState, state => state && state.competitionProperties);
+export const getSelectedEventInfoTemplate = createSelector(getSelectedEventState, state => state && state.selectedEventInfoTemplate);
 export const getSelectedEventId = createSelector(getSelectedEventProperties, props => props && props.id);
 export const getSelectedEventMatsCollection = createSelector(getSelectedEventState, state => (state && state.selectedEventMats) || matsInitialState);
 export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => state && state.selectedEventSchedule);

@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {
-  ComponentCommonMetadataProvider,
-  CompetitionManagerModuleRouterEntryComponent
+  CompetitionManagerModuleRouterEntryComponent,
+  ComponentCommonMetadataProvider
 } from '../../../../commons/directives/common-classes';
 import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
@@ -19,7 +19,7 @@ type TabOption = 'template' | 'contacts';
   templateUrl: './competition-info-editor-container.component.html',
   styleUrls: ['./competition-info-editor-container.component.scss']
 })
-export class CompetitionInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements  OnDestroy {
+export class CompetitionInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -40,11 +40,6 @@ export class CompetitionInfoEditorContainerComponent extends CompetitionManagerM
           showCondition: () => of(this.selectedTab === 'template')
         },
         {
-          name: 'Toggle editor',
-          action: () => this.showTemplateEditor = !this.showTemplateEditor,
-          showCondition: () => of(this.selectedTab === 'template')
-        },
-        {
           name: 'Toggle preview',
           action: () => this.showTemplatePreview = !this.showTemplatePreview,
           showCondition: () => of(this.selectedTab === 'template')
@@ -59,7 +54,6 @@ export class CompetitionInfoEditorContainerComponent extends CompetitionManagerM
 
   selectedTab: TabOption = 'template';
   showTemplatePreview = true;
-  showTemplateEditor = true;
 
   goBack() {
     this.router.navigate(['..'], {relativeTo: this.route}).catch(console.error);

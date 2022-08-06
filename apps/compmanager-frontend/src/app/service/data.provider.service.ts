@@ -9,7 +9,7 @@ import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
   eventManagerCategoryStagesLoaded,
-  eventManagerCategoryStateLoaded,
+  eventManagerCategoryStateLoaded, eventManagerCompetitionInfoLoaded,
   eventManagerFightersForCompetitionLoaded,
   eventManagerFightsLoaded
 } from "../modules/event-manager/redux/event-manager-actions";
@@ -26,6 +26,20 @@ export class DataProviderService {
   constructor(private infoService: InfoService, private selectors: SelectorsService, private store: Store<AppState>) {
   }
 
+  private requireCompetitionInfo$ = this.selectors.competitionId$.pipe(
+    filter((competitionId) => Boolean(competitionId)),
+    switchMap((competitionId) => this.infoService.getCompetitionInfoTemplate(competitionId)),
+    tap(infoTemplate => {
+      if (infoTemplate) this.store.dispatch(eventManagerCompetitionInfoLoaded({infoTemplate}))
+    }),
+    share(),
+  )
+
+  competitionInfoInterest$ = using(
+    () => this.requireCompetitionInfo$.subscribe(),
+    () => this.selectors.competitionInfo$
+  )
+
   private requireCategory$ = combineLatest([this.selectors.competitionId$, this.selectors.categoryId$]).pipe(
     filter(([competitionId, categoryId]) => Boolean(competitionId) && Boolean(categoryId)),
     switchMap(([competitionId, categoryId]) => this.infoService.getLatestCategoryState(competitionId, categoryId)),
@@ -35,10 +49,12 @@ export class DataProviderService {
     share(),
   );
 
+
   categoryInterest$ = using(
     () => this.requireCategory$.subscribe(),
     () => this.selectors.category$
   )
+
   private requireCategories$ = this.selectors.competitionId$.pipe(
     filter((competitionId) => Boolean(competitionId)),
     switchMap((competitionId) => this.infoService.getCategories(competitionId)),
