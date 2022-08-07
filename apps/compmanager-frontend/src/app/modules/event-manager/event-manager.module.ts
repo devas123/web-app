@@ -98,9 +98,6 @@ import {
 import {
   CompetitionInfoTemplateEditorComponent
 } from './components/competition-info-template-editor/competition-info-template-editor.component';
-import {
-  CompetitionInfoContactsEditorComponent
-} from './components/competition-info-contacts-editor/competition-info-contacts-editor.component';
 import {GenerateBracketsFormComponent} from './components/generate-brackets-form/generate-brackets-form.component';
 import {NumberControlsComponent} from './components/scoreboard-component/number-controls.component';
 import {TimerComponent} from './components/scoreboard-component/timer-component';
@@ -214,7 +211,6 @@ import {RestrictionHeaderComponent} from "./components/category-constructor/rest
     FighterProfileContainerComponent,
     CompetitionInfoEditorContainerComponent,
     CompetitionInfoTemplateEditorComponent,
-    CompetitionInfoContactsEditorComponent,
     GenerateBracketsFormComponent,
     NumberControlsComponent,
     TimerComponent,

@@ -30,7 +30,7 @@ export class DataProviderService {
     filter((competitionId) => Boolean(competitionId)),
     switchMap((competitionId) => this.infoService.getCompetitionInfoTemplate(competitionId)),
     tap(infoTemplate => {
-      if (infoTemplate) this.store.dispatch(eventManagerCompetitionInfoLoaded({infoTemplate}))
+      if (Boolean(infoTemplate)) this.store.dispatch(eventManagerCompetitionInfoLoaded({infoTemplate}))
     }),
     share(),
   )

@@ -40,6 +40,7 @@ import {
   MatsQueryResult,
   MessageInfo,
   PageInfo,
+  QueryServiceRequest,
   QueryServiceResponse,
   RegistrationInfo,
   RemoveAcademyPayload,
@@ -91,10 +92,22 @@ export class InfoService {
   constructor(private http: HttpClient) {
   }
 
+  static async uint8ArrToString(uint8arr: Uint8Array): Promise<string | ArrayBuffer> {
+    const bb = new Blob([uint8arr]);
+    const f = new FileReader();
+    return new Promise<string | ArrayBuffer>((resolve, reject) => {
+      f.onload = function (e) {
+        resolve(e.target.result);
+      };
+      f.onerror = function (e) {
+        reject(e.target.result)
+      }
+      f.readAsText(bb);
+    });
+  }
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  private decoder = new TextDecoder()
   private encoder = new TextEncoder()
 
   static commandFields = [
@@ -266,12 +279,19 @@ export class InfoService {
       headers: this.headers
     })
       .pipe(
-        map(r => this.decoder.decode(r.getCompetitionInfoTemplateResponse?.template))
+        switchMap(r => InfoService.uint8ArrToString(r.getCompetitionInfoTemplateResponse?.template)),
+        map(r => r as string)
       );
   }
 
   saveCompetitionInfoTemplate(competitionId: string, competitionInfoTemplate: string): Observable<QueryServiceResponse> {
-    return this.sendByteArrayToEndpoint(`${competitionQueryEndpoint}/${competitionId}/info`, this.encoder.encode(competitionInfoTemplate), this.defaultTimeout)
+    const request = <QueryServiceRequest>{
+      addCompetitionInfoRequest: {
+        competitionInfo: this.encoder.encode(competitionInfoTemplate)
+      }
+    }
+    const bytes = InfoService.toBytes(QueryServiceRequest.encode(request).finish());
+    return this.sendByteArrayToEndpoint(`${competitionQueryEndpoint}/${competitionId}/info`, bytes, this.defaultTimeout)
       .pipe(
         switchMap(arrayBuffer => {
           const response = QueryServiceResponse.decode(new Uint8Array(arrayBuffer))

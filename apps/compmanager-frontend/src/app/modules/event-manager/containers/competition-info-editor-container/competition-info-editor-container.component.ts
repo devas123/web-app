@@ -7,12 +7,15 @@ import {select, Store} from '@ngrx/store';
 import {eventManagerGetSelectedEventName} from '../../redux/event-manager-reducers';
 import {filter, map} from 'rxjs/operators';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
-import {AppState} from '../../../../reducers/global-reducers';
+import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers';
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {of} from 'rxjs';
+import {Observable} from "rxjs";
+import {eventManagerSaveCompetitionInfo} from "../../redux/event-manager-actions";
+import {
+  ISaveCompetitionInfoTemplatePayload
+} from "../../components/competition-info-template-editor/competition-info-template-editor.component";
 
-type TabOption = 'template' | 'contacts';
 
 @Component({
   selector: 'app-competition-info-editor-container',
@@ -20,6 +23,9 @@ type TabOption = 'template' | 'contacts';
   styleUrls: ['./competition-info-editor-container.component.scss']
 })
 export class CompetitionInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
+
+  template$: Observable<string>;
+  competitionId$: Observable<string>;
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
     super(store, <ComponentCommonMetadataProvider>{
@@ -30,33 +36,30 @@ export class CompetitionInfoEditorContainerComponent extends CompetitionManagerM
         }))),
       menu: [
         {
-          name: 'Edit info template',
-          action: () => this.selectedTab = 'template',
-          showCondition: () => of(this.selectedTab === 'contacts')
-        },
-        {
-          name: 'Edit contacts',
-          action: () => this.selectedTab = 'contacts',
-          showCondition: () => of(this.selectedTab === 'template')
+          name: 'Return',
+          action: () => this.goBack()
         },
         {
           name: 'Toggle preview',
           action: () => this.showTemplatePreview = !this.showTemplatePreview,
-          showCondition: () => of(this.selectedTab === 'template')
-        },
-        {
-          name: 'Return',
-          action: () => this.goBack()
         }
       ]
     }, menuService);
+    this.template$ = menuService.dataProviderService.competitionInfoInterest$
+    this.competitionId$ = this.store.pipe(select(getSelectedEventId));
   }
 
-  selectedTab: TabOption = 'template';
   showTemplatePreview = true;
 
   goBack() {
     this.router.navigate(['..'], {relativeTo: this.route}).catch(console.error);
+  }
+
+  saveTemplate(template: ISaveCompetitionInfoTemplatePayload) {
+    this.store.dispatch(eventManagerSaveCompetitionInfo({
+      infoTemplate: template.template,
+      competitionId: template.competitionId
+    }));
   }
 
 }

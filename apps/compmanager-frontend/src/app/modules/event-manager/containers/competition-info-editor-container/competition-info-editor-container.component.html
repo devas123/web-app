@@ -1,5 +1,6 @@
-<app-competition-info-contacts-editor  *ngIf="selectedTab === 'contacts'"></app-competition-info-contacts-editor>
 <app-competition-info-template-editor
-  [showPreview]="showTemplatePreview"
-  *ngIf="selectedTab === 'template'"></app-competition-info-template-editor>
+  (templateSaved)="saveTemplate($event)"
+  [template]="template$ | async"
+  [competitionId]="competitionId$ | async"
+  [showPreview]="showTemplatePreview"></app-competition-info-template-editor>
 

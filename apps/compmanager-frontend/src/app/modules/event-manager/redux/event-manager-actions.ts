@@ -109,7 +109,7 @@ export const eventManagerCategoryRestrictionGroupRemoved = createAction(EVENT_MA
   props<{ name: string }>());
 export const eventManagerCategoryRestrictionRootAdded = createAction(EVENT_MANAGER_CATEGORY_ROOT_ADDED, props<{ root: string }>());
 export const eventManagerCompetitionInfoLoaded = createAction(EVENT_MANAGER_COMPETITION_INFO_LOADED, props<{ infoTemplate: string }>());
-export const eventManagerSaveCompetitionInfo = createAction(EVENT_MANAGER_SAVE_COMPETITION_INFO, props<{ infoTemplate: string }>());
+export const eventManagerSaveCompetitionInfo = createAction(EVENT_MANAGER_SAVE_COMPETITION_INFO, props<{ infoTemplate: string, competitionId: string }>());
 export const eventManagerCategoryRestrictionRemoved = createAction(EVENT_MANAGER_CATEGORY_RESTRICTION_REMOVED, props<{ restrictionId: string }>());
 export const eventManagerLoadCategoryRestrictionsCommand = createAction(EVENT_MANAGER_LOAD_DEFAULT_CATEGORY_RESTRICTIONS);
 export const loadScheduleCommand = createAction(LOAD_SCHEDULE_COMMAND, props<{ competitionId: string }>());

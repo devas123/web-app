@@ -1,5 +1,8 @@
 <div id="editor">
   <textarea [ngClass]="{two_columns: !showPreview}" id="textarea" [placeholder]="placeHolder"
+            [value]="template_"
             (keyup)="onValueChange($event)"></textarea>
   <div *ngIf="showPreview" [ngClass]="{two_columns: !showPreview}" [innerHtml]="compiledMarkdown"></div>
+
+  <compmanager-frontend-submit-button (click)="saveTemplate()" [name]="'Save'"></compmanager-frontend-submit-button>
 </div>

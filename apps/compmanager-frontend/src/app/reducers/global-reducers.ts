@@ -39,7 +39,7 @@ import {
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
-  EVENT_MANAGER_CATEGORY_UNSELECTED,
+  EVENT_MANAGER_CATEGORY_UNSELECTED, EVENT_MANAGER_COMPETITION_INFO_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -321,6 +321,10 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
   }
   return produce(st, state => {
     switch (action.type) {
+      case EVENT_MANAGER_COMPETITION_INFO_LOADED: {
+        state.selectedEventInfoTemplate = action.infoTemplate;
+        break;
+      }
       case CommandType.GENERATE_BRACKETS_COMMAND: {
         state.fights.filter = {
           needFights: true,
