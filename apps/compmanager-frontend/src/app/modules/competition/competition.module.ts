@@ -27,6 +27,9 @@ import {CategoryInfoContainerComponent} from './containers/category-info-contain
 import {
   CompetitionMainInfoDisplayComponent
 } from "./components/competition-main-info/competition-main-info-display.component";
+import {
+  CompetitionDescriptionContainerComponent
+} from "./containers/competition-description/competition-description-container.component";
 
 @NgModule({
   imports: [
@@ -48,6 +51,7 @@ import {
     EventCardComponent, EventListComponent, EventCalendarComponent,
     FightersDisplayContainerComponent,
     ScheduleContainerComponent,
+    CompetitionDescriptionContainerComponent,
     CategoryInfoContainerComponent],
   providers: [RegistrationService, CompetitionStateService, StateResolver]
 })

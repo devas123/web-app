@@ -39,6 +39,10 @@ export class DataProviderService {
     () => this.requireCompetitionInfo$.subscribe(),
     () => this.selectors.competitionInfo$
   )
+  competitionInfoCompiledInterest$ = using(
+    () => this.requireCompetitionInfo$.subscribe(),
+    () => this.selectors.competitionInfoCompiled$
+  )
 
   private requireCategory$ = combineLatest([this.selectors.competitionId$, this.selectors.categoryId$]).pipe(
     filter(([competitionId, categoryId]) => Boolean(competitionId) && Boolean(categoryId)),

@@ -4,7 +4,7 @@ import {
   AppState,
   dashboardGetSelectedPeriodSelectedFight,
   getSelectedEventId,
-  getSelectedEventInfoTemplate
+  getSelectedEventInfoTemplate, getSelectedEventInfoTemplateCompiled
 } from "../reducers/global-reducers";
 import {
   eventManagerGetSelectedEventCategories,
@@ -77,6 +77,9 @@ export class SelectorsService {
 
   competitionInfo$: Observable<string> = this.store.pipe(
     select(getSelectedEventInfoTemplate)
+  );
+  competitionInfoCompiled$: Observable<string> = this.store.pipe(
+    select(getSelectedEventInfoTemplateCompiled)
   );
 
 }

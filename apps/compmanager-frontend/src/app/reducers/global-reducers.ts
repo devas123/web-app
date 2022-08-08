@@ -39,7 +39,8 @@ import {
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
-  EVENT_MANAGER_CATEGORY_UNSELECTED, EVENT_MANAGER_COMPETITION_INFO_LOADED,
+  EVENT_MANAGER_CATEGORY_UNSELECTED,
+  EVENT_MANAGER_COMPETITION_INFO_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
   EVENT_MANAGER_FIGHTER_SELECTED,
@@ -73,7 +74,8 @@ import {
   DASHBOARD_MAT_FIGHTS_LOADED,
   DASHBOARD_MAT_SELECTED,
   DASHBOARD_MAT_UNSELECTED,
-  DASHBOARD_MATS_LOADED, DASHBOARD_PERIOD_UNSELECTED,
+  DASHBOARD_MATS_LOADED,
+  DASHBOARD_PERIOD_UNSELECTED,
   PERIOD_SELECTED
 } from '../modules/event-manager/redux/dashboard-actions';
 import {generateUuid, uniqueFilter} from "../modules/account/utils";
@@ -96,6 +98,7 @@ import {
   StageDescriptor,
   StartTimeInfo
 } from "@frontend-nx/protobuf";
+import {marked} from "marked";
 
 export type SuccessCallback = (actions: Action[]) => any
 export type ErrorCallback = (error: any) => any
@@ -152,6 +155,7 @@ export interface CompetitionState {
   registrationInfo: RegistrationInfo;
   fights: FightsCollection;
   selectedEventInfoTemplate?: string
+  selectedEventInfoTemplateCompiled?: string
 }
 
 export const competitionPropertiesEntitiesAdapter: EntityAdapter<ManagedCompetition> = createEntityAdapter<ManagedCompetition>({
@@ -193,7 +197,8 @@ export const initialCompetitionState: CompetitionState = {
   competitionProperties: <CompetitionProperties>{},
   selectedEventMats: matsInitialState,
   fights: fightsInitialState,
-  selectedEventInfoTemplate: null
+  selectedEventInfoTemplate: null,
+  selectedEventInfoTemplateCompiled: null
 };
 
 export const competitionPropertiesEntitiesInitialState: EventPropsEntities = competitionPropertiesEntitiesAdapter.getInitialState({
@@ -323,6 +328,11 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
     switch (action.type) {
       case EVENT_MANAGER_COMPETITION_INFO_LOADED: {
         state.selectedEventInfoTemplate = action.infoTemplate;
+        if (Boolean(action.infoTemplate)) {
+          state.selectedEventInfoTemplateCompiled = marked.parser(marked.lexer(action.infoTemplate));
+        } else {
+          state.selectedEventInfoTemplateCompiled = null;
+        }
         break;
       }
       case CommandType.GENERATE_BRACKETS_COMMAND: {
@@ -925,6 +935,7 @@ export const getSelectedEventState = createSelector(state => state, (state: AppS
 
 export const getSelectedEventProperties = createSelector(getSelectedEventState, state => state && state.competitionProperties);
 export const getSelectedEventInfoTemplate = createSelector(getSelectedEventState, state => state && state.selectedEventInfoTemplate);
+export const getSelectedEventInfoTemplateCompiled = createSelector(getSelectedEventState, state => state?.selectedEventInfoTemplateCompiled);
 export const getSelectedEventId = createSelector(getSelectedEventProperties, props => props && props.id);
 export const getSelectedEventMatsCollection = createSelector(getSelectedEventState, state => (state && state.selectedEventMats) || matsInitialState);
 export const eventManagerGetSelectedEventSchedule = createSelector(getSelectedEventState, state => state && state.selectedEventSchedule);
