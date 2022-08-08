@@ -1,63 +1,6 @@
 <div class="ui grid">
-    <div class="two column row">
-        <div class="left floated ten wide column">
-          <div [innerHtml]="competitionInfoCompiled"></div>
-          <div class="ui left aligned container leftimg"></div>
-        </div>
-        <div class="right floated six wide column">
-            <div class="ui  leftimg fluid  container">
-                <div class="ui hidden divider"></div>
-                <div class="ui segment">
-                    <h2 class="ui left floated small header"><i class="info letter blue icon"></i>Contact info </h2>
-                    <div class="ui clearing divider"></div>
-                    <div class="ui   grid">
-                        <div class="row">
-                            <div class="column">
-                                <div class="ui label">
-                                    <i class="mail blue icon"></i>
-                                    Mail
-                                </div>
-                                <a>vasyanyavasyanyavasyanya.pupkin@gmail.com </a>
-                                <p></p>
-                                <div class="ui label">
-                                    <i class="phone blue icon"></i>
-                                    Phone
-                                </div>
-                                <a> +7-214-890-67894</a>
-                                <p></p>
-                                <div class="ui  center aligned container">
-                                    <button class="ui circular facebook icon button">
-                                        <i class="facebook large icon"></i>
-                                    </button>
-                                    <button class="ui circular vk icon button">
-                                        <i class="vk large icon "></i>
-                                    </button>
-                                    <button class="ui circular blue icon button">
-                                        <i class="telegram large  icon"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p></p>
-                </div>
-
-                <div class="ui segment">
-                    <h2 class="ui left floated small header"><i class="point red icon"></i>Location </h2>
-                    <div class="ui clearing divider "></div>
-                    <div class="ui two column grid">
-                        <div class="one wide column">
-                            <div class="ui right aligned  label">
-                                <i class="point blue circle icon"></i>
-                            </div>
-                        </div>
-                        <div class="thirteen wide column">
-                            <a>Saint-Petersburg ul.Lalalalalalalaeva 13/2 </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+    <div class="one column row">
+        <div class="left floated ten wide column" [innerHtml]="competitionInfoCompiled">
         </div>
     </div>
 </div>
