@@ -49,11 +49,19 @@ export interface MatsQueryResult {
 
 export interface QueryServiceRequest {
   addCompetitionInfoRequest?: AddCompetitionInfoRequest | undefined;
+  addCompetitionImageRequest?: AddCompetitionImageRequest | undefined;
+  removeCompetitionImageRequest?: RemoveCompetitionImageRequest | undefined;
 }
 
 export interface AddCompetitionInfoRequest {
   competitionInfo: Uint8Array;
 }
+
+export interface AddCompetitionImageRequest {
+  image: Uint8Array;
+}
+
+export interface RemoveCompetitionImageRequest {}
 
 export interface QueryServiceResponse {
   getDefaultRestrictionsResponse?: GetDefaultRestrictionsResponse | undefined;
@@ -635,7 +643,11 @@ export const MatsQueryResult = {
 };
 
 function createBaseQueryServiceRequest(): QueryServiceRequest {
-  return { addCompetitionInfoRequest: undefined };
+  return {
+    addCompetitionInfoRequest: undefined,
+    addCompetitionImageRequest: undefined,
+    removeCompetitionImageRequest: undefined,
+  };
 }
 
 export const QueryServiceRequest = {
@@ -647,6 +659,18 @@ export const QueryServiceRequest = {
       AddCompetitionInfoRequest.encode(
         message.addCompetitionInfoRequest,
         writer.uint32(10).fork()
+      ).ldelim();
+    }
+    if (message.addCompetitionImageRequest !== undefined) {
+      AddCompetitionImageRequest.encode(
+        message.addCompetitionImageRequest,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    if (message.removeCompetitionImageRequest !== undefined) {
+      RemoveCompetitionImageRequest.encode(
+        message.removeCompetitionImageRequest,
+        writer.uint32(26).fork()
       ).ldelim();
     }
     return writer;
@@ -665,6 +689,14 @@ export const QueryServiceRequest = {
             reader.uint32()
           );
           break;
+        case 2:
+          message.addCompetitionImageRequest =
+            AddCompetitionImageRequest.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.removeCompetitionImageRequest =
+            RemoveCompetitionImageRequest.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -678,6 +710,14 @@ export const QueryServiceRequest = {
       addCompetitionInfoRequest: isSet(object.addCompetitionInfoRequest)
         ? AddCompetitionInfoRequest.fromJSON(object.addCompetitionInfoRequest)
         : undefined,
+      addCompetitionImageRequest: isSet(object.addCompetitionImageRequest)
+        ? AddCompetitionImageRequest.fromJSON(object.addCompetitionImageRequest)
+        : undefined,
+      removeCompetitionImageRequest: isSet(object.removeCompetitionImageRequest)
+        ? RemoveCompetitionImageRequest.fromJSON(
+            object.removeCompetitionImageRequest
+          )
+        : undefined,
     };
   },
 
@@ -686,6 +726,16 @@ export const QueryServiceRequest = {
     message.addCompetitionInfoRequest !== undefined &&
       (obj.addCompetitionInfoRequest = message.addCompetitionInfoRequest
         ? AddCompetitionInfoRequest.toJSON(message.addCompetitionInfoRequest)
+        : undefined);
+    message.addCompetitionImageRequest !== undefined &&
+      (obj.addCompetitionImageRequest = message.addCompetitionImageRequest
+        ? AddCompetitionImageRequest.toJSON(message.addCompetitionImageRequest)
+        : undefined);
+    message.removeCompetitionImageRequest !== undefined &&
+      (obj.removeCompetitionImageRequest = message.removeCompetitionImageRequest
+        ? RemoveCompetitionImageRequest.toJSON(
+            message.removeCompetitionImageRequest
+          )
         : undefined);
     return obj;
   },
@@ -699,6 +749,20 @@ export const QueryServiceRequest = {
       object.addCompetitionInfoRequest !== null
         ? AddCompetitionInfoRequest.fromPartial(
             object.addCompetitionInfoRequest
+          )
+        : undefined;
+    message.addCompetitionImageRequest =
+      object.addCompetitionImageRequest !== undefined &&
+      object.addCompetitionImageRequest !== null
+        ? AddCompetitionImageRequest.fromPartial(
+            object.addCompetitionImageRequest
+          )
+        : undefined;
+    message.removeCompetitionImageRequest =
+      object.removeCompetitionImageRequest !== undefined &&
+      object.removeCompetitionImageRequest !== null
+        ? RemoveCompetitionImageRequest.fromPartial(
+            object.removeCompetitionImageRequest
           )
         : undefined;
     return message;
@@ -765,6 +829,115 @@ export const AddCompetitionInfoRequest = {
   ): AddCompetitionInfoRequest {
     const message = createBaseAddCompetitionInfoRequest();
     message.competitionInfo = object.competitionInfo ?? new Uint8Array();
+    return message;
+  },
+};
+
+function createBaseAddCompetitionImageRequest(): AddCompetitionImageRequest {
+  return { image: new Uint8Array() };
+}
+
+export const AddCompetitionImageRequest = {
+  encode(
+    message: AddCompetitionImageRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.image.length !== 0) {
+      writer.uint32(10).bytes(message.image);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AddCompetitionImageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddCompetitionImageRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.image = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddCompetitionImageRequest {
+    return {
+      image: isSet(object.image)
+        ? bytesFromBase64(object.image)
+        : new Uint8Array(),
+    };
+  },
+
+  toJSON(message: AddCompetitionImageRequest): unknown {
+    const obj: any = {};
+    message.image !== undefined &&
+      (obj.image = base64FromBytes(
+        message.image !== undefined ? message.image : new Uint8Array()
+      ));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AddCompetitionImageRequest>, I>>(
+    object: I
+  ): AddCompetitionImageRequest {
+    const message = createBaseAddCompetitionImageRequest();
+    message.image = object.image ?? new Uint8Array();
+    return message;
+  },
+};
+
+function createBaseRemoveCompetitionImageRequest(): RemoveCompetitionImageRequest {
+  return {};
+}
+
+export const RemoveCompetitionImageRequest = {
+  encode(
+    _: RemoveCompetitionImageRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): RemoveCompetitionImageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveCompetitionImageRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): RemoveCompetitionImageRequest {
+    return {};
+  },
+
+  toJSON(_: RemoveCompetitionImageRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RemoveCompetitionImageRequest>, I>>(
+    _: I
+  ): RemoveCompetitionImageRequest {
+    const message = createBaseRemoveCompetitionImageRequest();
     return message;
   },
 };

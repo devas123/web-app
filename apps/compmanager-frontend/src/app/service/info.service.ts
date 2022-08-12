@@ -1,7 +1,7 @@
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, filter, map, mergeMap, switchMap, tap, timeout} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpProgressEvent} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import * as env from '../../environments/environment';
@@ -56,6 +56,7 @@ import {
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
 import {CommandCallback, CommandExecutionResult} from "../../../../../libs/protobuf/src/lib/callback";
+import {fromPromise} from "rxjs/internal-compatibility";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -102,7 +103,21 @@ export class InfoService {
       f.onerror = function (e) {
         reject(e.target.result)
       }
-      f.readAsText(bb);
+      f.readAsArrayBuffer(bb);
+    });
+  }
+
+
+  static async getFileAsByteArray(file: File): Promise<string | ArrayBuffer> {
+    const f = new FileReader();
+    return new Promise<string | ArrayBuffer>((resolve, reject) => {
+      f.onloadend = function (e) {
+        resolve(e.target.result);
+      };
+      f.onerror = function (e) {
+        reject(e.target.result)
+      }
+      f.readAsArrayBuffer(file);
     });
   }
 
@@ -162,6 +177,7 @@ export class InfoService {
       params: params
     });
   }
+
 
   getCompetitions(creatorId?, status?): Observable<ManagedCompetition[]> {
     let params = {};
@@ -304,6 +320,24 @@ export class InfoService {
       )
   }
 
+  saveCompetitionInfoImage(competitionId: string, competitionInfoImage: File): Observable<number> {
+    return fromPromise(InfoService.getFileAsByteArray(competitionInfoImage))
+      .pipe(
+        filter(body => body instanceof ArrayBuffer),
+        map(fileBytes => (
+          QueryServiceRequest.encode(<QueryServiceRequest>{
+              addCompetitionImageRequest: {
+                image: new Uint8Array(fileBytes as ArrayBuffer)
+              }
+            }
+          ).finish().buffer
+        )),
+        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(`${competitionQueryEndpoint}/${competitionId}/image`, bytes, this.defaultTimeout)),
+        filter(event => event.type === HttpEventType.UploadProgress),
+        map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))
+      )
+  }
+
 
   getRegistrationInfo(competitionId: string): Observable<RegistrationInfo> {
     const params = {competitionId};
@@ -356,6 +390,25 @@ export class InfoService {
         'Content-Type': 'application/x-protobuf',
         'Accept': 'application/x-protobuf'
       })
+    }).pipe(
+      timeout(tmt),
+      catchError(error => {
+        console.log(error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private sendByteArrayToEndpointWithProgress(endpoint: string, body: ArrayBuffer, tmt: number): Observable<HttpEvent<ArrayBuffer>> {
+    return this.http.post(endpoint, body, {
+      responseType: 'arraybuffer',
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Content-Type': 'application/x-protobuf',
+        'Accept': 'application/x-protobuf'
+      }),
+      reportProgress: true,
+      observe: 'events'
     }).pipe(
       timeout(tmt),
       catchError(error => {

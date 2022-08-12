@@ -1,4 +1,5 @@
 <div id="editor">
+  <cf-file-upload class="two_columns"></cf-file-upload>
   <textarea [ngClass]="{two_columns: !showPreview}" id="textarea" [placeholder]="placeHolder"
             [value]="template_"
             (keyup)="onValueChange($event)"></textarea>

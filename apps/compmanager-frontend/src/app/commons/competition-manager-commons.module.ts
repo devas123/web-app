@@ -16,7 +16,8 @@ import {
   SuiCollapseModule,
   SuiMessageModule,
   SuiPaginationModule,
-  SuiPopupModule
+  SuiPopupModule,
+  SuiProgressModule
 } from '@frontend-nx/ng2-semantic-ui';
 import {CategoryEditorComponent} from '../components/category-editor/category-editor.component';
 import {RouterModule} from '@angular/router';
@@ -56,6 +57,7 @@ import {
 } from "./components/editable-field/transparent-right-floated-container.component";
 import {LinkIconComponent} from "./components/link-icon-component";
 import {SimpleButtonDirective} from "./directives/simple.button.directive";
+import {FileUploadComponent} from "./components/file-upload-component";
 
 const importsExports = [
   CommonContainerWithPaginationComponent,
@@ -101,12 +103,22 @@ const importsExports = [
   TransparentRightFloatedContainerComponent,
   LinkIconComponent,
   SimpleButtonDirective,
+  FileUploadComponent,
   MultipleGroupsDisplayComponent];
 
 @NgModule({
   declarations: importsExports,
   exports: importsExports,
-  imports: [CommonModule, SuiPopupModule, SuiCollapseModule, SuiAccordionModule, SuiPaginationModule, RouterModule, SuiCheckboxModule, ReactiveFormsModule, SuiMessageModule]
+  imports: [CommonModule,
+    SuiProgressModule,
+    SuiPopupModule,
+    SuiCollapseModule,
+    SuiAccordionModule,
+    SuiPaginationModule,
+    RouterModule,
+    SuiCheckboxModule,
+    ReactiveFormsModule,
+    SuiMessageModule]
 })
 export class CompetitionManagerCommonsModule {
 }
