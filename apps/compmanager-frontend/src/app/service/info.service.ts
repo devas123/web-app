@@ -120,6 +120,18 @@ export class InfoService {
       f.readAsArrayBuffer(file);
     });
   }
+  static async encodeUint8ArrayAsBase64(array: Uint8Array): Promise<string | ArrayBuffer> {
+    const f = new FileReader();
+    return new Promise<string | ArrayBuffer>((resolve, reject) => {
+      f.onloadend = function (e) {
+        resolve(e.target.result);
+      };
+      f.onerror = function (e) {
+        reject(e.target.result)
+      }
+      f.readAsDataURL(new Blob([array]));
+    });
+  }
 
   private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
@@ -296,6 +308,18 @@ export class InfoService {
     })
       .pipe(
         switchMap(r => InfoService.uint8ArrToString(r.getCompetitionInfoTemplateResponse?.template)),
+        map(r => r as string)
+      );
+  }
+
+  getCompetitionInfoImage(competitionId: string): Observable<string> {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/image`, {
+      headers: this.headers
+    })
+      .pipe(
+        map(r => r.getCompetitionInfoImageResponse?.image),
+        filter(r => Boolean(r)),
+        switchMap(bytes => InfoService.encodeUint8ArrayAsBase64(bytes)),
         map(r => r as string)
       );
   }

@@ -39,7 +39,7 @@ import {
   EVENT_MANAGER_CATEGORY_SELECTED,
   EVENT_MANAGER_CATEGORY_STAGES_LOADED,
   EVENT_MANAGER_CATEGORY_STATE_LOADED,
-  EVENT_MANAGER_CATEGORY_UNSELECTED,
+  EVENT_MANAGER_CATEGORY_UNSELECTED, EVENT_MANAGER_COMPETITION_IMAGE_LOADED,
   EVENT_MANAGER_COMPETITION_INFO_LOADED,
   EVENT_MANAGER_DEFAULT_FIGHT_RESULTS_LOADED,
   EVENT_MANAGER_FIGHTER_LOADED,
@@ -155,6 +155,7 @@ export interface CompetitionState {
   registrationInfo: RegistrationInfo;
   fights: FightsCollection;
   selectedEventInfoTemplate?: string
+  selectedEventInfoImage?: string
   selectedEventInfoTemplateCompiled?: string
 }
 
@@ -198,6 +199,7 @@ export const initialCompetitionState: CompetitionState = {
   selectedEventMats: matsInitialState,
   fights: fightsInitialState,
   selectedEventInfoTemplate: null,
+  selectedEventInfoImage: null,
   selectedEventInfoTemplateCompiled: null
 };
 
@@ -327,11 +329,30 @@ export function competitionStateReducer(st: CompetitionState = initialCompetitio
   return produce(st, state => {
     switch (action.type) {
       case EVENT_MANAGER_COMPETITION_INFO_LOADED: {
-        state.selectedEventInfoTemplate = action.infoTemplate;
-        if (Boolean(action.infoTemplate)) {
-          state.selectedEventInfoTemplateCompiled = marked.parser(marked.lexer(action.infoTemplate));
+        if (Boolean(action.infoTemplate) && action.infoTemplate) {
+          const infoTemplate = action.infoTemplate as ArrayBuffer;
+          if (infoTemplate.byteLength > 0) {
+            state.selectedEventInfoTemplate = new TextDecoder().decode(infoTemplate)
+            state.selectedEventInfoTemplateCompiled = marked.parser(marked.lexer(state.selectedEventInfoTemplate));
+          } else {
+            state.selectedEventInfoTemplate = null;
+            state.selectedEventInfoTemplateCompiled = null;
+          }
         } else {
           state.selectedEventInfoTemplateCompiled = null;
+        }
+        break;
+      }
+      case EVENT_MANAGER_COMPETITION_IMAGE_LOADED: {
+        if (Boolean(action.image) && action.image) {
+          const image = action.image as string;
+          if (image.length > 0) {
+            state.selectedEventInfoImage = image
+          } else {
+            state.selectedEventInfoImage = null;
+          }
+        } else {
+          state.selectedEventInfoImage = null;
         }
         break;
       }
@@ -935,6 +956,7 @@ export const getSelectedEventState = createSelector(state => state, (state: AppS
 
 export const getSelectedEventProperties = createSelector(getSelectedEventState, state => state && state.competitionProperties);
 export const getSelectedEventInfoTemplate = createSelector(getSelectedEventState, state => state && state.selectedEventInfoTemplate);
+export const getSelectedEventInfoImage = createSelector(getSelectedEventState, state => state && state.selectedEventInfoImage);
 export const getSelectedEventInfoTemplateCompiled = createSelector(getSelectedEventState, state => state?.selectedEventInfoTemplateCompiled);
 export const getSelectedEventId = createSelector(getSelectedEventProperties, props => props && props.id);
 export const getSelectedEventMatsCollection = createSelector(getSelectedEventState, state => (state && state.selectedEventMats) || matsInitialState);

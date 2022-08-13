@@ -1,5 +1,8 @@
 <div id="editor">
-  <cf-file-upload class="two_columns"></cf-file-upload>
+  <ng-container *ngIf="image">
+    <img [src]="getImageSrc()" alt="Competition image">
+  </ng-container>
+  <cf-file-upload class="two_columns" [competitionId]="competitionId"></cf-file-upload>
   <textarea [ngClass]="{two_columns: !showPreview}" id="textarea" [placeholder]="placeHolder"
             [value]="template_"
             (keyup)="onValueChange($event)"></textarea>

@@ -25,6 +25,7 @@ import {
 export class CompetitionInfoEditorContainerComponent extends CompetitionManagerModuleRouterEntryComponent implements OnDestroy {
 
   template$: Observable<string>;
+  image$: Observable<string>;
   competitionId$: Observable<string>;
 
   constructor(store: Store<AppState>, menuService: MenuService, private router: Router, private route: ActivatedRoute) {
@@ -46,6 +47,7 @@ export class CompetitionInfoEditorContainerComponent extends CompetitionManagerM
       ]
     }, menuService);
     this.template$ = menuService.dataProviderService.competitionInfoInterest$
+    this.image$ = menuService.dataProviderService.competitionImageInterest$
     this.competitionId$ = this.store.pipe(select(getSelectedEventId));
   }
 

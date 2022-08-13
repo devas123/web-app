@@ -3,7 +3,7 @@ import {select, Store} from "@ngrx/store";
 import {
   AppState,
   dashboardGetSelectedPeriodSelectedFight,
-  getSelectedEventId,
+  getSelectedEventId, getSelectedEventInfoImage,
   getSelectedEventInfoTemplate, getSelectedEventInfoTemplateCompiled
 } from "../reducers/global-reducers";
 import {
@@ -77,6 +77,9 @@ export class SelectorsService {
 
   competitionInfo$: Observable<string> = this.store.pipe(
     select(getSelectedEventInfoTemplate)
+  );
+  competitionImage$: Observable<string> = this.store.pipe(
+    select(getSelectedEventInfoImage)
   );
   competitionInfoCompiled$: Observable<string> = this.store.pipe(
     select(getSelectedEventInfoTemplateCompiled)

@@ -98,6 +98,7 @@ export interface QueryServiceResponse {
   getStageFightsResponse?: GetStageFightsResponse | undefined;
   getAcademiesResponse?: GetAcademiesResponse | undefined;
   getAcademyResponse?: GetAcademyResponse | undefined;
+  getCompetitionInfoImageResponse?: GetCompetitionInfoImageResponse | undefined;
   errorResponse?: ErrorResponse | undefined;
 }
 
@@ -123,6 +124,10 @@ export interface GetCompetitionPropertiesResponse {
 
 export interface GetCompetitionInfoTemplateResponse {
   template: Uint8Array;
+}
+
+export interface GetCompetitionInfoImageResponse {
+  image: Uint8Array;
 }
 
 export interface GetScheduleResponse {
@@ -970,6 +975,7 @@ function createBaseQueryServiceResponse(): QueryServiceResponse {
     getStageFightsResponse: undefined,
     getAcademiesResponse: undefined,
     getAcademyResponse: undefined,
+    getCompetitionInfoImageResponse: undefined,
     errorResponse: undefined,
   };
 }
@@ -1135,6 +1141,12 @@ export const QueryServiceResponse = {
         writer.uint32(210).fork()
       ).ldelim();
     }
+    if (message.getCompetitionInfoImageResponse !== undefined) {
+      GetCompetitionInfoImageResponse.encode(
+        message.getCompetitionInfoImageResponse,
+        writer.uint32(218).fork()
+      ).ldelim();
+    }
     if (message.errorResponse !== undefined) {
       ErrorResponse.encode(
         message.errorResponse,
@@ -1291,6 +1303,10 @@ export const QueryServiceResponse = {
             reader.uint32()
           );
           break;
+        case 27:
+          message.getCompetitionInfoImageResponse =
+            GetCompetitionInfoImageResponse.decode(reader, reader.uint32());
+          break;
         case 2700:
           message.errorResponse = ErrorResponse.decode(reader, reader.uint32());
           break;
@@ -1413,6 +1429,13 @@ export const QueryServiceResponse = {
         : undefined,
       getAcademyResponse: isSet(object.getAcademyResponse)
         ? GetAcademyResponse.fromJSON(object.getAcademyResponse)
+        : undefined,
+      getCompetitionInfoImageResponse: isSet(
+        object.getCompetitionInfoImageResponse
+      )
+        ? GetCompetitionInfoImageResponse.fromJSON(
+            object.getCompetitionInfoImageResponse
+          )
         : undefined,
       errorResponse: isSet(object.errorResponse)
         ? ErrorResponse.fromJSON(object.errorResponse)
@@ -1552,6 +1575,13 @@ export const QueryServiceResponse = {
       (obj.getAcademyResponse = message.getAcademyResponse
         ? GetAcademyResponse.toJSON(message.getAcademyResponse)
         : undefined);
+    message.getCompetitionInfoImageResponse !== undefined &&
+      (obj.getCompetitionInfoImageResponse =
+        message.getCompetitionInfoImageResponse
+          ? GetCompetitionInfoImageResponse.toJSON(
+              message.getCompetitionInfoImageResponse
+            )
+          : undefined);
     message.errorResponse !== undefined &&
       (obj.errorResponse = message.errorResponse
         ? ErrorResponse.toJSON(message.errorResponse)
@@ -1712,6 +1742,13 @@ export const QueryServiceResponse = {
       object.getAcademyResponse !== undefined &&
       object.getAcademyResponse !== null
         ? GetAcademyResponse.fromPartial(object.getAcademyResponse)
+        : undefined;
+    message.getCompetitionInfoImageResponse =
+      object.getCompetitionInfoImageResponse !== undefined &&
+      object.getCompetitionInfoImageResponse !== null
+        ? GetCompetitionInfoImageResponse.fromPartial(
+            object.getCompetitionInfoImageResponse
+          )
         : undefined;
     message.errorResponse =
       object.errorResponse !== undefined && object.errorResponse !== null
@@ -2130,6 +2167,68 @@ export const GetCompetitionInfoTemplateResponse = {
   >(object: I): GetCompetitionInfoTemplateResponse {
     const message = createBaseGetCompetitionInfoTemplateResponse();
     message.template = object.template ?? new Uint8Array();
+    return message;
+  },
+};
+
+function createBaseGetCompetitionInfoImageResponse(): GetCompetitionInfoImageResponse {
+  return { image: new Uint8Array() };
+}
+
+export const GetCompetitionInfoImageResponse = {
+  encode(
+    message: GetCompetitionInfoImageResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.image.length !== 0) {
+      writer.uint32(10).bytes(message.image);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetCompetitionInfoImageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCompetitionInfoImageResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.image = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetCompetitionInfoImageResponse {
+    return {
+      image: isSet(object.image)
+        ? bytesFromBase64(object.image)
+        : new Uint8Array(),
+    };
+  },
+
+  toJSON(message: GetCompetitionInfoImageResponse): unknown {
+    const obj: any = {};
+    message.image !== undefined &&
+      (obj.image = base64FromBytes(
+        message.image !== undefined ? message.image : new Uint8Array()
+      ));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetCompetitionInfoImageResponse>, I>>(
+    object: I
+  ): GetCompetitionInfoImageResponse {
+    const message = createBaseGetCompetitionInfoImageResponse();
+    message.image = object.image ?? new Uint8Array();
     return message;
   },
 };

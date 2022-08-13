@@ -6,16 +6,18 @@ import {finalize} from "rxjs/operators";
 @Component({
   selector: 'cf-file-upload',
   template: `
-    <input type="file" class="ui input file-input"
-           [accept]="requiredFileType"
-           (change)="onFileSelected($event)" #fileUpload>
+    <div class="ui input">
+      <input type="file"
+             [accept]="requiredFileType"
+             (change)="onFileSelected($event)" #fileUpload>
+    </div>
 
     <div class="file-upload">
 
       {{fileName || "No file uploaded yet."}}
 
       <compmanager-frontend-submit-button [name]="'Upload'"
-                                          (click)="fileUpload.click()"></compmanager-frontend-submit-button>
+                                          (click)="onFileSelected(fileUpload.files)"></compmanager-frontend-submit-button>
 
     </div>
 
@@ -27,7 +29,7 @@ import {finalize} from "rxjs/operators";
       </sui-progress>
 
       <compmanager-frontend-link-icon [iconClass]="'stop circle'" class="cancel-upload" (click)="cancelUpload()"
-                *ngIf="uploadProgress">Stop
+                                      *ngIf="uploadProgress">Stop
       </compmanager-frontend-link-icon>
 
     </div>`,
@@ -47,9 +49,9 @@ export class FileUploadComponent {
   constructor(private infoService: InfoService) {
   }
 
-  onFileSelected(event) {
-    const file: File = event.target.files[0];
-
+  onFileSelected(files) {
+    const file: File = files[0];
+    console.log(files)
     if (file) {
 
       const upload$ = this.infoService.saveCompetitionInfoImage(this.competitionId, file).pipe(

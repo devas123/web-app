@@ -9,7 +9,7 @@ import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
   eventManagerCategoryStagesLoaded,
-  eventManagerCategoryStateLoaded, eventManagerCompetitionInfoLoaded,
+  eventManagerCategoryStateLoaded, eventManagerCompetitionImageLoaded, eventManagerCompetitionInfoLoaded,
   eventManagerFightersForCompetitionLoaded,
   eventManagerFightsLoaded
 } from "../modules/event-manager/redux/event-manager-actions";
@@ -26,6 +26,7 @@ export class DataProviderService {
   constructor(private infoService: InfoService, private selectors: SelectorsService, private store: Store<AppState>) {
   }
 
+
   private requireCompetitionInfo$ = this.selectors.competitionId$.pipe(
     filter((competitionId) => Boolean(competitionId)),
     switchMap((competitionId) => this.infoService.getCompetitionInfoTemplate(competitionId)),
@@ -34,10 +35,22 @@ export class DataProviderService {
     }),
     share(),
   )
+  private requireCompetitionImage$ = this.selectors.competitionId$.pipe(
+    filter((competitionId) => Boolean(competitionId)),
+    switchMap((competitionId) => this.infoService.getCompetitionInfoImage(competitionId)),
+    tap(image => {
+      if (Boolean(image)) this.store.dispatch(eventManagerCompetitionImageLoaded({image}))
+    }),
+    share(),
+  )
 
   competitionInfoInterest$ = using(
     () => this.requireCompetitionInfo$.subscribe(),
     () => this.selectors.competitionInfo$
+  )
+  competitionImageInterest$ = using(
+    () => this.requireCompetitionImage$.subscribe(),
+    () => this.selectors.competitionImage$
   )
   competitionInfoCompiledInterest$ = using(
     () => this.requireCompetitionInfo$.subscribe(),

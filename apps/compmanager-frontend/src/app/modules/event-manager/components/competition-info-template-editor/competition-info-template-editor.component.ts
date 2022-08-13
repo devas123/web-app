@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {marked} from 'marked';
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 export interface ISaveCompetitionInfoTemplatePayload {
@@ -14,9 +15,16 @@ export interface ISaveCompetitionInfoTemplatePayload {
 })
 export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
+  constructor(private dom: DomSanitizer) {
+
+  }
+
   @Input() placeHolder: string = CompetitionInfoTemplateEditorComponent.getPlaceHolder();
 
   @Output() templateSaved = new EventEmitter<ISaveCompetitionInfoTemplatePayload>();
+
+  @Input()
+  image: string
 
   @Input()
   set template(value: string) {
@@ -64,5 +72,11 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
   saveTemplate() {
     this.templateSaved.next({template: this.template_, competitionId: this.competitionId});
+  }
+
+  getImageSrc() {
+    if (this.image) {
+      return this.dom.bypassSecurityTrustUrl(this.image)
+    }
   }
 }
