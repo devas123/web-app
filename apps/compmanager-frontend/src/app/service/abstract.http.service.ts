@@ -10,20 +10,36 @@ export class AbstractHttpService {
 
   defaultTimeout = 15000;
 
+  httpHeaders = new HttpHeaders({
+    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    'Content-Type': 'application/x-protobuf',
+    'Accept': 'application/x-protobuf'
+  });
+
+
   sendByteArrayToEndpointWithProgress(endpoint: string, body: ArrayBuffer, tmt: number): Observable<HttpEvent<ArrayBuffer>> {
     return this.http.post(endpoint, body, {
       responseType: 'arraybuffer',
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf',
-        'Accept': 'application/x-protobuf'
-      }),
+      headers: this.httpHeaders,
       reportProgress: true,
       observe: 'events'
     }).pipe(
       timeout(tmt),
       catchError(error => {
-        console.log(error);
+        return throwError(error);
+      })
+    );
+  }
+
+  sendDeleteRequestToEndpointWithProgress(endpoint: string, tmt: number): Observable<HttpEvent<ArrayBuffer>> {
+    return this.http.delete(endpoint, {
+      responseType: 'arraybuffer',
+      headers: this.httpHeaders,
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+      timeout(tmt),
+      catchError(error => {
         return throwError(error);
       })
     );

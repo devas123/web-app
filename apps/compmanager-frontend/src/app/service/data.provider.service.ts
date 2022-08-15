@@ -39,7 +39,7 @@ export class DataProviderService {
     filter((competitionId) => Boolean(competitionId)),
     switchMap((competitionId) => this.infoService.getCompetitionInfoImage(competitionId)),
     tap(image => {
-      if (Boolean(image)) this.store.dispatch(eventManagerCompetitionImageLoaded({image}))
+      if (Boolean(image) && image.slice(5).length > 0) this.store.dispatch(eventManagerCompetitionImageLoaded({image}))
     }),
     share(),
   )

@@ -15,12 +15,13 @@ import {fromPromise} from "rxjs/internal-compatibility";
     </div>
 
     <div class="file-upload">
-
-      {{fileName || "No file uploaded yet."}}
-
-      <compmanager-frontend-submit-button [name]="'Upload'"
-                                          (click)="onFileSelected(fileUpload.files)"></compmanager-frontend-submit-button>
-
+      <p></p>
+      <div class="ui buttons_row">
+        <compmanager-frontend-submit-button [name]="'Upload'" [disabled]="!fileUpload?.files[0]"
+                                            (click)="onFileSelected(fileUpload.files)"></compmanager-frontend-submit-button>
+        <compmanager-frontend-button [disabled]="disableDeleteButton" [name]="'Delete'"
+                                     (click)="onImageRemoveClicked()"></compmanager-frontend-button>
+      </div>
     </div>
 
     <div class="progress">
@@ -44,8 +45,14 @@ export class FileUploadComponent {
   @Input()
   competitionId: string;
 
+  @Input()
+  disableDeleteButton: boolean;
+
   @Output()
   uploadFinished: EventEmitter<ArrayBuffer> = new EventEmitter<ArrayBuffer>();
+
+  @Output()
+  imageRemoved: EventEmitter<void> = new EventEmitter<void>();
 
   fileName = '';
   uploadProgress: number;
@@ -82,6 +89,14 @@ export class FileUploadComponent {
     this.uploadSub = null;
     if (Boolean(image)) {
       this.uploadFinished.next(image);
+    }
+  }
+
+  onImageRemoveClicked() {
+    if (!this.disableDeleteButton) {
+      this.pictureUploadService.deleteCompetitionInfoImage(this.competitionId).pipe(
+        finalize(() => this.imageRemoved.next())
+      ).subscribe()
     }
   }
 }

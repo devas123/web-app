@@ -38,6 +38,8 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
   @Output()
   competitionImageUpdated = new EventEmitter<ArrayBuffer>()
+  @Output()
+  competitionImageRemoved = new EventEmitter<void>()
 
   compiledMarkdown: string;
 
@@ -85,5 +87,8 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
 
   sendCompetitionImageUpdatedEvent(image: ArrayBuffer) {
     this.competitionImageUpdated.next(image)
+  }
+  sendCompetitionImageRemovedEvent() {
+    this.competitionImageRemoved.next()
   }
 }

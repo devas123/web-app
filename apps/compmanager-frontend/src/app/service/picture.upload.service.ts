@@ -17,6 +17,9 @@ export class PictureUploadService extends AbstractHttpService {
     super(http)
   }
 
+  endpoint = (competitionId: string) =>  `${competitionQueryEndpoint}/${competitionId}/image`;
+
+
   saveCompetitionInfoImage(competitionId: string, competitionInfoImage: ArrayBuffer): Observable<number> {
     return of(competitionInfoImage)
       .pipe(
@@ -29,7 +32,15 @@ export class PictureUploadService extends AbstractHttpService {
             }
           ).finish().buffer
         )),
-        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(`${competitionQueryEndpoint}/${competitionId}/image`, bytes, this.defaultTimeout)),
+        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(this.endpoint(competitionId), bytes, this.defaultTimeout)),
+        filter(event => event.type === HttpEventType.UploadProgress),
+        map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))
+      )
+  }
+
+  deleteCompetitionInfoImage(competitionId: string): Observable<number> {
+    return this.sendDeleteRequestToEndpointWithProgress(this.endpoint(competitionId), this.defaultTimeout)
+      .pipe(
         filter(event => event.type === HttpEventType.UploadProgress),
         map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))
       )

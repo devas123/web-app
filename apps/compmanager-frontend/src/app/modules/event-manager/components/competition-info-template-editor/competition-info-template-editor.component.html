@@ -2,7 +2,11 @@
   <ng-container *ngIf="image">
     <img [src]="getImageSrc()" alt="Competition image">
   </ng-container>
-  <cf-file-upload class="two_columns" [competitionId]="competitionId" (uploadFinished)="sendCompetitionImageUpdatedEvent($event)"></cf-file-upload>
+  <cf-file-upload class="two_columns" [competitionId]="competitionId"
+                  [disableDeleteButton]="!image"
+                  (uploadFinished)="sendCompetitionImageUpdatedEvent($event)"
+                  (imageRemoved)="sendCompetitionImageRemovedEvent()"
+  ></cf-file-upload>
   <textarea [ngClass]="{two_columns: !showPreview}" id="textarea" [placeholder]="placeHolder"
             [value]="template_"
             (keyup)="onValueChange($event)"></textarea>

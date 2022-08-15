@@ -4,5 +4,7 @@
   [competitionId]="competitionId$ | async"
   [image]="image$ | async"
   [showPreview]="showTemplatePreview"
-  (competitionImageUpdated)="updateCompetitionImage($event)"></app-competition-info-template-editor>
+  (competitionImageUpdated)="updateCompetitionImage($event)"
+  (competitionImageRemoved)="removeCompetitionImage()"
+></app-competition-info-template-editor>
 
