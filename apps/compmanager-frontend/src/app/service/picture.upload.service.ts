@@ -1,11 +1,9 @@
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {filter, map, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEventType, HttpProgressEvent} from '@angular/common/http';
 import * as env from '../../environments/environment';
 import {QueryServiceRequest} from "@frontend-nx/protobuf";
-import {fromPromise} from "rxjs/internal-compatibility";
-import {InfoService} from "./info.service";
 import {AbstractHttpService} from "./abstract.http.service";
 
 const {
@@ -19,8 +17,8 @@ export class PictureUploadService extends AbstractHttpService {
     super(http)
   }
 
-  saveCompetitionInfoImage(competitionId: string, competitionInfoImage: File): Observable<number> {
-    return fromPromise(InfoService.getFileAsByteArray(competitionInfoImage))
+  saveCompetitionInfoImage(competitionId: string, competitionInfoImage: ArrayBuffer): Observable<number> {
+    return of(competitionInfoImage)
       .pipe(
         filter(body => body instanceof ArrayBuffer),
         map(fileBytes => (

@@ -11,10 +11,11 @@ import {AppState, getSelectedEventId} from '../../../../reducers/global-reducers
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable} from "rxjs";
-import {eventManagerSaveCompetitionInfo} from "../../redux/event-manager-actions";
+import {eventManagerCompetitionImageLoaded, eventManagerSaveCompetitionInfo} from "../../redux/event-manager-actions";
 import {
   ISaveCompetitionInfoTemplatePayload
 } from "../../components/competition-info-template-editor/competition-info-template-editor.component";
+import {InfoService} from "../../../../service/info.service";
 
 
 @Component({
@@ -64,4 +65,8 @@ export class CompetitionInfoEditorContainerComponent extends CompetitionManagerM
     }));
   }
 
+  updateCompetitionImage(imageBytes: ArrayBuffer) {
+    const imageBase64Promise = InfoService.encodeUint8ArrayAsBase64(new Uint8Array(imageBytes));
+    imageBase64Promise.then(imageBase64 => this.store.dispatch(eventManagerCompetitionImageLoaded({image: imageBase64 as string})));
+  }
 }

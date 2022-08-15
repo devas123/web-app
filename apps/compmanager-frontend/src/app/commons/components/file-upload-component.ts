@@ -1,7 +1,9 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Subscription} from "rxjs";
-import {finalize} from "rxjs/operators";
+import {filter, finalize, map, switchMap} from "rxjs/operators";
 import {PictureUploadService} from "../../service/picture.upload.service";
+import {InfoService} from "../../service/info.service";
+import {fromPromise} from "rxjs/internal-compatibility";
 
 @Component({
   selector: 'cf-file-upload',
@@ -42,6 +44,9 @@ export class FileUploadComponent {
   @Input()
   competitionId: string;
 
+  @Output()
+  uploadFinished: EventEmitter<ArrayBuffer> = new EventEmitter<ArrayBuffer>();
+
   fileName = '';
   uploadProgress: number;
   uploadSub: Subscription;
@@ -51,11 +56,16 @@ export class FileUploadComponent {
 
   onFileSelected(files) {
     const file: File = files[0];
-    console.log(files)
     if (file) {
 
-      const upload$ = this.pictureUploadService.saveCompetitionInfoImage(this.competitionId, file).pipe(
-        finalize(() => this.reset())
+      let fileAsByteArray = InfoService.getFileAsByteArray(file);
+      const upload$ = fromPromise(fileAsByteArray).pipe(
+        filter(res => res instanceof ArrayBuffer),
+        map(res => res as ArrayBuffer),
+        switchMap(array => this.pictureUploadService.saveCompetitionInfoImage(this.competitionId, array).pipe(
+            finalize(() => this.reset(array))
+          )
+        )
       );
 
       this.uploadSub = upload$.subscribe(event => this.uploadProgress = event)
@@ -67,8 +77,11 @@ export class FileUploadComponent {
     this.reset();
   }
 
-  reset() {
+  reset(image?: ArrayBuffer) {
     this.uploadProgress = null;
     this.uploadSub = null;
+    if (Boolean(image)) {
+      this.uploadFinished.next(image);
+    }
   }
 }

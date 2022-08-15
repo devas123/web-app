@@ -36,6 +36,9 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
   @Input()
   competitionId: string;
 
+  @Output()
+  competitionImageUpdated = new EventEmitter<ArrayBuffer>()
+
   compiledMarkdown: string;
 
   @Input()
@@ -78,5 +81,9 @@ export class CompetitionInfoTemplateEditorComponent implements OnInit {
     if (this.image) {
       return this.dom.bypassSecurityTrustUrl(this.image)
     }
+  }
+
+  sendCompetitionImageUpdatedEvent(image: ArrayBuffer) {
+    this.competitionImageUpdated.next(image)
   }
 }

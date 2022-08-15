@@ -3,5 +3,6 @@
   [template]="template$ | async"
   [competitionId]="competitionId$ | async"
   [image]="image$ | async"
-  [showPreview]="showTemplatePreview"></app-competition-info-template-editor>
+  [showPreview]="showTemplatePreview"
+  (competitionImageUpdated)="updateCompetitionImage($event)"></app-competition-info-template-editor>
 
