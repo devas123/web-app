@@ -129,6 +129,7 @@ import {
 import {CreateEventContainerComponent} from "./containers/create-event-container/create-event-container.component";
 import {GroupDescriptorFormComponent} from "./components/generate-brackets-form/group-descriptor-form.component";
 import {RestrictionHeaderComponent} from "./components/category-constructor/restriction-header.component";
+import {PictureUploadService} from "../../service/picture.upload.service";
 
 @NgModule({
   imports: [

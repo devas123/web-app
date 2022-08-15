@@ -31,6 +31,7 @@ import {CommonScheduleInfoContainerService} from './commons/classes/common-sched
 import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-semantic-ui';
 import {DataProviderService} from "./service/data.provider.service";
 import {SelectorsService} from "./service/selectors.service";
+import {PictureUploadService} from "./service/picture.upload.service";
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import {SelectorsService} from "./service/selectors.service";
   ],
   providers: [HttpClient,
     InfoService,
+    PictureUploadService,
     DataProviderService,
     SelectorsService,
     MenuService,

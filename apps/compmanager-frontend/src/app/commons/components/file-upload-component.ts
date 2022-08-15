@@ -1,7 +1,7 @@
 import {Component, Input} from "@angular/core";
 import {Subscription} from "rxjs";
-import {InfoService} from "../../service/info.service";
 import {finalize} from "rxjs/operators";
+import {PictureUploadService} from "../../service/picture.upload.service";
 
 @Component({
   selector: 'cf-file-upload',
@@ -46,7 +46,7 @@ export class FileUploadComponent {
   uploadProgress: number;
   uploadSub: Subscription;
 
-  constructor(private infoService: InfoService) {
+  constructor(private pictureUploadService: PictureUploadService) {
   }
 
   onFileSelected(files) {
@@ -54,7 +54,7 @@ export class FileUploadComponent {
     console.log(files)
     if (file) {
 
-      const upload$ = this.infoService.saveCompetitionInfoImage(this.competitionId, file).pipe(
+      const upload$ = this.pictureUploadService.saveCompetitionInfoImage(this.competitionId, file).pipe(
         finalize(() => this.reset())
       );
 

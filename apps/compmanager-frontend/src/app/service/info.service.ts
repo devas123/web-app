@@ -1,7 +1,7 @@
 import {Observable, of, throwError} from 'rxjs';
-import {catchError, filter, map, mergeMap, switchMap, tap, timeout} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpProgressEvent} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import {HttpAuthService} from '../modules/account/service/AuthService';
 import * as env from '../../environments/environment';
@@ -56,7 +56,7 @@ import {
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
 import {CommandCallback, CommandExecutionResult} from "../../../../../libs/protobuf/src/lib/callback";
-import {fromPromise} from "rxjs/internal-compatibility";
+import {AbstractHttpService} from "./abstract.http.service";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -88,9 +88,10 @@ const competitionIdPrefix = (competitionId: string) => (arg: string) => `${compe
 
 
 @Injectable()
-export class InfoService {
+export class InfoService extends AbstractHttpService {
 
-  constructor(private http: HttpClient) {
+  constructor(http: HttpClient) {
+    super(http)
   }
 
   static async uint8ArrToString(uint8arr: Uint8Array): Promise<string | ArrayBuffer> {
@@ -133,7 +134,7 @@ export class InfoService {
     });
   }
 
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  static headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   private encoder = new TextEncoder()
 
@@ -164,22 +165,6 @@ export class InfoService {
     return '';
   }
 
-  private httpGet(url: string, options: any, tmt = 60000): Observable<QueryServiceResponse> {
-    return this.http.get<ArrayBuffer>(url, {
-      ...options, responseType: 'arraybuffer', headers: {
-        Accept: 'application/x-protobuf'
-      }
-    }).pipe(
-      timeout(tmt),
-      map(buff => QueryServiceResponse.decode(new Uint8Array(buff as any))),
-      tap(r => console.log("Info service received a response: \n ", QueryServiceResponse.toJSON(r))),
-      catchError(error => {
-        console.log(error);
-        return throwError(error);
-      }),
-    );
-  }
-
   subscribeToCompetition(userId: string | number, competitionId: string) {
     const params = {
       userId: `${userId}`,
@@ -189,6 +174,19 @@ export class InfoService {
       params: params
     });
   }
+
+  getCompetitionInfoImage(competitionId: string): Observable<string> {
+    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/image`, {
+      headers: InfoService.headers
+    })
+      .pipe(
+        map(r => r.getCompetitionInfoImageResponse?.image),
+        filter(r => Boolean(r)),
+        switchMap(bytes => InfoService.encodeUint8ArrayAsBase64(bytes)),
+        map(r => r as string)
+      );
+  }
+
 
 
   getCompetitions(creatorId?, status?): Observable<ManagedCompetition[]> {
@@ -220,7 +218,7 @@ export class InfoService {
 
   getSchedule(competitionId: string): Observable<Schedule> {
     return this.httpGet(competitionIdPrefix(competitionId)('schedule'), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getScheduleResponse.schedule || <Schedule>{})
@@ -229,7 +227,7 @@ export class InfoService {
 
   getFightIdsByCategoryId(competitionId: string): Observable<Dictionary<string[]>> {
     return this.httpGet(competitionIdPrefix(competitionId)('fight'), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getFightIdsByCategoryIdsResponse.fightIdsByCategoryId),
@@ -246,7 +244,7 @@ export class InfoService {
 
   getCategories(competitionId: string): Observable<CategoryState[]> {
     return this.httpGet(competitionIdPrefix(competitionId)('category'), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getCategoriesResponse.categoryState),
@@ -295,7 +293,7 @@ export class InfoService {
 
   getCompetitionProperties(competitionId: string): Observable<CompetitionProperties> {
     return this.httpGet(`${competitionQueryEndpoint}/${competitionId}`, {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getCompetitionPropertiesResponse?.competitionProperties)
@@ -304,22 +302,10 @@ export class InfoService {
 
   getCompetitionInfoTemplate(competitionId: string): Observable<string> {
     return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/info`, {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         switchMap(r => InfoService.uint8ArrToString(r.getCompetitionInfoTemplateResponse?.template)),
-        map(r => r as string)
-      );
-  }
-
-  getCompetitionInfoImage(competitionId: string): Observable<string> {
-    return this.httpGet(`${competitionQueryEndpoint}/${competitionId}/image`, {
-      headers: this.headers
-    })
-      .pipe(
-        map(r => r.getCompetitionInfoImageResponse?.image),
-        filter(r => Boolean(r)),
-        switchMap(bytes => InfoService.encodeUint8ArrayAsBase64(bytes)),
         map(r => r as string)
       );
   }
@@ -344,30 +330,12 @@ export class InfoService {
       )
   }
 
-  saveCompetitionInfoImage(competitionId: string, competitionInfoImage: File): Observable<number> {
-    return fromPromise(InfoService.getFileAsByteArray(competitionInfoImage))
-      .pipe(
-        filter(body => body instanceof ArrayBuffer),
-        map(fileBytes => (
-          QueryServiceRequest.encode(<QueryServiceRequest>{
-              addCompetitionImageRequest: {
-                image: new Uint8Array(fileBytes as ArrayBuffer)
-              }
-            }
-          ).finish().buffer
-        )),
-        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(`${competitionQueryEndpoint}/${competitionId}/image`, bytes, this.defaultTimeout)),
-        filter(event => event.type === HttpEventType.UploadProgress),
-        map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))
-      )
-  }
-
 
   getRegistrationInfo(competitionId: string): Observable<RegistrationInfo> {
     const params = {competitionId};
     return this.httpGet(competitionIdPrefix(competitionId)('reginfo'), {
       params: params,
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getRegistrationInfoResponse?.registrationInfo)
@@ -377,7 +345,7 @@ export class InfoService {
 
   getLatestCategoryState(competitionId, categoryId): Observable<CategoryState> {
     return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}`), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getCategoryResponse?.categoryState)
@@ -404,42 +372,6 @@ export class InfoService {
     const userRequestArrayBuffer = InfoService.toBytes(body);
     const tmt = this.defaultTimeout;
     return this.sendByteArrayToEndpoint(endpoint, userRequestArrayBuffer, tmt);
-  }
-
-  private sendByteArrayToEndpoint(endpoint: string, body: ArrayBuffer, tmt: number) {
-    return this.http.post(endpoint, body, {
-      responseType: 'arraybuffer',
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf',
-        'Accept': 'application/x-protobuf'
-      })
-    }).pipe(
-      timeout(tmt),
-      catchError(error => {
-        console.log(error);
-        return throwError(error);
-      })
-    );
-  }
-
-  private sendByteArrayToEndpointWithProgress(endpoint: string, body: ArrayBuffer, tmt: number): Observable<HttpEvent<ArrayBuffer>> {
-    return this.http.post(endpoint, body, {
-      responseType: 'arraybuffer',
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
-        'Content-Type': 'application/x-protobuf',
-        'Accept': 'application/x-protobuf'
-      }),
-      reportProgress: true,
-      observe: 'events'
-    }).pipe(
-      timeout(tmt),
-      catchError(error => {
-        console.log(error);
-        return throwError(error);
-      })
-    );
   }
 
   static createCommandWithPayload(rawAction: any): Command {
@@ -577,7 +509,6 @@ export class InfoService {
     return this.sendCommandToEndpoint(normalizedCommand, this.withCompetitionId(commandsEndpoint)(competitionId));
   }
 
-  private defaultTimeout = 15000;
 
   generatePreliminaryCategories(payload: GenerateCategoriesFromRestrictionsPayload, competitionId: string): Observable<GenerateCategoriesFromRestrictionsResponse> {
     return this.sendByteArrayToEndpoint(`${generateCategoriesEndpoint}/${competitionId}`,
@@ -591,7 +522,7 @@ export class InfoService {
 
   getPeriodMats(competitionId: any, periodId: string): Observable<MatsQueryResult> {
     return this.httpGet(competitionIdPrefix(competitionId)(`period/${periodId}/mat`), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getPeriodMatsResponse.matsQueryResults)
@@ -600,7 +531,7 @@ export class InfoService {
 
   getFight(competitionId: string, fightId: string): Observable<{ fight: FightDescription, options: FightResultOption[] }> {
     return this.httpGet(competitionIdPrefix(competitionId)(`fight/${fightId}`), {
-      headers: this.headers
+      headers: InfoService.headers
     }).pipe(
       map(r => r.getFightByIdResponse?.fightDescription),
       mergeMap(result => this.getFightResultOptions(competitionId, result?.stageId)
@@ -612,7 +543,7 @@ export class InfoService {
 
   getFightResultOptions(competitionId: string, stageId: string): Observable<FightResultOption[]> {
     return this.httpGet(competitionIdPrefix(competitionId)(`stage/${stageId}/resultoptions`), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getFightResulOptionsResponse?.fightResultOptions)
@@ -624,7 +555,7 @@ export class InfoService {
     const params = {matId, queryString: queryString || null, maxResults: `${maxResults}`};
     return this.httpGet(competitionIdPrefix(competitionId)(`mat/${matId}/fight`), {
       params: params,
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getMatFightsResponse.matFights)
@@ -660,7 +591,7 @@ export class InfoService {
       return throwError(`something is missing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getStageFightsResponse.fights)
@@ -669,7 +600,7 @@ export class InfoService {
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<StageDescriptor[]> {
     return this.httpGet(competitionIdPrefix(competitionId)(`category/${categoryId}/stage`), {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getStagesForCategoryResponse.stages)
@@ -680,7 +611,7 @@ export class InfoService {
     const params = {competitionId};
     return this.httpGet(defaultFightResults, {
       params: params,
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getDefaultFightResultsResponse.fightResultOptions)
@@ -704,7 +635,7 @@ export class InfoService {
     }
     return this.httpGet(academiesEndpoint, {
       params: params,
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getAcademiesResponse)
@@ -721,7 +652,7 @@ export class InfoService {
 
   loadAcademy(id: string): Observable<GetAcademyResponse> {
     return this.httpGet(`${academiesEndpoint}/${id}`, {
-      headers: this.headers
+      headers: InfoService.headers
     })
       .pipe(
         map(r => r.getAcademyResponse)
