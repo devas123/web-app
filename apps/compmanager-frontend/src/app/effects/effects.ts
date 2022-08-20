@@ -35,7 +35,9 @@ export class Effects {
     switchMap(() =>
       this.infoService.getCompetitions(null, 'PUBLISHED').pipe(
         map((payload: ManagedCompetition[]) => {
-          return allActions.competitionsLoaded(payload);
+          if (Boolean(payload))
+            return allActions.competitionsLoaded(payload);
+          return allActions.errorEvent("Payload missing")
         }),
         catchError(err => of(allActions.errorEvent(err.statusText || JSON.stringify(err)))))
     )), {useEffectsErrorHandler: true});
