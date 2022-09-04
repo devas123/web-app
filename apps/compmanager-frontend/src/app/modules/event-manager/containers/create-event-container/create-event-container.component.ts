@@ -11,8 +11,8 @@ import {CompetitionProperties, RegistrationInfo} from "@frontend-nx/protobuf";
 import {createCompetition} from "../../../../actions/actions";
 import {TimeZone} from "@vvo/tzdb";
 import {Observable} from "rxjs";
-import {Account} from "../../../account/model/Account";
 import {availableTimeZones} from "../../../../reducers/compmanager-utils";
+import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
 
 @Component({
   template: `

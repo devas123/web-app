@@ -3,11 +3,11 @@ import {select, Store} from '@ngrx/store';
 import {AppState, selectUser} from '../reducers/global-reducers';
 import {authorizeToken, logout} from '../modules/account/flux/actions';
 import {Observable, Subscription} from 'rxjs';
-import {Account} from '../modules/account/model/Account';
 import {map, tap} from 'rxjs/operators';
 import {MenuService} from '../components/main-menu/menu.service';
 import {MenuItem} from '../commons/model/competition.model';
 import {Router} from '@angular/router';
+import {Account} from "../../../../../libs/protobuf/src/lib/account";
 
 @Component({
   selector: 'app-root',

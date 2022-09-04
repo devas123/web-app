@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Account} from '../model/Account';
 import {catchError, map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 
 
 import * as roles from '../user.roles';
+import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
 
 @Injectable()
 export class HttpAuthService {
@@ -61,12 +61,11 @@ export class HttpAuthService {
   }
 
   getCurrentUser(accesToken: string): Observable<any> {
-    return of( {
+    return of({
       email: 'test@email.ru',
       firstName: 'firstName',
       lastName: 'lastName',
-      password: accesToken,
-      userId: 1
+      userId: '1',
     } as Account);
     // return this.http.get('accounts/currentUser', {
     //   headers: new HttpHeaders({
@@ -83,7 +82,9 @@ export class HttpAuthService {
 
   getUserRole(competitionId: string): string {
     // TODO: implement
-    if (competitionId === 'id1') { return roles.USER; }
+    if (competitionId === 'id1') {
+      return roles.USER;
+    }
     return roles.ORGANIZATOR;
   }
 }

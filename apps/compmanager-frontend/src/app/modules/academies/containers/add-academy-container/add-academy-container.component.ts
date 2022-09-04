@@ -19,7 +19,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   styles: [],
 })
 export class AddAcademyContainerComponent extends CompetitionManagerModuleRouterEntryComponent {
-  userId$: Observable<number>;
+  userId$: Observable<string>;
 
   constructor(
     store: Store<AppState>, menuService: MenuService,

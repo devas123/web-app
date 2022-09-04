@@ -31,7 +31,7 @@ export class AddAcademyComponentComponent {
   academyForm: FormGroup;
 
   @Input()
-  userId: number
+  userId: string
 
   @Output()
   academyAdded: EventEmitter<FullAcademyInfo> = new EventEmitter<FullAcademyInfo>();

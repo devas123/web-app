@@ -34,7 +34,7 @@ export function accountStateReducer(state: AccountState = initialAccountState, a
         ...state,
         user: {
           ...state.user,
-          avatar: (window.URL || (window as any).webkitURL).createObjectURL(b64toBlob(action.payload.blobBase64, 'image/png'))
+          // avatar: (window.URL || (window as any).webkitURL).createObjectURL(b64toBlob(action.payload.blobBase64, 'image/png'))
         }
       };
     case ACCOUNT_ERROR:

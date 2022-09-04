@@ -1,7 +1,8 @@
-import {Account} from '../model/Account';
 
 // Actions
 // Auth
+import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
+
 export const AUTHORIZE_USER = 'AUTHORIZE_USER';
 export const AUTHORIZE_TOKEN = 'AUTHORIZE_WITH_TOKEN';
 export const LOGOUT = 'LOGOUT';

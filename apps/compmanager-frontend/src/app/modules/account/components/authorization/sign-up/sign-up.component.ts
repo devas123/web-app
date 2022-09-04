@@ -13,8 +13,8 @@ import {Transition, TransitionController, TransitionDirection} from '@frontend-n
 import {Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';
 import {Router} from '@angular/router';
-import {Account} from '../../../model/Account';
 import {AppState} from '../../../../../reducers/global-reducers';
+import {Account} from "../../../../../../../../../libs/protobuf/src/lib/account";
 
 declare var $: any;
 
@@ -100,14 +100,13 @@ export class SignUpComponent implements OnInit {
     const user = {
       firstName: this.firstName.value,
       lastName: this.lastName.value,
-      password: this.password.value,
       email: this.email.value
     } as Account;
 
     this.error = null;
     this.processing = true;
     this.authService.registerUser(user).pipe(tap(() => {
-      this.store.dispatch(authorizeUser({email: user.email, password: user.password}));
+      this.store.dispatch(authorizeUser({email: user.email, password: "TODO"}));
     })).subscribe(data => this.processing = false, error2 => {
       this.processing = false;
       this.error = error2;

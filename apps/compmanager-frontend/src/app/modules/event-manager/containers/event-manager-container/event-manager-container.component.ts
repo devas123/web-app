@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState, eventManagerGetHeaderDescription, selectUser} from '../../../../reducers/global-reducers';
-import {Account} from '../../../account/model/Account';
 import {
   eventManagerConnectSocket,
   eventManagerDisconnectSocket,
@@ -19,6 +18,7 @@ import {
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {eventManagerGetSocketConnected} from "../../redux/event-manager-reducers";
+import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
 
 @Component({
   selector: 'app-event-manager-container',

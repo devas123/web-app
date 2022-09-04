@@ -1,5 +1,5 @@
 <div class="shaked"  [suiTransition]="transitionController">
-    <form class="ui large form" [formGroup]="userForm" [ngClass]="{error: error || (userForm.touched || userForm.dirty) && (userForm.invalid || password.value != confirmPassword.value)}">
+    <form class="ui large form" [formGroup]="userForm" [ngClass]="{error: error || (userForm.touched || userForm.dirty) && (userForm.invalid || password.value !== confirmPassword.value)}">
       <div class="ui stacked segment">
         <div class="ui  dimmer" [ngClass]="{active: processing}">
           <div class="ui loader"></div>
@@ -39,7 +39,7 @@
           </div>
 
 
-          <div class="field" [ngClass]="{error: password.value != confirmPassword.value && (confirmPassword.dirty || confirmPassword.touched)}">
+          <div class="field" [ngClass]="{error: password.value !== confirmPassword.value && (confirmPassword.dirty || confirmPassword.touched)}">
             <div class="ui left icon input">
               <i class="lock icon"></i>
               <input type="password" name="confirmPassword" placeholder="Confirm password"
@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="ui fluid middle positive submit button" (click)="createUser()"
-             [ngClass]="{disabled: userForm.invalid || password.value != confirmPassword.value}">
+             [ngClass]="{disabled: userForm.invalid || password.value !== confirmPassword.value}">
           Register
         </div>
 
@@ -62,8 +62,8 @@
               <li *ngIf="!email.errors.required && email.errors.invalidRegexp">Please enter a valid e-mail address. For example bob@gmail.com.</li>
             </ng-container>
             <li *ngIf="password.invalid && password.errors.minlength && (password.touched || password.dirty)">Password should be at least 6 characters long.</li>
-            <li *ngIf="password.value != confirmPassword.value && (confirmPassword.dirty || confirmPassword.touched)">Passwords do not match.</li>
-            <li *ngIf="error && error != null">{{error}}</li>
+            <li *ngIf="password.value !== confirmPassword.value && (confirmPassword.dirty || confirmPassword.touched)">Passwords do not match.</li>
+            <li *ngIf="error && error !== null">{{error}}</li>
           </ul>
         </div>
       </div>

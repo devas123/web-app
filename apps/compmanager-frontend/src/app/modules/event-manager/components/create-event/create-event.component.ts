@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Account} from '../../../account/model/Account';
 import {
   CompetitionProperties,
   CompetitionStatus,
@@ -10,8 +9,8 @@ import {
   RegistrationPeriod
 } from "@frontend-nx/protobuf";
 import {TimeZone} from "@vvo/tzdb";
-import {FilterFn} from "@frontend-nx/ng2-semantic-ui";
 import {compmanagerTimeZoneFilter, compmanagerTimeZoneFormatter} from "../../../../reducers/compmanager-utils";
+import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
 
 
 @Component({

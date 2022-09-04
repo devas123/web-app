@@ -55,8 +55,8 @@ export class AccountInfoComponent implements OnChanges, OnInit {
       email: [accountState?.user?.email, [Validators.required]],
       firstName: [accountState?.user?.firstName, [Validators.required]],
       lastName: [accountState?.user?.lastName, [Validators.required]],
-      password: [accountState?.user?.password, [Validators.required]],
-      avatar: [accountState?.user?.avatar, []],
+      password: ['', [Validators.required]],
+      avatar: ['', []],
     })
   }
 
@@ -70,8 +70,8 @@ export class AccountInfoComponent implements OnChanges, OnInit {
           email: this.accountState?.user?.email,
           firstName: this.accountState?.user?.firstName,
           lastName: this.accountState?.user?.lastName,
-          password: this.accountState?.user?.password,
-          avatar: this.accountState?.user?.avatar,
+          password: '',
+          avatar: '',
         }
       );
     }

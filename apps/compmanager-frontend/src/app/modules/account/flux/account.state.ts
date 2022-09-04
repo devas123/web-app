@@ -1,4 +1,4 @@
-import {Account} from '../model/Account';
+import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
 
 
 export interface AccountState {

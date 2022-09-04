@@ -7,6 +7,7 @@ import {
   Competitor,
   FightDescription,
   MatState,
+  ErrorResponse,
   FightResultOption,
   ManagedCompetition,
   CategoryDescriptor,
@@ -211,11 +212,6 @@ export interface GetStageByIdResponse {
 
 export interface GetStageFightsResponse {
   fights: FightDescription[];
-}
-
-export interface ErrorResponse {
-  errorMessage?: string | undefined;
-  errorReason?: string | undefined;
 }
 
 export interface GetAcademiesResponse {
@@ -3643,75 +3639,6 @@ export const GetStageFightsResponse = {
     const message = createBaseGetStageFightsResponse();
     message.fights =
       object.fights?.map((e) => FightDescription.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseErrorResponse(): ErrorResponse {
-  return { errorMessage: undefined, errorReason: undefined };
-}
-
-export const ErrorResponse = {
-  encode(
-    message: ErrorResponse,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
-    if (message.errorMessage !== undefined) {
-      writer.uint32(10).string(message.errorMessage);
-    }
-    if (message.errorReason !== undefined) {
-      writer.uint32(18).string(message.errorReason);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ErrorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseErrorResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.errorMessage = reader.string();
-          break;
-        case 2:
-          message.errorReason = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ErrorResponse {
-    return {
-      errorMessage: isSet(object.errorMessage)
-        ? String(object.errorMessage)
-        : undefined,
-      errorReason: isSet(object.errorReason)
-        ? String(object.errorReason)
-        : undefined,
-    };
-  },
-
-  toJSON(message: ErrorResponse): unknown {
-    const obj: any = {};
-    message.errorMessage !== undefined &&
-      (obj.errorMessage = message.errorMessage);
-    message.errorReason !== undefined &&
-      (obj.errorReason = message.errorReason);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ErrorResponse>, I>>(
-    object: I
-  ): ErrorResponse {
-    const message = createBaseErrorResponse();
-    message.errorMessage = object.errorMessage ?? undefined;
-    message.errorReason = object.errorReason ?? undefined;
     return message;
   },
 };

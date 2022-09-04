@@ -1,11 +1,9 @@
 
-import {filter} from 'rxjs/operators';
 import {Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {select, Store} from '@ngrx/store';
 import {FormGroup} from "@angular/forms";
 import {Observable} from "rxjs";
-import {Account} from "../model/Account";
 import {AppState, selectAccountState} from "../../../reducers/global-reducers";
 import {AccountState} from "../flux/account.state";
 
