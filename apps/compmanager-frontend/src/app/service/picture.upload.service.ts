@@ -32,14 +32,14 @@ export class PictureUploadService extends AbstractHttpService {
             }
           ).finish().buffer
         )),
-        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(this.endpoint(competitionId), bytes, this.defaultTimeout)),
+        switchMap(bytes => this.sendByteArrayToEndpointWithProgress(this.endpoint(competitionId), bytes, AbstractHttpService.defaultTimeout)),
         filter(event => event.type === HttpEventType.UploadProgress),
         map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))
       )
   }
 
   deleteCompetitionInfoImage(competitionId: string): Observable<number> {
-    return this.sendDeleteRequestToEndpointWithProgress(this.endpoint(competitionId), this.defaultTimeout)
+    return this.sendDeleteRequestToEndpointWithProgress(this.endpoint(competitionId), AbstractHttpService.defaultTimeout)
       .pipe(
         filter(event => event.type === HttpEventType.UploadProgress),
         map((event: HttpProgressEvent) => Math.round(100 * (event.loaded / event.total)))

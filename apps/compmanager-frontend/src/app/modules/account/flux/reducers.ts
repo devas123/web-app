@@ -2,8 +2,8 @@ import {batchReducer, CommonAction} from '../../../reducers/global-reducers';
 import {AccountState, initialAccountState} from './account.state';
 import {ACCOUNT_ERROR, AUTHORIZE_USER, CHANGE_AVATAR, LOGOUT, USER_AUTHORIZED} from './actions';
 import {b64toBlob} from '../utils';
-import {HttpAuthService} from '../service/AuthService';
 import {BATCH_ACTION} from "../../event-manager/redux/event-manager-actions";
+import {removeToken} from "../../../service/abstract.http.service";
 
 
 export function accountStateReducer(state: AccountState = initialAccountState, action: CommonAction): AccountState {
@@ -27,7 +27,7 @@ export function accountStateReducer(state: AccountState = initialAccountState, a
       return state;
     }
     case LOGOUT:
-      HttpAuthService.removeToken();
+      removeToken();
       return {...state, user: null};
     case CHANGE_AVATAR:
       return {

@@ -29,6 +29,13 @@ export const appRoutes: Routes = [
     canActivateChild: [AuthGuard]
   },
   {
+    path: 'user/:id',
+    loadChildren: () => import('./modules/account/account.module').then(mod => mod.AccountModule),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+    canActivateChild: [AuthGuard]
+  },
+  {
     path: '**',
     component: PagenotfoundComponent
   }];

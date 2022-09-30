@@ -10,7 +10,8 @@ import {accountError, AUTHORIZE_TOKEN, AUTHORIZE_USER, CHANGE_AVATAR, USER_AUTHO
 import {CommonAction} from '../../../reducers/global-reducers';
 import {AccountService} from '../service/account.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
+import {setToken} from "../../../service/abstract.http.service";
 
 
 @Injectable()
@@ -30,17 +31,17 @@ export class AccountEffects {
   @Effect()
   authorizeUser: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_USER), mergeMap((action: CommonAction) => {
     return this.authService.requestToken(action?.payload?.email, action?.payload?.password).pipe(tap(token => {
-      HttpAuthService.setToken(token.access_token);
-    }), switchMap(token => {
-      return this.authService.getCurrentUser(token.access_token);
+      setToken(token.token);
+    }), switchMap(() => {
+      return this.authService.getCurrentUser();
     }), map((user: Account) => userAuthorized(user)), catchError(err => of(accountError(err))));
   }));
 
   @Effect()
   authorizeToken: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_TOKEN),
     mergeMap((action: CommonAction) => {
-      HttpAuthService.setToken(action.payload)
-      return this.authService.getCurrentUser(action.payload).pipe(map(user => userAuthorized(user)));
+      setToken(action.payload)
+      return this.authService.getCurrentUser().pipe(map(user => userAuthorized(user)));
     }));
 
   constructor(private authService: HttpAuthService, private accountService: AccountService, private router: Router, private actions$: Actions, private route: ActivatedRoute) {
@@ -49,9 +50,5 @@ export class AccountEffects {
 
 
   @Effect({dispatch: false})
-  changeAvatar = this.actions$.pipe(ofType(CHANGE_AVATAR), tap((action: CommonAction) => {
-    this.accountService.changeAvatar(action.payload.blobBase64).subscribe(data => data, error2 => {
-      console.error(error2);
-    });
-  }), catchError(err => of(accountError(err))));
+  changeAvatar = this.actions$.pipe(ofType(CHANGE_AVATAR), switchMap((action: CommonAction) => this.accountService.changeAvatar(action.payload.blobBase64)), catchError(err => of(accountError(err))));
 }

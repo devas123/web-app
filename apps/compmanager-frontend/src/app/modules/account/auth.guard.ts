@@ -1,5 +1,4 @@
-
-import {of as observableOf, Observable} from 'rxjs';
+import {Observable, of as observableOf} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {
   ActivatedRouteSnapshot,
@@ -10,10 +9,10 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import {HttpAuthService} from './service/AuthService';
 
 import {AppState} from '../../reducers/global-reducers';
 import {Store} from '@ngrx/store';
+import {getToken} from "../../service/abstract.http.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
@@ -35,7 +34,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   }
 
   checkLogin(url: string): boolean {
-    if (HttpAuthService.getToken() && HttpAuthService.getToken().length > 0) {
+    if (getToken() && getToken().length > 0) {
       console.log("Checklogin success")
       // logged in so return true
       return true;

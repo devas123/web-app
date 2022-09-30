@@ -1,83 +1,67 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError, map} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {catchError, map, mergeMap} from 'rxjs/operators';
+import {Observable, of, throwError} from 'rxjs';
 
 
 import * as roles from '../user.roles';
-import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
+import * as env from "../../../../environments/environment";
+import {AbstractHttpService, removeToken} from "../../../service/abstract.http.service";
+import {
+  AuthenticationResponsePayload, ErrorResponse,
+  AccountServiceResponse,
+  AuthenticateRequestPayload,
+  Account
+} from "@frontend-nx/protobuf";
+
+const {
+  accountEndpoint
+} = env.environment;
 
 @Injectable()
-export class HttpAuthService {
+export class HttpAuthService extends AbstractHttpService {
 
   headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor(public http: HttpClient) {
-
+  constructor(http: HttpClient) {
+    super(http)
   }
 
-  static removeToken() {
-    localStorage.removeItem('token');
+  registerUser(user: Account): Observable<ArrayBuffer> {
+    return this.sendByteArrayToEndpoint(accountEndpoint, Account.encode(user).finish().buffer, AbstractHttpService.defaultTimeout)
   }
 
-  static getToken() {
-    return localStorage.getItem('token');
+  requestToken(email: string, password: string): Observable<AuthenticationResponsePayload> {
+    const body = <AuthenticateRequestPayload>{
+      password,
+      username: email
+    };
+    return this.sendByteArrayToEndpoint(`${accountEndpoint}/authenticate`, AuthenticateRequestPayload.encode(body).finish().buffer, AbstractHttpService.defaultTimeout)
+      .pipe(
+        mergeMap(buffer => {
+          const response = AccountServiceResponse.decode(new Uint8Array(buffer));
+          if (response.authenticationResponsePayload) {
+            return of(response.authenticationResponsePayload)
+          } else {
+            throwError(<ErrorResponse>{
+              errorMessage: "Unexpected response"
+            })
+          }
+        })
+      )
   }
 
-  static setToken(token) {
-    localStorage.setItem('token', token);
-  }
-
-
-  registerUser(user: Account): Observable<any> {
-    const payload = JSON.stringify(user);
-    return this.http.post('accounts/createUser', payload, {
-      headers: this.headers
-    }).pipe(map(data => {
-        return data;
-      }),
-      catchError(err => {
-        throw err.error.message ? err.error.message : 'Internal error occured';
-      }));
-  }
-
-  requestToken(email: string, password: string): Observable<any> {
-    const body = 'client_id=browser&username=' + email + '&password=' + password + '&grant_type=password&scope=ui';
-    return of({access_token: 'asdasdasdasdasdasd'});
-    // return this.http.post('uaa/oauth/token', body, {
-    //   headers: new HttpHeaders({
-    //     'Authorization': 'Basic YnJvd3Nlcjp0ZXN0',
-    //     'Content-Type': 'application/x-www-form-urlencoded'
-    //   })
-    // }).pipe(map(data => {
-    //   return data;
-    // }), catchError(err => {
-    //   console.log('err');
-    //   if (err.error.message) {
-    //     throw err.error.message;
-    //   }
-    //   throw new Error('Internal error occured');
-    // }));
-  }
-
-  getCurrentUser(accesToken: string): Observable<any> {
-    return of({
-      email: 'test@email.ru',
-      firstName: 'firstName',
-      lastName: 'lastName',
-      userId: '1',
-    } as Account);
-    // return this.http.get('accounts/currentUser', {
-    //   headers: new HttpHeaders({
-    //     'Authorization': 'Bearer ' + accesToken
-    //   })
-    // }).pipe(map(data => {
-    //   return data;
-    // }), catchError(err => {
-    //   localStorage.removeItem('token');
-    //   console.error(err);
-    //   throw new Error(`Error when getting current user.`);
-    // }));
+  getCurrentUser(): Observable<Account> {
+    return this.httpGetBytes(accountEndpoint)
+      .pipe(
+        map(bytes => AccountServiceResponse.decode(new Uint8Array(bytes))),
+        map(resp => resp.getAccountResponsePayload?.account),
+        catchError(err => {
+          removeToken();
+          console.error(err);
+          throw err;
+        })
+      );
   }
 
   getUserRole(competitionId: string): string {
