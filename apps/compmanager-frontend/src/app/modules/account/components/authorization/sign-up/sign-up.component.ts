@@ -100,13 +100,14 @@ export class SignUpComponent implements OnInit {
     const user = {
       firstName: this.firstName.value,
       lastName: this.lastName.value,
-      email: this.email.value
+      email: this.email.value,
+      password: this.password.value
     } as Account;
 
     this.error = null;
     this.processing = true;
     this.authService.registerUser(user).pipe(tap(() => {
-      this.store.dispatch(authorizeUser({email: user.email, password: "TODO"}));
+      this.store.dispatch(authorizeUser({email: user.email, password: this.password.value}));
     })).subscribe(data => this.processing = false, error2 => {
       this.processing = false;
       this.error = error2;

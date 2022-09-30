@@ -1014,7 +1014,5 @@ export const selectUser = createSelector(selectAccountState, state => state && s
 export const selectUserId = createSelector(selectUser, state => state && state.userId);
 
 export const {
-  selectAll: getAllCompetitions
+  selectAll: selectAllCompetitions
 } = competitionPropertiesEntitiesAdapter.getSelectors(eventsListState);
-
-export const selectAllCompetitions = getAllCompetitions;

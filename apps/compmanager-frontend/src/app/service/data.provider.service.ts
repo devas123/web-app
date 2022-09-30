@@ -9,7 +9,9 @@ import {Store} from "@ngrx/store";
 import {
   eventManagerCategoriesLoaded,
   eventManagerCategoryStagesLoaded,
-  eventManagerCategoryStateLoaded, eventManagerCompetitionImageLoaded, eventManagerCompetitionInfoLoaded,
+  eventManagerCategoryStateLoaded,
+  eventManagerCompetitionImageLoaded,
+  eventManagerCompetitionInfoLoaded,
   eventManagerFightersForCompetitionLoaded,
   eventManagerFightsLoaded
 } from "../modules/event-manager/redux/event-manager-actions";
@@ -20,12 +22,12 @@ import {
   dashboardMatFightsLoaded,
   dashboardMatsLoaded
 } from "../modules/event-manager/redux/dashboard-actions";
+import {AccountService} from "../modules/account/service/account.service";
 
 @Injectable()
 export class DataProviderService {
-  constructor(private infoService: InfoService, private selectors: SelectorsService, private store: Store<AppState>) {
+  constructor(private infoService: InfoService, private accountService: AccountService, private selectors: SelectorsService, private store: Store<AppState>) {
   }
-
 
   private requireCompetitionInfo$ = this.selectors.competitionId$.pipe(
     filter((competitionId) => Boolean(competitionId)),

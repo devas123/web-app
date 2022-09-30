@@ -3,8 +3,10 @@ import {select, Store} from "@ngrx/store";
 import {
   AppState,
   dashboardGetSelectedPeriodSelectedFight,
-  getSelectedEventId, getSelectedEventInfoImage,
-  getSelectedEventInfoTemplate, getSelectedEventInfoTemplateCompiled
+  getSelectedEventId,
+  getSelectedEventInfoImage,
+  getSelectedEventInfoTemplate,
+  getSelectedEventInfoTemplateCompiled
 } from "../reducers/global-reducers";
 import {
   eventManagerGetSelectedEventCategories,

@@ -8,7 +8,7 @@ import {AppState, selectAccountState} from "../../../reducers/global-reducers";
 import {AccountState} from "../flux/account.state";
 
 @Component({
-  template: `<app-account-info [accountState]="accountState$ | async"></app-account-info>`
+  template: `<cf-account-info [accountState]="accountState$ | async"></cf-account-info>`
 })
 export class AccountInfoContainerComponent  {
 

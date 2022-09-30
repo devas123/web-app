@@ -33,7 +33,6 @@ export function regexpValidator(nameRe: RegExp): ValidatorFn {
   selector: 'app-authorization',
   templateUrl: './authorization.component.html',
   styleUrls: ['./authorization.component.css'],
-  providers: [HttpAuthService]
 })
 export class AuthorizationComponent  {
 

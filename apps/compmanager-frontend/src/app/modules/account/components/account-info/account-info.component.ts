@@ -1,11 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {AccountState} from '../../flux/account.state';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
-  selector: 'app-account-info',
-  templateUrl: './account-info.component.html'
+  selector: 'cf-account-info',
+  templateUrl: './account-info.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountInfoComponent implements OnChanges, OnInit {
 
