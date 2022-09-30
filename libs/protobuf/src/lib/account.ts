@@ -2,7 +2,7 @@
 import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
-import { ErrorResponse } from './model';
+import { AuthenticationResponsePayload, ErrorResponse } from './model';
 
 export interface AccountServiceRequest {
   addAccount?: AddAccountRequestPayload | undefined;
@@ -14,6 +14,7 @@ export interface AccountServiceRequest {
 
 export interface AccountServiceResponse {
   getAccountResponsePayload?: GetAccountResponsePayload | undefined;
+  authenticationResponsePayload?: AuthenticationResponsePayload | undefined;
   errorResponse?: ErrorResponse | undefined;
 }
 
@@ -23,6 +24,7 @@ export interface Account {
   lastName: string;
   email: string;
   birthDate?: Date;
+  password: string;
 }
 
 export interface AddAccountRequestPayload {
@@ -30,6 +32,11 @@ export interface AddAccountRequestPayload {
   lastName: string;
   email: string;
   birthDate?: Date;
+}
+
+export interface AuthenticateRequestPayload {
+  username: string;
+  password: string;
 }
 
 export interface UpdateProfilePictureRequestPayload {
@@ -175,7 +182,11 @@ export const AccountServiceRequest = {
 };
 
 function createBaseAccountServiceResponse(): AccountServiceResponse {
-  return { getAccountResponsePayload: undefined, errorResponse: undefined };
+  return {
+    getAccountResponsePayload: undefined,
+    authenticationResponsePayload: undefined,
+    errorResponse: undefined,
+  };
 }
 
 export const AccountServiceResponse = {
@@ -187,6 +198,12 @@ export const AccountServiceResponse = {
       GetAccountResponsePayload.encode(
         message.getAccountResponsePayload,
         writer.uint32(10).fork()
+      ).ldelim();
+    }
+    if (message.authenticationResponsePayload !== undefined) {
+      AuthenticationResponsePayload.encode(
+        message.authenticationResponsePayload,
+        writer.uint32(34).fork()
       ).ldelim();
     }
     if (message.errorResponse !== undefined) {
@@ -214,6 +231,10 @@ export const AccountServiceResponse = {
             reader.uint32()
           );
           break;
+        case 4:
+          message.authenticationResponsePayload =
+            AuthenticationResponsePayload.decode(reader, reader.uint32());
+          break;
         case 100000:
           message.errorResponse = ErrorResponse.decode(reader, reader.uint32());
           break;
@@ -230,6 +251,11 @@ export const AccountServiceResponse = {
       getAccountResponsePayload: isSet(object.getAccountResponsePayload)
         ? GetAccountResponsePayload.fromJSON(object.getAccountResponsePayload)
         : undefined,
+      authenticationResponsePayload: isSet(object.authenticationResponsePayload)
+        ? AuthenticationResponsePayload.fromJSON(
+            object.authenticationResponsePayload
+          )
+        : undefined,
       errorResponse: isSet(object.errorResponse)
         ? ErrorResponse.fromJSON(object.errorResponse)
         : undefined,
@@ -241,6 +267,12 @@ export const AccountServiceResponse = {
     message.getAccountResponsePayload !== undefined &&
       (obj.getAccountResponsePayload = message.getAccountResponsePayload
         ? GetAccountResponsePayload.toJSON(message.getAccountResponsePayload)
+        : undefined);
+    message.authenticationResponsePayload !== undefined &&
+      (obj.authenticationResponsePayload = message.authenticationResponsePayload
+        ? AuthenticationResponsePayload.toJSON(
+            message.authenticationResponsePayload
+          )
         : undefined);
     message.errorResponse !== undefined &&
       (obj.errorResponse = message.errorResponse
@@ -260,6 +292,13 @@ export const AccountServiceResponse = {
             object.getAccountResponsePayload
           )
         : undefined;
+    message.authenticationResponsePayload =
+      object.authenticationResponsePayload !== undefined &&
+      object.authenticationResponsePayload !== null
+        ? AuthenticationResponsePayload.fromPartial(
+            object.authenticationResponsePayload
+          )
+        : undefined;
     message.errorResponse =
       object.errorResponse !== undefined && object.errorResponse !== null
         ? ErrorResponse.fromPartial(object.errorResponse)
@@ -275,6 +314,7 @@ function createBaseAccount(): Account {
     lastName: '',
     email: '',
     birthDate: undefined,
+    password: '',
   };
 }
 
@@ -300,6 +340,9 @@ export const Account = {
         toTimestamp(message.birthDate),
         writer.uint32(42).fork()
       ).ldelim();
+    }
+    if (message.password !== '') {
+      writer.uint32(50).string(message.password);
     }
     return writer;
   },
@@ -328,6 +371,9 @@ export const Account = {
             Timestamp.decode(reader, reader.uint32())
           );
           break;
+        case 6:
+          message.password = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -345,6 +391,7 @@ export const Account = {
       birthDate: isSet(object.birthDate)
         ? fromJsonTimestamp(object.birthDate)
         : undefined,
+      password: isSet(object.password) ? String(object.password) : '',
     };
   },
 
@@ -356,6 +403,7 @@ export const Account = {
     message.email !== undefined && (obj.email = message.email);
     message.birthDate !== undefined &&
       (obj.birthDate = message.birthDate.toISOString());
+    message.password !== undefined && (obj.password = message.password);
     return obj;
   },
 
@@ -366,6 +414,7 @@ export const Account = {
     message.lastName = object.lastName ?? '';
     message.email = object.email ?? '';
     message.birthDate = object.birthDate ?? undefined;
+    message.password = object.password ?? '';
     return message;
   },
 };
@@ -458,6 +507,72 @@ export const AddAccountRequestPayload = {
     message.lastName = object.lastName ?? '';
     message.email = object.email ?? '';
     message.birthDate = object.birthDate ?? undefined;
+    return message;
+  },
+};
+
+function createBaseAuthenticateRequestPayload(): AuthenticateRequestPayload {
+  return { username: '', password: '' };
+}
+
+export const AuthenticateRequestPayload = {
+  encode(
+    message: AuthenticateRequestPayload,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.username !== '') {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.password !== '') {
+      writer.uint32(26).string(message.password);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AuthenticateRequestPayload {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthenticateRequestPayload();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          message.username = reader.string();
+          break;
+        case 3:
+          message.password = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuthenticateRequestPayload {
+    return {
+      username: isSet(object.username) ? String(object.username) : '',
+      password: isSet(object.password) ? String(object.password) : '',
+    };
+  },
+
+  toJSON(message: AuthenticateRequestPayload): unknown {
+    const obj: any = {};
+    message.username !== undefined && (obj.username = message.username);
+    message.password !== undefined && (obj.password = message.password);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AuthenticateRequestPayload>, I>>(
+    object: I
+  ): AuthenticateRequestPayload {
+    const message = createBaseAuthenticateRequestPayload();
+    message.username = object.username ?? '';
+    message.password = object.password ?? '';
     return message;
   },
 };

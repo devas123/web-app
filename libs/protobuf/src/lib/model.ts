@@ -1194,6 +1194,10 @@ export function competitorRegistrationStatusToNumber(
   }
 }
 
+export interface AuthenticationResponsePayload {
+  token: string;
+}
+
 export interface AdjacencyList {
   root: number;
   vertices: AdjacencyListEntry[];
@@ -1669,6 +1673,63 @@ export interface ErrorResponse {
   errorMessage?: string | undefined;
   errorReason?: string | undefined;
 }
+
+function createBaseAuthenticationResponsePayload(): AuthenticationResponsePayload {
+  return { token: '' };
+}
+
+export const AuthenticationResponsePayload = {
+  encode(
+    message: AuthenticationResponsePayload,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.token !== '') {
+      writer.uint32(10).string(message.token);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AuthenticationResponsePayload {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthenticationResponsePayload();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.token = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuthenticationResponsePayload {
+    return {
+      token: isSet(object.token) ? String(object.token) : '',
+    };
+  },
+
+  toJSON(message: AuthenticationResponsePayload): unknown {
+    const obj: any = {};
+    message.token !== undefined && (obj.token = message.token);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AuthenticationResponsePayload>, I>>(
+    object: I
+  ): AuthenticationResponsePayload {
+    const message = createBaseAuthenticationResponsePayload();
+    message.token = object.token ?? '';
+    return message;
+  },
+};
 
 function createBaseAdjacencyList(): AdjacencyList {
   return { root: 0, vertices: [] };

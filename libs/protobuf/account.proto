@@ -14,6 +14,7 @@ message AccountServiceRequest {
 message AccountServiceResponse {
   oneof payload {
     GetAccountResponsePayload getAccountResponsePayload = 1;
+    AuthenticationResponsePayload authenticationResponsePayload = 4;
     ErrorResponse errorResponse = 100000;
   }
 }
@@ -24,6 +25,7 @@ message Account {
   string lastName = 3;
   string email = 4;
   google.protobuf.Timestamp birthDate = 5;
+  string password = 6;
 }
 
 message AddAccountRequestPayload {
@@ -32,6 +34,12 @@ message AddAccountRequestPayload {
   string email = 4;
   google.protobuf.Timestamp birthDate = 5;
 }
+
+message AuthenticateRequestPayload {
+  string username = 2;
+  string password = 3;
+}
+
 message UpdateProfilePictureRequestPayload {
   bytes picture = 1;
   string userId = 2;
