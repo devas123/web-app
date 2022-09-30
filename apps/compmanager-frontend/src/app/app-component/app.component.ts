@@ -7,7 +7,7 @@ import {map, tap} from 'rxjs/operators';
 import {MenuService} from '../components/main-menu/menu.service';
 import {MenuItem} from '../commons/model/competition.model';
 import {Router} from '@angular/router';
-import {Account} from "../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-root',

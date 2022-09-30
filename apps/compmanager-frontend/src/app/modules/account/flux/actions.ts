@@ -1,7 +1,7 @@
 
 // Actions
 // Auth
-import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 export const AUTHORIZE_USER = 'AUTHORIZE_USER';
 export const AUTHORIZE_TOKEN = 'AUTHORIZE_WITH_TOKEN';

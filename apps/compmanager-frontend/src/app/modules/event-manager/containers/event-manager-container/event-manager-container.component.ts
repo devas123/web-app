@@ -18,7 +18,7 @@ import {
 import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription, MenuItem} from '../../../../commons/model/competition.model';
 import {eventManagerGetSocketConnected} from "../../redux/event-manager-reducers";
-import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-event-manager-container',

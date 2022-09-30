@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {Account} from "../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 @Component({
   selector: 'app-main-menu',

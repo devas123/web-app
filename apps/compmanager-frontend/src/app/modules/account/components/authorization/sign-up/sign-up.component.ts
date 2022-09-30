@@ -14,7 +14,7 @@ import {Store} from '@ngrx/store';
 import {authorizeUser} from '../../../flux/actions';
 import {Router} from '@angular/router';
 import {AppState} from '../../../../../reducers/global-reducers';
-import {Account} from "../../../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 declare var $: any;
 

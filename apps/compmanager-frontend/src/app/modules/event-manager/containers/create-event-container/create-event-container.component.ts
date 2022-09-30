@@ -12,7 +12,7 @@ import {createCompetition} from "../../../../actions/actions";
 import {TimeZone} from "@vvo/tzdb";
 import {Observable} from "rxjs";
 import {availableTimeZones} from "../../../../reducers/compmanager-utils";
-import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 @Component({
   template: `

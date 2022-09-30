@@ -10,7 +10,7 @@ import {
 } from "@frontend-nx/protobuf";
 import {TimeZone} from "@vvo/tzdb";
 import {compmanagerTimeZoneFilter, compmanagerTimeZoneFormatter} from "../../../../reducers/compmanager-utils";
-import {Account} from "../../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 
 @Component({

@@ -1,4 +1,4 @@
-import {Account} from "../../../../../../../libs/protobuf/src/lib/account";
+import {Account} from "@frontend-nx/protobuf";
 
 
 export interface AccountState {
