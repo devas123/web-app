@@ -5,3 +5,4 @@ export * from './lib/eventpayload';
 export * from './lib/common';
 export * from './lib/model';
 export * from './lib/query';
+export * from './lib/account';
