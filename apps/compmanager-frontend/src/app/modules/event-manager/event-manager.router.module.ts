@@ -26,7 +26,7 @@ import {
 import {
   FighterProfileContainerComponent
 } from './containers/fighter-profile-container/fighter-profile-container.component';
-import {AuthGuard} from '../account/auth.guard';
+import {AuthGuard} from '../authorization/auth.guard';
 import {DashboardContainerComponent} from './containers/dashboard-container/dashboard-container.component';
 import {MatsOverviewContainerComponent} from './containers/mats-overview-container/mats-overview-container.component';
 import {

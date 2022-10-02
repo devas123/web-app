@@ -206,7 +206,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.compservice.model.protobuf.AccountServiceRequest.oneofGroups_ = [[1,2,3]];
+proto.compservice.model.protobuf.AccountServiceRequest.oneofGroups_ = [[1,2,3,4]];
 
 /**
  * @enum {number}
@@ -215,7 +215,8 @@ proto.compservice.model.protobuf.AccountServiceRequest.PayloadCase = {
   PAYLOAD_NOT_SET: 0,
   ADDACCOUNT: 1,
   UPDATEACCOUNT: 2,
-  UPDATEPROFILEPICTUREREQUESTPAYLOAD: 3
+  UPDATEPROFILEPICTUREREQUESTPAYLOAD: 3,
+  AUTHENTICATEREQUESTPAYLOAD: 4
 };
 
 /**
@@ -258,7 +259,8 @@ proto.compservice.model.protobuf.AccountServiceRequest.toObject = function(inclu
   var f, obj = {
     addaccount: (f = msg.getAddaccount()) && proto.compservice.model.protobuf.AddAccountRequestPayload.toObject(includeInstance, f),
     updateaccount: (f = msg.getUpdateaccount()) && proto.compservice.model.protobuf.UpdateAccountRequestPayload.toObject(includeInstance, f),
-    updateprofilepicturerequestpayload: (f = msg.getUpdateprofilepicturerequestpayload()) && proto.compservice.model.protobuf.UpdateProfilePictureRequestPayload.toObject(includeInstance, f)
+    updateprofilepicturerequestpayload: (f = msg.getUpdateprofilepicturerequestpayload()) && proto.compservice.model.protobuf.UpdateProfilePictureRequestPayload.toObject(includeInstance, f),
+    authenticaterequestpayload: (f = msg.getAuthenticaterequestpayload()) && proto.compservice.model.protobuf.AuthenticateRequestPayload.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -309,6 +311,11 @@ proto.compservice.model.protobuf.AccountServiceRequest.deserializeBinaryFromRead
       var value = new proto.compservice.model.protobuf.UpdateProfilePictureRequestPayload;
       reader.readMessage(value,proto.compservice.model.protobuf.UpdateProfilePictureRequestPayload.deserializeBinaryFromReader);
       msg.setUpdateprofilepicturerequestpayload(value);
+      break;
+    case 4:
+      var value = new proto.compservice.model.protobuf.AuthenticateRequestPayload;
+      reader.readMessage(value,proto.compservice.model.protobuf.AuthenticateRequestPayload.deserializeBinaryFromReader);
+      msg.setAuthenticaterequestpayload(value);
       break;
     default:
       reader.skipField();
@@ -361,6 +368,14 @@ proto.compservice.model.protobuf.AccountServiceRequest.serializeBinaryToWriter =
       3,
       f,
       proto.compservice.model.protobuf.UpdateProfilePictureRequestPayload.serializeBinaryToWriter
+    );
+  }
+  f = message.getAuthenticaterequestpayload();
+  if (f != null) {
+    writer.writeMessage(
+      4,
+      f,
+      proto.compservice.model.protobuf.AuthenticateRequestPayload.serializeBinaryToWriter
     );
   }
 };
@@ -474,6 +489,43 @@ proto.compservice.model.protobuf.AccountServiceRequest.prototype.clearUpdateprof
  */
 proto.compservice.model.protobuf.AccountServiceRequest.prototype.hasUpdateprofilepicturerequestpayload = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional AuthenticateRequestPayload authenticateRequestPayload = 4;
+ * @return {?proto.compservice.model.protobuf.AuthenticateRequestPayload}
+ */
+proto.compservice.model.protobuf.AccountServiceRequest.prototype.getAuthenticaterequestpayload = function() {
+  return /** @type{?proto.compservice.model.protobuf.AuthenticateRequestPayload} */ (
+    jspb.Message.getWrapperField(this, proto.compservice.model.protobuf.AuthenticateRequestPayload, 4));
+};
+
+
+/**
+ * @param {?proto.compservice.model.protobuf.AuthenticateRequestPayload|undefined} value
+ * @return {!proto.compservice.model.protobuf.AccountServiceRequest} returns this
+*/
+proto.compservice.model.protobuf.AccountServiceRequest.prototype.setAuthenticaterequestpayload = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 4, proto.compservice.model.protobuf.AccountServiceRequest.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.compservice.model.protobuf.AccountServiceRequest} returns this
+ */
+proto.compservice.model.protobuf.AccountServiceRequest.prototype.clearAuthenticaterequestpayload = function() {
+  return this.setAuthenticaterequestpayload(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.compservice.model.protobuf.AccountServiceRequest.prototype.hasAuthenticaterequestpayload = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -1093,6 +1145,7 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.toObject = function(in
     firstname: jspb.Message.getFieldWithDefault(msg, 2, ""),
     lastname: jspb.Message.getFieldWithDefault(msg, 3, ""),
     email: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    password: jspb.Message.getFieldWithDefault(msg, 5, ""),
     birthdate: (f = msg.getBirthdate()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
@@ -1143,6 +1196,10 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.deserializeBinaryFromR
       msg.setEmail(value);
       break;
     case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setPassword(value);
+      break;
+    case 6:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setBirthdate(value);
@@ -1197,10 +1254,17 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.serializeBinaryToWrite
       f
     );
   }
+  f = message.getPassword();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
   f = message.getBirthdate();
   if (f != null) {
     writer.writeMessage(
-      5,
+      6,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -1263,12 +1327,30 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.setEmail = f
 
 
 /**
- * optional google.protobuf.Timestamp birthDate = 5;
+ * optional string password = 5;
+ * @return {string}
+ */
+proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.getPassword = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.compservice.model.protobuf.AddAccountRequestPayload} returns this
+ */
+proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.setPassword = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional google.protobuf.Timestamp birthDate = 6;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.getBirthdate = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 5));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 6));
 };
 
 
@@ -1277,7 +1359,7 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.getBirthdate
  * @return {!proto.compservice.model.protobuf.AddAccountRequestPayload} returns this
 */
 proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.setBirthdate = function(value) {
-  return jspb.Message.setWrapperField(this, 5, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -1295,7 +1377,7 @@ proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.clearBirthda
  * @return {boolean}
  */
 proto.compservice.model.protobuf.AddAccountRequestPayload.prototype.hasBirthdate = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.getField(this, 6) != null;
 };
 
 

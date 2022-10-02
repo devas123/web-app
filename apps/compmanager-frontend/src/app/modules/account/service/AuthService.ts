@@ -6,12 +6,15 @@ import {Observable, of, throwError} from 'rxjs';
 
 import * as roles from '../user.roles';
 import * as env from "../../../../environments/environment";
-import {AbstractHttpService, removeToken} from "../../../service/abstract.http.service";
+import {AbstractHttpService, removeToken, toBytes} from "../../../service/abstract.http.service";
 import {
-  AuthenticationResponsePayload, ErrorResponse,
+  Account,
+  AccountServiceRequest,
   AccountServiceResponse,
+  AddAccountRequestPayload,
   AuthenticateRequestPayload,
-  Account
+  AuthenticationResponsePayload,
+  ErrorResponse
 } from "@frontend-nx/protobuf";
 
 const {
@@ -28,7 +31,14 @@ export class HttpAuthService extends AbstractHttpService {
   }
 
   registerUser(user: Account): Observable<ArrayBuffer> {
-    return this.sendByteArrayToEndpoint(accountEndpoint, Account.encode(user).finish().buffer, AbstractHttpService.defaultTimeout)
+    const body = <AddAccountRequestPayload>{}
+    body.email = user.email
+    body.firstName = user.firstName
+    body.lastName = user.lastName
+    body.birthDate = user.birthDate
+    body.password = user.password
+    const bytes = toBytes(AddAccountRequestPayload.encode(body).finish());
+    return this.sendByteArrayToEndpoint(`${accountEndpoint}/register`, bytes, AbstractHttpService.defaultTimeout)
   }
 
   requestToken(email: string, password: string): Observable<AuthenticationResponsePayload> {

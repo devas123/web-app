@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {AuthorizationComponent} from './authorization.component';
-import {SignInComponent} from './sign-in/sign-in.component';
+import {AuthorizationContainerComponent} from './authorization.component';
+import {SignInComponent} from '../../components/authorization/sign-in/sign-in.component';
 import {SignUpComponent} from './sign-up/sign-up.component';
 import {SuiTransitionModule} from '@frontend-nx/ng2-semantic-ui';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -16,12 +16,12 @@ import {competitionListReducer} from '../../../competition/redux/reducers';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 
 describe('AuthorizationComponent', () => {
-  let component: AuthorizationComponent;
-  let fixture: ComponentFixture<AuthorizationComponent>;
+  let component: AuthorizationContainerComponent;
+  let fixture: ComponentFixture<AuthorizationContainerComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthorizationComponent, SignInComponent, SignUpComponent],
+      declarations: [AuthorizationContainerComponent, SignInComponent, SignUpComponent],
       imports: [SuiTransitionModule, ReactiveFormsModule, StoreModule.forRoot({
         ...reducers,
         'eventManagerState': combineReducers(eventManagerReducers()),
@@ -46,7 +46,7 @@ describe('AuthorizationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AuthorizationComponent);
+    fixture = TestBed.createComponent(AuthorizationContainerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

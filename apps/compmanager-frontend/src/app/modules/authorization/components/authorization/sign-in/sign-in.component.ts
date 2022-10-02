@@ -1,26 +1,19 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {flyOut} from '../../../../../animations/flyOut';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Transition, TransitionController, TransitionDirection} from '@frontend-nx/ng2-semantic-ui';
 import {AppState, selectAccountState} from '../../../../../reducers/global-reducers';
 import {select, Store} from '@ngrx/store';
-import {authorizeUser} from '../../../flux/actions';
-import {AccountState} from '../../../flux/account.state';
-
-declare var $: any;
+import {AccountState} from "../../../../account/flux/account.state";
+import {authorizeUser} from "../../../../account/flux/actions";
 
 @Component({
-  selector: 'app-sign-in',
+  selector: 'cf-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css'],
-  animations: [flyOut]
 })
-export class SignInComponent implements OnInit, OnDestroy {
+export class SignInComponent implements OnInit {
 
 
   form: FormGroup;
-
-  public transitionController = new TransitionController();
 
   public error: string;
 
@@ -54,30 +47,18 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.animate('fly right');
     this.store.pipe(select(selectAccountState)).subscribe((state: AccountState) => {
       if (state.error) {
         this.error = state.error;
-        $('.shaked').transition('shake');
       }
-
     });
-  }
-
-  ngOnDestroy(): void {
-    this.animate('fly left');
   }
 
 
   onClick() {
     this.notify.emit(false);
-
   }
 
-  public animate(transitionName: string = 'scale') {
-    this.transitionController.animate(
-      new Transition(transitionName, 500, TransitionDirection.In));
-  }
 
 
   authorize() {

@@ -30,6 +30,7 @@ import {
 import {
   CompetitionDescriptionContainerComponent
 } from "./containers/competition-description/competition-description-container.component";
+import {BracketsSelectorsComponent} from "./containers/brackets-container/brackets-selectors.component";
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import {
     CompetitionMainInfoComponent,
     CompetitionDescriptionComponent,
     BracketsContainerComponent,
+    BracketsSelectorsComponent,
     EventCardComponent, EventListComponent, EventCalendarComponent,
     FightersDisplayContainerComponent,
     ScheduleContainerComponent,

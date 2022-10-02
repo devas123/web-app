@@ -1,0 +1,5 @@
+<div class="wrapper">
+  <cf-sign-in (notify)="signIn=$event" *ngIf="signIn"></cf-sign-in>
+  <cf-sign-up-gg [error]="error" [processing]="processing" (notify)="signIn=$event" *ngIf="!signIn"
+                 (signUp)="signUp($event)"></cf-sign-up-gg>
+</div>

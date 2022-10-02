@@ -1,9 +1,8 @@
 import {Routes} from '@angular/router';
-import {AuthorizationComponent} from './modules/account/components/authorization/authorization.component';
-import {SignUpGuard} from './modules/account/components/authorization/sign-up.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
-import {AuthGuard} from './modules/account/auth.guard';
+import {AuthGuard} from './modules/authorization/auth.guard';
+import {SignUpGuard} from "./modules/authorization/sign-up.guard";
 
 // @ts-ignore
 export const appRoutes: Routes = [
@@ -18,7 +17,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'login',
-    component: AuthorizationComponent,
+    loadChildren: () => import('./modules/authorization/authorization.module').then(mod => mod.AuthorizationModule),
     canActivate: [SignUpGuard]
   },
   {

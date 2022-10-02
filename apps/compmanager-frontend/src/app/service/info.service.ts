@@ -55,7 +55,7 @@ import {
 import {Dictionary} from "@ngrx/entity";
 import * as eventManagerActions from "../modules/event-manager/redux/event-manager-actions";
 import {CommandCallback, CommandExecutionResult} from "../../../../../libs/protobuf/src/lib/callback";
-import {AbstractHttpService} from "./abstract.http.service";
+import {AbstractHttpService, toBytes} from "./abstract.http.service";
 
 const isoFormat = 'yyyy-MM-dd\'T\'HH:mm:ss.S\'Z\'';
 
@@ -310,7 +310,7 @@ export class InfoService extends AbstractHttpService {
         competitionInfo: this.encoder.encode(competitionInfoTemplate)
       }
     }
-    const bytes = InfoService.toBytes(QueryServiceRequest.encode(request).finish());
+    const bytes = toBytes(QueryServiceRequest.encode(request).finish());
     return this.sendByteArrayToEndpoint(`${competitionQueryEndpoint}/${competitionId}/info`, bytes, AbstractHttpService.defaultTimeout)
       .pipe(
         switchMap(arrayBuffer => {
@@ -346,12 +346,6 @@ export class InfoService extends AbstractHttpService {
       );
   }
 
-  static toBytes(encodedRequest: Uint8Array): ArrayBuffer {
-    const offset = encodedRequest.byteOffset;
-    const length = encodedRequest.byteLength;
-    return encodedRequest.buffer.slice(offset, offset + length);
-  }
-
   sendCreateCompetitionCommand(action: CommonAction): Observable<Action[]> {
     let competitionId = generateUuid();
     let id = generateUuid();
@@ -363,7 +357,7 @@ export class InfoService extends AbstractHttpService {
 
   private sendCommandToEndpoint(payload: Command, endpoint: string): Observable<any> {
     const body = Command.encode(payload).finish();
-    const userRequestArrayBuffer = InfoService.toBytes(body);
+    const userRequestArrayBuffer = toBytes(body);
     const tmt = AbstractHttpService.defaultTimeout;
     return this.sendByteArrayToEndpoint(endpoint, userRequestArrayBuffer, tmt);
   }
@@ -506,7 +500,7 @@ export class InfoService extends AbstractHttpService {
 
   generatePreliminaryCategories(payload: GenerateCategoriesFromRestrictionsPayload, competitionId: string): Observable<GenerateCategoriesFromRestrictionsResponse> {
     return this.sendByteArrayToEndpoint(`${generateCategoriesEndpoint}/${competitionId}`,
-      InfoService.toBytes(GenerateCategoriesFromRestrictionsPayload.encode(payload).finish()),
+      toBytes(GenerateCategoriesFromRestrictionsPayload.encode(payload).finish()),
       AbstractHttpService.defaultTimeout)
       .pipe(
         map(buff => QueryServiceResponse.decode(new Uint8Array(buff as any))),

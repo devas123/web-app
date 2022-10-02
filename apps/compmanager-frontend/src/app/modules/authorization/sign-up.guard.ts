@@ -11,8 +11,8 @@ import {
 } from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
-import {AppState, selectUser} from '../../../../reducers/global-reducers';
-import {getToken} from "../../../../service/abstract.http.service";
+import {AppState, selectUser} from '../../reducers/global-reducers';
+import {getToken, removeToken} from "../../service/abstract.http.service";
 
 @Injectable()
 export class SignUpGuard implements CanActivate, CanActivateChild, CanLoad {
@@ -34,6 +34,7 @@ export class SignUpGuard implements CanActivate, CanActivateChild, CanLoad {
 
   checkLogin(): boolean {
     if (getToken() && getToken().length > 0) {
+      console.log("Have token ", getToken());
       this.store.pipe(select(selectUser)).subscribe(s => s && s.userId && this.router.navigate(['/user', s.userId]));
       return false;
     }

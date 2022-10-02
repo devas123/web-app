@@ -7,6 +7,12 @@ export function removeToken() {
   localStorage.removeItem('token');
 }
 
+export function toBytes(encodedRequest: Uint8Array): ArrayBuffer {
+  const offset = encodedRequest.byteOffset;
+  const length = encodedRequest.byteLength;
+  return encodedRequest.buffer.slice(offset, offset + length);
+}
+
 export function getBearerToken() {
   return 'Bearer ' + getToken()
 }
@@ -34,7 +40,7 @@ export abstract class AbstractHttpService {
 
 
   httpHeaders = new HttpHeaders({
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    'Authorization': getBearerToken(),
     'Content-Type': 'application/x-protobuf',
     'Accept': 'application/x-protobuf'
   });
@@ -72,7 +78,7 @@ export abstract class AbstractHttpService {
     return this.http.post(endpoint, body, {
       responseType: 'arraybuffer',
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Authorization': getBearerToken(),
         'Content-Type': 'application/x-protobuf',
         'Accept': 'application/x-protobuf'
       })

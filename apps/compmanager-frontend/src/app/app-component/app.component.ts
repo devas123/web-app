@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState, selectUser} from '../reducers/global-reducers';
-import {authorizeToken, logout} from '../modules/account/flux/actions';
+import {logout} from '../modules/account/flux/actions';
 import {Observable, Subscription} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {MenuService} from '../components/main-menu/menu.service';
@@ -14,7 +14,7 @@ import {Account} from "@frontend-nx/protobuf";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   title = 'app';
   displayMenuButton$: Observable<boolean>;
@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   navigate(location: any[]) {
+    console.log("Navigating to", location)
     this.router.navigate(location).catch(error => console.error(`Navigation error ${location}: ${error}`));
   }
 
@@ -41,10 +42,5 @@ export class AppComponent implements OnInit {
   doLogout() {
     this.store.dispatch(logout());
     this.navigate(['/']);
-  }
-
-
-  ngOnInit(): void {
-    this.store.dispatch(authorizeToken('asdasdasdasdasdasd'));
   }
 }

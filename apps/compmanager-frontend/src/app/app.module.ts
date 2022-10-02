@@ -17,8 +17,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {AccountService} from './modules/account/service/account.service';
 // import {AvatarModule} from 'ngx-avatar';
-import {SignUpGuard} from './modules/account/components/authorization/sign-up.guard';
-import {AuthGuard} from './modules/account/auth.guard';
+import {AuthGuard} from './modules/authorization/auth.guard';
 import {PagenotfoundComponent} from './components/pagenotfound/pagenotfound.component';
 import {HomeComponent} from './components/home/home.component';
 import {CompetitionManagerCommonsModule} from './commons/competition-manager-commons.module';
@@ -30,6 +29,7 @@ import {SuiDropdownModule, SuiModule, SuiSidebarModule} from '@frontend-nx/ng2-s
 import {DataProviderService} from "./service/data.provider.service";
 import {SelectorsService} from "./service/selectors.service";
 import {PictureUploadService} from "./service/picture.upload.service";
+import {SignUpGuard} from "./modules/authorization/sign-up.guard";
 
 @NgModule({
   declarations: [

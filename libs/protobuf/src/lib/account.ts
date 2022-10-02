@@ -10,6 +10,7 @@ export interface AccountServiceRequest {
   updateProfilePictureRequestPayload?:
     | UpdateProfilePictureRequestPayload
     | undefined;
+  authenticateRequestPayload?: AuthenticateRequestPayload | undefined;
 }
 
 export interface AccountServiceResponse {
@@ -31,6 +32,7 @@ export interface AddAccountRequestPayload {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   birthDate?: Date;
 }
 
@@ -57,6 +59,7 @@ function createBaseAccountServiceRequest(): AccountServiceRequest {
     addAccount: undefined,
     updateAccount: undefined,
     updateProfilePictureRequestPayload: undefined,
+    authenticateRequestPayload: undefined,
   };
 }
 
@@ -81,6 +84,12 @@ export const AccountServiceRequest = {
       UpdateProfilePictureRequestPayload.encode(
         message.updateProfilePictureRequestPayload,
         writer.uint32(26).fork()
+      ).ldelim();
+    }
+    if (message.authenticateRequestPayload !== undefined) {
+      AuthenticateRequestPayload.encode(
+        message.authenticateRequestPayload,
+        writer.uint32(34).fork()
       ).ldelim();
     }
     return writer;
@@ -112,6 +121,10 @@ export const AccountServiceRequest = {
           message.updateProfilePictureRequestPayload =
             UpdateProfilePictureRequestPayload.decode(reader, reader.uint32());
           break;
+        case 4:
+          message.authenticateRequestPayload =
+            AuthenticateRequestPayload.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -135,6 +148,9 @@ export const AccountServiceRequest = {
             object.updateProfilePictureRequestPayload
           )
         : undefined,
+      authenticateRequestPayload: isSet(object.authenticateRequestPayload)
+        ? AuthenticateRequestPayload.fromJSON(object.authenticateRequestPayload)
+        : undefined,
     };
   },
 
@@ -155,6 +171,10 @@ export const AccountServiceRequest = {
               message.updateProfilePictureRequestPayload
             )
           : undefined);
+    message.authenticateRequestPayload !== undefined &&
+      (obj.authenticateRequestPayload = message.authenticateRequestPayload
+        ? AuthenticateRequestPayload.toJSON(message.authenticateRequestPayload)
+        : undefined);
     return obj;
   },
 
@@ -175,6 +195,13 @@ export const AccountServiceRequest = {
       object.updateProfilePictureRequestPayload !== null
         ? UpdateProfilePictureRequestPayload.fromPartial(
             object.updateProfilePictureRequestPayload
+          )
+        : undefined;
+    message.authenticateRequestPayload =
+      object.authenticateRequestPayload !== undefined &&
+      object.authenticateRequestPayload !== null
+        ? AuthenticateRequestPayload.fromPartial(
+            object.authenticateRequestPayload
           )
         : undefined;
     return message;
@@ -420,7 +447,13 @@ export const Account = {
 };
 
 function createBaseAddAccountRequestPayload(): AddAccountRequestPayload {
-  return { firstName: '', lastName: '', email: '', birthDate: undefined };
+  return {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    birthDate: undefined,
+  };
 }
 
 export const AddAccountRequestPayload = {
@@ -437,10 +470,13 @@ export const AddAccountRequestPayload = {
     if (message.email !== '') {
       writer.uint32(34).string(message.email);
     }
+    if (message.password !== '') {
+      writer.uint32(42).string(message.password);
+    }
     if (message.birthDate !== undefined) {
       Timestamp.encode(
         toTimestamp(message.birthDate),
-        writer.uint32(42).fork()
+        writer.uint32(50).fork()
       ).ldelim();
     }
     return writer;
@@ -466,6 +502,9 @@ export const AddAccountRequestPayload = {
           message.email = reader.string();
           break;
         case 5:
+          message.password = reader.string();
+          break;
+        case 6:
           message.birthDate = fromTimestamp(
             Timestamp.decode(reader, reader.uint32())
           );
@@ -483,6 +522,7 @@ export const AddAccountRequestPayload = {
       firstName: isSet(object.firstName) ? String(object.firstName) : '',
       lastName: isSet(object.lastName) ? String(object.lastName) : '',
       email: isSet(object.email) ? String(object.email) : '',
+      password: isSet(object.password) ? String(object.password) : '',
       birthDate: isSet(object.birthDate)
         ? fromJsonTimestamp(object.birthDate)
         : undefined,
@@ -494,6 +534,7 @@ export const AddAccountRequestPayload = {
     message.firstName !== undefined && (obj.firstName = message.firstName);
     message.lastName !== undefined && (obj.lastName = message.lastName);
     message.email !== undefined && (obj.email = message.email);
+    message.password !== undefined && (obj.password = message.password);
     message.birthDate !== undefined &&
       (obj.birthDate = message.birthDate.toISOString());
     return obj;
@@ -506,6 +547,7 @@ export const AddAccountRequestPayload = {
     message.firstName = object.firstName ?? '';
     message.lastName = object.lastName ?? '';
     message.email = object.email ?? '';
+    message.password = object.password ?? '';
     message.birthDate = object.birthDate ?? undefined;
     return message;
   },
