@@ -175,7 +175,7 @@ export class InfoService extends AbstractHttpService {
 
   getCompetitionInfoImage(competitionId: string): Observable<string> {
     return this.httpGetQueryServiceResponse(`${competitionQueryEndpoint}/${competitionId}/image`, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getCompetitionInfoImageResponse?.image),
@@ -215,7 +215,7 @@ export class InfoService extends AbstractHttpService {
 
   getSchedule(competitionId: string): Observable<Schedule> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)('schedule'), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getScheduleResponse.schedule || <Schedule>{})
@@ -224,7 +224,7 @@ export class InfoService extends AbstractHttpService {
 
   getFightIdsByCategoryId(competitionId: string): Observable<Dictionary<string[]>> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)('fight'), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getFightIdsByCategoryIdsResponse.fightIdsByCategoryId),
@@ -241,7 +241,7 @@ export class InfoService extends AbstractHttpService {
 
   getCategories(competitionId: string): Observable<CategoryState[]> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)('category'), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getCategoriesResponse.categoryState),
@@ -277,7 +277,7 @@ export class InfoService extends AbstractHttpService {
     const params = {sportsId: 'bjj', competitionId, includeKids: 'false'};
     return this.httpGetQueryServiceResponse(defaultRestrictions, {
       params: params,
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getDefaultRestrictionsResponse?.restrictions)
@@ -287,7 +287,7 @@ export class InfoService extends AbstractHttpService {
 
   getCompetitionProperties(competitionId: string): Observable<CompetitionProperties> {
     return this.httpGetQueryServiceResponse(`${competitionQueryEndpoint}/${competitionId}`, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getCompetitionPropertiesResponse?.competitionProperties)
@@ -296,7 +296,7 @@ export class InfoService extends AbstractHttpService {
 
   getCompetitionInfoTemplate(competitionId: string): Observable<string> {
     return this.httpGetQueryServiceResponse(`${competitionQueryEndpoint}/${competitionId}/info`, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         switchMap(r => InfoService.uint8ArrToString(r.getCompetitionInfoTemplateResponse?.template)),
@@ -329,7 +329,7 @@ export class InfoService extends AbstractHttpService {
     const params = {competitionId};
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)('reginfo'), {
       params: params,
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getRegistrationInfoResponse?.registrationInfo)
@@ -339,7 +339,7 @@ export class InfoService extends AbstractHttpService {
 
   getLatestCategoryState(competitionId, categoryId): Observable<CategoryState> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`category/${categoryId}`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getCategoryResponse?.categoryState)
@@ -510,7 +510,7 @@ export class InfoService extends AbstractHttpService {
 
   getPeriodMats(competitionId: any, periodId: string): Observable<MatsQueryResult> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`period/${periodId}/mat`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getPeriodMatsResponse.matsQueryResults)
@@ -519,7 +519,7 @@ export class InfoService extends AbstractHttpService {
 
   getFight(competitionId: string, fightId: string): Observable<{ fight: FightDescription, options: FightResultOption[] }> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`fight/${fightId}`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     }).pipe(
       map(r => r.getFightByIdResponse?.fightDescription),
       mergeMap(result => this.getFightResultOptions(competitionId, result?.stageId)
@@ -531,7 +531,7 @@ export class InfoService extends AbstractHttpService {
 
   getFightResultOptions(competitionId: string, stageId: string): Observable<FightResultOption[]> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`stage/${stageId}/resultoptions`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getFightResulOptionsResponse?.fightResultOptions)
@@ -543,7 +543,7 @@ export class InfoService extends AbstractHttpService {
     const params = {matId, queryString: queryString || null, maxResults: `${maxResults}`};
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`mat/${matId}/fight`), {
       params: params,
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getMatFightsResponse.matFights)
@@ -579,7 +579,7 @@ export class InfoService extends AbstractHttpService {
       return throwError(`something is missing: ${competitionId}, ${categoryId}, ${stageId}`);
     }
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`category/${categoryId}/stage/${stageId}/fight`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getStageFightsResponse.fights)
@@ -588,7 +588,7 @@ export class InfoService extends AbstractHttpService {
 
   getCategoryStages(competitionId: string, categoryId: string): Observable<StageDescriptor[]> {
     return this.httpGetQueryServiceResponse(competitionIdPrefix(competitionId)(`category/${categoryId}/stage`), {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getStagesForCategoryResponse.stages)
@@ -599,7 +599,7 @@ export class InfoService extends AbstractHttpService {
     const params = {competitionId};
     return this.httpGetQueryServiceResponse(defaultFightResults, {
       params: params,
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getDefaultFightResultsResponse.fightResultOptions)
@@ -623,7 +623,7 @@ export class InfoService extends AbstractHttpService {
     }
     return this.httpGetQueryServiceResponse(academiesEndpoint, {
       params: params,
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getAcademiesResponse)
@@ -640,7 +640,7 @@ export class InfoService extends AbstractHttpService {
 
   loadAcademy(id: string): Observable<GetAcademyResponse> {
     return this.httpGetQueryServiceResponse(`${academiesEndpoint}/${id}`, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(r => r.getAcademyResponse)

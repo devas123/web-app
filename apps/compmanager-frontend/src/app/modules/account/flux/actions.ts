@@ -2,6 +2,8 @@
 // Actions
 // Auth
 import {Account} from "@frontend-nx/protobuf";
+import {createAction, props} from "@ngrx/store";
+import {SignInData} from "../../authorization/components/authorization/sign-in/sign-in.component";
 
 export const AUTHORIZE_USER = 'AUTHORIZE_USER';
 export const AUTHORIZE_TOKEN = 'AUTHORIZE_WITH_TOKEN';
@@ -18,9 +20,7 @@ export const userAuthorized = (payload: Account) => {
   return {type: USER_AUTHORIZED, payload};
 };
 
-export const authorizeUser = (payload: { email: string, password: string }) => {
-  return {type: AUTHORIZE_USER, payload};
-};
+export const authorizeUser = createAction(AUTHORIZE_USER, props<SignInData>());
 
 export const authorizeToken = (payload: string) => {
   return {type: AUTHORIZE_TOKEN, payload};

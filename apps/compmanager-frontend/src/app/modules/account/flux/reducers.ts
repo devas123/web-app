@@ -1,7 +1,6 @@
 import {batchReducer, CommonAction} from '../../../reducers/global-reducers';
 import {AccountState, initialAccountState} from './account.state';
 import {ACCOUNT_ERROR, AUTHORIZE_USER, CHANGE_AVATAR, LOGOUT, USER_AUTHORIZED} from './actions';
-import {b64toBlob} from '../utils';
 import {BATCH_ACTION} from "../../event-manager/redux/event-manager-actions";
 import {removeToken} from "../../../service/abstract.http.service";
 
@@ -15,12 +14,10 @@ export function accountStateReducer(state: AccountState = initialAccountState, a
       return state;
     case USER_AUTHORIZED: {
       if (action.payload) {
-        const avatar = action.payload.avatar;
         return {
           ...state,
           user: {
             ...action.payload,
-            avatar: avatar ? (window.URL || (window as any).webkitURL).createObjectURL(b64toBlob(avatar, 'image/png')) : 'assets/images/empty.png'
           }
         };
       }

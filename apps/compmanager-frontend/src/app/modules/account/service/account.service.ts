@@ -36,7 +36,7 @@ export class AccountService {
 
   getAccount(): Observable<Account> {
     return this.httpGet(`${accountEndpoint}`, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     })
       .pipe(
         map(response => response.getAccountResponsePayload?.account)
@@ -45,7 +45,7 @@ export class AccountService {
 
   changeAvatar(avatar: string): Observable<any> {
     return this.http.post('accounts/changeAvatar', avatar, {
-      headers: AbstractHttpService.authHeader
+      headers: AbstractHttpService.authHeader()
     }).pipe(catchError(err => {
       throw "Internal server error ";
     }))

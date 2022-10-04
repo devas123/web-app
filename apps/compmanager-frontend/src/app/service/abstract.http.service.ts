@@ -34,12 +34,12 @@ export abstract class AbstractHttpService {
 
   static defaultTimeout = 15000;
 
-  static authHeader = new HttpHeaders({
+  static authHeader = () => new HttpHeaders({
     'Authorization': getBearerToken()
   });
 
 
-  httpHeaders = new HttpHeaders({
+  httpHeaders = () => new HttpHeaders({
     'Authorization': getBearerToken(),
     'Content-Type': 'application/x-protobuf',
     'Accept': 'application/x-protobuf'
@@ -49,7 +49,7 @@ export abstract class AbstractHttpService {
   sendByteArrayToEndpointWithProgress(endpoint: string, body: ArrayBuffer, tmt: number = AbstractHttpService.defaultTimeout): Observable<HttpEvent<ArrayBuffer>> {
     return this.http.post(endpoint, body, {
       responseType: 'arraybuffer',
-      headers: this.httpHeaders,
+      headers: this.httpHeaders(),
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -63,7 +63,7 @@ export abstract class AbstractHttpService {
   sendDeleteRequestToEndpointWithProgress(endpoint: string, tmt: number = AbstractHttpService.defaultTimeout): Observable<HttpEvent<ArrayBuffer>> {
     return this.http.delete(endpoint, {
       responseType: 'arraybuffer',
-      headers: this.httpHeaders,
+      headers: this.httpHeaders(),
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -95,7 +95,7 @@ export abstract class AbstractHttpService {
     return this.http.get(url, {
       ...options,
       responseType: 'arraybuffer',
-      headers: AbstractHttpService.authHeader.set('Accept', 'application/x-protobuf')
+      headers: AbstractHttpService.authHeader().set('Accept', 'application/x-protobuf')
     }).pipe(
       timeout(tmt),
       catchError(error => {

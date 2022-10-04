@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {catchError, map, mergeMap} from 'rxjs/operators';
 import {Observable, of, throwError} from 'rxjs';
 
@@ -9,7 +9,6 @@ import * as env from "../../../../environments/environment";
 import {AbstractHttpService, removeToken, toBytes} from "../../../service/abstract.http.service";
 import {
   Account,
-  AccountServiceRequest,
   AccountServiceResponse,
   AddAccountRequestPayload,
   AuthenticateRequestPayload,
@@ -23,8 +22,6 @@ const {
 
 @Injectable()
 export class HttpAuthService extends AbstractHttpService {
-
-  headers = new HttpHeaders({'Content-Type': 'application/json'});
 
   constructor(http: HttpClient) {
     super(http)
@@ -46,7 +43,7 @@ export class HttpAuthService extends AbstractHttpService {
       password,
       username: email
     };
-    return this.sendByteArrayToEndpoint(`${accountEndpoint}/authenticate`, AuthenticateRequestPayload.encode(body).finish().buffer, AbstractHttpService.defaultTimeout)
+    return this.sendByteArrayToEndpoint(`${accountEndpoint}/authenticate`, toBytes(AuthenticateRequestPayload.encode(body).finish()), AbstractHttpService.defaultTimeout)
       .pipe(
         mergeMap(buffer => {
           const response = AccountServiceResponse.decode(new Uint8Array(buffer));
@@ -62,7 +59,7 @@ export class HttpAuthService extends AbstractHttpService {
   }
 
   getCurrentUser(): Observable<Account> {
-    return this.httpGetBytes(accountEndpoint)
+    return this.httpGetBytes(accountEndpoint, this.httpHeaders())
       .pipe(
         map(bytes => AccountServiceResponse.decode(new Uint8Array(bytes))),
         map(resp => resp.getAccountResponsePayload?.account),

@@ -9,8 +9,6 @@ import {AccountRootComponent} from './components/account-root/account-root.compo
 import {CompetitionManagerCommonsModule} from '../../commons/competition-manager-commons.module';
 import {AccountInfoContainerComponent} from "./containers/account-info.container.component";
 import {ReactiveFormsModule} from "@angular/forms";
-import {EffectsModule} from "@ngrx/effects";
-import {AccountEffects} from "./flux/effects";
 
 // import {AvatarModule} from 'ngx-avatar';
 
@@ -21,7 +19,6 @@ import {AccountEffects} from "./flux/effects";
     HttpClientModule,
     SuiTransitionModule,
     RouterModule.forChild(accountRoutes),
-    EffectsModule.forFeature([AccountEffects]),
     // AvatarModule,
     SuiModalModule,
     CompetitionManagerCommonsModule,

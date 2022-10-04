@@ -29,12 +29,12 @@ export class AccountEffects {
   }));
 
   @Effect()
-  authorizeUser: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_USER), mergeMap((action: CommonAction) => {
-    return this.authService.requestToken(action?.payload?.email, action?.payload?.password).pipe(tap(token => {
-      setToken(token.token);
-    }), switchMap(() => {
-      return this.authService.getCurrentUser();
-    }), map((user: Account) => userAuthorized(user)), catchError(err => of(accountError(err))));
+  authorizeUser: Observable<Action> = this.actions$.pipe(ofType(AUTHORIZE_USER), mergeMap((action: any) => {
+    return this.authService.requestToken(action?.email, action?.password).pipe(
+      tap(token => setToken(token.token)),
+      switchMap(() => this.authService.getCurrentUser()),
+      map((user: Account) => userAuthorized(user)),
+      catchError(err => of(accountError(err))));
   }));
 
   @Effect()

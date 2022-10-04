@@ -18,11 +18,11 @@
         </div>
 
 
-        <div class="ui error message " *ngIf="displayErrorList() || error">
+        <div class="ui error message " *ngIf="displayErrorList() || accountState?.error">
           <ul class="list">
             <li *ngIf="email.invalid && (email.touched || email.dirty)">Please enter your e-mail</li>
             <li *ngIf="password.invalid && (password.touched || password.dirty)">Please enter your password</li>
-            <li *ngIf="!!error">{{error}}</li>
+            <li *ngIf="!!accountState?.error">{{accountState?.error}}</li>
           </ul>
         </div>
 
@@ -35,7 +35,7 @@
       New to us? &nbsp;&nbsp;
       <button class="ui primary basic button" (click)="onClick()">Sign Up</button>
     </div>
-  <div class="ui error message" *ngIf="!!error">
+  <div class="ui error message" *ngIf="!!accountState?.error">
     Bla
   </div>
 </div>
