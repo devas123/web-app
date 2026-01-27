@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {Dictionary} from '@ngrx/entity';
-import produce from 'immer';
+import { produce } from 'immer';
 import {defaultSelectionColor} from '../../../account/utils';
 import {ScheduleRequirement} from "@frontend-nx/protobuf";
 

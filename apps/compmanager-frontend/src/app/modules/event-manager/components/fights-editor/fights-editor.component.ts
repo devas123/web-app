@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output} from '@angular/core';
-import produce from 'immer';
+import { produce } from 'immer';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Competitor, CompScore, FightDescription} from "@frontend-nx/protobuf";
 

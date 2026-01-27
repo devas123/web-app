@@ -40,7 +40,7 @@ import {
 } from '../../../commons/model/competition.model';
 import {getEventManagerState} from './reducers';
 import {InjectionToken} from '@angular/core';
-import produce from 'immer';
+import { produce } from 'immer';
 import * as _ from 'lodash';
 
 export const eventManagerGetSocketConnected = createSelector(getEventManagerState, state => state.socketConnected);

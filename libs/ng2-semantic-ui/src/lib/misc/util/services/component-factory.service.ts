@@ -1,12 +1,12 @@
 import {
   ApplicationRef,
-  ComponentFactoryResolver,
   ComponentRef,
+  createComponent,
+  EnvironmentInjector,
   Injectable,
   Injector,
   NgZone,
   Provider,
-  ReflectiveInjector,
   TemplateRef,
   Type,
   ViewContainerRef
@@ -19,23 +19,23 @@ export interface IImplicitContext<T> {
 @Injectable()
 export class SuiComponentFactory {
   constructor(private _applicationRef: ApplicationRef,
-              private _componentFactoryResolver: ComponentFactoryResolver,
               private _injector: Injector,
+              private _environmentInjector: EnvironmentInjector,
               private _zone: NgZone) {
   }
 
   public createComponent<T>(type: Type<T>, providers: Provider[] = []): ComponentRef<T> {
-    // Resolve a factory for creating components of type `type`.
-    const factory = this._componentFactoryResolver.resolveComponentFactory(type as Type<T>);
+    // Create an injector with the specified providers.
+    const injector = Injector.create({
+      providers: providers.map(p => typeof p === 'function' ? { provide: p, useClass: p } : p),
+      parent: this._injector
+    });
 
-    // Resolve and create an injector with the specified providers.
-    const injector = ReflectiveInjector.resolveAndCreate(
-      providers,
-      this._injector
-    );
-
-    // Create a component using the previously resolved factory & injector.
-    return factory.create(injector);
+    // Create a component using the createComponent function.
+    return createComponent(type, {
+      environmentInjector: this._environmentInjector,
+      elementInjector: injector
+    });
   }
 
   public createView<T, U extends IImplicitContext<T>>(viewContainer: ViewContainerRef, template: TemplateRef<U>, context: U): void {

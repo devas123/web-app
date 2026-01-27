@@ -3,7 +3,7 @@ import {ComponentModalConfig, IPopup, ModalSize, SuiModal} from '@frontend-nx/ng
 import {CommonBracketsInfoContainer} from '../../../../commons/classes/common-brackets-container.component';
 import {displayCategory} from '../../../../commons/model/competition.model';
 import {Dictionary} from '@ngrx/entity';
-import produce from 'immer';
+import { produce } from 'immer';
 import {defaultActiveSelectionColor, uniqueFilter} from '../../../account/utils';
 import {ColorEvent} from 'ngx-color';
 import {CategoryState, ScheduleRequirement} from "@frontend-nx/protobuf";

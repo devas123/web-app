@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as Long from 'long';
+import Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import { Any } from './google/protobuf/any';
 import { Event } from './event';

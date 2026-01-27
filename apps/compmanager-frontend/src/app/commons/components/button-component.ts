@@ -19,6 +19,6 @@ export class ButtonComponent {
 
   onClick(event: Event) {
     event.stopPropagation();
-    this.click.next();
+    this.click.emit();
   }
 }

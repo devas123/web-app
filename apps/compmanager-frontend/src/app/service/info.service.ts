@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {CommonAction} from '../reducers/global-reducers';
 import * as env from '../../environments/environment';
-import produce from 'immer';
+import { produce } from 'immer';
 import * as allActions from '../actions/actions';
 import {Action} from '@ngrx/store';
 import {parseISO} from 'date-fns';

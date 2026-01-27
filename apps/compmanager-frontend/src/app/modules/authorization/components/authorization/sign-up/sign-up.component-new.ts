@@ -77,7 +77,7 @@ import {Account} from "@frontend-nx/protobuf";
             <ng-container *ngIf="email.invalid && (email.dirty || email.touched)">
               <li *ngIf="email.errors.required">E-mail is required.</li>
               <li *ngIf="!email.errors.required && email.errors.invalidRegexp">Please enter a valid e-mail address. For
-                example bob@gmail.com.
+                example bob&#64;gmail.com.
               </li>
             </ng-container>
             <li *ngIf="password.invalid && password.errors.minlength && (password.touched || password.dirty)">Password

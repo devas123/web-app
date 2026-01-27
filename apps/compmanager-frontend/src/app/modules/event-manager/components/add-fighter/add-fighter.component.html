@@ -67,7 +67,7 @@
   <p></p>
   <compmanager-frontend-button
     [name]="'Close'"
-    (click)="closeClicked.next()"
+    (click)="closeClicked.emit()"
   ></compmanager-frontend-button>
   <compmanager-frontend-submit-button
   [name]="'Create'"

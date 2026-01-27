@@ -7,7 +7,7 @@ import {
   RegistrationInfo,
   RegistrationPeriod
 } from "@frontend-nx/protobuf";
-import produce from "immer";
+import { produce } from "immer";
 
 @Component({
   selector: 'app-registration-info-editor',

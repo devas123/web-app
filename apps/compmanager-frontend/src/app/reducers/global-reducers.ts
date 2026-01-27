@@ -1,11 +1,5 @@
 import {Action, ActionReducer, ActionReducerMap, createSelector, MetaReducer} from '@ngrx/store';
 import {environment} from '../../environments/environment';
-/**
- * storeFreeze prevents state from being mutated. When mutation occurs, an
- * exception will be thrown. This is useful during development mode to
- * ensure that none of the reducers accidentally mutates the state.
- */
-import {storeFreeze} from 'ngrx-store-freeze';
 import {AccountState, initialAccountState} from '../modules/account/flux/account.state';
 import {accountStateReducer} from '../modules/account/flux/reducers';
 import {createEntityAdapter, Dictionary, EntityAdapter, EntityState, Update} from '@ngrx/entity';
@@ -58,7 +52,7 @@ import {
   EVENT_MANAGER_SCHEDULE_PERIODS_UPDATED,
   FIGHT_IDS_BY_CATEGORY_ID_LOADED,
 } from '../modules/event-manager/redux/event-manager-actions';
-import produce from 'immer';
+import { produce } from 'immer';
 import {
   COMPETITION_LIST_LOADED,
   COMPETITION_PUBLISHED,
@@ -224,7 +218,7 @@ export function logger(reducer: ActionReducer<AppState>): ActionReducer<AppState
 }
 
 export const metaReducers: MetaReducer<AppState>[] = !environment.production
-  ? [logger, storeFreeze]
+  ? [logger]
   : [];
 
 export function competitionListReducer(state: EventPropsEntities = competitionPropertiesEntitiesInitialState, action): EventPropsEntities {

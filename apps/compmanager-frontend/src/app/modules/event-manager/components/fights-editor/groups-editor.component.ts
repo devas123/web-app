@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
-import produce from 'immer';
+import { produce } from 'immer';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {collectingReducer, uniqueFilter} from '../../../account/utils';
 import {Dictionary} from '@ngrx/entity';

@@ -1,9 +1,8 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {Subscription} from "rxjs";
+import {from, Subscription} from "rxjs";
 import {filter, finalize, map, switchMap} from "rxjs/operators";
 import {PictureUploadService} from "../../service/picture.upload.service";
 import {InfoService} from "../../service/info.service";
-import {fromPromise} from "rxjs/internal-compatibility";
 
 @Component({
   selector: 'cf-file-upload',
@@ -66,7 +65,7 @@ export class FileUploadComponent {
     if (file) {
 
       let fileAsByteArray = InfoService.getFileAsByteArray(file);
-      const upload$ = fromPromise(fileAsByteArray).pipe(
+      const upload$ = from(fileAsByteArray).pipe(
         filter(res => res instanceof ArrayBuffer),
         map(res => res as ArrayBuffer),
         switchMap(array => this.pictureUploadService.saveCompetitionInfoImage(this.competitionId, array).pipe(

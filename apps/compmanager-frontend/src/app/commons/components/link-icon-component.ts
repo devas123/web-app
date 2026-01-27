@@ -21,6 +21,6 @@ export class LinkIconComponent {
 
   onClick(event: Event) {
     event.stopPropagation();
-    this.click.next();
+    this.click.emit();
   }
 }

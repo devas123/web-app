@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {displayCategory as dc,} from '../../../../commons/model/competition.model';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
-import produce from 'immer';
+import { produce } from 'immer';
 import {objectValues} from "../../../account/utils";
 import {CategoryDescriptor, CategoryState, RegistrationGroup, RegistrationInfo} from "@frontend-nx/protobuf";
 

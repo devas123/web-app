@@ -1,5 +1,8 @@
 import { Component, Input, Output, OnChanges, EventEmitter, HostBinding } from "@angular/core";
-import {isNumeric} from "rxjs/internal-compatibility";
+
+function isNumeric(value: any): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+}
 
 @Component({
     selector: "sui-pagination",

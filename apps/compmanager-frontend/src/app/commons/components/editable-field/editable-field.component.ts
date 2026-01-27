@@ -56,12 +56,12 @@ export class EditableFieldComponent {
   }
 
   fireContentChanged() {
-    this.contentChanged.next();
+    this.contentChanged.emit();
     this._editMode = false;
   }
 
   fireEditModeEntered() {
-    this.editModeEntered.next();
+    this.editModeEntered.emit();
     this._editMode = true;
   }
 

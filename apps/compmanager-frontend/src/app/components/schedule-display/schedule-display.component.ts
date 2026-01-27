@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {AddFighterComponent} from '../../modules/event-manager/components/add-fighter/add-fighter.component';
 import {Dictionary} from '@ngrx/entity';
-import produce from 'immer';
+import { produce } from 'immer';
 import {CategoryState, MatState, Period, ScheduleEntryType} from "@frontend-nx/protobuf";
 import {InternalScheduleState} from "../../reducers/global-reducers";
 

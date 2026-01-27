@@ -9,7 +9,7 @@ import {
   Output
 } from '@angular/core';
 import {AddFighterComponent} from '../add-fighter/add-fighter.component';
-import produce from 'immer';
+import { produce } from 'immer';
 import {IScoreboardFightResultSet} from '../../redux/dashboard-reducers';
 import {
   CategoryDescriptor, CategoryState,
@@ -133,7 +133,7 @@ export class ScoreboardComponentComponent implements AfterContentInit {
   }
 
   goMatView() {
-    this.goMatViewClicked.next();
+    this.goMatViewClicked.emit();
   }
 
 

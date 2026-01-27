@@ -8,7 +8,7 @@ import {
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ComponentModalConfig, ModalSize, SuiModal} from '@frontend-nx/ng2-semantic-ui';
 import {InfoService} from '../../../../service/info.service';
-import produce from 'immer';
+import { produce } from 'immer';
 import {generateUuid} from '../../../account/utils';
 import {MatDescription, MatState, Period} from "@frontend-nx/protobuf";
 

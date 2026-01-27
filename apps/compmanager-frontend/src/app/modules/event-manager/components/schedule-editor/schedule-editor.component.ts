@@ -16,7 +16,7 @@ import {
   IAddSchedulePeriodResult
 } from '../../containers/schedule-editor-container/add-shedule-period-form.component';
 import {Dictionary} from '@ngrx/entity';
-import produce from 'immer';
+import { produce } from 'immer';
 import {AddSchedulePauseModal, IAddSchedulePauseResult} from './add-pause-form.component';
 import {ISplitCategoryResult, SplitCategoryModal} from './split-category-modal.component';
 import {EditRequirementModal, IEditRequirementResult} from './edit-requirement-modal.component';

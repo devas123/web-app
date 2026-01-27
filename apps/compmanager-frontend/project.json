@@ -1,7 +1,7 @@
 {
   "projectType": "application",
   "generators": {
-    "@nrwl/workspace:component": {
+    "@nx/angular:component": {
       "style": "scss"
     }
   },
@@ -9,7 +9,7 @@
   "prefix": "compmanager-frontend",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:webpack-browser",
+      "executor": "@angular-devkit/build-angular:browser",
       "options": {
         "outputPath": "dist/apps/compmanager-frontend",
         "preserveSymlinks": true,
@@ -20,22 +20,17 @@
           "marked",
           "date-fns-tz"
         ],
-        "sourceMap": {
-          "scripts": true,
-          "styles": true,
-          "vendor": true
-        },
+        "sourceMap": true,
         "index": "apps/compmanager-frontend/src/index.html",
         "main": "apps/compmanager-frontend/src/main.ts",
-        "polyfills": "apps/compmanager-frontend/src/polyfills.ts",
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/compmanager-frontend/tsconfig.app.json",
-        "aot": true,
         "assets": [
           "apps/compmanager-frontend/src/favicon.ico",
           "apps/compmanager-frontend/src/assets"
         ],
         "styles": [
-          "tools/fui/semantic/dist/semantic.min.css",
+          "node_modules/fomantic-ui-css/semantic.min.css",
           "apps/compmanager-frontend/src/styles.scss",
           "node_modules/@fortawesome/fontawesome-free/css/all.css"
         ],
@@ -52,11 +47,8 @@
           "optimization": true,
           "outputHashing": "all",
           "sourceMap": true,
-          "extractCss": true,
           "namedChunks": false,
           "extractLicenses": true,
-          "vendorChunk": false,
-          "buildOptimizer": true,
           "budgets": [
             {
               "type": "initial",
@@ -69,20 +61,29 @@
               "maximumError": "10kb"
             }
           ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
         }
-      }
+      },
+      "defaultConfiguration": "development"
     },
     "serve": {
-      "executor": "@nrwl/angular:webpack-server",
+      "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "compmanager-frontend:build",
         "proxyConfig": "proxy.conf.js"
       },
       "configurations": {
         "production": {
-          "browserTarget": "compmanager-frontend:build:production"
+          "buildTarget": "compmanager-frontend:build:production"
+        },
+        "development": {
+          "buildTarget": "compmanager-frontend:build:development"
         }
-      }
+      },
+      "defaultConfiguration": "development"
     },
     "lint": {
       "executor": "@angular-eslint/builder:lint",
@@ -94,12 +95,10 @@
       }
     },
     "test": {
-      "executor": "@angular-devkit/build-angular:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/compmanager-frontend/jest.config.js",
-        "tsConfig": "apps/compmanager-frontend/tsconfig.spec.json",
-        "passWithNoTests": true,
-        "setupFile": "apps/compmanager-frontend/src/test-setup.ts"
+        "passWithNoTests": true
       }
     }
   },

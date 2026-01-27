@@ -29,7 +29,7 @@ import {MenuService} from '../../../../components/main-menu/menu.service';
 import {HeaderDescription} from '../../../../commons/model/competition.model';
 import {objectValues} from "../../../account/utils";
 import {CategoryState, RegistrationInfo} from "@frontend-nx/protobuf";
-import produce from "immer";
+import { produce } from "immer";
 
 @Component({
   selector: 'app-registration-info-editor-container',

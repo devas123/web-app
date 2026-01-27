@@ -8,13 +8,13 @@ export type TypeInTree = 'fully-connected' | 'partially-connected' | 'not-connec
   selector: 'app-restriction-item',
   template: `
     <div class="restriction-item selectable" [class]="typeInTree" [ngClass]="{'in-path': inPath}">
-      <span (click)="restrictionClicked.next()">{{defaultRestrictionFmt(restriction)}}</span>
-      <div (click)="restrictionClicked.next()" class="filler"></div>
-      <a class="right-floated-close" *ngIf="canSelect" (click)="restrictionSelected.next()">
+      <span (click)="restrictionClicked.emit()">{{defaultRestrictionFmt(restriction)}}</span>
+      <div (click)="restrictionClicked.emit()" class="filler"></div>
+      <a class="right-floated-close" *ngIf="canSelect" (click)="restrictionSelected.emit()">
         <i *ngIf="typeInTree !== 'not-connected'" class="ui minus icon"></i>
         <i *ngIf="typeInTree === 'not-connected'" class="ui plus icon"></i>
       </a>
-      <a class="right-floated-close" (click)="restrictionDeleted.next()"><i class="ui close icon"></i></a>
+      <a class="right-floated-close" (click)="restrictionDeleted.emit()"><i class="ui close icon"></i></a>
     </div>
   `,
   styleUrls: ['category-constructor.component.scss'],

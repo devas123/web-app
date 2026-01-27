@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, Validators} from '@angular/forms';
-import produce from 'immer';
+import { produce } from 'immer';
 import {SuiModalService} from '@frontend-nx/ng2-semantic-ui';
 import {AddFightResultOptionModal} from './add-fight-result-option-form.component';
 import {AddInputSelectorFormModal} from './add-input-selector-form.component';
